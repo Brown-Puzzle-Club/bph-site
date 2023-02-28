@@ -4,11 +4,11 @@ from django.utils import timezone
 
 # included in various templates. NOTE, sometimes appears with a "the" before
 # it, maybe check those are what you want.
-HUNT_TITLE = 'FIXME Puzzle Hunt'
+HUNT_TITLE = 'Brown Puzzlehunt'
 # included in various templates and displayed on the static site
 HUNT_ORGANIZERS = 'FIXME Puzzlesetters'
 # included in various templates and set as reply-to for automatic emails
-CONTACT_EMAIL = 'FIXME@example.com'
+CONTACT_EMAIL = 'puzzle@brown.edu'
 # the sender from which automatic emails are sent; your mail sending service
 # might require you set this to something (check settings/base.py to put your
 # actual mail sending service credentials)
@@ -26,25 +26,25 @@ INITIAL_STATS_AVAILABLE = False
 SURVEYS_AVAILABLE = False
 
 HUNT_START_TIME = timezone.make_aware(datetime.datetime(
-    year=9001,
-    month=1,
-    day=1,
-    hour=0,
+    year=2023,
+    month=4,
+    day=15,
+    hour=13,
     minute=0,
 ))
 HUNT_END_TIME = timezone.make_aware(datetime.datetime(
-    year=9002,
-    month=1,
-    day=1,
-    hour=0,
+    year=2023,
+    month=4,
+    day=16,
+    hour=19,
     minute=0,
 ))
 HUNT_CLOSE_TIME = timezone.make_aware(datetime.datetime(
-    year=9003,
-    month=1,
-    day=1,
-    hour=0,
-    minute=0,
+    year=2023,
+    month=4,
+    day=21,
+    hour=23,
+    minute=59,
 ))
 
 MAX_GUESSES_PER_PUZZLE = 20
@@ -56,7 +56,7 @@ HINTS_ENABLED = True
 HINTS_PER_DAY = (2, 2, 2, 2, 2, 2, 2, 2, 2, 2)
 # Teams get the first number in HINTS_PER_DAY at this time, and subsequent
 # numbers every day after until the end of HINTS_PER_DAY.
-HINT_TIME = HUNT_START_TIME + datetime.timedelta(days=1)
+HINT_TIME = HUNT_START_TIME + datetime.timedelta(hours=1)
 # To discourage teams from creating sockpuppets to grab more hints, teams
 # created less than this time ago get nothing. Once the time elapses, they
 # get the full number of hints, including retroactively.
@@ -65,7 +65,7 @@ HINT_TIME = HUNT_START_TIME + datetime.timedelta(days=1)
 # many hints they would get, since we advertised that there would be intro
 # hints or extra hints released at this or that time. Feel free to change the
 # logic in models.py to suit your needs.)
-TEAM_AGE_BEFORE_HINTS = datetime.timedelta(days=1)
+TEAM_AGE_BEFORE_HINTS = datetime.timedelta(hours=1)
 # If set, a team's first N hints are usable only on puzzles in the intro round.
 # (They don't go away or convert into regular hints after some time; if a team
 # doesn't use them, they can still use regular hints they receive afterward.)
