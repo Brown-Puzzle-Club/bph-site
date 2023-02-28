@@ -41,9 +41,9 @@
                 <a{% if request.path == '/' %} class="selected-tab"{% endif %} href="{% url 'index' %}">
                     {% translate "Home" %}
                 </a>
-                <a{% if request.path == '/rules' %} class="selected-tab"{% endif %} href="{% url 'rules' %}">
+                <!-- <a{% if request.path == '/rules' %} class="selected-tab"{% endif %} href="{% url 'rules' %}">
                     {% translate "Rules" %}
-                </a>
+                </a> -->
                 {% if story_page_visible %}
                 <a{% if request.path == '/story' %} class="selected-tab"{% endif %} href="{% url 'story' %}">
                     {% translate "Story" %}
@@ -61,18 +61,18 @@
                     {% translate "FAQ" %}
                 </a>
                 {% if errata_page_visible %}
-                <a{% if request.path == '/errata' %} class="selected-tab"{% endif %} href="{% url 'errata' %}">
+                <!-- <a{% if request.path == '/errata' %} class="selected-tab"{% endif %} href="{% url 'errata' %}">
                     {% translate "Updates" %}
-                </a>
+                </a> -->
                 {% endif %}
                 {% if wrapup_page_visible %}
                 <a{% if '/wrapup' in request.path %} class="selected-tab"{% endif %} href="{% url 'wrapup' %}">
                     {% translate "Wrap-Up" %}
                 </a>
                 {% endif %}
-                <a{% if request.path == '/archive' %} class="selected-tab"{% endif %} href="{{ archive_link }}">
+                <!-- <a{% if request.path == '/archive' %} class="selected-tab"{% endif %} href="{{ archive_link }}">
                     {% translate "Archive" %}
-                </a>
+                </a> -->
             </div>
             <div class="top-left-actions">
                 {% block top-left-actions %}{% endblock %}
