@@ -10,8 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.10/ref/settings/
 '''
 
-import os, sys
-import dj_database_url
+import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -51,7 +50,6 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.http.ConditionalGetMiddleware',
@@ -66,12 +64,10 @@ MIDDLEWARE = [
     'puzzles.views.accept_ranges_middleware',
 ]
 
-redis_url = os.environ.get('REDISCLOUD_URL')
-
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": redis_url,
+        "LOCATION": "redis://127.0.0.1:6379/1",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         },
@@ -82,7 +78,7 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [{'address': redis_url}],
+            "hosts": [{'address':('127.0.0.1', 6379), 'db': 2}],
         },
     }
 }
@@ -115,10 +111,11 @@ ASGI_APPLICATION = 'gph.asgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
-# Apparently conn_max_age=0 is better for Heroku:
-# https://stackoverflow.com/questions/48644208/django-postgresql-heroku-operational-error-fatal-too-many-connections-for-r
 DATABASES = {
-    'default': dj_database_url.config(conn_max_age=0, ssl_require=True),
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
 }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
@@ -199,28 +196,28 @@ LOGGING = {
     'handlers': {
         'django': {
             'level': 'INFO',
-            'class': 'logging.StreamHandler',
-            'stream': sys.stdout,
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(LOGS_DIR, 'django.log'),
             'formatter': 'django',
         },
         'general': {
             'level': 'INFO',
-            'class': 'logging.StreamHandler',
-            'stream': sys.stdout,
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(LOGS_DIR, 'general.log'),
             'formatter': 'puzzles',
         },
         'puzzle': {
             'level': 'INFO',
-            'class': 'logging.StreamHandler',
-            'stream': sys.stdout,
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(LOGS_DIR, 'puzzle.log'),
             'formatter': 'puzzles',
         },
         'request': {
             'level': 'INFO',
-            'class': 'logging.StreamHandler',
-            'stream': sys.stdout,
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(LOGS_DIR, 'request.log'),
             'formatter': 'puzzles',
-        }
+        },
     },
     'loggers': {
         'django': {
