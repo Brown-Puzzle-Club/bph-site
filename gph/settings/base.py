@@ -196,7 +196,7 @@ LOGGING = {
     },
     # FIXME you may want to change the filenames to something like
     # /srv/logs/django.log or similar
-    handlers': {
+    'handlers': {
         'django': {
             'level': 'INFO',
             'class': 'logging.StreamHandler',
