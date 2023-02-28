@@ -4,11 +4,11 @@ from django.utils import timezone
 
 # included in various templates. NOTE, sometimes appears with a "the" before
 # it, maybe check those are what you want.
-HUNT_TITLE = 'FIXME Puzzle Hunt'
+HUNT_TITLE = 'Brown Puzzlehunt'
 # included in various templates and displayed on the static site
-HUNT_ORGANIZERS = 'FIXME Puzzlesetters'
+HUNT_ORGANIZERS = 'Brown Puzzle Club'
 # included in various templates and set as reply-to for automatic emails
-CONTACT_EMAIL = 'FIXME@example.com'
+CONTACT_EMAIL = 'puzzle@brown.edu'
 # the sender from which automatic emails are sent; your mail sending service
 # might require you set this to something (check settings/base.py to put your
 # actual mail sending service credentials)
@@ -26,25 +26,25 @@ INITIAL_STATS_AVAILABLE = False
 SURVEYS_AVAILABLE = False
 
 HUNT_START_TIME = timezone.make_aware(datetime.datetime(
-    year=9001,
-    month=1,
-    day=1,
-    hour=0,
+    year=2023,
+    month=4,
+    day=15,
+    hour=12,
     minute=0,
 ))
 HUNT_END_TIME = timezone.make_aware(datetime.datetime(
-    year=9002,
-    month=1,
-    day=1,
-    hour=0,
+    year=2023,
+    month=4,
+    day=17,
+    hour=18,
     minute=0,
 ))
 HUNT_CLOSE_TIME = timezone.make_aware(datetime.datetime(
-    year=9003,
-    month=1,
-    day=1,
-    hour=0,
-    minute=0,
+    year=2023,
+    month=4,
+    day=21,
+    hour=23,
+    minute=59,
 ))
 
 MAX_GUESSES_PER_PUZZLE = 20
