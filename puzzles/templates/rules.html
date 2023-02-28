@@ -7,62 +7,207 @@
 <h1>{% translate "Rules" %}</h1>
 
 <main>
-    <div class="no-break">
-        <h4 id="Format">{% translate "Format" %}</h4>
+      <div class="no-break">
+        <h4 id="what-is">{% translate "What is this?" %}</h4>
         <ul>
-            {% format_time start_time "WEEKDATE_AT_TIME" as hunt_start %}
-            {% format_time end_time "WEEKDATE_AT_TIME" as hunt_end %}
-            <li>{% blocktranslate %}The puzzlehunt starts on <strong>{{ hunt_start }}</strong> and ends on <strong>{{ hunt_end }}</strong>, at which point puzzle solutions will be available. {% endblocktranslate %}
-            {% comment %}
-            {% format_time close_time "WEEKDATE_AT_TIME" as hunt_close %}
-            {% url 'faq' as faq_url %}
-            {% blocktranslate %}However, we will leave the website running until <strong>{{ hunt_close }}</strong> so teams can still submit answers and go through the hunt at their own pace (see the <a href="{{ faq_url }}">FAQ</a> for a more detailed explanation).{% endblocktranslate %}
-            {% endcomment %}
-            </li>
-            <li>{% blocktranslate with max_members=max_members_per_team %}Teams have a maximum size of {{ max_members }}. You may not create multiple accounts or be on multiple teams.{% endblocktranslate %}</li>
-            <li>{% blocktranslate %}A few puzzles will be available at the start, and the primary way to unlock new puzzles is by solving puzzles and progressing through the hunt, although puzzles may also be unlocked over time.{% endblocktranslate %}</li>
-            <li>{% blocktranslate %}Teams that complete the hunt will be ranked by the time at which they finish. Teams that do not complete the hunt will be ranked by number of puzzles solved and tie-broken by earliest last solve time.{% endblocktranslate %}</li>
+            <li>This is a puzzlehunt! Teams of people will compete to solve puzzles (think escape room, not jigsaw) using information both online and in real life. 
+              If you want to know more about what a puzzlehunt is, check out our <a href="{% url 'faq' %}">FAQ section</a>.</li>
         </ul>
     </div>
 
     <div class="no-break">
-        <h4 id="Solving">{% translate "Solving" %}</h4>
+        <h4 id="Format">{% translate "When and where is it?" %}</h4>
         <ul>
+            <li>This puzzlehunt is taking place at <strong>Brown University, in Providence, Rhode Island.</strong></li>
+
+            <li>Kickoff will start promptly at 12pm Saturday, April 15th, 
+              in <strong>MacMillan Hall Room 117</strong>, with doors opening at 11:30am.
+            </li>
+            {% format_time start_time "WEEKDATE_AT_TIME" as hunt_start %}
+            {% format_time end_time "WEEKDATE_AT_TIME" as hunt_end %}
+            <li>Puzzles will be released <strong>{{hunt_start}}</strong>. HQ will close at 7pm Sunday, April 16th, at which point hints will be answered at a slower rate and physical puzzles will no longer be available to be picked up.</li>
+            <li>There may be <strong>in-person puzzles</strong>, which require physical presence on campus; <strong>physical puzzles</strong>, which require collecting objects from HQ; and <strong>events</strong>, which are not essential to finish, but will be a fun time anyway.</li>
+            <li>Wrap-up will be ***at some point on Monday***</li>
+        </ul>
+    </div>
+
+    <div class="no-break">
+      <h4 id="Goal">{% translate "What's the goal?" %}</h4>
+      <ul>
+        <li>The official winner will be the first team to find Blueno hidden somewhere on campus.</li>
+        <li>For obvious reasons, only teams which are on-campus during the final runaround will be able to find Blueno. Additionally, only teams with one or more current undergraduate or graduate students on-campus are eligible to find Blueno. </li>
+        <li>If you know that you will be on-campus and think that you might be in the position to find Blueno first, we highly encourage you to include a Brown University undergraduate or graduate student on your team. </li>
+      </ul>
+    </div>
+
+    <div class="no-break">
+      <h4 id="Participation">{% translate "Who can participate?" %}</h4>
+      <ul>
+        <li>Brown Puzzlehunt is open to anyone, anywhere in the world, including those not in the Brown community. However, teams with current undergraduate or graduate students, or other members of the Brown community, may have some advantage in solving puzzles.</li>
+        <li>We recommend teams to be around 5 to 8 people. Teams of students are encouraged to be on the larger side. Experienced or highly dedicated teams may want to be smaller (5 or less people). The maximum team size is 8 people.</li>
+        
+      </ul>
+    </div>
+
+    <div class="no-break">
+        <h4 id="Solving">{% translate "How do puzzles work?" %}</h4>
+        <ul>
+            <li>All puzzles will be visible on the website; this is where you will submit your answers and receive new puzzles. If something in real life is part of a puzzle, the website will direct you towards it first.</li>
+            <li>A few puzzles will be available at the start, and the primary way to unlock new puzzles is by solving puzzles and progressing through the hunt.</li>
             <li>{% blocktranslate %}Each answer is a string of letters A&ndash;Z. Lowercase letters will be changed into uppercase, and any other characters will be stripped before checking for correctness.{% endblocktranslate %}</li>
-            <li>{% blocktranslate with max_guesses=max_guesses_per_puzzle %}You have <strong>{{ max_guesses }} total guesses</strong> for each puzzle. If you legitimately run out of guesses and need more, feel free to contact us, though we won&rsquo;t grant your request if we see that you were, for example, guessing random thematic answers, or brute-forcing all 10-letter words.{% endblocktranslate %}</li>
+            <li>You have <strong>{{max_guesses_per_puzzle}} total guesses</strong> for each puzzle. If you legitimately run out of guesses and need more, feel free to contact us, though we won’t grant your request if we see that you were, for example, guessing random thematic answers, or brute-forcing all 10-letter words.</li>
         </ul>
     </div>
 
     {% if hints_enabled %}
     <div class="no-break">
-        <h4 id="Hints">{% translate "Hints" %}</h4>
+        <h4 id="Hints">{% translate "How do hints work?" %}</h4>
         <ul>
             {% format_time hint_time "WEEKDATE" as hint_date %}
             {% format_time hint_time "TIME" as hint_time %}
-            <li>{% blocktranslate %}Starting on <strong>{{ hint_date }}</strong>, teams will receive hints at <strong>{{ hint_time }}</strong> each day until the end of the hunt. The number of hints given each day will be at our discretion based on how the hunt is going.{% endblocktranslate %}</li>
-            {% if intro_hints %}
-            <li>{% blocktranslate count hints=intro_hints %}The first <strong>{{ hints }} hint</strong> your team receives may only be used on the first set of puzzles in the hunt.{% plural %}The first <strong>{{ hints }} hints</strong> your team receives may only be used on the first set of puzzles in the hunt.{% endblocktranslate %}</li>
-            {% endif %}
+            <li>{% blocktranslate %}Starting on <strong>{{ hint_date }}</strong>, teams will be able to request a hint once every hour of the hunt runtime on any puzzle.{% endblocktranslate %}</li>
+            <li>If you are a beginner student team or a team with a strong on-site presence that is not in the running to win, we will also visit you frequently to check that you’re having fun and to give tailored hints to help you along. Having fun is the most important thing! If you want someone on HQ to come and visit you, you can email us at any time; but we will also drop in as often as we can.</li>
             <li>{% blocktranslate %}You can use a hint to get help on a puzzle. This can be something like a nudge in the right direction (i.e. you give us your progress on the puzzle and we&rsquo;ll try to get you unstuck) or an answer to a question (e.g. &ldquo;Which answers to these crossword clues are wrong?&rdquo;).{% endblocktranslate %}</li>
             {% if one_hint_at_a_time %}
-            <li>{% blocktranslate %}You can only have <strong>one open hint request</strong> at a time.{% endblocktranslate %}</li>
+            <li>{% blocktranslate %}You can only have <strong>one open hint request</strong> at a time. We’re a small HQ; this will help us answer in a timely manner.{% endblocktranslate %}</li>
             {% endif %}
-</li>
+            
         </ul>
     </div>
     {% endif %}
 
     <div class="no-break">
-        <h4 id="Other">{% translate "Other" %}</h4>
+      <h4 id="on-campus-rules">{% translate "I’m not a Brown community member but I want to participate on-campus. What do I need to consider?" %}</h4>
+      <ul>
+          <li>We’re excited to have you join us! You’ll primarily need to consider how you’re getting to and from campus and where you’ll be solving puzzles. We do <strong>not</strong> need you to register with Brown University; but <strong>please</strong> let us know that you’re coming so that we’ll be able to accommodate you!</li>
+          <li>For essential information, check out <a href="#on-campus">On-Campus Information</a>.</li>
+      </ul>
+  </div>
+
+    <div class="no-break">
+        <h4 id="Other">{% translate "What else?" %}</h4>
         <ul>
             <li>{% blocktranslate %}You may use any external sources for help, including other people, as long as they aren&rsquo;t helping other teams and aren&rsquo;t actively participating in the hunt.{% endblocktranslate %}</li>
             <li>{% blocktranslate %}You may not publicly stream a solve of our hunt when the hunt is live.{% endblocktranslate %}</li>
-            <li>{% blocktranslate %}It won&rsquo;t be necessary to look at the HTML source/JavaScript/CSS on any webpages for any puzzle, but you&rsquo;re welcome to look anyway.{% endblocktranslate %}</li>
+            <li>{% blocktranslate %}It won&rsquo;t be necessary to look at the HTML source/JavaScript/CSS on any webpages for any puzzle, but you&rsquo;re welcome to look anyway. Infractions or abuse of these elements may be grounds for disqualification or removal from the hunt.{% endblocktranslate %}</li>
             <li>{% blocktranslate %}We reserve the right to disqualify any team for unsportsmanlike conduct.{% endblocktranslate %}</li>
             <li>{% blocktranslate %}We reserve the right to change any of these rules. If there&rsquo;s a big change, we&rsquo;ll announce it to all teams.{% endblocktranslate %}</li>
             <li>{% blocktranslate with contact=contact_email %}If you have any questions about these rules, or if you want to contact us for any reason, email <a href="mailto:{{ contact }}">{{ contact }}</a>. We will get back to you as soon as we can.{% endblocktranslate %}</li>
         </ul>
     </div>
+</main>
+
+<h1 id="on-campus">{% translate "On-Campus" %}</h1>
+<main>
+  <p>
+    Visitors and guests are allowed on the Brown University campus without specific approvals or permissions. This means that all puzzlehunters are welcome to access the greens, outdoor areas, and some buildings during daylight hours. If you want to experience Brown Puzzlehunt while being on-campus, this page will help you with information and logistics!
+  </p>
+  <div class="no-break">
+    <h4 id="safety">{% translate "Being Safe On-Campus" %}</h4>
+    <p>
+      Brown University is not a playground for puzzlers; it is also a live university, with classes, students, faculty, research, and other events happening all the time. If you’re going to be on-site, please be respectful of both the community and the campus!
+      <br><br>
+      Brown Puzzlehunt will not require you to do anything illegal, immoral, or untoward, including accessing unauthorized spaces. If you think that a puzzle is asking you to do something dangerous, against the law, or disrespectful, stop and think. If you’re really not sure, please contact us and check.
+    </p>
+    <!--  -->
+    <h5 id="covid-safety">COVID-19 Safety Policy</h5>
+    <p>Additionally, while you are on campus, you are required to abide by the COVID-19 Campus Safety Policy. As of time of writing: </p>
+      <ul>
+        <li>Visitors are <strong>not</strong> required to sign a vaccine attestation form.</li>
+        <li>Visitors, employees, and students are required to be “up to date” with COVID-19 vaccines. That means having received all recommended COVID-19 vaccines, including any booster dose(s) when eligible. For more information, see <a href="https://healthy.brown.edu/vaccinations">healthy.brown.edu/vaccinations</a>.</li>
+        <li>Wearing masks is strongly recommended for everyone when indoors with large numbers of people, regardless of vaccination status, including on the Brown University shuttle. Acceptable masks on the Brown University campus include KN95, KF94, N95 or disposable/surgical masks.</li>
+      </ul>
+    <p>We will do our best to update these policies on this website if they change, but it’s your responsibility to be up-to-date with the university’s COVID-19 Safety Policies if you’re planning to attend.</p>
+  </div>
+
+  <div class="no-break">
+      <h4 id="minors">Minors</h4>
+      <p>Unfortunately, we are not in a position to accommodate minors on-campus (participants who are not Brown students and who are under the age of 18). Sorry! However, minors are welcome to participate remotely, and teams with minors can still send other participants who are over the age of 18 to campus to participate. </p>
+  </div>
+
+  <div class="no-break">
+    <h4 id="locations">Where Things Are</h4>
+    <h5 id="locations-kickoff">Kickoff</h5>
+    <p>Kickoff is located in MacMillan Hall, Room 117. This is the big auditorium on the ground floor.
+      <br><br>
+      The main entrance is on the north side of the building, off of Sciences Park. There is also a second entrance off of Thayer Street.</p>
+    <p>INSERT MAP</p>
+    <!--  -->
+    <h5 id="locations-hq">Brown Puzzle Club Headquarters</h5>
+    <p>Our headquarters will be located in Sayles Room 306. This is up the stairs from the lobby, on the top floor. 
+      <br><br>
+      The main entrance is on the west side of the building, off of the Main Green.</p>
+    <p>INSERT MAP</p>
+    <!--  -->
+    <p>Some events and puzzles might use locations that require card swipe access, which is limited to current undergraduate or graduate students (or some faculty). Puzzles which require this will be kept to a minimum and, where applicable, clearly marked as such. If you know ahead of time that you’ll want to participate in these puzzles but have no current students on your team, contact us at <a href="mailto:{{ contact }}">{{ contact_email }}</a> before the hunt and we’ll find a way to get that sorted.</p>
+  </div>
+
+  <div class="no-break">
+    <h4 id="arrival">Getting to Providence</h4>
+    <h5 id="arrival-train">Train</h5>
+      <p>Providence is easily accessible by train to those living in Boston, New Haven, and New York, and to a lesser extent other cities in the Northeast Corridor.
+        <br><br>
+        It lies on the Northeast Corridor train line, which is serviced by a number of providers. Both of these options will bring you to Providence Station, which is just across the river from College Hill and Brown’s campus. If you’re traveling from Boston, we recommend Amtrak Northeast Regional as the least expensive provider.
+        <br><br>
+        For those living in Boston, Providence is also accessible via the MBTA Rapid Transit system, along the Providence/Stoughton line, starting at South Station. 
+        <br><br>
+        If you plan to travel by train, we recommend purchasing tickets in advance, as they may get more expensive closer to the date.
+        </p>
+    <h5 id="arrival-bus">Bus</h5>
+        <p>There are a number of bus companies which provide bus services from cities in the New England and New York area and beyond terminating to Providence, including but not limited to: FlixBus, Peter Pan Lines, and Greyhound. We recommend doing your own research if you plan to take the bus from your starting location to Providence.
+          <br><br>
+          If you are planning to travel by bus, we also recommend purchasing tickets in advance, as they may get more expensive closer to the date.</p>
+    <h5 id="arrival-car">Car</h5>
+        <p>Providence lies at the intersection of Interstate 95 and Interstate 195.</p>
+  </div>
+
+  <div class="no-break">
+    <h4 id="parking">Parking</h4>
+    <p>For non-Brown community members and visitors, parking is available at the Lot 68 Visitor Parking Garage, also known as the Power Street Parking Garage, located at 111 Power Street. The visitor entrance is located at the intersection of Power and Thayer Streets. Parking costs $2.00 per hour over the weekend. 
+      <br><br>
+      If you want overnight parking or require a permit for more than one day, you can email us at <a href="mailto:{{ contact }}">{{ contact_email }}</a> and we’ll try to help you out, but we can’t promise anything.
+      </p>
+      <p>INSERT MAP</p>
+  </div>
+
+  <div class="no-break">
+    <h4 id="accomodation">Accomodation</h4>
+    <p>Unfortunately, we are unable to provide accommodation or discounted rates for teams who wish to stay on-campus overnight. If you do absolutely wish to stay overnight, however, let us know where you’ll be staying!</p>
+  </div>
+
+  <div class="no-break">
+    <h4 id="solving-spaces">Solving Spaces</h4>
+    <p>If you are going to be on-campus, we will need you to let us know where your HQ is! This is the location where you will be spending most of your time solving puzzles while you’re on-campus. If you are a student team or have student members, this might be a dorm common area or a flat near campus, or a noise-tolerant space like the Student Center or some floors of the SciLi. 
+      <br><br>
+      If you need a place for your team to work during the hunt, let us know during the registration process and we will try to accommodate you. Our ability to allocate classrooms like this will be limited, so we will prioritize teams which do not have other spaces available and who register in advance.</p>
+  </div>
+
+  <div class="no-break">
+    <h4 id="wifi">Wi-Fi and Internet Access</h4>
+    <p>The Brown-Guest network is available to all Brown Guests. However, Brown's guest wireless network is not secure (unencrypted), and your bandwidth may be limited. If you’re worried about security, then a VPN can help encrypt your data on the Brown-Guest network.</p>
+  </div>
+
+  <div class="no-break">
+    <h4 id="events">Events</h4>
+    <p>We’re excited to say that there will be events which are on-campus! These events will provide one “free solve” to teams who complete it, which can be used to get the answer to a puzzle that they’re stuck on. Anyone ***(some limited?)*** who is on-campus during the event is welcome to participate.
+      <br><br>
+      Events, naturally, will not be available to teams which do not have an on-campus presence when that event is occurring.
+      <br><br>
+      Events will occur on the following schedule: ***CONFIRM THIS***
+      </p>
+      <ol>
+        <li>Event #1: Saturday @3pm EST</li>
+        <li>Event #3: Saturday @8pm EST</li>
+        <li>Event #4: Sunday @12pm EST</li>
+      </ol>
+      <p>More information will be provided about these events at a later date.</p>
+  </div>
+
+  <div class="no-break">
+    <h4 id="other">Other</h4>
+    <p>If you have any other questions, please let us know at <a href="mailto:{{ contact }}">{{ contact_email }}</a>.</p>
+  </div>
+
 </main>
 
 {% endblock %}
