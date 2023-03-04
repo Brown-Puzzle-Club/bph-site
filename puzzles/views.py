@@ -226,11 +226,11 @@ def register(request):
                 user=user,
                 team_name=data.get('team_name'),
                 # logistics info (BPH ADD)
-                # brown_members=logistics_data.get('brown_members'),
-                # in_person_sat=logistics_data.get('in_person_sat'),
-                # in_person_sun=logistics_data.get('in_person_sun'),
-                # location=logistics_data.get('where_to_find'),
-                # phone_number=logistics_data.get('phone_number'),
+                brown_members=logistics_data.get('brown_members'),
+                in_person_sat=logistics_data.get('in_person_sat'),
+                in_person_sun=logistics_data.get('in_person_sun'),
+                location=logistics_data.get('where_to_find'),
+                phone_number=logistics_data.get('phone_number'),
             )
             for team_member in formset_data:
                 TeamMember.objects.create(
