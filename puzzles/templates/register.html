@@ -56,6 +56,27 @@
     </div>
 
     <div class="form-section">
+    <h4>{% translate "Logistics and Prize Eligibility" %}</h4>
+
+    <p>{% translate "To be prize eligible at least one member of your team must be a current Brown University student. Also, please let us know if you are intending to participate in person, and if you are interested in having a classroom reserved for your team." %}<br></p>
+
+    {{ logistics_form.non_field_errors }}
+    {% for log_field in logistics_form %}
+        <div class="form-row">
+            <div class="form-desc">
+                {{ log_field.label_tag }}
+            </div>
+            {{ log_field }}
+            {{ log_field.errors }}
+            <div class="form-desc">
+                {{ log_field.help_text|safe }}
+            </div>
+        </div>
+    {% endfor %}
+
+    </div>
+
+    <div class="form-section">
     {% if recaptcha_sitekey %}
         <script src="https://www.google.com/recaptcha/api.js"></script>
         <script>
