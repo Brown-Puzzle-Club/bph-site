@@ -58,27 +58,23 @@ def dispatch_discord_alert(webhook, content, username):
     content = '[{}] {}'.format(timezone.localtime().strftime('%H:%M:%S'), content)
     if len(content) >= 2000:
         content = content[:1996] + '...'
-    if settings.IS_TEST:
+    if settings.IS_TEST or not DISCORD_TOGGLE:
         logger.info(_('(Test) Discord alert:\n') + content)
         return
     logger.info(_('(Real) Discord alert:\n') + content)
     requests.post(webhook, data={'username': username, 'content': content})
 
 def dispatch_general_alert(content):
-    if DISCORD_TOGGLE: return
     dispatch_discord_alert(ALERT_WEBHOOK_URL, content, ALERT_DISCORD_USERNAME)
 
 def dispatch_submission_alert(content, correct):
-    if DISCORD_TOGGLE: return
     username = CORRECT_SUBMISSION_DISCORD_USERNAME if correct else INCORRECT_SUBMISSION_DISCORD_USERNAME
     dispatch_discord_alert(SUBMISSION_WEBHOOK_URL, content, username)
 
 def dispatch_free_answer_alert(content):
-    if DISCORD_TOGGLE: return
     dispatch_discord_alert(FREE_ANSWER_WEBHOOK_URL, content, FREE_ANSWER_DISCORD_USERNAME)
 
 def dispatch_victory_alert(content):
-    if DISCORD_TOGGLE: return
     dispatch_discord_alert(VICTORY_WEBHOOK_URL, content, VICTORY_DISCORD_USERNAME)
 
 
