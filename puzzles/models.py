@@ -213,8 +213,8 @@ class Team(models.Model):
     brown_members = models.BooleanField(default=False, verbose_name=_('Any Brown community members on the team?'), help_text=_('(Undergraduates, Graduates, Faculty, or Alumni)'))
     in_person_sat = models.BooleanField(default=False, verbose_name=_('in person on Saturday, April 15th?'))
     in_person_sun = models.BooleanField(default=False, verbose_name=_('in person on Sunday, April 16th?'))
-    location = models.CharField(max_length=200, verbose_name=_('Location during hunt'), help_text=_('(e.g: Hegeman Common Room, Barus and Holley Room ###, Zoom, Discord, etc.)'))
-    phone_number = models.CharField(max_length=200, verbose_name=_('Phone number'))
+    location = models.CharField(default=_('NO LOCATION'), max_length=200, verbose_name=_('Location during hunt'), help_text=_('(e.g: Hegeman Common Room, Barus and Holley Room ###, Zoom, Discord, etc.)'))
+    phone_number = models.CharField(default=_('-1'), max_length=200, verbose_name=_('Phone number'))
 
     class Meta:
         verbose_name = _('team')
