@@ -49,6 +49,8 @@ SUBMISSION_WEBHOOK_URL = 'FIXME'
 FREE_ANSWER_WEBHOOK_URL = 'FIXME'
 VICTORY_WEBHOOK_URL = 'FIXME'
 
+DISCORD_TOGGLE = False # Set to True to enable Discord integration
+
 # Assuming you want messages on a messaging platform that's not Discord but
 # supports at least a vaguely similar API, change the following code
 # accordingly:
@@ -56,7 +58,7 @@ def dispatch_discord_alert(webhook, content, username):
     content = '[{}] {}'.format(timezone.localtime().strftime('%H:%M:%S'), content)
     if len(content) >= 2000:
         content = content[:1996] + '...'
-    if settings.IS_TEST:
+    if settings.IS_TEST or not DISCORD_TOGGLE:
         logger.info(_('(Test) Discord alert:\n') + content)
         return
     logger.info(_('(Real) Discord alert:\n') + content)

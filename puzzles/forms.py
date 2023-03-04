@@ -2,7 +2,7 @@ import re
 
 from django import forms
 from django.contrib.auth.models import User
-from django.core.validators import validate_email
+from django.core.validators import validate_email, RegexValidator
 from django.utils.translation import gettext as _
 
 from puzzles.models import (
@@ -90,6 +90,27 @@ class TeamMemberForm(forms.Form):
         validators=[validate_email, validate_team_member_email_unique],
     )
 
+class LogisticsForm(forms.Form):
+    brown_members = forms.BooleanField(label=_('Do you have any Brown community members on your team?'), help_text=_('(Undergraduates, Graduates, Faculty, or Alumni)'), required=False)
+    in_person_sat = forms.BooleanField(label=_('Will you be attending the event in person on Saturday, April 15th?'), required=False)
+    in_person_sun = forms.BooleanField(label=_('Will you be attending the event in person on Sunday, April 16th?'), required=False)
+    where_to_find = forms.CharField(label=_('Where can we best find you during the hunt?'), help_text=_('(e.g: Hegeman Common Room, Barus and Holley Room ###, Zoom, Discord, etc.)'), max_length=200)
+    # phone_regex = RegexValidator(regex=r'^[0-9\.-]$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+    phone_number = forms.CharField(label=_('Phone number of your team captain'), max_length=16)
+
+    def clean(self):
+        cleaned_data = super(LogisticsForm, self).clean()
+        brown_members = cleaned_data.get('brown_members')
+        in_person_sun = cleaned_data.get('in_person_sun')
+        where_to_find = cleaned_data.get('where_to_find')
+        phone_number = cleaned_data.get('phone_number')
+
+        if re.match('^[0-9\.-]*$', phone_number) is None:
+            raise forms.ValidationError(
+                _('Please enter a valid phone number.')
+            )
+
+        return cleaned_data
 
 def validate_team_emails(formset):
     emails = []

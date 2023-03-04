@@ -6,7 +6,7 @@ from django.utils import timezone
 # it, maybe check those are what you want.
 HUNT_TITLE = 'Brown Puzzlehunt'
 # included in various templates and displayed on the static site
-HUNT_ORGANIZERS = 'FIXME Puzzlesetters'
+HUNT_ORGANIZERS = 'Brown Puzzle Club'
 # included in various templates and set as reply-to for automatic emails
 CONTACT_EMAIL = 'puzzle@brown.edu'
 # the sender from which automatic emails are sent; your mail sending service

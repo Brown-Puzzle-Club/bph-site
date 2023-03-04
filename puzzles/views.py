@@ -48,6 +48,7 @@ from puzzles.forms import (
     RegisterForm,
     TeamMemberForm,
     TeamMemberFormset,
+    LogisticsForm,
     TeamMemberModelFormset,
     SubmitAnswerForm,
     RequestHintForm,
@@ -170,6 +171,8 @@ recaptcha_logger = logging.getLogger('puzzles.recaptcha')
 
 @require_before_hunt_closed_or_admin
 def register(request):
+    print('register request sent!!!')
+
     team_members_formset = formset_factory(
         TeamMemberForm,
         formset=TeamMemberFormset,
@@ -182,6 +185,8 @@ def register(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         formset = team_members_formset(request.POST)
+
+        logistics_form = LogisticsForm(request.POST)
 
         # The below only logs the response and doesn't do anything with it.
         # If you have spam problems, you can reject when the score is low.
@@ -198,18 +203,34 @@ def register(request):
             except Exception:
                 pass
 
-        if form.is_valid() and formset.is_valid():
+        if form.is_valid() and formset.is_valid() and logistics_form.is_valid():
             data = form.cleaned_data
             formset_data = formset.cleaned_data
+            logistics_data = logistics_form.cleaned_data
 
             user = User.objects.create_user(
                 data.get('team_id'),
                 password=data.get('password'),
                 first_name=data.get('team_name'),
             )
+            brown_members=logistics_data.get('brown_members')
+            in_person_sat=logistics_data.get('in_person_sat')
+            in_person_sun=logistics_data.get('in_person_sun')
+            location=logistics_data.get('where_to_find')
+            phone_number=logistics_data.get('phone_number')
+
+            print("TESTING LOGISTICS OUTPUT:")
+            print(brown_members, in_person_sat, in_person_sun, location, phone_number)
+
             team = Team.objects.create(
                 user=user,
                 team_name=data.get('team_name'),
+                # logistics info (BPH ADD)
+                brown_members=logistics_data.get('brown_members'),
+                in_person_sat=logistics_data.get('in_person_sat'),
+                in_person_sun=logistics_data.get('in_person_sun'),
+                location=logistics_data.get('where_to_find'),
+                phone_number=logistics_data.get('phone_number'),
             )
             for team_member in formset_data:
                 TeamMember.objects.create(
@@ -233,10 +254,12 @@ def register(request):
     else:
         form = RegisterForm()
         formset = team_members_formset()
+        logistics_form = LogisticsForm()
 
     return render(request, 'register.html', {
         'form': form,
         'team_members_formset': formset,
+        'logistics_form': logistics_form,
     })
 
 
