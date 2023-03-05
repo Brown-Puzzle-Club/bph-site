@@ -39,29 +39,29 @@
         <span class="tray">
             <div class="top-tabs">
                 <a{% if request.path == '/' %} class="selected-tab"{% endif %} href="{% url 'index' %}">
-                    {% translate "Home" %}
+                    {% translate "- Home -" %}
                 </a>
                 <!-- <a{% if request.path == '/rules' %} class="selected-tab"{% endif %} href="{% url 'rules' %}">
                     {% translate "Rules" %}
                 </a> -->
                 {% if story_page_visible %}
                 <a{% if request.path == '/story' %} class="selected-tab"{% endif %} href="{% url 'story' %}">
-                    {% translate "Story" %}
+                    {% translate "- Story -" %}
                 </a>
                 {% endif %}
                 {% if hunt_has_started or hunt_has_almost_started %}
                 <a{% if '/puzzle' in request.path or puzzle %} class="selected-tab"{% endif %} href="{% url 'puzzles' %}">
-                    {% translate "Puzzles" %}
+                    {% translate "- Puzzles -" %}
                 </a>
                 {% endif %}
                 <a{% if '/team' in request.path %} class="selected-tab"{% endif %} href="{% url 'teams' %}">
-                    {% translate "Teams" %}
+                    {% translate "- Teams -" %}
                 </a>
                 <a{% if request.path == '/rules' %} class="selected-tab"{% endif %} href="{% url 'rules' %}">
-                    {% translate "Rules" %}
+                    {% translate "- Rules -" %}
                 </a>
-                <a{% if request.path == '/faq' %} class="selected-tab"{% endif %} href="{% url 'faq' %}">
-                    {% translate "FAQ" %}
+                <a{% if request.path == '/on_campus' %} class="selected-tab"{% endif %} href="{% url 'on_campus' %}">
+                    {% translate "- On-Campus -" %}
                 </a>
                 {% if errata_page_visible %}
                 <!-- <a{% if request.path == '/errata' %} class="selected-tab"{% endif %} href="{% url 'errata' %}">
@@ -70,7 +70,7 @@
                 {% endif %}
                 {% if wrapup_page_visible %}
                 <a{% if '/wrapup' in request.path %} class="selected-tab"{% endif %} href="{% url 'wrapup' %}">
-                    {% translate "Wrap-Up" %}
+                    {% translate "- Wrap-Up -" %}
                 </a>
                 {% endif %}
                 <!-- <a{% if request.path == '/archive' %} class="selected-tab"{% endif %} href="{{ archive_link }}">
