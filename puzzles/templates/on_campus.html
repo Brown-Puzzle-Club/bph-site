@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load puzzle_tags %}
+
+{% block content %}
+
+<h1 id="on-campus">{% translate "On-Campus" %}</h1>
+<main>
+  <p>
+    Visitors and guests are allowed on the Brown University campus without specific approvals or permissions. This means that all puzzlehunters are welcome to access the greens, outdoor areas, and some buildings during daylight hours. If you want to experience Brown Puzzlehunt while being on-campus, this page will help you with information and logistics!
+  </p>
+  <div class="no-break">
+    <h4 id="safety">{% translate "Being Safe On-Campus" %}</h4>
+    <p>
+      Brown University is not a playground for puzzlers; it is also a live university, with classes, students, faculty, research, and other events happening all the time. If you’re going to be on-site, please be respectful of both the community and the campus!
+      <br><br>
+      Brown Puzzlehunt will not require you to do anything illegal, immoral, or untoward, including accessing unauthorized spaces. If you think that a puzzle is asking you to do something dangerous, against the law, or disrespectful, stop and think. If you’re really not sure, please contact us and check.
+    </p>
+    <!--  -->
+    <h5 id="covid-safety">COVID-19 Safety Policy</h5>
+    <p>Additionally, while you are on campus, you are required to abide by the COVID-19 Campus Safety Policy. As of time of writing: </p>
+      <ul>
+        <li>Visitors are <strong>not</strong> required to sign a vaccine attestation form.</li>
+        <li>Visitors, employees, and students are required to be “up to date” with COVID-19 vaccines. That means having received all recommended COVID-19 vaccines, including any booster dose(s) when eligible. For more information, see <a href="https://healthy.brown.edu/vaccinations">healthy.brown.edu/vaccinations</a>.</li>
+        <li>Wearing masks is strongly recommended for everyone when indoors with large numbers of people, regardless of vaccination status, including on the Brown University shuttle. Acceptable masks on the Brown University campus include KN95, KF94, N95 or disposable/surgical masks.</li>
+      </ul>
+    <p>We will do our best to update these policies on this website if they change, but it’s your responsibility to be up-to-date with the university’s COVID-19 Safety Policies if you’re planning to attend.</p>
+  </div>
+
+  <div class="no-break">
+      <h4 id="minors">Minors</h4>
+      <p>Unfortunately, we are not in a position to accommodate minors on-campus (participants who are not Brown students and who are under the age of 18). Sorry! However, minors are welcome to participate remotely, and teams with minors can still send other participants who are over the age of 18 to campus to participate. </p>
+  </div>
+
+  <div class="no-break">
+    <h4 id="locations">Where Things Are</h4>
+    <h5 id="locations-kickoff">Kickoff</h5>
+    <p>Kickoff is located in MacMillan Hall, Room 117. This is the big auditorium on the ground floor.
+      <br><br>
+      The main entrance is on the north side of the building, off of Sciences Park. There is also a second entrance off of Thayer Street.</p>
+    <p>INSERT MAP</p>
+    <!--  -->
+    <h5 id="locations-hq">Brown Puzzle Club Headquarters</h5>
+    <p>Our headquarters will be located in Sayles Room 306. This is up the stairs from the lobby, on the top floor. 
+      <br><br>
+      The main entrance is on the west side of the building, off of the Main Green.</p>
+    <p>INSERT MAP</p>
+    <!--  -->
+    <p>Some events and puzzles might use locations that require card swipe access, which is limited to current undergraduate or graduate students (or some faculty). Puzzles which require this will be kept to a minimum and, where applicable, clearly marked as such. If you know ahead of time that you’ll want to participate in these puzzles but have no current students on your team, contact us at <a href="mailto:{{ contact }}">{{ contact_email }}</a> before the hunt and we’ll find a way to get that sorted.</p>
+  </div>
+
+  <div class="no-break">
+    <h4 id="arrival">Getting to Providence</h4>
+    <h5 id="arrival-train">Train</h5>
+      <p>Providence is easily accessible by train to those living in Boston, New Haven, and New York, and to a lesser extent other cities in the Northeast Corridor.
+        <br><br>
+        It lies on the Northeast Corridor train line, which is serviced by a number of providers. Both of these options will bring you to Providence Station, which is just across the river from College Hill and Brown’s campus. If you’re traveling from Boston, we recommend Amtrak Northeast Regional as the least expensive provider.
+        <br><br>
+        For those living in Boston, Providence is also accessible via the MBTA Rapid Transit system, along the Providence/Stoughton line, starting at South Station. 
+        <br><br>
+        If you plan to travel by train, we recommend purchasing tickets in advance, as they may get more expensive closer to the date.
+        </p>
+    <h5 id="arrival-bus">Bus</h5>
+        <p>There are a number of bus companies which provide bus services from cities in the New England and New York area and beyond terminating to Providence, including but not limited to: FlixBus, Peter Pan Lines, and Greyhound. We recommend doing your own research if you plan to take the bus from your starting location to Providence.
+          <br><br>
+          If you are planning to travel by bus, we also recommend purchasing tickets in advance, as they may get more expensive closer to the date.</p>
+    <h5 id="arrival-car">Car</h5>
+        <p>Providence lies at the intersection of Interstate 95 and Interstate 195.</p>
+  </div>
+
+  <div class="no-break">
+    <h4 id="parking">Parking</h4>
+    <p>For non-Brown community members and visitors, parking is available at the Lot 68 Visitor Parking Garage, also known as the Power Street Parking Garage, located at 111 Power Street. The visitor entrance is located at the intersection of Power and Thayer Streets. Parking costs $2.00 per hour over the weekend. 
+      <br><br>
+      If you want overnight parking or require a permit for more than one day, you can email us at <a href="mailto:{{ contact }}">{{ contact_email }}</a> and we’ll try to help you out, but we can’t promise anything.
+      </p>
+      <p>INSERT MAP</p>
+  </div>
+
+  <div class="no-break">
+    <h4 id="accomodation">Accomodation</h4>
+    <p>Unfortunately, we are unable to provide accommodation or discounted rates for teams who wish to stay on-campus overnight. If you do absolutely wish to stay overnight, however, let us know where you’ll be staying!</p>
+  </div>
+
+  <div class="no-break">
+    <h4 id="solving-spaces">Solving Spaces</h4>
+    <p>If you are going to be on-campus, we will need you to let us know where your HQ is! This is the location where you will be spending most of your time solving puzzles while you’re on-campus. If you are a student team or have student members, this might be a dorm common area or a flat near campus, or a noise-tolerant space like the Student Center or some floors of the SciLi. 
+      <br><br>
+      If you need a place for your team to work during the hunt, let us know during the registration process and we will try to accommodate you. Our ability to allocate classrooms like this will be limited, so we will prioritize teams which do not have other spaces available and who register in advance.</p>
+  </div>
+
+  <div class="no-break">
+    <h4 id="wifi">Wi-Fi and Internet Access</h4>
+    <p>The Brown-Guest network is available to all Brown Guests. However, Brown's guest wireless network is not secure (unencrypted), and your bandwidth may be limited. If you’re worried about security, then a VPN can help encrypt your data on the Brown-Guest network.</p>
+  </div>
+
+  <div class="no-break">
+    <h4 id="events">Events</h4>
+    <p>We’re excited to say that there will be events which are on-campus! These events will provide one “free solve” to teams who complete it, which can be used to get the answer to a puzzle that they’re stuck on. Anyone ***(some limited?)*** who is on-campus during the event is welcome to participate.
+      <br><br>
+      Events, naturally, will not be available to teams which do not have an on-campus presence when that event is occurring.
+      <br><br>
+      Events will occur on the following schedule: ***CONFIRM THIS***
+      </p>
+      <ol>
+        <li>Event #1: Saturday @3pm EST</li>
+        <li>Event #3: Saturday @8pm EST</li>
+        <li>Event #4: Sunday @12pm EST</li>
+      </ol>
+      <p>More information will be provided about these events at a later date.</p>
+  </div>
+
+  <div class="no-break">
+    <h4 id="other">Other</h4>
+    <p>If you have any other questions, please let us know at <a href="mailto:{{ contact }}">{{ contact_email }}</a>.</p>
+  </div>
+
+</main>
+
+{% endblock %}

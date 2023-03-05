@@ -44,7 +44,7 @@ urlpatterns = [
     path('', views.index, name='index'),
 
     path('rules', views.rules, name='rules'),
-    path('faq', views.faq, name='faq'),
+    path('on-campus', views.on_campus, name='on_campus'),
     path('archive', views.archive, name='archive'),
     path('register', views.register, name='register'),
 
