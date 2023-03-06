@@ -163,6 +163,10 @@ def faq(request):
 
 
 @require_GET
+def on_campus(request):
+    return render(request, 'on_campus.html')
+
+@require_GET
 def archive(request):
     return render(request, 'archive.html')
 

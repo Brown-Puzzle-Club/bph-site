@@ -1,19 +1,19 @@
 html {
-  --page-bg-rgb: 255, 255, 255;
-  --accent-rgb: 38, 115, 128; /*0, 85, 170;*/
+  --page-bg-rgb: 255, 255, 253;
+  --accent-rgb: 20, 121, 162; /*0, 85, 170;*/
 
   --white-color: white;
-  --neutral-color: #bbb;
+  --neutral-color: rgb(180, 216, 234);
   --accent-color: rgb(var(--accent-rgb));
   --accent-bg-color: rgba(var(--accent-rgb), 0.1);
-  --accent-hover-color: #78b5bf;
+  --accent-hover-color: #004d6e;
 
   --page-bg-color: rgb(var(--page-bg-rgb));
   --sticky-bg-color: rgba(var(--page-bg-rgb), 0.9);
   --heading-text-color: var(--accent-color);
 
   --border-color: var(--accent-color);
-  --print-border-color: #111;
+  --print-border-color: #222;
 
   --link-text-color: var(--accent-color);
   --link-hover-color: var(--accent-hover-color);
@@ -25,8 +25,8 @@ html {
   --tray-text-color: var(--accent-color);
   --tray-bg-color: var(--neutral-color);
 
-  --text-font: sans-serif;
-  --btn-font: sans-serif;
+  --text-font: "Merriweather", sans-serif;
+  --btn-font: "Merriweather", sans-serif;
   --input-font: monospace;
   --answer-font: monospace;
 }
@@ -38,6 +38,11 @@ body {
   font-size: 1.75rem;
   overflow-wrap: break-word;
   position: relative;
+}
+
+@font-face {
+  font-family: "Merriweather";
+  src: url("../fonts/Merriweather-Regular.ttf");
 }
 
 @media print {
@@ -208,7 +213,7 @@ figcaption {
 
   h3,
   h4 {
-    border-bottom: 2px solid var(--border-color);
+    border-bottom: 4px dashed var(--border-color);
     font-weight: normal;
   }
 
@@ -630,7 +635,7 @@ figcaption {
 
 @media print {
   .story-chunk {
-    border-bottom: 1px solid var(--print-border-color);
+    border-bottom: 1px dashed var(--print-border-color);
   }
 }
 
@@ -799,7 +804,7 @@ figcaption {
 }
 
 .puzzles-answer > :first-child {
-  border-bottom: 2px solid var(--border-color);
+  border-bottom: 2px dashed var(--border-color);
   font-family: var(--answer-font);
   font-weight: bold;
 }
