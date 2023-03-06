@@ -11,7 +11,7 @@
         <h4 id="what-is">{% translate "What is this?" %}</h4>
         <ul>
             <li>This is a puzzlehunt! Teams of people will compete to solve puzzles (think escape room, not jigsaw) using information both online and in real life. 
-              If you want to know more about what a puzzlehunt is, check out our <a href="#faqs">FAQ section</a>.</li>
+              If you want to know more about what a puzzlehunt is, check out our FAQ section.</li>
         </ul>
     </div>
 
@@ -19,12 +19,15 @@
         <h4 id="Format">{% translate "When and where is it?" %}</h4>
         <ul>
             <li>This puzzlehunt is taking place at <strong>Brown University, in Providence, Rhode Island.</strong></li>
-            <li>Kickoff will start promptly at <strong>Saturday, April 15, 2023 at 12:00 PM EDT</strong>, in <strong>MacMillan Hall Room 117</strong>, with doors opening at 11:30am.</li>
+
+            <li>Kickoff will start promptly at 12pm Saturday, April 15th, 
+              in <strong>MacMillan Hall Room 117</strong>, with doors opening at 11:30am.
+            </li>
             {% format_time start_time "WEEKDATE_AT_TIME" as hunt_start %}
             {% format_time end_time "WEEKDATE_AT_TIME" as hunt_end %}
-            <li>Puzzles will be released <strong>{{hunt_start}}</strong>. HQ will close at Sunday 7:00 PM EDT, at which point hints will be answered at a slower rate and physical puzzles will no longer be available to be picked up.</li>
+            <li>Puzzles will be released <strong>{{hunt_start}}</strong>. HQ will close at 7pm Sunday, April 16th, at which point hints will be answered at a slower rate and physical puzzles will no longer be available to be picked up.</li>
             <li>There may be <strong>in-person puzzles</strong>, which require physical presence on campus; <strong>physical puzzles</strong>, which require collecting objects from HQ; and <strong>events</strong>, which are not essential to finish, but will be a fun time anyway.</li>
-            <li>Wrap-up will be on Zoom, at some point on Monday evening. We'll update this with more precise information closer to the date.</li>
+            <li>Wrap-up will be ***at some point on Monday***</li>
         </ul>
     </div>
 
@@ -63,7 +66,7 @@
             {% format_time hint_time "WEEKDATE" as hint_date %}
             {% format_time hint_time "TIME" as hint_time %}
             <li>{% blocktranslate %}Starting on <strong>{{ hint_date }}</strong>, teams will be able to request a hint once every hour of the hunt runtime on any puzzle.{% endblocktranslate %}</li>
-            <li>{% blocktranslate %}If you are a beginner student team or a team with a strong on-site presence that is not in the running to win, we will also visit you frequently to check that you’re having fun and give tailored hints to help you along. Having fun is the most important thing! If you want someone on HQ to come and visit you, you can email us at any time; but we will also drop in as often as we can.{% endblocktranslate %}</li>
+            <li>If you are a beginner student team or a team with a strong on-site presence that is not in the running to win, we will also visit you frequently to check that you’re having fun and to give tailored hints to help you along. Having fun is the most important thing! If you want someone on HQ to come and visit you, you can email us at any time; but we will also drop in as often as we can.</li>
             <li>{% blocktranslate %}You can use a hint to get help on a puzzle. This can be something like a nudge in the right direction (i.e. you give us your progress on the puzzle and we&rsquo;ll try to get you unstuck) or an answer to a question (e.g. &ldquo;Which answers to these crossword clues are wrong?&rdquo;).{% endblocktranslate %}</li>
             {% if one_hint_at_a_time %}
             <li>{% blocktranslate %}You can only have <strong>one open hint request</strong> at a time. We’re a small HQ; this will help us answer in a timely manner.{% endblocktranslate %}</li>
@@ -74,10 +77,10 @@
     {% endif %}
 
     <div class="no-break">
-      <h4 id="on-campus-rules">{% translate "I'm not a Brown community member but I want to participate on-campus. What do I need to consider?" %}</h4>
+      <h4 id="on-campus-rules">{% translate "I’m not a Brown community member but I want to participate on-campus. What do I need to consider?" %}</h4>
       <ul>
-          <li>We're excited to have you join us! You'll primarily need to consider how you're getting to and from campus and where you'll be solving puzzles. We do <strong>not</strong> need you to register with Brown University; but <strong>please</strong> let us know that you're coming so that we'll be able to accommodate you!</li>
-          <li>For essential information, check out <a href="/on-campus">On-Campus Information</a>.</li>
+          <li>We’re excited to have you join us! You’ll primarily need to consider how you’re getting to and from campus and where you’ll be solving puzzles. We do <strong>not</strong> need you to register with Brown University; but <strong>please</strong> let us know that you’re coming so that we’ll be able to accommodate you!</li>
+          <li>For essential information, check out <a href="#on-campus">On-Campus Information</a>.</li>
       </ul>
   </div>
 
@@ -85,12 +88,6 @@
         <h4 id="Other">{% translate "What else?" %}</h4>
         <ul>
             <li>{% blocktranslate %}You may use any external sources for help, including other people, as long as they aren&rsquo;t helping other teams and aren&rsquo;t actively participating in the hunt.{% endblocktranslate %}</li>
-            <li>{% blocktranslate %}Use of Google (or your other search engine of choice) is not only permitted, but <strong>essential</strong>. You may also benefit from other online tools, such as:{% endblocktranslate %}
-            <ul>
-              <li>{% blocktranslate %}Online wordplay solvers, such as <a href="https://nutrimatic.org/">nutrimatic</a>, <a href="https://www.quinapalus.com/cgi-bin/qat">qat</a>, or <a href="https://www.onelook.com/">OneLook</a>{% endblocktranslate %}</li>
-              <li>{% blocktranslate %}Logic puzzle solvers, such as <a href="https://www.noq.solutions/">noq</a>{% endblocktranslate %}</li>
-              <li>{% blocktranslate %}Reverse image searching tools, such as <a href="https://www.google.com/imghp">Google Reverse Image Search</a> or <a href="https://tineye.com/"></a>{% endblocktranslate %}</li>
-            </ul></li>
             <li>{% blocktranslate %}You may not publicly stream a solve of our hunt when the hunt is live.{% endblocktranslate %}</li>
             <li>{% blocktranslate %}It won&rsquo;t be necessary to look at the HTML source/JavaScript/CSS on any webpages for any puzzle, but you&rsquo;re welcome to look anyway. Infractions or abuse of these elements may be grounds for disqualification or removal from the hunt.{% endblocktranslate %}</li>
             <li>{% blocktranslate %}We reserve the right to disqualify any team for unsportsmanlike conduct.{% endblocktranslate %}</li>
@@ -100,7 +97,7 @@
     </div>
 </main>
 
-<h1 id="faqs">{% translate "FAQs" %}</h1>
+<h1>{% translate "FAQs" %}</h1>
 
 <main>
   <div class="no-break">
@@ -110,25 +107,8 @@
   </div>
 
   <div class="no-break"> 
-    <h4>{% translate "Who's writing this hunt?" %}</h4>
-    <p>{% blocktranslate %}We are Brown Puzzle Club, a group of undergraduate students at Brown who are passionate about puzzles! Our goals for this hunt are to put a unique and fun experience on puzzlehunters' calendars, and to introduce more people in the Brown community to the joys of solving puzzles.{% endblocktranslate %}</p>
-    <p>{% blocktranslate %}Brown Puzzle Club consists primarily of members from two well-known puzzlehunt teams.{% endblocktranslate %}</p>
-  </div>
-
-  <div class="no-break"> 
       <h4>{% translate "I think there&rsquo;s a mistake in this puzzle!" %}</h4>
       <p>{% blocktranslate with contact=contact_email %}Please describe the error in an email to <a href="mailto:{{ contact }}">{{ contact }}</a> and we&rsquo;ll try to correct it.{% endblocktranslate %}</p>
-  </div>
-
-  <div class="no-break"> 
-    <h4>{% translate "How hard will this hunt be? How long will it be>" %}</h4>
-    <p>{% blocktranslate %}We've designed this hunt to be a relatively easy introduction to puzzlehunting for beginner teams, while also showcasing what makes puzzlehunts so fun.{% endblocktranslate %}</p>
-    <p>{% blocktranslate %}There will be around 20 to 25 puzzles. Highly experienced, somewhat insane online-only teams may finish all online components in only a few hours, but we expect and encourage teams engaging with the on-campus puzzles to take longer.{% endblocktranslate %}</p>
-  </div>
-
-  <div class="no-break"> 
-    <h4>{% blocktranslate %}There are tons of cool puzzlehunt (and puzzle hunt) events happening - <a href="https://puzzlehunt.club.cc.cmu.edu/hunt/current/">including one next weekend</a>! What's unique about your one?{% endblocktranslate %}</h4>
-    <p>{% blocktranslate %}We love online-only puzzlehunts, but we're also extremely excited about the idea of in-person hunts which tap into the physicality and energy of a student-inhabited campus. Brown Puzzlehunt is a hunt written by current Brown students, and we hope that we are able to share some of the unique history, culture, and student zeitgeist with the puzzle community.{% endblocktranslate %}</p>
   </div>
 
   <div class="no-break">
