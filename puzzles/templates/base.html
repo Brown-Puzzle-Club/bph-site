@@ -60,7 +60,7 @@
                 <a{% if request.path == '/rules' %} class="selected-tab"{% endif %} href="{% url 'rules' %}">
                     {% translate "- Rules -" %}
                 </a>
-                <a{% if request.path == '/on_campus' %} class="selected-tab"{% endif %} href="{% url 'on_campus' %}">
+                <a{% if request.path == '/on-campus' %} class="selected-tab"{% endif %} href="{% url 'on_campus' %}">
                     {% translate "- On-Campus -" %}
                 </a>
                 {% if errata_page_visible %}
