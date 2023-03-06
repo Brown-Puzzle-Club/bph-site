@@ -25,8 +25,8 @@ html {
   --tray-text-color: var(--accent-color);
   --tray-bg-color: var(--neutral-color);
 
-  --text-font: "Merriweather", sans-serif;
-  --btn-font: "Merriweather", sans-serif;
+  --text-font: 'Merriweather', sans-serif;
+  --btn-font: 'Merriweather', sans-serif;
   --input-font: monospace;
   --answer-font: monospace;
 }
@@ -41,8 +41,8 @@ body {
 }
 
 @font-face {
-  font-family: "Merriweather";
-  src: url("../fonts/Merriweather-Regular.ttf");
+  font-family: 'Merriweather'; 
+  src: url('fonts/Merriweather-Regular.ttf');
 }
 
 @media print {
