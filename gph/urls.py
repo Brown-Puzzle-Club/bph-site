@@ -45,7 +45,7 @@ urlpatterns = [
 
     path('rules', views.rules, name='rules'),
     path('faq', views.faq, name='faq'),
-    path('on_campus', views.on_campus, name='on-campus'),
+    path('on_campus', views.on_campus, name='on_campus'),
     path('archive', views.archive, name='archive'),
     path('register', views.register, name='register'),
 
