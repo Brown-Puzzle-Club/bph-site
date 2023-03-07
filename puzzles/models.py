@@ -211,8 +211,10 @@ class Team(models.Model):
 
     # LOGISTICS DATA (BPH ADD)
     brown_members = models.BooleanField(default=False, verbose_name=_('Any Brown community members on the team?'), help_text=_('(Undergraduates, Graduates, Faculty, or Alumni)'))
-    in_person_sat = models.BooleanField(default=False, verbose_name=_('in person on Saturday, April 15th?'))
-    in_person_sun = models.BooleanField(default=False, verbose_name=_('in person on Sunday, April 16th?'))
+    brown_affiliation_desc = models.CharField(default="",max_length=200,verbose_name=_('For each member, please describe their affiliation to Brown/RISD (if applicable)'))
+    in_person_sat = models.IntegerField(default=0, verbose_name=_('number person on Saturday, April 15th'))
+    in_person_sun = models.IntegerField(default=0, verbose_name=_('number person on Sunday, April 16th?'))
+    classroom_need = models.BooleanField(default=False,verbose_name=_('Do you want to request a classroom to hunt in?'),help_text=_('Our availability will be limited, so please do not request one if you can make alternate plans.'))
     location = models.CharField(default=_('NO LOCATION'), max_length=200, verbose_name=_('Location during hunt'), help_text=_('(e.g: Hegeman Common Room, Barus and Holley Room ###, Zoom, Discord, etc.)'))
     phone_number = models.CharField(default=_('-1'), max_length=200, verbose_name=_('Phone number'))
 
