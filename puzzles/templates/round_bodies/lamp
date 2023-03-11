@@ -1,0 +1,8 @@
+{% extends "round.html" %}
+{% load static %}
+
+{% block round-body %}
+This aspect of Blueno is a lamp.
+
+<br><br>
+{% endblock %}
