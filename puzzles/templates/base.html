@@ -38,30 +38,30 @@
     <nav>
         <span class="tray">
             <div class="top-tabs">
-                <a{% if request.path == '/' %} class="selected-tab"{% endif %} href="{% url 'index' %}">
-                    {% translate "- Home -" %}
+                <a{% if request.path == '/' %} class="selected-tab"{% endif %} href="{% url 'index' %}" style="color: var(--tray-text-color);">
+                    <b>{% translate "Brown Puzzlehunt" %}</b>
                 </a>
                 <!-- <a{% if request.path == '/rules' %} class="selected-tab"{% endif %} href="{% url 'rules' %}">
                     {% translate "Rules" %}
                 </a> -->
                 {% if story_page_visible %}
                 <a{% if request.path == '/story' %} class="selected-tab"{% endif %} href="{% url 'story' %}">
-                    {% translate "- Story -" %}
+                    {% translate "Story" %}
                 </a>
                 {% endif %}
                 {% if hunt_has_started or hunt_has_almost_started %}
                 <a{% if '/puzzle' in request.path or puzzle %} class="selected-tab"{% endif %} href="{% url 'puzzles' %}">
-                    {% translate "- Puzzles -" %}
+                    {% translate "Puzzles" %}
                 </a>
                 {% endif %}
                 <a{% if '/team' in request.path %} class="selected-tab"{% endif %} href="{% url 'teams' %}">
-                    {% translate "- Teams -" %}
+                    {% translate "Teams" %}
                 </a>
                 <a{% if request.path == '/rules' %} class="selected-tab"{% endif %} href="{% url 'rules' %}">
-                    {% translate "- Rules -" %}
+                    {% translate "Rules" %}
                 </a>
                 <a{% if request.path == '/on-campus' %} class="selected-tab"{% endif %} href="{% url 'on_campus' %}">
-                    {% translate "- On-Campus -" %}
+                    {% translate "On-Campus" %}
                 </a>
                 {% if errata_page_visible %}
                 <!-- <a{% if request.path == '/errata' %} class="selected-tab"{% endif %} href="{% url 'errata' %}">
@@ -77,43 +77,23 @@
                     {% translate "Archive" %}
                 </a> -->
             </div>
-            <div class="top-left-actions">
+            <!-- <div class="top-left-actions">
                 {% block top-left-actions %}{% endblock %}
-            </div>
+            </div> -->
         </span>
         <div class="top-right-actions">
         {% if request.user.is_authenticated %}
-            {% if team %}
-            <a class="team-name" href="{% url 'team' team.team_name %}">{{ request.user }}</a>
-            {% else %}
-            {{ request.user }}
-            {% endif %}
-            {% if request.user.is_impersonate %}
-            <span class="current-stat" title="{% translate 'Currently impersonating' %}">
-                ({{ request.impersonator }}
-                <a href="{% url 'impersonate-stop' %}">&#x1F6D1;</a>)
-            </span>
-            {% endif %}
-            {% if team and num_hints_remaining > 0 %}
-            <span class="current-stat" title="{% translate 'Available hints:' %} {{ num_hints_remaining }}">
-                {% include 'icon-hint.svg' %}
-                <span class="current-stat-label">{{ num_hints_remaining }}</span>
-            </span>
-            {% endif %}
-            {% if team and num_free_answers_remaining > 0 %}
-            <span class="current-stat" title="{% translate 'Free answers:' %} {{ num_free_answers_remaining }}">
-                {% include 'icon-answer.svg' %}
-                <span class="current-stat-label">{{ num_free_answers_remaining }}</span>
-            </span>
-            {% endif %}
-            {% if team and hunt_has_started %}
-            <span class="current-stat" title="Solves: {{ team.solves|length }}">
-                {% include 'icon-solve.svg' %}
-                <span class="current-stat-label">{{ team.solves|length }}</span>
-            </span>
-            {% endif %}
+            
+            
+            
+            
+            
+            
+            
+            <!--  -->
+            <a href="{% url 'logout' %}" class="btn">{% translate "Logout" %}</a>
             {% if is_superuser %}
-            <label for="shortcuts" title="{% translate 'Admin toolbox' %}">
+            <label class="navbar-shortcuts" for="shortcuts" title="{% translate 'Admin toolbox' %}">
                 {% if not hunt_is_prereleased %}&#x26A0;&#xFE0F;{% endif %}
                 {% translate "Shortcuts" %}
             </label>
@@ -124,10 +104,38 @@
             </a>
             {% endif %}
             {% endif %}
-            <a href="{% url 'logout' %}" class="btn">{% translate "Logout" %}</a>
+            {% if team and hunt_has_started %}
+            <span class="current-stat" title="Solves: {{ team.solves|length }}">
+                {% include 'icon-solve.svg' %}
+                <span class="current-stat-label">{{ team.solves|length }}</span>
+            </span>
+            {% endif %}
+            {% if team and num_free_answers_remaining > 0 %}
+            <span class="current-stat" title="{% translate 'Free answers:' %} {{ num_free_answers_remaining }}">
+                {% include 'icon-answer.svg' %}
+                <span class="current-stat-label">{{ num_free_answers_remaining }}</span>
+            </span>
+            {% endif %}
+            {% if team and num_hints_remaining > 0 %}
+            <span class="current-stat" title="{% translate 'Available hints:' %} {{ num_hints_remaining }}">
+                {% include 'icon-hint.svg' %}
+                <span class="current-stat-label">{{ num_hints_remaining }}</span>
+            </span>
+            {% endif %}
+            {% if request.user.is_impersonate %}
+            <span class="current-stat" title="{% translate 'Currently impersonating' %}">
+                ({{ request.impersonator }}
+                <a href="{% url 'impersonate-stop' %}">&#x1F6D1;</a>)
+            </span>
+            {% endif %}
+            {% if team %}
+            <a class="team-name" href="{% url 'team' team.team_name %}">{{ request.user }}</a>
+            {% else %}
+            {{ request.user }}
+            {% endif %}
         {% elif not hunt_is_closed %}
-            <a href="{% url 'login' %}" class="btn">{% translate "Login" %}</a>
-            <a href="{% url 'register' %}" class="btn">{% translate "Register" %}</a>
+          <a href="{% url 'register' %}" class="btn">{% translate "Register" %}</a>
+          <a href="{% url 'login' %}" class="btn">{% translate "Login" %}</a>
         {% endif %}
         </div>
     </nav>
@@ -195,8 +203,8 @@
     <div class="content">
         {% block content %}{% endblock %}
     </div>
-    <footer>
+    <!-- <footer>
         {% translate 'Powered by <a href="https://github.com/galacticpuzzlehunt/gph-site">gph-site</a>' %}
-    </footer
+    </footer -->
 </body>
 </html>

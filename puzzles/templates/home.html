@@ -5,6 +5,24 @@
 
 {% block content %}
 <style>
+h1 {
+  color: black;
+  font-family: "Kollektif";
+  border-right: 3px solid black;
+  text-align: right;
+  font-size: 6rem;
+  letter-spacing: 10px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+@media screen and (max-width: 960px) {
+  h1 {
+    font-size: 4rem;
+    letter-spacing: 5px;
+  }
+  
+}
+
 @media print {
     a {
         text-decoration: none;
@@ -34,8 +52,20 @@
     .register .btn {
         height: 48px;
         line-height: 48px;
-        font-size: 3rem;
+        font-size: 2rem;
+        transition: background-color 0.3s;
+        color: var(--page-bg-color);
+        background-color: var(--btn3-bg-color);
+        font-family: "Monteserrat";
     }
+    
+    .register .btn:hover,
+    .register .btn:focus {
+      color: var(--btn-text-color);
+      background-color: var(--btn3-hover-color);
+    }
+
+
 }
 
 .footnote {
@@ -44,28 +74,108 @@
 }
 
 .landing-image {
-  margin: auto;
-  display:block;
+  display:flex;
   padding: 10px;
 }
 
 .landing-image img{
-  margin: auto;
-  width: 30%;
+  width: 30rem;
   display: block;
-  transition: transform .9s ease-in-out;
+  margin-left: auto;
 }
 
 .landing-image img:hover {
-  transform: rotate(360deg);
+  animation: shakeImg 0.5s ease-in-out;
+  animation-iteration-count: 1;
 }
+@keyframes shakeImg {
+30% { transform: rotate(20deg); }
+70% { transform: rotate(-25deg); }
+100% { transform: rotate(0deg); }
+}
+
+
+
+.event-invite {
+  margin: auto;
+  display: flex;
+  padding: 10px;
+  position: relative;
+  text-align: center;
+  margin-right: 10px;
+  transform: rotate(5deg);
+}
+
+.event-invite span {
+  font-family: "Finger-Paint";
+  position:absolute;
+  top: 30%;
+  right: 20%;
+  font-size: 15px;
+  padding-left: 50px;
+}
+.event-invite .register {
+  position:absolute;
+  top: 55%;
+  right: 15%;
+  padding: 5px 20px;
+}
+
+.event-invite img {
+  display:block;
+  width: 30rem;
+}
+
+.title-center {
+  display: flex;
+  margin-top: 10rem;
+}
+
+.info-desc {
+  font-family: "Monteserrat";
+}
+
 </style>
 
-<div class="landing-image">
-  <img src={% static "images/bphlogo.png" %} alt="blueno logo">
+<!-- .landing-image img:hover {
+  animation: shakeImg 0.5s ease-in-out;
+  animation-iteration-count: 1;
+}
+@keyframes shakeImg {
+30% { transform: rotate(20deg); }
+70% { transform: rotate(-25deg); }
+100% { transform: rotate(0deg); }
+} -->
+
+<!-- 
+    transition: transform .6s;
+  transform-style: preserve-3d;
+  margin-left: auto;
+
+
+  .landing-image img:hover {
+  transition: 0.9s;
+  transform: rotateY(180deg);
+} -->
+
+<!-- <h1>{{ hunt_title }}</h1> -->
+<div class="title-center">
+  <div class="landing-image">
+    <img src={% static "images/bphlogo.png" %} alt="blueno logo">
+  </div>
+  <h1>brown <br> 
+    puzzle <br> 
+    hunt</h1>
+  <div class="event-invite">
+    <img src={% static "images/scroll.png" %} alt="scroll invitation">
+    <span>The Blueno Resurrection Society needs your help...</span>
+    <div class="register">
+      <a href="{% url 'register' %}" class="btn">{% translate " Register now " %}</a>
+    </div>
+  </div>
 </div>
 
-<h1>{{ hunt_title }}</h1>
+
 
 {% if hunt_is_over %}
 <div class="feedback">
@@ -97,7 +207,7 @@
     {% blocktranslate %}The hunt began on {{ hunt_start }}, and ended on {{ hunt_end }}.{% endblocktranslate %}
     {% else %}
     {% days_between start_time end_time as num_days %}
-    {% blocktranslate %}The Blueno Resurrection Society will begin their search on {{ hunt_start }}.{% endblocktranslate %}
+    {% blocktranslate %}The hunt will begin on {{ hunt_start }}.{% endblocktranslate %}
     {% endif %}
   </div>
 </div>
@@ -146,9 +256,7 @@
 </div> -->
 
 {% if not hunt_is_closed %}
-<div class="register">
-    <a href="{% url 'register' %}" class="btn" style="padding: 5px 20px;">{% translate " Register now " %}</a>
-</div>
+
 <h3 class="print-register">
     <a>{% translate "Register at" %} https://FIXME</a>
 </h3>
