@@ -26,6 +26,9 @@ html {
   --btn2-bg-color: var(--neutral-color);
   --btn2-hover-color: var(--page-bg-color);
 
+  --btn3-bg-color: #97998b;
+  --btn3-hover-color: #5d604c;
+
   /* --tray-text-color: var(--accent-color); */
   /* --tray-bg-color: var(--neutral-color); */
   --tray-text-color: white;
@@ -78,6 +81,22 @@ body {
 @font-face {
   font-family: "Monteserrat";
   src: url("../fonts/Montserrat-SemiBold.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Monteserrat";
+  src: url("../fonts/Montserrat-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Monteserrat";
+  src: url("../fonts/Montserrat-Light.ttf") format("truetype");
+  font-weight: lighter;
+  font-style: normal;
 }
 
 @font-face {
@@ -195,6 +214,7 @@ a,
   border-radius: 0;
   border: none;
   font-family: var(--btn-font);
+  font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 0;
 
@@ -369,6 +389,8 @@ figcaption {
 
   .current-stat {
     color: var(--tray-text-light-color);
+    font-family: "monospace";
+    margin-right: 10px;
   }
 
   .top-right-actions {
