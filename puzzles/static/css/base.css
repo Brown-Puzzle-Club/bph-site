@@ -134,11 +134,13 @@ body {
 
 p {
   margin-bottom: 2rem;
+  font-size: 20px;
 }
 
 li {
   list-style-position: outside;
   margin-left: 1.5em;
+  font-size: 20px;
 }
 
 ul > li {
