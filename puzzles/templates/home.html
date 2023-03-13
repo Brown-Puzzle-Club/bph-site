@@ -5,6 +5,24 @@
 
 {% block content %}
 <style>
+h1 {
+  color: black;
+  font-family: "Kollektif";
+  border-right: 3px solid black;
+  text-align: right;
+  font-size: 6rem;
+  letter-spacing: 10px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+@media screen and (max-width: 960px) {
+  h1 {
+    font-size: 4rem;
+    letter-spacing: 5px;
+  }
+  
+}
+
 @media print {
     a {
         text-decoration: none;
@@ -44,28 +62,69 @@
 }
 
 .landing-image {
-  margin: auto;
-  display:block;
+  display:flex;
   padding: 10px;
 }
 
 .landing-image img{
-  margin: auto;
-  width: 30%;
+  width: 30rem;
   display: block;
   transition: transform .9s ease-in-out;
+  margin-left: auto;
 }
 
 .landing-image img:hover {
   transform: rotate(360deg);
 }
+
+.event-invite {
+  margin: auto;
+  display: flex;
+  padding: 10px;
+  position: relative;
+  text-align: center;
+  margin-right: 10px;
+}
+
+.event-invite span {
+  font-family: "Finger-Paint";
+  position:absolute;
+  top: 30%;
+  right: 20%;
+  font-size: 15px;
+  padding-left: 50px;
+
+}
+
+.event-invite img {
+  display:block;
+  width: 30rem;
+}
+
+.title-center {
+  display: flex;
+  margin-top: 10rem;
+}
+
 </style>
 
-<div class="landing-image">
-  <img src={% static "images/bphlogo.png" %} alt="blueno logo">
+
+
+<!-- <h1>{{ hunt_title }}</h1> -->
+<div class="title-center">
+  <div class="landing-image">
+    <img src={% static "images/bphlogo.png" %} alt="blueno logo">
+  </div>
+  <h1>brown <br> 
+    puzzle <br> 
+    hunt</h1>
+  <div class="event-invite">
+    <img src={% static "images/scroll.png" %} alt="scroll invitation">
+    <span>The Blueno Resurrection Society needs your help...</span>
+  </div>
 </div>
 
-<h1>{{ hunt_title }}</h1>
+
 
 {% if hunt_is_over %}
 <div class="feedback">
@@ -97,7 +156,7 @@
     {% blocktranslate %}The hunt began on {{ hunt_start }}, and ended on {{ hunt_end }}.{% endblocktranslate %}
     {% else %}
     {% days_between start_time end_time as num_days %}
-    {% blocktranslate %}The Blueno Resurrection Society will begin their search on {{ hunt_start }}.{% endblocktranslate %}
+    {% blocktranslate %}The hunt will begin on {{ hunt_start }}.{% endblocktranslate %}
     {% endif %}
   </div>
 </div>
