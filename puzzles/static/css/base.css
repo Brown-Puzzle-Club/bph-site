@@ -58,22 +58,27 @@ body {
 }
 
 @font-face {
+  font-family: "FlamanteRoma";
+  src: url("../fonts/Flamante-Roma-Medium.ttf");
+}
+
+@font-face {
   font-family: "BubbleboddyNeue";
-  src: url("../fonts/BubbleboddyNeue.ttf") format("truetype");
+  src: url("../fonts/Bubbleboddy-Neue.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: "BubbleboddyNeue";
-  src: url("../fonts/BubbleboddyNeue-Light\ Trial.ttf") format("truetype");
+  src: url("../fonts/Bubbleboddy-Neue-Light.ttf") format("truetype");
   font-weight: lighter;
   font-style: normal;
 }
 
 @font-face {
   font-family: "BubbleboddyNeue";
-  src: url("../fonts/BubbleboddyNeue.ttf") format("truetype");
+  src: url("../fonts/Bubbleboddy-Neue.ttf") format("truetype");
   font-weight: bold;
   font-style: normal;
 }
