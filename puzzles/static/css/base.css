@@ -22,11 +22,23 @@ html {
   --btn-bg-color: var(--accent-color);
   --btn-hover-color: var(--accent-hover-color);
 
-  --tray-text-color: var(--accent-color);
-  --tray-bg-color: var(--neutral-color);
+  --btn2-text-color: black;
+  --btn2-bg-color: var(--neutral-color);
+  --btn2-hover-color: var(--page-bg-color);
 
-  --text-font: "Merriweather", sans-serif;
-  --btn-font: "Merriweather", sans-serif;
+  --btn3-bg-color: #97998b;
+  --btn3-hover-color: #5d604c;
+
+  /* --tray-text-color: var(--accent-color); */
+  /* --tray-bg-color: var(--neutral-color); */
+  --tray-text-color: white;
+  --tray-text-light-color: #a8cada;
+  --tray-bg-color: #1479a2;
+
+  --title-font: "Kollektif", sans-serif;
+  --script-font: "Finger-Paint", sans-serif;
+  --text-font: "BubbleboddyNeue", sans-serif;
+  --btn-font: "Monteserrat", sans-serif;
   --input-font: monospace;
   --answer-font: monospace;
 }
@@ -45,6 +57,58 @@ body {
   src: url("../fonts/Merriweather-Regular.ttf");
 }
 
+@font-face {
+  font-family: "BubbleboddyNeue";
+  src: url("../fonts/BubbleboddyNeue.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "BubbleboddyNeue";
+  src: url("../fonts/BubbleboddyNeue-Light\ Trial.ttf") format("truetype");
+  font-weight: lighter;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "BubbleboddyNeue";
+  src: url("../fonts/BubbleboddyNeue.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Monteserrat";
+  src: url("../fonts/Montserrat-SemiBold.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Monteserrat";
+  src: url("../fonts/Montserrat-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Monteserrat";
+  src: url("../fonts/Montserrat-Light.ttf") format("truetype");
+  font-weight: lighter;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Kollektif";
+  src: url("../fonts/Kollektif-Bold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Finger-Paint";
+  src: url("../fonts/FingerPaint-Regular.ttf") format("truetype");
+}
+
 @media print {
   nav,
   .shortcuts,
@@ -55,10 +119,11 @@ body {
 
 @media screen {
   body {
-    margin: 0 auto 60px;
-    width: 80%;
+    /* margin: 0 auto 60px; */
+    margin: 0;
+    /* width: 80%;
     width: 80vw;
-    max-width: 960px;
+    max-width: 960px; */
   }
 }
 
@@ -80,6 +145,10 @@ textarea {
   min-height: 24ch;
   font-family: var(--input-font);
 }
+
+/* h1 {
+  font-family: "Kollektif";
+} */
 
 h1,
 h2,
@@ -145,6 +214,7 @@ a,
   border-radius: 0;
   border: none;
   font-family: var(--btn-font);
+  font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 0;
 
@@ -206,8 +276,8 @@ figcaption {
   h1,
   h2 {
     padding: 2rem;
-    margin: auto;
-    width: 50%;
+    margin: auto 0;
+    /* width: 50%; */
     text-align: center;
   }
 
@@ -265,8 +335,21 @@ figcaption {
     cursor: not-allowed;
   }
 
+  .content {
+    margin: 0 auto;
+    /* margin: 0; */
+    width: 80%;
+    width: 80vw;
+    max-width: 960px;
+  }
+
   nav {
     overflow: hidden;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 5px 10px;
+    background: var(--tray-bg-color);
   }
 
   .top-tabs {
@@ -274,30 +357,65 @@ figcaption {
     white-space: nowrap;
     justify-content: space-evenly;
     font-size: 2rem;
-    margin: 5px 0 1.5rem;
+    margin: 5px 0 0.5rem;
     line-height: 1;
   }
 
   .top-tabs a {
     display: inline-flex;
     position: relative;
-    padding: 6px 0 10px;
+    padding: 6px 10px 10px;
     text-decoration: none;
     align-items: center;
+    color: var(--tray-text-light-color);
+  }
+
+  .top-tabs a:hover {
+    color: var(--tray-text-color);
   }
 
   .top-tabs .selected-tab {
     font-weight: bold;
+    color: var(--tray-text-color);
   }
 
   .top-left-actions {
     float: left;
   }
 
+  .navbar-shortcuts {
+    color: var(--tray-text-light-color);
+  }
+
+  .current-stat {
+    color: var(--tray-text-light-color);
+    font-family: "monospace";
+    margin-right: 10px;
+  }
+
   .top-right-actions {
     float: right;
     min-height: 32px;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    flex-direction: row-reverse;
+    flex-grow: 1;
+  }
+
+  .top-right-actions .btn {
+    color: var(--btn2-text-color);
+    background-color: var(--btn2-bg-color);
+  }
+
+  .top-right-actions .btn:hover,
+  .top-right-actions .btn:focus {
+    color: var(--btn2-text-color);
+    background-color: var(--btn2-hover-color);
+  }
+
+  .top-right-actions a {
+    margin: 0px 10px;
+    color: var(--tray-text-light-color);
   }
 
   .top-left-actions,
@@ -378,7 +496,7 @@ figcaption {
   }
 
   body {
-    width: calc(480px + 30vw);
+    /* width: calc(480px + 30vw); */
   }
 
   .tray {
@@ -481,9 +599,9 @@ figcaption {
     font-size: 12px;
   }
 
-  body {
+  /* body {
     width: 90vw;
-  }
+  } */
 
   .tray {
     padding: 2rem calc((100% - 90vw) / 2) 1rem;
@@ -603,6 +721,7 @@ figcaption {
   .info-desc {
     font-size: 2rem;
     padding: 1rem 2rem;
+    text-align: center;
   }
 }
 
@@ -692,6 +811,13 @@ figcaption {
 
 .current-team {
   font-weight: bold;
+}
+
+.team-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
+  white-space: nowrap;
 }
 
 .meta-stats {
