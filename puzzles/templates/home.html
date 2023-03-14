@@ -22,7 +22,7 @@ h1 {
   }
 
   .event-invite {
-    margin-right: 20%;
+    margin: auto;
     margin-top: 10%;
   }
 
@@ -30,6 +30,13 @@ h1 {
     flex-wrap: wrap;
   }
   
+}
+
+@media screen and not (max-width: 960px) {
+  .event-invite {
+    margin: auto;
+    margin-left: 20px;
+  }
 }
 
 @media print {
@@ -165,6 +172,12 @@ h1 {
   .landing-image img:hover {
   transition: 0.9s;
   transform: rotateY(180deg);
+} -->
+
+<!-- @media screen and not (max-width: 960px) {
+  .event-invite {
+    margin-left: 20px;
+  }
 } -->
 
 <!-- <h1>{{ hunt_title }}</h1> -->
