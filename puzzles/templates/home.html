@@ -19,8 +19,38 @@ h1 {
   h1 {
     font-size: 4rem;
     letter-spacing: 5px;
+    padding-right: 5px;
+  }
+
+  .event-invite {
+    margin: auto;
+    margin-top: 10%;
+    margin-bottom: 10%;
+  }
+
+  .event-invite span {
+    font-size: 18px;
+  }
+
+  .title-center {
+    flex-wrap: wrap;
   }
   
+}
+
+@media screen and not (max-width: 960px) {
+  .event-invite {
+    margin: auto;
+    margin-left: 50px;
+  }
+
+  .event-invite span {
+    font-size: 15px;
+  }
+
+  .landing-image {
+    padding: 10px;
+  }
 }
 
 @media print {
@@ -97,21 +127,18 @@ h1 {
 
 
 .event-invite {
-  margin: auto;
   display: flex;
   padding: 10px;
   position: relative;
   text-align: center;
-  margin-right: 10px;
   transform: rotate(5deg);
 }
 
 .event-invite span {
-  font-family: "Finger-Paint";
+  font-family: "Kollektif";
   position:absolute;
-  top: 30%;
+  top: 14%;
   right: 20%;
-  font-size: 15px;
   padding-left: 50px;
 }
 .event-invite .register {
@@ -158,6 +185,12 @@ h1 {
   transform: rotateY(180deg);
 } -->
 
+<!-- @media screen and not (max-width: 960px) {
+  .event-invite {
+    margin-left: 20px;
+  }
+} -->
+
 <!-- <h1>{{ hunt_title }}</h1> -->
 <div class="title-center">
   <div class="landing-image">
@@ -167,8 +200,8 @@ h1 {
     puzzle <br> 
     hunt</h1>
   <div class="event-invite">
-    <img style = "box-shadow: 5px 5px 2px grey;" src={% static "images/card.png" %} alt="card invitation">
-    <span>The Blueno Resurrection Society needs your help. RSVP in advance.</span>
+    <img style="box-shadow: 5px 5px 2px grey;" src={% static "images/card.png" %} alt="card invitation">
+    <span>The Blueno Resurrection Society needs your help. RSVP in advance</span>
     <div class="register">
       <a href="{% url 'register' %}" class="btn">{% translate " Register now " %}</a>
     </div>
