@@ -98,7 +98,7 @@ class LogisticsForm(forms.Form):
     classroom_need = forms.BooleanField(label=_('Do you want to request a classroom to hunt in?'),help_text=_('Our availability will be limited, so please do not request one if you can make alternate plans.'), required=False)
     where_to_find = forms.CharField(label=_("Where can we best find you during the hunt while you're solving puzzles?"), help_text=_('(e.g: Hegeman Common Room, Barus and Holley Room ###, Zoom, Discord, etc.)'), max_length=200)
     # phone_regex = RegexValidator(regex=r'^[0-9\.-]$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
-    phone_number = forms.CharField(label=_('Phone number of your team captain'), help_text=_('Required for teams with on-site presence. If the team captain is not on-site, the phone number of whoever you trust most who is.'), max_length=16)
+    phone_number = forms.CharField(label=_('Phone number of your team captain'), help_text=_('Required for teams with on-site presence. If the team captain is not on-site, the phone number of whoever you trust most who is. Please don`t include country code (+#).. we cannot service international numbers.'), max_length=16, required=False)
 
     def clean(self):
         cleaned_data = super(LogisticsForm, self).clean()

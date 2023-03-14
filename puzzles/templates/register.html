@@ -6,6 +6,10 @@
 .row {
     margin-bottom: 1em;
 }
+
+.form-desc .asterisk-field {
+  color: var(--accent-hover-color);
+}
 </style>
 
 <h2>{% translate "Register a new team" %}</h2>
@@ -24,6 +28,9 @@
         <div class="form-row">
             <div class="form-desc">
                 {{ field.label_tag }}
+                {% if field.field.required %}
+                  <span class="asterisk-field">*</span>
+              {% endif %}
             </div>
             {{ field }}
             {{ field.errors }}
@@ -47,6 +54,9 @@
             {% for field in team_member_form %}
             <div class="form-desc">
                 {{ field.label_tag }}
+                {% if field.field.required %}
+                  <span class="asterisk-field">*</span>
+              {% endif %}
             </div>
             {{ field }}
             {{ field.errors }}
@@ -66,6 +76,9 @@
         <div class="form-row">
             <div class="form-desc">
                 {{ log_field.label_tag }}
+                {% if log_field.field.required %}
+                  <span class="asterisk-field">*</span>
+                {% endif %}
             </div>
             {{ log_field }}
             {{ log_field.errors }}
