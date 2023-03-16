@@ -397,6 +397,11 @@ figcaption {
     float: left;
   }
 
+  .top-left-actions span {
+    color: var(--tray-text-light-color);
+    font-size: 25px;
+  }
+
   .navbar-shortcuts {
     color: var(--tray-text-light-color);
   }
@@ -588,12 +593,17 @@ figcaption {
     height: auto;
     font-size: calc((960px - 100vw) * 3 / 80 + 18px);
     margin-bottom: calc((960px - 100vw) * 3 / 40 + 12px);
+    text-align: center;
   }
 
   .top-right-actions {
     float: none;
     text-align: center;
     padding-top: 64px;
+  }
+
+  .top-left-actions span {
+    opacity: 0;
   }
 
   .flavor {

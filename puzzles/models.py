@@ -9,7 +9,7 @@ from django.core.exceptions import ValidationError
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
-from django.db.models import F, FilteredRelation, Q, Case, When, Count, Min
+from django.db.models import F, FilteredRelation, Q, BooleanField, Value, Case, When, Count, Min
 from django.db.models.functions import Coalesce
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -261,6 +261,7 @@ class Team(models.Model):
           - 'id'
           - 'user_id'
           - 'team_name'
+          - 'in_person': if they are in person versus remote
           - 'total_solves': number of solves (before hunt end)
           - 'last_solve_or_creation_time': last non-free solve (before hunt
             end), or if none, team creation time
@@ -273,6 +274,7 @@ class Team(models.Model):
         return Team.leaderboard_teams(current_team, hide_hidden).values(
             'id',
             'user_id',
+            'in_person',
             'team_name',
             'total_solves',
             'last_solve_or_creation_time',
@@ -289,6 +291,7 @@ class Team(models.Model):
             end), or if none, team creation time
           - 'metameta_solve_time': time of finishing the hunt (if before hunt
             end)
+          - 'in_person': whether or not the team is competing in person
 
         This depends on the viewing team for hidden teams.
         '''
@@ -328,9 +331,15 @@ class Team(models.Model):
             )),
             # Coalesce(things) = the first of things that isn't null
             last_solve_or_creation_time=Coalesce('last_solve_time', 'creation_time'),
+            in_person=Case(
+              When(Q(in_person_sat__gt=0) | Q(in_person_sun__gt=0), then=Value(True)),
+              default=Value(False),
+              output_field=BooleanField(),
+        )
         ).order_by(
             F('metameta_solve_time').asc(nulls_last=True),
             F('total_solves').desc(),
+            F('in_person').desc(),
             F('last_solve_or_creation_time'),
         )
 
