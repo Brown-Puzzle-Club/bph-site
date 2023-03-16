@@ -34,6 +34,7 @@ html {
   --tray-text-color: white;
   --tray-text-light-color: #a8cada;
   --tray-bg-color: #1479a2;
+  --tray-hover-color: #4d9fc1ba;
 
   --title-font: "Kollektif", sans-serif;
   --script-font: "Finger-Paint", sans-serif;
@@ -322,6 +323,7 @@ figcaption {
     transition: background-color 0.3s;
     color: var(--btn-text-color);
     background-color: var(--btn-bg-color);
+    border-radius: 12px;
   }
 
   .btn:hover,
@@ -381,9 +383,11 @@ figcaption {
     color: var(--tray-text-color);
   }
 
-  .top-tabs .selected-tab {
+  .top-tabs .selected-tab:not(.site-title) {
     font-weight: bold;
     color: var(--tray-text-color);
+    border-radius: 12px;
+    background: var(--tray-hover-color);
   }
 
   .top-left-actions {
