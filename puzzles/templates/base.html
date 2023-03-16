@@ -38,7 +38,7 @@
     <nav>
         <span class="tray">
             <div class="top-tabs">
-                <a{% if request.path == '/' %} class="selected-tab"{% endif %} href="{% url 'index' %}" style="color: var(--tray-text-color);">
+                <a{% if request.path == '/' %} class="selected-tab site-title"{% endif %} href="{% url 'index' %}" style="color: var(--tray-text-color);">
                     <b>{% translate "Brown Puzzlehunt" %}</b>
                 </a>
                 <!-- <a{% if request.path == '/rules' %} class="selected-tab"{% endif %} href="{% url 'rules' %}">
