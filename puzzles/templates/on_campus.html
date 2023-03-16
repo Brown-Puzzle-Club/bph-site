@@ -1,8 +1,107 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load puzzle_tags %}
+{% load static %}
 
 {% block content %}
+
+<style>
+
+  .locations {
+    margin-top: 6%;
+  }
+
+  .locations * {
+    color: black;
+    text-align: right;
+    font-weight: normal;
+  }
+
+  .locations h2 {
+    font-size: 32px;
+    padding-bottom: 0px;
+  }
+  .locations h6 {
+    font-size: 20px;
+    padding-bottom: 0px;
+  }
+  .locations p {
+    padding-left: 30%;
+    font-size: 15px;
+    line-height: 2rem;
+  }
+
+  .kickoff-image {
+    width: 300px;
+    float: right;
+  }
+
+  .hq-image {
+    width: 300px;
+    float: left;
+  }
+
+  .left-div {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: row;
+  }
+
+  .hq h2 {
+    text-align: left;
+    padding: 0;
+  }
+
+  .hq h6 {
+    text-align: left;
+    padding: 0;
+  }
+
+  .hq p {
+    text-align: left;
+    padding: 0;
+    padding-right: 40%;
+    font-size: 15px;
+    line-height: 2rem;
+  }
+
+  .flex-info {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: -3%;
+  }
+
+  .flex-info * {
+    text-align: left;
+    margin: 0 5%;
+  }
+
+  .transit-info {
+    margin: 5% 0;
+  }
+
+  .transit-info h2 {
+    text-align: left;
+    padding: 0;
+    color:black;
+    font-weight: normal;
+    font-size: 30px;
+    padding-bottom: 2%;
+  }
+
+  .transit-info p {
+    font-size: 16px;
+  }
+
+  @media screen and (max-width: 960px) {
+    .locations p {
+      padding-left: 0;
+    }
+  }
+
+
+</style>
 
 <h1 id="on-campus">{% translate "On-Campus" %}</h1>
 <main>
@@ -34,30 +133,38 @@
       <p>Unfortunately, we are not in a position to accommodate minors on-campus (participants who are not Brown or RISD students and who are under the age of 18). Sorry! However, minors are welcome to participate remotely, and teams with minors can still send other participants who are over the age of 18 to campus to participate. </p>
   </div>
 
-  <div class="no-break">
-    <h4 id="locations">Where Things Are</h4>
-    <div class="kickoff-image" style="width: 50%; float: right;">
+  <div class="no-break" style="margin-bottom: -5%;">
+    <h4 id="locations">Locations to Know</h4>
+    <div class="kickoff-image">
       <figure>
-        <img src="../static/images/macmillanhall.png" style="max-width: 100%;" alt="Map showing the location of Macmillan Hall">
-        <figcaption><i>Image courtesy of Google Maps</i></figcaption>
+        <img src={% static "images/macmillan_squiggle.png" %} style="max-width: 100%;" alt="Map showing the location of Macmillan Hall">
+        <!-- <figcaption><i>Image courtesy of Google Maps</i></figcaption> -->
       </figure>
     </div>
-    <h5 id="locations-kickoff">Kickoff</h5>
-    <p>Kickoff is located in MacMillan Hall, Room 117. This is the big auditorium on the ground floor.
-      <br><br>
-      The main entrance is on the north side of the building, off of Sciences Park. There is also a second entrance off of Thayer Street.</p>
+    <div class="locations kickoff">
+      <h2>Kickoff</h2>
+      <h6><i class="fa fa-map-marker" style="font-size:20px;color:red"></i> MacMillan Hall, Room 117</h6> 
+      <p>Enter through the north side off Sciences Park, or through the Thayer Street entrance.</p>
+    </div>
+    
   </div>
-  <div class="no-break">
-    <div class="hq-image" style="width: 50%; float: right;">
+  <div class="no-break left-div">
+    <div class="hq-image">
       <figure>
-        <img src="../static/images/sayleshall.png" style="max-width: 100%;" alt="Map showing the location of Sayles Hall">
-        <figcaption><i>Image courtesy of Google Maps</i></figcaption>
+        <img src={% static "images/sayles_squiggle.png" %} style="max-width: 220px;" alt="Map showing the location of Sayles Hall">
+        <!-- <figcaption><i>Image courtesy of Google Maps</i></figcaption> -->
       </figure>
     </div>
-    <h5 id="locations-hq">Brown Puzzle Club Headquarters</h5>
+    <div class="locations hq">
+      <h2>Brown Puzzle Club HQ</h2>
+      <h6>Sayles Hall Room 306 <i class="fa fa-map-marker" style="font-size:20px;color:red"></i></h6>
+      <p>Enter through the west side through the Main Green entrance.</p>
+    </div>
+    
+<!--     
     <p>Our headquarters will be located in Sayles Room 306. This is up the stairs from the lobby, on the top floor. 
       <br><br>
-      The main entrance is on the west side of the building, off of the Main Green.</p>
+      The main entrance is on the west side of the building, off of the Main Green.</p> -->
   </div>
   <div class="no-break">
     <p>Some events and puzzles might use locations that require card swipe access, which is limited to current undergraduate or graduate students (or some faculty). Puzzles which require this will be kept to a minimum and, where applicable, clearly marked as such. If you know ahead of time that you'll want to participate in these puzzles but have no current students on your team, contact us at <a href="mailto:{{ contact }}">{{ contact_email }}</a> before the hunt and we'll find a way to get that sorted.</p>
@@ -65,36 +172,60 @@
 
   <div class="no-break">
     <h4 id="arrival">Getting to Providence</h4>
-    <h5 id="arrival-train">Train</h5>
-      <p>Providence is easily accessible by train to those living in Boston, New Haven, and New York, and to a lesser extent other cities in the Northeast Corridor.
-        <br><br>
-        It lies on the Northeast Corridor train line, which is serviced by a number of providers. Both of these options will bring you to Providence Station, which is just across the river from College Hill and Brown's campus. If you're traveling from Boston, we recommend Amtrak Northeast Regional as the least expensive provider.
-        <br><br>
-        For those living in Boston, Providence is also accessible via the MBTA Rapid Transit system, along the Providence/Stoughton line, starting at South Station. 
-        <br><br>
-        If you plan to travel by train, we recommend purchasing tickets in advance, as they may get more expensive closer to the date.
+    <div class="flex-info train">
+      <div class="train-icon">
+        <i class="fa fa-train" style="font-size:160px;color:#8cadbb"></i>
+      </div>
+      <div class="transit-info">
+        <h2 id="arrival-train">Train</h2>
+        <p>
+          Brown University is a 10-15 minute walk from Providence Station, our nearest train station. The station is across the river from College Hill.
+          <br>
+          If you're traveling from Boston, we recommend Amtrak Northeast Regional as the least expensive provider. Providence is also accessible via the MBTA Rapid Transit system, along the Providence/Stoughton line, starting at South Station.
         </p>
-    <h5 id="arrival-bus">Bus</h5>
-        <p>There are a number of bus companies which provide bus services from cities in the New England and New York area and beyond terminating to Providence, including but not limited to: FlixBus, Peter Pan Lines, and Greyhound. We recommend doing your own research if you plan to take the bus from your starting location to Providence.
-          <br><br>
-          If you are planning to travel by bus, we also recommend purchasing tickets in advance, as they may get more expensive closer to the date.</p>
-    <h5 id="arrival-car">Car</h5>
-        <p>Providence lies at the intersection of Interstate 95 and Interstate 195.</p>
+      </div>
+    </div>
+
+    <div class="flex-info bus">
+      <div class="bus-icon">
+        <i class="fa fa-bus" style="font-size:160px;color:#8cadbb"></i>
+      </div>
+      <div class="transit-info">
+        <h2 id="arrival-bus">Bus</h2>
+        <p>
+          There are a number of bus companies which provide bus services from cities in the New England and New York area and beyond terminating to Providence, including but not limited to: FlixBus, Peter Pan Lines, and Greyhound. We recommend doing your own research if you plan to take the bus from your starting location to Providence.
+        </p>
+      </div>
+    </div>
+      
+    <div class="flex-info car">
+      <div class="car-icon">
+        <i class="fa fa-car" style="font-size:120px;color:#8cadbb"></i>
+      </div>
+      <div class="transit-info">
+        <h2 id="arrival-car">Car</h2>
+        <p>
+          Providence lies at the intersection of Interstate 95 and Interstate 195.
+For non-Brown community members and visitors, parking is available at the Lot 68 Visitor Parking Garage, also known as the Power Street Parking Garage, located at 111 Power Street. The visitor entrance is located at the intersection of Power and Thayer Streets. Parking costs $2.00 per hour over the weekend.
+If you want overnight parking or require a permit for more than one day, you can email us at puzzle@brown.edu and we'll try to help you out.
+        </p>
+      </div>
+    </div>
   </div>
 
-  <div class="no-break">
+  <!-- <div class="no-break">
     <h4 id="parking">Parking</h4>
     <div class="hq-image" style="width: 50%; float: right;">
       <figure>
         <img src="../static/images/powerstreetparking.png" style="max-width: 100%;" alt="Map showing the location of the Power Street Parking Garage">
-        <figcaption><i>Image courtesy of Google Maps</i></figcaption>
+
       </figure>
     </div>
     <p>For non-Brown community members and visitors, parking is available at the Lot 68 Visitor Parking Garage, also known as the Power Street Parking Garage, located at 111 Power Street. The visitor entrance is located at the intersection of Power and Thayer Streets. Parking costs $2.00 per hour over the weekend. 
       <br><br>
       If you want overnight parking or require a permit for more than one day, you can email us at <a href="mailto:{{ contact }}">{{ contact_email }}</a> and we'll try to help you out, but we can't promise anything.
       </p>
-  </div>
+  </div> -->
 
   <div class="no-break">
     <h4 id="accommodation">Accommodation</h4>
@@ -108,10 +239,10 @@
       If you need a place for your team to work during the hunt, let us know during the registration process and we will try to accommodate you. Our ability to allocate classrooms like this will be limited, so we will prioritize teams which do not have other spaces available and who register in advance.</p>
   </div>
 
-  <div class="no-break">
+  <!-- <div class="no-break">
     <h4 id="wifi">Wi-Fi and Internet Access</h4>
     <p>The Brown-Guest network is available to all Brown Guests. However, Brown's guest wireless network is not secure (unencrypted), and your bandwidth may be limited. If you're worried about security, then a VPN can help encrypt your data on the Brown-Guest network.</p>
-  </div>
+  </div> -->
 
   <div class="no-break">
     <h4 id="events">Events</h4>
