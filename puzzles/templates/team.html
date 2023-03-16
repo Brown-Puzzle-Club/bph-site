@@ -8,6 +8,7 @@
 {% endblock %}
 
 {% block top-left-actions %}
+<span>//</span>
 {% if modify_info_available %}
 <a href="{% url 'edit-team' %}" class="btn">{% translate "Edit team members" %}</a>
 <a href="{% url 'password_change' %}" class="btn">{% translate "Change password" %}</a>
