@@ -36,6 +36,9 @@ html {
   --tray-bg-color: #1479a2;
   --tray-hover-color: #4d9fc1ba;
 
+  --page-accent-color-muted: #8cadbb;
+  --page-accent-color-light: #d8ebf3;
+
   --title-font: "Kollektif", sans-serif;
   --script-font: "Finger-Paint", sans-serif;
   --text-font: "BubbleboddyNeue", sans-serif;
