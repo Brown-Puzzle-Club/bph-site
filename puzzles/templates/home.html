@@ -29,7 +29,8 @@ h1 {
   }
 
   .event-invite span {
-    font-size: 18px;
+    font-size: 15px;
+    padding-left: 85px;
   }
 
   .title-center {
@@ -42,10 +43,13 @@ h1 {
   .event-invite {
     margin: auto;
     margin-left: 50px;
+    
   }
 
   .event-invite span {
     font-size: 15px;
+    padding-left: 72px;
+}
   }
 
   .landing-image {
@@ -80,9 +84,9 @@ h1 {
     }
 
     .register .btn {
-        height: 48px;
-        line-height: 48px;
-        font-size: 2rem;
+        height: 30px;
+        line-height: 30px;
+        font-size: 1.5rem;
         transition: background-color 0.3s;
         color: var(--page-bg-color);
         background-color: var(--btn3-bg-color);
@@ -106,6 +110,7 @@ h1 {
 .landing-image {
   display:flex;
   padding: 10px;
+  align-items: center;
 }
 
 .landing-image img{
@@ -136,15 +141,14 @@ h1 {
 
 .event-invite span {
   font-family: "Kollektif";
-  position:absolute;
-  top: 14%;
-  right: 20%;
-  padding-left: 50px;
+  position: absolute;
+  top: 53%;
+  right: 21%;
 }
 .event-invite .register {
-  position:absolute;
-  top: 55%;
-  right: 15%;
+  position: absolute;
+  top: 70%;
+  right: 22%;
   padding: 5px 20px;
 }
 
@@ -200,7 +204,7 @@ h1 {
     puzzle <br> 
     hunt</h1>
   <div class="event-invite">
-    <img style="box-shadow: 5px 5px 2px grey;" src={% static "images/card.png" %} alt="card invitation">
+    <img src={% static "images/brs_letter.png" %} alt="card invitation">
     <span>The Blueno Resurrection Society needs your help. RSVP in advance.</span>
     <div class="register">
       <a href="{% url 'register' %}" class="btn">{% translate " Register now " %}</a>
