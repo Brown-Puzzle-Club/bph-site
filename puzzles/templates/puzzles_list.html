@@ -1,6 +1,12 @@
 {% load i18n %}
+
 <tbody class="puzzles-section">
-    {% for data in round.puzzles %}
+
+  {% block extra_css %}
+    <link rel="stylesheet" href="/static/css/rounds/round-{{ round.round.order }}.css">
+  {% endblock %}
+
+  {% for data in round.puzzles %}
     <tr>
         <td>
             {% if not data.puzzle.is_meta %}{{ data.puzzle.order }}{% endif %}

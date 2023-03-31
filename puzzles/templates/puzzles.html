@@ -2,6 +2,16 @@
 {% load i18n %}
 {% block content %}
 
+
+<!-- If only one round is open, load the first round -->
+{% block extra_css_landing %}
+{% if rounds.values|length == 1 %}
+  <link rel="stylesheet" href="/static/css/rounds/brs-landing.css">
+{% else %}
+  <link rel="stylesheet" href="/static/css/rounds/cthulu-landing.css">
+{% endif %}
+{% endblock %}
+
 {% if hunt_is_prereleased %}
 <h3 style="text-align: center">
     {% translate "You are a pre-release testsolver, so you may be seeing puzzles that are locked for the general public. Please be careful!" %}
@@ -15,7 +25,7 @@
             <h1><a href="{% url 'round' round.round.slug %}">{{ round.round.name }}</a></h1>
         </th>
     </tbody>
-    {% include 'puzzles_list.html' with round=round %}
+    
 {% endfor %}
 </table>
 
