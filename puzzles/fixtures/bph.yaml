@@ -94,29 +94,28 @@
     answer: DEMO
     round: 4
     unlock_global: 0
-- model: auth.User
-  pk: 1
-  fields:
-    username: admin
-    password: pbkdf2_sha256$150000$admin$rHCEm45iy0F69gtXVPfBkSQ0Y5ubeAvCxGmb2M5QokM= # password is "admin"
-    is_staff: True
-    is_superuser: True
-- model: auth.User
-  pk: 2
-  fields:
-    username: test
-    password: pbkdf2_sha256$150000$test$tdsbQtbroRvN08LIFFbEvVL/5h5OP1WSUgjNAFGofjo= # password is "test"
-- model: puzzles.Team
-  pk: 1
-  fields:
-    user: 1
-    team_name: admin
-    creation_time: "9001-01-01T00:00:00+00:00"
-    is_prerelease_testsolver: True
-- model: puzzles.Team
-  pk: 2
-  fields:
-    user: 2
-    team_name: test
-    creation_time: "9001-01-01T00:00:00+00:00"
-    
+# - model: auth.User
+#   pk: 1
+#   fields:
+#     username: admin
+#     password: pbkdf2_sha256$150000$admin$rHCEm45iy0F69gtXVPfBkSQ0Y5ubeAvCxGmb2M5QokM= # password is "admin"
+#     is_staff: True
+#     is_superuser: True
+# - model: auth.User
+#   pk: 2
+#   fields:
+#     username: test
+#     password: pbkdf2_sha256$150000$test$tdsbQtbroRvN08LIFFbEvVL/5h5OP1WSUgjNAFGofjo= # password is "test"
+# - model: puzzles.Team
+#   pk: 1
+#   fields:
+#     user: 10
+#     team_name: admin
+#     creation_time: "9001-01-01T00:00:00+00:00"
+#     is_prerelease_testsolver: True
+# - model: puzzles.Team
+#   pk: 2
+#   fields:
+#     user: 2
+#     team_name: test
+#     creation_time: "9001-01-01T00:00:00+00:00"
