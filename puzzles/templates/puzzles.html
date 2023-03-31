@@ -2,7 +2,6 @@
 {% load i18n %}
 {% block content %}
 
-
 <!-- If only one round is open, load the first round -->
 {% block extra_css_landing %}
 {% if rounds.values|length == 1 %}
@@ -12,13 +11,15 @@
 {% endif %}
 {% endblock %}
 
-{% if hunt_is_prereleased %}
-<h3 style="text-align: center">
-    {% translate "You are a pre-release testsolver, so you may be seeing puzzles that are locked for the general public. Please be careful!" %}
-</h3>
-{% endif %}
 
-<table class="puzzles-list">
+<div class="background"></div>
+
+{% for round in rounds.values %}
+  <img class="{{ round.round.slug }}">  
+{% endfor %}
+
+
+<!-- <table class="puzzles-list">
 {% for round in rounds.values %}
     <tbody>
         <th colspan="4">
@@ -27,6 +28,12 @@
     </tbody>
     
 {% endfor %}
-</table>
+</table> -->
+
+{% if hunt_is_prereleased %}
+<footer style="font-weight: bold;">
+    {% translate "PRE-RELEASE MODE" %}
+</footer>
+{% endif %}
 
 {% endblock %}

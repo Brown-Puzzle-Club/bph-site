@@ -5,7 +5,7 @@ html {
   --accent-rgb: 20, 121, 162; /*0, 85, 170;*/
 
   --white-color: white;
-  --neutral-color: red;
+  --neutral-color: rgb(180, 216, 234);
   --accent-color: rgb(var(--accent-rgb));
   --accent-bg-color: rgba(var(--accent-rgb), 0.1);
   --accent-hover-color: #004d6e;
@@ -47,4 +47,56 @@ html {
   --btn-font: "Monteserrat", sans-serif;
   --input-font: monospace;
   --answer-font: monospace;
+}
+
+html {
+  background-image: url('/static/images/cthulu-landing/cthulu_page_placement.png');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  align-items: center;
+  height: 800px;
+  background-color: #0e0316;
+}
+
+html {
+  background-color: #0e0316;
+}
+
+footer {
+  color: white
+}
+
+footer a {
+  color:rgb(180, 216, 234)
+}
+footer a:hover {
+  color: white;
+}
+
+/* .background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url("/static/images/cthulu-landing/cthulu_page_placement.png");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: contain;
+} */
+
+/* INDIVIDUAL ROUND STYLE AND PLACEMENT: */
+
+.bear {
+  position: absolute;
+  top: 150%;
+  left: 24%;
+  transform: translate(-50%, -50%);
+  content: url("/static/images/cthulu-landing/sandwich1.png");
+  color: white;
+  width:200px;
+}
+.bear:hover {
+  background-image: url("/static/images/cthulu-landing/sandwich2.png");
 }
