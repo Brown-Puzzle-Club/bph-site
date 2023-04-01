@@ -48,3 +48,21 @@ html {
   --input-font: monospace;
   --answer-font: monospace;
 }
+
+.content {
+  padding-top: 660px;
+}
+
+/* INDIVIDUAL ROUND STYLE AND PLACEMENT: */
+.blueno {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  content: url("/static/images/cthulu-landing/brs1.png");
+  width: 20%;
+}
+.blueno:hover {
+  content: url("/static/images/cthulu-landing/brs2.png");
+  cursor: pointer;
+}
