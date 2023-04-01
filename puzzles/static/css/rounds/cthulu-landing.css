@@ -5,7 +5,7 @@ html {
   --accent-rgb: 20, 121, 162; /*0, 85, 170;*/
 
   --white-color: white;
-  --neutral-color: rgb(180, 216, 234);
+  --neutral-color: rgb(188, 173, 211);
   --accent-color: rgb(var(--accent-rgb));
   --accent-bg-color: rgba(var(--accent-rgb), 0.1);
   --accent-hover-color: #004d6e;
@@ -31,12 +31,10 @@ html {
   --btn3-bg-color: #97998b;
   --btn3-hover-color: #5d604c;
 
-  /* --tray-text-color: var(--accent-color); */
-  /* --tray-bg-color: var(--neutral-color); */
   --tray-text-color: white;
-  --tray-text-light-color: #a8cada;
-  --tray-bg-color: #1479a2;
-  --tray-hover-color: #4d9fc1ba;
+  --tray-text-light-color: #aaa1b8;
+  --tray-bg-color: #4a3e5d;
+  --tray-hover-color: #665979;
 
   --page-accent-color-muted: #8cadbb;
   --page-accent-color-light: #d8ebf3;
@@ -50,7 +48,7 @@ html {
 }
 
 html {
-  background-image: url('/static/images/cthulu-landing/cthulu_page_placement.png');
+  background-image: url("/static/images/cthulu-landing/cthulu_page_bg.png");
   background-position: center center;
   background-repeat: no-repeat;
   background-size: contain;
@@ -64,11 +62,11 @@ html {
 }
 
 footer {
-  color: white
+  color: white;
 }
 
 footer a {
-  color:rgb(180, 216, 234)
+  color: rgb(180, 216, 234);
 }
 footer a:hover {
   color: white;
@@ -86,17 +84,55 @@ footer a:hover {
   background-size: contain;
 } */
 
-/* INDIVIDUAL ROUND STYLE AND PLACEMENT: */
+.content {
+  padding-top: 660px;
+}
 
+/* INDIVIDUAL ROUND STYLE AND PLACEMENT: */
 .bear {
   position: absolute;
-  top: 150%;
+  top: 30%;
   left: 24%;
   transform: translate(-50%, -50%);
   content: url("/static/images/cthulu-landing/sandwich1.png");
   color: white;
-  width:200px;
+  width: 20%;
 }
 .bear:hover {
-  background-image: url("/static/images/cthulu-landing/sandwich2.png");
+  content: url("/static/images/cthulu-landing/sandwich2.png");
+  cursor: pointer;
+  /* -webkit-filter: drop-shadow(12px 12px 7px rgba(254, 226, 136, 0.5));
+  filter: drop-shadow(12px 12px 7px rgba(254, 226, 136, 0.5)); */
+}
+
+.lamp {
+  position: absolute;
+  top: 60%;
+  left: 22%;
+  transform: translate(-50%, -50%);
+  content: url("/static/images/cthulu-landing/lamp 1.png");
+  color: white;
+  width: 20%;
+}
+.lamp:hover {
+  content: url("/static/images/cthulu-landing/lamp 2.png");
+  cursor: pointer;
+  /* -webkit-filter: drop-shadow(12px 12px 7px rgba(254, 226, 136, 0.5));
+  filter: drop-shadow(12px 12px 7px rgba(254, 226, 136, 0.5)); */
+}
+
+.dear-blueno {
+  position: absolute;
+  top: 50%;
+  left: 80%;
+  transform: translate(-50%, -50%);
+  content: url("/static/images/cthulu-landing/computer 1.png");
+  color: white;
+  width: 20%;
+}
+.dear-blueno:hover {
+  content: url("/static/images/cthulu-landing/computer 2.png");
+  cursor: pointer;
+  /* -webkit-filter: drop-shadow(12px 12px 7px rgba(254, 226, 136, 0.5));
+  filter: drop-shadow(12px 12px 7px rgba(254, 226, 136, 0.5)); */
 }
