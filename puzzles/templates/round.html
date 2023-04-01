@@ -16,11 +16,6 @@
 <h1>{{ round.round.name }}</h1>
 {% endblock %}
 
-{% if hunt_is_prereleased %}
-<h3 style="text-align: center">
-    {% translate "You are a pre-release testsolver, so you may be seeing puzzles that are locked for the general public. Please be careful!" %}
-</h3>
-{% endif %}
 
 {% block round-body %}
 <p style="text-align: center">{% translate "Imagine some cool art goes here." %}</p>
@@ -28,5 +23,11 @@
 {% endblock %}
 
 {% include 'puzzles_list.html' with round=round %}
+
+{% if hunt_is_prereleased %}
+<footer style="font-weight: bold;">
+    {% translate "PRE-RELEASE MODE" %}
+</footer>
+{% endif %}
 
 {% endblock %}
