@@ -300,9 +300,11 @@ class TeamWebsocketConsumer(BroadcastWebsocketConsumer):
 
     @classmethod
     def send_to_team(cls, team, text_data):
-        async_to_sync(get_channel_layer().group_send)(
-            '%s-%d' % (cls.group_id, team.user_id),
-            {'type': 'channel.receive_broadcast', 'data': text_data})
+        # TODO: RE-ENABLE UNLOCK NOTIFICATIONS
+        return
+        # async_to_sync(get_channel_layer().group_send)(
+        #     '%s-%d' % (cls.group_id, team.user_id),
+        #     {'type': 'channel.receive_broadcast', 'data': text_data})
 
 class TeamNotificationsConsumer(TeamWebsocketConsumer):
     group_id = 'team'
