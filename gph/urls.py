@@ -44,7 +44,6 @@ urlpatterns = [
     path('', views.index, name='index'),
 
     path('rules', views.rules, name='rules'),
-    path('faq', views.faq, name='faq'),
     path('on-campus', views.on_campus, name='on_campus'),
     path('archive', views.archive, name='archive'),
     path('register', views.register, name='register'),
@@ -91,6 +90,9 @@ urlpatterns = [
     path('puzzle/interactive-demo/submit',
         puzzlehandlers.interactive_demo_submit,
         name='interactive_demo_submit'),
+    path('puzzle/space-piracy/submit',
+         puzzlehandlers.space_piracy_submit,
+         name='space_piracy_submit'),
 
     path('story', views.story, name='story'),
     path('victory', views.victory, name='victory'),
