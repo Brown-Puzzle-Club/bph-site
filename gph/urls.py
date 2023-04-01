@@ -90,6 +90,9 @@ urlpatterns = [
     path('puzzle/interactive-demo/submit',
         puzzlehandlers.interactive_demo_submit,
         name='interactive_demo_submit'),
+    path('puzzle/space-piracy/submit',
+         puzzlehandlers.space_piracy_submit,
+         name='space_piracy_submit'),
 
     path('story', views.story, name='story'),
     path('victory', views.victory, name='victory'),
