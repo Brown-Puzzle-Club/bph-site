@@ -1,0 +1,19 @@
+{% extends "puzzle.html" %}
+{% load static %}
+{% block puzzle-body-md %}
+
+<style>
+    img {
+        display: block; 
+        margin-left: auto; 
+        margin-right: auto;
+        width: 100%;
+    }
+</style>
+
+Bach wrote a lot of music for the organ. What's this one for?
+{: .flavor}
+
+<img src="{% static 'puzzle_resources/musical-cryptogram/music.png' %}">
+
+{% endblock %}
