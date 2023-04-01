@@ -15,7 +15,9 @@
 <div class="background"></div>
 
 {% for round in rounds.values %}
-  <img class="{{ round.round.slug }}">  
+  <a href="{% url 'round' round.round.slug %}">
+    <img class="{{ round.round.slug }}">
+  </a>
 {% endfor %}
 
 
