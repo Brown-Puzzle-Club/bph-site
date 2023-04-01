@@ -60,6 +60,13 @@ def error_ratelimit(handler, rate, error, check_response=None, encode_response=N
     @require_POST
     @wraps(handler)
     def rate_limiter(request):
+        ## QUICK FIX FOR NOW..
+        response = handler(request)
+        if encode_response is not None:
+            response = encode_response(response)
+        return HttpResponse(response)
+
+
         if check_ratelimit(request, rate):
             response = error
             update_ratelimit(request, rate)
