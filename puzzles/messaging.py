@@ -272,7 +272,7 @@ class BroadcastWebsocketConsumer(WebsocketConsumer):
     def connect(self):
         if self.is_ok():
             self.group = self.get_group()
-            async_to_sync(self.channel_layer.group_add)(self.group, self.channel_name)
+            # async_to_sync(self.channel_layer.group_add)(self.group, self.channel_name)
         # If not is_ok, still accept the connection to stop the client from
         # repeatedly retrying. But consider modifying the client to not open a
         # socket at all in this case since it's probably pointless to do so.
