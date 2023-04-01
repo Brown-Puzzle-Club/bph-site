@@ -1,0 +1,69 @@
+{% extends "puzzle.html" %}
+{% load static %}
+{% block puzzle-body-md %}
+
+<style>
+    img {
+        display: block; 
+        margin-left: auto; 
+        margin-right: auto;
+        width: 100%;
+    }
+</style>
+
+You're playing snakes and ladders... but all the snakes have escaped! Thankfully, you remember that each snake took up three squares - two even, one odd - without any of them overlapping. Oh, and each square they visit was smaller in number than the last.
+{: .flavor}
+
+<img src="{% static 'puzzle_resources/reptiles-all-the-way-down/board.jpg' %}">
+
+Start on space 1.<br>
+Roll a 4 and move to space 17.<br>
+Roll a 4 and move to space 2. <br>
+Roll a 2 and move to space 4. <br>
+Roll a 6 and move to space 10. <br>
+Roll a 2 and move to space 8. <br>
+Roll a 3 and move to space 29. <br>
+Roll a 3 and move to space 29 (again).<br> 
+Roll a 4 and move to space 53.<br>
+Roll a 1 and move to space 34.<br>
+Roll a 2 and move to space 16. <br>
+Roll a 3 and move to space 39. <br>
+Roll a 6 and move to space 45.<br>
+Roll a 6 and move to space 51. <br>
+Roll a 5 and move to space 44. <br>
+Roll a 6 and move to space 50. <br>
+Roll a 5 and move to space 55. <br>
+Roll a 4 and move to space 38. <br>
+Roll a 2 and move to space 42. <br>
+Roll a 6 and move to space 48. <br>
+Roll a 5 and move to space 53. <br>
+Roll a 4 and move to space 57. <br>
+Roll a 3 and move to space 42. <br>
+Roll a 6 and move to space 48. <br>
+Roll a 5 and move to space 53. <br>
+Roll a 4 and move to space 57. <br>
+Roll a 6 and move to space 63. <br>
+Roll a 1 and move to space 43. <br>
+Roll a 6 and move to space 49. <br>
+Roll a 6 and move to space 55. <br>
+Roll a 6 and move to space 61. <br>
+Roll a 5 and move to space 66. <br>
+Roll a 2 and move to space 52. <br>
+Roll a 6 and move to space 78. <br>
+Roll a 5 and move to space 83. <br>
+Roll a 3 and move to space 66. <br>
+Roll a 1 and move to space 73. <br>
+Roll a 1 and move to space 94. <br>
+Roll a 4 and move to space 82. <br>
+Roll a 5 and move to space 87. <br>
+Roll a 3 and move to space 69. <br>
+Roll a 1 and move to space 72. <br>
+Roll a 6 and move to space 78. <br>
+Roll a 2 and move to space 82. <br>
+Roll a 3 and move to space 85. <br>
+Roll a 6 and move to space 91. <br>
+Roll a 2 and move to space 94.<br>
+Roll a 6 and move to space 100. You win!<br>
+In celebration of your win, you think about the most famous members of this species.
+
+{% endblock %}
