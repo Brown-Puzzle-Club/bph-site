@@ -510,6 +510,7 @@ class Team(models.Model):
             puzzle=puzzle,
             unlock_datetime=unlocked_at)
         context.team.db_unlocks[puzzle.id] = unlock
+
         if unlocked_at == context.now:
             show_unlock_notification(context, unlock)
         return unlock
