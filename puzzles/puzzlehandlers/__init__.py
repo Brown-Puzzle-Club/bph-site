@@ -78,5 +78,6 @@ def error_ratelimit(handler, rate, error, check_response=None, encode_response=N
 from . import interactive_demo
 interactive_demo_submit = error_ratelimit(interactive_demo.submit, '2/m', {'error': 'Please limit your attempts to two per minute.'}, lambda response: response['correct'], json.dumps)
 
+# TODO: FIX RATE LIMITING (requires redis)
 from . import space_piracy
-space_piracy_submit = error_ratelimit(space_piracy.submit, '20/m', {'error': 'Please limit your attempts to twenty per minute.'}, lambda response: response['correct'], json.dumps)
+space_piracy_submit = space_piracy.submit
