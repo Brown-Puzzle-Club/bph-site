@@ -1,0 +1,104 @@
+{% extends "puzzle.html" %}
+{% block puzzle-body-md %}
+
+Space pirates are surprisingly basic, and they always seem to be missing something.
+
+<div id="clues">
+  <ol style="list-style-type:none;">
+      <li>Izanagi, for example</li>
+      <li>They can make good neighbors</li>
+      <li>Parisian party</li>
+      <li>Desist partner</li>
+      <li>Absurd comedy</li>
+      <li>Programmer's product</li>
+      <li>Naval cry for help</li>
+      <li>Old contraction</li>
+      <li>Fear</li>
+      <li>Somewhat unrelated remark</li>
+      <li>Most secure</li>
+      <li>They can be stolen, rounded, or loaded</li>
+  </ol>
+</div>
+
+<form id="space-piracy-form" autocomplete="off" action="javascript:void(0);">
+    {# Adding the csrf_token tag is sort of a hack, because we don't care about having an <input> tag with the token; we just care about having the cookie. #}
+    {% csrf_token %}
+    <input type="text" name="guess" id="guess" placeholder="Guess">
+    <input type="submit" value="Guess!">
+    <div id="output">...</div>
+</form>
+
+<script type="text/javascript">
+// This demo code uses jQuery and modern JavaScript features flagrantly.
+// You should evaluate your own needs.
+document.addEventListener('DOMContentLoaded', () => {
+    async function submit() {
+        $('#output').empty()
+
+        $('#guess').prop("disabled", true);
+        $('#submit').prop("disabled", true);
+
+        let csrftoken = getCookie('csrftoken');
+        try {
+            let result = await fetch("/puzzle/space-piracy/submit", {
+                method: 'POST',
+                body: JSON.stringify({
+                    guess: $('#guess').val(),
+                }),
+                headers: { "X-CSRFToken": csrftoken },
+            });
+            if (!result.ok) {
+                // HTTP response code was not 2xx. Maybe introspect more...
+                $('#output').text(`Error: ${result.status} ${result.statusText}`);
+            } else {
+                let res = await result.json();
+                if (res.error) {
+                    $('#output').text(`Error: ${res.error}`);
+                } else {
+                    // $('#output').text(res.correct ? "Right!" : "Wrong!");
+                    // $('#output').text(res.table.length);
+                    
+                    for (let i = 0; i < res.table.length; i++) {
+                      const result = res.table[i].result;
+                      const idx = res.table[i].index;
+
+                      if (result === "just right!") {
+                        $('#output').append(`<p style="font-weight: bold; color: green;">${idx}: ${result}</p>`);
+                      } else {
+                        $('#output').append(`<p>${idx}: ${result}</p>`);
+                      }
+                    }
+                    
+                }
+            }
+        } catch (e) {
+            // This error handling will be very poor.
+            $('#output').text(`Error: ${e}`);
+        }
+        // calls you might make: .val(""), .select(), .focus()
+        $('#guess').prop("disabled", false);
+        $('#submit').prop("disabled", false);
+    }
+
+    // https://docs.djangoproject.com/en/dev/ref/csrf/#ajax
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    $('#space-piracy-form').on('submit', submit);
+});
+</script>
+
+{% endblock %}

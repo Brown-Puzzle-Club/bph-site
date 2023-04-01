@@ -60,6 +60,13 @@ def error_ratelimit(handler, rate, error, check_response=None, encode_response=N
     @require_POST
     @wraps(handler)
     def rate_limiter(request):
+        ## QUICK FIX FOR NOW..
+        response = handler(request)
+        if encode_response is not None:
+            response = encode_response(response)
+        return HttpResponse(response)
+
+
         if check_ratelimit(request, rate):
             response = error
             update_ratelimit(request, rate)
@@ -77,3 +84,6 @@ def error_ratelimit(handler, rate, error, check_response=None, encode_response=N
 # Example usage:
 from . import interactive_demo
 interactive_demo_submit = error_ratelimit(interactive_demo.submit, '2/m', {'error': 'Please limit your attempts to two per minute.'}, lambda response: response['correct'], json.dumps)
+
+from . import space_piracy
+space_piracy_submit = error_ratelimit(space_piracy.submit, '20/m', {'error': 'Please limit your attempts to twenty per minute.'}, lambda response: response['correct'], json.dumps)
