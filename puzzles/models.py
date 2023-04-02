@@ -107,6 +107,8 @@ class Puzzle(models.Model):
         help_text=_('If nonnegative, puzzle unlocks after N main round solves in any round.'))
     unlock_local = models.IntegerField(default=-1, verbose_name=_('Unlock local'),
         help_text=_('If nonnegative, puzzle unlocks after N main round solves in this round.'))
+    unlock_meta = models.IntegerField(default=-1, verbose_name=_('Unlock meta'),
+        help_text=_('If nonnegative, puzzle unlocks after N meta solves.'))
 
     emoji = models.CharField(
         max_length=32, default=':question:', verbose_name=_('Emoji'),
@@ -472,6 +474,10 @@ class Team(models.Model):
         puzzles_unlocked = collections.OrderedDict()
         unlocks = []
         for puzzle in context.all_puzzles:
+            if context.team and puzzle.is_meta:
+                metas_solved.append(puzzle.id in context.team.solves)
+
+        for puzzle in context.all_puzzles:
             unlocked_at = None
             if 0 <= puzzle.unlock_hours and (
                 puzzle.unlock_hours == 0 or
@@ -489,10 +495,10 @@ class Team(models.Model):
                     unlocked_at = context.now
                 if 0 <= puzzle.unlock_local <= local_solves[puzzle.round.slug]:
                     unlocked_at = context.now
+                if 0 <= puzzle.unlock_meta <= len(metas_solved):
+                    unlocked_at = context.now
                 if puzzle.slug == META_META_SLUG and all(metas_solved):
                     unlocked_at = context.now
-                if puzzle.is_meta:
-                    metas_solved.append(puzzle.id in context.team.solves)
                 if puzzle.id in context.team.db_unlocks:
                     unlocked_at = context.team.db_unlocks[puzzle.id].unlock_datetime
                 elif unlocked_at:
