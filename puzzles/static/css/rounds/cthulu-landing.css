@@ -1,52 +1,4 @@
 /* LANDING PAGE FOR THE PUZZLES ONCE CTHULU BLUENO HAS BEEN AWAKENED.. */
-
-html {
-  --page-bg-rgb: 255, 255, 253;
-  --accent-rgb: 20, 121, 162; /*0, 85, 170;*/
-
-  --white-color: white;
-  --neutral-color: rgb(188, 173, 211);
-  --accent-color: rgb(var(--accent-rgb));
-  --accent-bg-color: rgba(var(--accent-rgb), 0.1);
-  --accent-hover-color: #004d6e;
-
-  --page-bg-color: rgb(var(--page-bg-rgb));
-  --sticky-bg-color: rgba(var(--page-bg-rgb), 0.9);
-  --heading-text-color: var(--accent-color);
-
-  --border-color: var(--accent-color);
-  --print-border-color: #222;
-
-  --link-text-color: var(--accent-color);
-  --link-hover-color: var(--accent-hover-color);
-
-  --btn-text-color: var(--white-color);
-  --btn-bg-color: var(--accent-color);
-  --btn-hover-color: var(--accent-hover-color);
-
-  --btn2-text-color: black;
-  --btn2-bg-color: var(--neutral-color);
-  --btn2-hover-color: var(--page-bg-color);
-
-  --btn3-bg-color: #97998b;
-  --btn3-hover-color: #5d604c;
-
-  --tray-text-color: white;
-  --tray-text-light-color: #aaa1b8;
-  --tray-bg-color: #4a3e5d;
-  --tray-hover-color: #665979;
-
-  --page-accent-color-muted: #8cadbb;
-  --page-accent-color-light: #d8ebf3;
-
-  --title-font: "Kollektif", sans-serif;
-  --script-font: "Finger-Paint", sans-serif;
-  --text-font: "BubbleboddyNeue", sans-serif;
-  --btn-font: "Monteserrat", sans-serif;
-  --input-font: monospace;
-  --answer-font: monospace;
-}
-
 html {
   background-image: url("/static/images/cthulu-landing/cthulu_page_bg.png");
   background-position: center center;
@@ -99,9 +51,6 @@ footer a:hover {
 }
 .blueno:hover {
   content: url("/static/images/cthulu-landing/brs2.png");
-  cursor: pointer;
-  /* -webkit-filter: drop-shadow(12px 12px 7px rgba(254, 226, 136, 0.5));
-  filter: drop-shadow(12px 12px 7px rgba(254, 226, 136, 0.5)); */
 }
 @media screen and (max-width: 960px) {
   .blueno {
