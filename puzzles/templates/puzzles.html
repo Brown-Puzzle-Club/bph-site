@@ -8,11 +8,12 @@
   <link rel="stylesheet" href="/static/css/rounds/brs-landing.css">
 {% else %}
   <link rel="stylesheet" href="/static/css/rounds/cthulu-landing.css">
+  <link rel="stylesheet" href="/static/css/rounds/themes/cthulu-purple.css">
 {% endif %}
 {% endblock %}
 
 
-<div class="background"></div>
+<!-- <div class="background"></div> -->
 
 {% for round in rounds.values %}
   <a href="{% url 'round' round.round.slug %}">
