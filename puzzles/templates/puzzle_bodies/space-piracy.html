@@ -1,32 +1,64 @@
 {% extends "puzzle.html" %}
 {% block puzzle-body-md %}
 
-Space pirates are surprisingly basic, and they always seem to be missing something.
+<style>
+  #output {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
-<div id="clues">
-  <ol style="list-style-type:none;">
-      <li>Izanagi, for example</li>
-      <li>They can make good neighbors</li>
-      <li>Parisian party</li>
-      <li>Desist partner</li>
-      <li>Absurd comedy</li>
-      <li>Programmer's product</li>
-      <li>Naval cry for help</li>
-      <li>Old contraction</li>
-      <li>Fear</li>
-      <li>Somewhat unrelated remark</li>
-      <li>Most secure</li>
-      <li>They can be stolen, rounded, or loaded</li>
-  </ol>
-</div>
+  html {
+    background-color: #191919;
+  }
+
+  .puzzle-main {
+    background-color: #191919;
+  } 
+
+  h1, footer, footer a {
+    color: cadetblue;
+  }
+
+  form {
+    display: flex;
+  }
+
+  input[type="text"] {
+    background-color: #272727;
+    color: white;
+    margin: 10px;
+    border-radius: 4px;
+  }
+
+  input[type="submit"] {
+    background-color: aliceblue;
+    margin-top: 10px;
+  }
+
+  footer a:hover {
+    color: white;
+  }
+
+
+  .content {
+    font-family: 'Consolas';
+    /* color: goldenrod; */
+    color: cadetblue;
+}
+</style>
+
+
+
+To hack the space station, you'll need more fingers than the average astronaut and familiarity with the crew's favorite functions.  
 
 <form id="space-piracy-form" autocomplete="off" action="javascript:void(0);">
     {# Adding the csrf_token tag is sort of a hack, because we don't care about having an <input> tag with the token; we just care about having the cookie. #}
     {% csrf_token %}
-    <input type="text" name="guess" id="guess" placeholder="Guess">
+    <input type="text" name="guess" id="guess" placeholder="ENTER NUMBER HERE" oninput="this.value = this.value.toUpperCase();">
     <input type="submit" value="Guess!">
-    <div id="output">...</div>
 </form>
+<div id="output"><i>Type a number in the field above and submit to make a guess.</i></div>
 
 <script type="text/javascript">
 // This demo code uses jQuery and modern JavaScript features flagrantly.
@@ -34,6 +66,7 @@ Space pirates are surprisingly basic, and they always seem to be missing somethi
 document.addEventListener('DOMContentLoaded', () => {
     async function submit() {
         $('#output').empty()
+        $('#output').css('color', 'cadetblue');
 
         $('#guess').prop("disabled", true);
         $('#submit').prop("disabled", true);
@@ -54,19 +87,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 let res = await result.json();
                 if (res.error) {
                     $('#output').text(`Error: ${res.error}`);
+                    $('#output').css('color', '#ae7575');
                 } else {
-                    // $('#output').text(res.correct ? "Right!" : "Wrong!");
-                    // $('#output').text(res.table.length);
+                    $('#output').append(`<table id="table"></table>`);
+
+                    $('#table').append(`<tr id="tr-${0}" style="color: white;"></tr>`);
+                    $(`#tr-${0}`).append(`<td></td>`);
+                    $(`#tr-${0}`).append(`<td><b>Errors/Warnings</b></td>`);
+                    $(`#tr-${0}`).append(`<td><b>Results</b></td>`);
                     
                     for (let i = 0; i < res.table.length; i++) {
-                      const result = res.table[i].result;
-                      const idx = res.table[i].index;
-
-                      if (result === "just right!") {
-                        $('#output').append(`<p style="font-weight: bold; color: green;">${idx}: ${result}</p>`);
-                      } else {
-                        $('#output').append(`<p>${idx}: ${result}</p>`);
-                      }
+                      const result = res.table[i].response_text;
+                      const overlap = res.table[i].overlap;
+                      const style = res.table[i].response_text.includes("No errors") ? "color: white;" : ""
+                      //const idx = res.table[i].index; 
+                      $('#table').append(`<tr id="tr-${i+1}"></tr>`);
+                      //$('#output').append(`<p>${i}: <b>${result}</b> (${overlap})</p>`);
+                      $(`#tr-${i+1}`).append(`<td style="color: white; text-align: center;">${i}</td>`);
+                      $(`#tr-${i+1}`).append(`<td style="${style}">${result}</td>`);
+                      $(`#tr-${i+1}`).append(`<td>${overlap}</td>`);
                     }
                     
                 }
@@ -74,6 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (e) {
             // This error handling will be very poor.
             $('#output').text(`Error: ${e}`);
+            $('#output').css('color', '#ae7575');
         }
         // calls you might make: .val(""), .select(), .focus()
         $('#guess').prop("disabled", false);
