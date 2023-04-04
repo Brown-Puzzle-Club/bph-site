@@ -475,12 +475,16 @@ class Team(models.Model):
 
     @staticmethod
     def compute_unlocks(context):
+        # print("SOLVES:", context.team.solves)
         metas_solved = []
         puzzles_unlocked = collections.OrderedDict()
         unlocks = []
         for puzzle in context.all_puzzles:
             if context.team and puzzle.is_meta:
-                metas_solved.append(puzzle.id in context.team.solves)
+                if puzzle.id in context.team.solves:
+                  # print("META SOLVED:", puzzle)
+                  metas_solved.append(puzzle)
+        # print("META SOLVED CNT:", len(metas_solved))
 
         for puzzle in context.all_puzzles:
             unlocked_at = None
@@ -496,7 +500,7 @@ class Team(models.Model):
             #     unlocked_at = context.start_time
             elif context.team:
                 (global_solves, local_solves) = context.team.main_round_solves
-                if 0 <= puzzle.unlock_global <= global_solves and (global_solves or any(metas_solved)):
+                if 0 <= puzzle.unlock_global <= global_solves: # and (global_solves or any(metas_solved)):
                     unlocked_at = context.now
                 if 0 <= puzzle.unlock_local <= local_solves[puzzle.round.slug]:
                     unlocked_at = context.now
