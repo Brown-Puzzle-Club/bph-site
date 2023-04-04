@@ -144,7 +144,10 @@ def require_before_hunt_closed_or_admin(request):
     if request.context.hunt_is_closed:
         messages.error(request, _('Sorry, the hunt is over.'))
         return redirect('index')
-
+    
+#TODO: possibly add a new access restrictors for:
+# - between registration close and hunt start
+# - between hunt end and solutions open.
 
 # These are basically static pages:
 
