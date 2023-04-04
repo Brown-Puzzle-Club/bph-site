@@ -49,6 +49,7 @@ from puzzles.forms import (
     TeamMemberForm,
     TeamMemberFormset,
     LogisticsForm,
+    TeamMergeForm,
     TeamMemberModelFormset,
     SubmitAnswerForm,
     RequestHintForm,
@@ -192,6 +193,8 @@ def register(request):
 
         logistics_form = LogisticsForm(request.POST)
 
+        merge_form = TeamMergeForm(request.POST)
+
         # The below only logs the response and doesn't do anything with it.
         # If you have spam problems, you can reject when the score is low.
         if 'g-recaptcha-response' in request.POST:
@@ -207,10 +210,11 @@ def register(request):
             except Exception:
                 pass
 
-        if form.is_valid() and formset.is_valid() and logistics_form.is_valid():
+        if form.is_valid() and formset.is_valid() and logistics_form.is_valid() and merge_form.is_valid():
             data = form.cleaned_data
             formset_data = formset.cleaned_data
             logistics_data = logistics_form.cleaned_data
+            merge_data = merge_form.cleaned_data
 
             user = User.objects.create_user(
                 data.get('team_id'),
@@ -237,6 +241,11 @@ def register(request):
                 classroom_need=logistics_data.get('classroom_need'),
                 location=logistics_data.get('where_to_find'),
                 phone_number=logistics_data.get('phone_number'),
+                # merge info
+                merge_out=merge_data.get('merge_out'),
+                merge_out_preferences=merge_data.get('merge_out_preferences'),
+                merge_in=merge_data.get('merge_in'),
+                merge_in_preferences=merge_data.get('merge_in_preferences'),
             )
             for team_member in formset_data:
                 TeamMember.objects.create(
@@ -261,11 +270,13 @@ def register(request):
         form = RegisterForm()
         formset = team_members_formset()
         logistics_form = LogisticsForm()
+        merge_form = TeamMergeForm()
 
     return render(request, 'register.html', {
         'form': form,
         'team_members_formset': formset,
         'logistics_form': logistics_form,
+        'merge_form': merge_form,
     })
 
 

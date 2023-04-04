@@ -220,6 +220,11 @@ class Team(models.Model):
     location = models.CharField(default=_('NO LOCATION'), max_length=200, verbose_name=_('Location during hunt'), help_text=_('(e.g: Hegeman Common Room, Barus and Holley Room ###, Zoom, Discord, etc.)'))
     phone_number = models.CharField(default=_('-1'), max_length=200, verbose_name=_('Phone number'))
 
+    merge_out = models.BooleanField(verbose_name=_('Is the team interested in joining up with a larger team for the hunt.'), default=False)
+    merge_out_preferences = models.CharField(default="", max_length=200, verbose_name=_('Merge out with larger team preferences'), help_text=_('(e.g. size, age-range, in-person vs remote, etc.)'))
+    merge_in = models.BooleanField(verbose_name=_('Is the team interested in taking on lone-solvers.'), default=False)
+    merge_in_preferences = models.CharField(default="", max_length=200, verbose_name=_('Lone solver merge in preferences'), help_text=_('(e.g. size, age-range, in-person vs remote, etc.). DO NOT GIVE A TEAM MORE THAN THE NUMBER OF MEMBERS THEY ARE ASKING FOR!'))
+
     class Meta:
         verbose_name = _('team')
         verbose_name_plural = _('teams')
