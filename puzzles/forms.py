@@ -94,7 +94,7 @@ class LogisticsForm(forms.Form):
     brown_members = forms.BooleanField(label=_('Do you have any Brown/RISD community members on your team?'), help_text=_('(Undergraduates, Graduates, Faculty, or Alumni)'), required=False)
     brown_affiliation_desc = forms.CharField(label=_('For each member, please describe their affiliation to Brown/RISD (if applicable)'), max_length=200, required=False)
     in_person_sat = forms.CharField(label=_('How many of your team members will be attending the event in person on Saturday, April 15th?'), required=True)
-    in_person_sun = forms.CharField(label=_('How many of your team members will be attending the in person on Sunday, April 16th?'), required=True)
+    in_person_sun = forms.CharField(label=_('How many of your team members will be attending the event in person on Sunday, April 16th?'), required=True)
     classroom_need = forms.BooleanField(label=_('Do you want to request a classroom to hunt in?'),help_text=_('Our availability will be limited, so please do not request one if you can make alternate plans.'), required=False)
     where_to_find = forms.CharField(label=_("Where can we best find you during the hunt while you're solving puzzles?"), help_text=_('(e.g: Hegeman Common Room, Barus and Holley Room ###, Zoom, Discord, etc.)'), max_length=200)
     # phone_regex = RegexValidator(regex=r'^[0-9\.-]$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
@@ -124,6 +124,18 @@ class LogisticsForm(forms.Form):
                 _('Please enter a valid phone number.')
             )
 
+        return cleaned_data
+
+class TeamMergeForm(forms.Form):
+    merge_out = forms.BooleanField(label=_('Would you be interested in joining up with a larger team for the hunt?'), required=False)
+    merge_out_preferences = forms.CharField(label=_('If applicable, please detail your preferences for the team you would like to join'), help_text=_('(e.g. size, age-range, in-person vs remote, etc.). We will try our best to accomodate everyone to their prefrences.'), max_length=200, required=False)
+    merge_in = forms.BooleanField(label=_('Would you be interested in taking on lone-solvers onto your team?'), required=False)
+    merge_in_preferences = forms.CharField(label=_('If applicable, please detail your preferences for the lone-solvers you would like to take on'), help_text=_('(e.g. number of new members, age-range, in-person vs remote, etc.). We will not add more members to your team than you prefer.'), max_length=200, required=False)
+
+    def clean(self):
+        cleaned_data = super(TeamMergeForm, self).clean()
+
+        # may need more validation later
         return cleaned_data
 
 def validate_team_emails(formset):
