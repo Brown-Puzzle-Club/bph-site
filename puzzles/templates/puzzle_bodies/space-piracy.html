@@ -1,7 +1,6 @@
 {% extends "puzzle.html" %}
 {% block puzzle-body-md %}
 
-
 <style>
   #output {
     display: flex;
@@ -10,26 +9,31 @@
   }
 
   html {
-    background-color: black;
+    background-color: #191919;
   }
 
   .puzzle-main {
-    background-color: black;
+    background-color: #191919;
   } 
 
   h1, footer, footer a {
     color: cadetblue;
   }
 
+  form {
+    display: flex;
+  }
+
   input[type="text"] {
-    background-color: black;
+    background-color: #272727;
     color: white;
-    margin-top: 10px;
-    padding-bottom: 9px;
+    margin: 10px;
+    border-radius: 4px;
   }
 
   input[type="submit"] {
     background-color: aliceblue;
+    margin-top: 10px;
   }
 
   footer a:hover {
@@ -43,6 +47,8 @@
     color: cadetblue;
 }
 </style>
+
+
 
 To hack the space station, you'll need more fingers than the average astronaut and familiarity with the crew's favorite functions.  
 
@@ -60,6 +66,7 @@ To hack the space station, you'll need more fingers than the average astronaut a
 document.addEventListener('DOMContentLoaded', () => {
     async function submit() {
         $('#output').empty()
+        $('#output').css('color', 'cadetblue');
 
         $('#guess').prop("disabled", true);
         $('#submit').prop("disabled", true);
