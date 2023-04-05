@@ -19,7 +19,7 @@ function askName(force) {
     }
 
     if (!name || force) {
-        name = prompt(gettext('Who are you? (personal Discord name/username, excluding the #0000 tag; this is for internal use)'));
+        name = prompt('Who are you? (personal Discord name/username, excluding the #0000 tag; this is for internal use)');
     }
 
     if (name) {
