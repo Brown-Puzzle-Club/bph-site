@@ -150,7 +150,9 @@ def submit(request):
         
         table = display_results(guess)
 
-        return {'table': table}
+        guess_san = guess.lstrip("0") if guess != "0" else "0"
+
+        return {'table': table, 'guess': guess_san}
     except (KeyError, AttributeError):
         # This error handling is pretty rough.
         return {
