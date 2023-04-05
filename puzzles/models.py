@@ -930,6 +930,7 @@ def notify_on_hint_update(sender, instance, created, update_fields, **kwargs):
     # to control which fields are written, which can be checked here. This is
     # to be safe and prevent overtriggering of these handlers, e.g. spamming
     # the team with more emails if an answered hint is somehow claimed again.
+    return
     if not update_fields:
         update_fields = ()
     if instance.status == Hint.NO_RESPONSE:
