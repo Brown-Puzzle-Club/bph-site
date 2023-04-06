@@ -1,42 +1,103 @@
 {% extends "puzzle.html" %}
 {% block puzzle-body-md %}
-{% load static %}
-
-The Blueno Resurrection Society has been researching local sculptures to try and bring back Blueno, but their notes seem to be unreadable.
-<br><br>How can they bring back Blueno?
-{: .flavor}
 
 <style>
     .instructions {
-        font-family: monospace;
+        font-family: Georgia, "Times New Roman", Times, serif;
+    }
+    .title {
         text-align: center;
+    }
+    img {
+        display: block; 
+        margin-left: auto; 
+        margin-right: auto;
+        width: 100%;
+    }
+    .dark {
+        background-color: black;
     }
 </style>
 
 <div class="instructions">
+<span class="title"><u>INSTRUCTIONS FOR RESURRECTION:</u></span>
 
-    Start at the location clued by the answer to (Missing Puzzle). Count the number of people at this location and index it into your current location's answer to get your FIRST LETTER.<br><br>
-    Go in a direction until you reach a XXXXXX XXXXX XXXXX X small oval fruit. Turn right along that XXXXXX, and then again XXXX XXX XXXX X XXXXX that sells textbooks. Continue down XXXX XXXXXX for about 0.2 miles until XXX XXX XX XXXXXXXXXXX XXXXXXXXXX the word PERDITION. Pass under the XXXX XXXX XXXX XXXX XX inscribed on, and continue straight ahead. You will see another location. Count the number of people at this location and index it into your current location's answer to get your FOURTH LETTER.
+<ol>
+    <li>Draw a suitable shape in chalk. (See the diagram below.)</li>
+    <li>Place your anchoring pieces at the points of the shape.</li>
+        <ol>
+            <li>The MUSICAL anchor should go in the top-left (note: this is a temporary anchor and may not be listed with the others!)</li>
+            <li>The SEPARATION anchor should go in the top-right</li>
+            <li>The THOUGHT anchor should go on the right</li>
+            <li>The STATE anchor should go on the bottom</li>
+            <li>The SEAT anchor should go on the left</li>
+        </ol>
+    <li>Draw the suitable connections of power between your anchors, along the lines.</li>
+    <li>Count dramatically, and very, very carefully. Consider only the shape and official title of the anchor. (Visiting the anchors may help.)</li>
+    <li>Read around the circle, clockwise, to receive your final incantation.</li>
+</ol>
 
-    <hr>
+<span class="title"><u>APPENDIX 1: DIAGRAM</u></span>
 
-    Start at the location clued by the answer to Work Together. The last letter of that answer is a compass direction; stand on that side of the location and face it. Count the number of topological holes on this side and index it into your current location's answer to get your THIRD LETTER. (Tip: You can check whether something is a hole or not by poking your finger through it. Photos may lie to you!)<br><br>
-    Turn left, and XXXX XXXXX XXX XXX a mathematical symbol across the street, and turn right XXXXXXXXX XXX XXXX. XXXX X right, eventually passing a XXXXXXX XXXX XXXX crosses. When there is a street on your left, turn to pass through a gate and XXXX a monument. Follow XXX XXXXXXXX XXXX XXXXX XXX XXXX a boulder in a tree. After passing between two buildings, you will see another location on your right. Count the number of topological holes in this location and index it into your current location's answer to get your SIXTH LETTER.
+<img src="{% static 'puzzle_resources/bring-back-blueno/diagram.png' %}">
 
-    <hr>
+<span class="title"><u>APPENDIX 2: CONNECTIONS OF POWER</u></span>
 
-    Start at the location clued by the answer to Built In A Day. Count the number of legs at this location and index it into your current location's answer to get your FIFTH LETTER.<br><br>
-    On the western side of the location, stand so you're facing a boulder which has XXX XXXXXX one thousand, XXXX XXXXXXX XXX twenty six. XXXX left XXX walk XX XXXX XXXXXXXXX. When you reach the street, head XX XXX XXXXXXXXX that will take you past XX XXXXXXXXXXX on a building ending with THEE. (It's right where you come out onto the street. Look above you!) XXXX XXX XXX a number divisible by one XXXXXXX and twenty seven, reverse direction, and continue until you reach X XXXXXX XXXXX XX one greater. Turn immediately, to pass through a XXXX, and walk until you see X XXXX XXXX masks on your left, above a door. You will see another location. Count the number of legs at this location (in this case, a leg is any connection between the location and the ground) and index it into your current location's answer to get your EIGHTH LETTER.
+<span class="title">Number of...</span>
+<table>
+    <tr>
+        <td></td>
+        <td>MUSICAL</td>
+        <td>SEPARATION</td>
+        <td>THOUGHT</td>
+        <td>STATE</td>
+        <td>SEAT</td>
+    </tr>
+    <tr>
+        <td>SEAT</td>
+        <td>letters</td>
+        <td>Arabic numerals</td>
+        <td>legs*</td>
+        <td>words</td>
+        <td class="dark"></td>
+    </tr>
+    <tr>
+        <td>STATE</td>
+        <td>syllables</td>
+        <td>holes** on the larger side</td>
+        <td>animals</td>
+        <td class="dark"></td>
+        <td class="dark"></td>
+    </tr>
+    <tr>
+        <td>THOUGHT</td>
+        <td>people</td>
+        <td>arms</td>
+        <td class="dark"></td>
+        <td class="dark"></td>
+        <td class="dark"></td>
+    </tr>
+    <tr>
+        <td>SEPARATION</td>
+        <td>holes** on the smaller side</td>
+        <td class="dark"></td>
+        <td class="dark"></td>
+        <td class="dark"></td>
+        <td class="dark"></td>
+    </tr>
+    <tr>
+        <td>MUSICAL</td>
+        <td class="dark"></td>
+        <td class="dark"></td>
+        <td class="dark"></td>
+        <td class="dark"></td>
+        <td class="dark"></td>
+    </tr>
+</table>
 
-    <hr>
+*This includes any connection between the anchor and the ground.<br>
+**Holes means topological holes which you can poke your finger through. Photos might lie to you.
 
-    Start at the location clued by the answer to Misreader of the Free World. Count the number of syllables at this location and index it into your current location's answer to get your SEVENTH LETTER.<br><br>
-    Behind you XX X XXX XX XXXXX XXXX XXX traditionally closed except for two major events. Go through XXXX, and turn, passing a "gift from the Italians”. Take the next XXXXX turn onto a street which violates the rules of the road. Next, turn to head towards X XXXXXXXX XXXX X mail services, and turn left when you pass it. After you pass a theater, you will see another location. Count the number of syllables at this location and index it into your current location's answer to get your TENTH LETTER.
-
-    <hr>
-
-    Start at the location clued by the answer to The ABC's of Puzzle Solving. Count the number of Arabic numerals at this location and index it into your current location's answer to get your NINTH LETTER.<br><br>
-    Nearby you can see a XXXX. Walk past the XXXX to the left and go down a set of XXXXXX, XXXX X XXXX XXXX XXXX MAIL ROOM. Continue onwards, up XXXX XXXXX, and XXXX XX X XXX XX four red objects. Taking the next right, and then the next left, XXXX XX XX XXXXXXXXX XX XXX pass under it, and then cross the street. You will see another location. Count the number of Arabic numerals at this location and index it into your current location's answer to get your SECOND LETTER.
 </div>
 
 {% endblock %}
