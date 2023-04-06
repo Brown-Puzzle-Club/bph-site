@@ -5,201 +5,1290 @@
 <!-- Initial attempt at formatting this up - not nearly in a presentable state yet, and also currently spoilers -->
 
 <style>
-    td {
-      border: 1px solid black;
-      margin: 10px;
-      text-align: center;
+    .puzzle-body {
+    font-family: Georgia, "Times New Roman", Times, serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
     }
-    table {
-        margin: 10px;
-    }
-    </style>
 
-<table cellpadding="4" cellspacing="2" style="margin:auto">
-    <tbody><tr style="text-align:center;">
-    <td>ffi</td>
-    <td>fl</td>
-    <td><span style="font-size:87%;">5/m</span></td>
-    <td><span style="font-size:87%;">4/m</span></td>
-    <td>'</td>
-    <td>k
-    </td>
-    <td rowspan="3" colspan="2">e
-    </td>
-    <td rowspan="7">
-    </td>
-    <td>1
-    </td>
-    <td>2
-    </td>
-    <td>3
-    </td>
-    <td>4
-    </td>
-    <td>5
-    </td>
-    <td>6
-    </td>
-    <td>7
-    </td>
-    <td>8
-    </td>
-    <td rowspan="7">
-    </td>
-    <td>$
-    </td>
-    <td>£
-    </td>
-    <td>-
-    </td>
-    <td>Æ
-    </td>
-    <td>Œ
-    </td>
-    <td>æ
-    </td>
-    <td>œ
-    </td></tr>
-    <tr style="text-align:center;">
-    <td>j<br>&nbsp;
-    </td>
-    <td rowspan="2">b
-    </td>
-    <td rowspan="2" colspan="2">c
-    </td>
-    <td rowspan="2" colspan="2">d
-    </td>
-    <td rowspan="2" colspan="2">i
-    </td>
-    <td rowspan="2" colspan="2">s
-    </td>
-    <td rowspan="2">f
-    </td>
-    <td rowspan="2">g
-    </td>
-    <td>ff
-    </td>
-    <td>9
-    </td>
-    <td>A
-    </td>
-    <td>B
-    </td>
-    <td>C
-    </td>
-    <td>D
-    </td>
-    <td>E
-    </td>
-    <td>F
-    </td>
-    <td>G
-    </td></tr>
-    <tr style="text-align:center;">
-    <td>?
-    </td>
-    <td>fi
-    </td>
-    <td>0
-    </td>
-    <td rowspan="2">H
-    </td>
-    <td rowspan="2">I
-    </td>
-    <td rowspan="2">K
-    </td>
-    <td rowspan="2">L
-    </td>
-    <td rowspan="2">M
-    </td>
-    <td rowspan="2">N
-    </td>
-    <td rowspan="2">O
-    </td></tr>
-    <tr style="text-align:center;">
-    <td>!
-    </td>
-    <td rowspan="2">l
-    </td>
-    <td rowspan="2" colspan="2">m
-    </td>
-    <td rowspan="2" colspan="2">n
-    </td>
-    <td rowspan="2" colspan="2">h
-    </td>
-    <td rowspan="2" colspan="2">o
-    </td>
-    <td rowspan="2">y
-    </td>
-    <td rowspan="2">p
-    </td>
-    <td rowspan="2">w
-    </td>
-    <td rowspan="2">,
-    </td>
-    <td rowspan="2"><span style="font-size:87%;">en<br>qd</span>
-    </td>
-    <td rowspan="2"><span style="font-size:87%;">em<br>qd</span>
-    </td></tr>
-    <tr style="text-align:center;">
-    <td>z
-    </td>
-    <td rowspan="2">P
-    </td>
-    <td rowspan="2">Q
-    </td>
-    <td rowspan="2">R
-    </td>
-    <td rowspan="2">S
-    </td>
-    <td rowspan="2">T
-    </td>
-    <td rowspan="2">V
-    </td>
-    <td rowspan="2">W
-    </td></tr>
-    <tr style="text-align:center;">
-    <td>x
-    </td>
-    <td rowspan="2">v
-    </td>
-    <td rowspan="2" colspan="2">u
-    </td>
-    <td rowspan="2" colspan="2" style="text-align:center;">t
-    </td>
-    <td rowspan="2" colspan="2"><span style="font-size:87%;">3/em<br>spaces</span>
-    </td>
-    <td rowspan="2" colspan="2" style="text-align:center;">a
-    </td>
-    <td rowspan="2" colspan="2" style="text-align:center;">r
-    </td>
-    <td>;
-    </td>
-    <td>:
-    </td>
-    <td rowspan="2" colspan="2"><span style="font-size:87%;">2 &amp; 3-em<br>quads</span>
-    </td></tr>
-    <tr style="text-align:center;">
-    <td>q<br>&nbsp;
-    </td>
-    <td>.
-    </td>
-    <td>-
-    </td>
-    <td>X
-    </td>
-    <td>Y
-    </td>
-    <td>Z
-    </td>
-    <td>J
-    </td>
-    <td>U
-    </td>
-    <td>&amp;
-    </td>
-    <td>ffl
-    </td></tr>
-</tbody></table>
+    .boxes {
+    --border: 2px;
+    --width: 25px;
+    --height: 20px;
+    --outline: 12px;
+    --translate: 8px;
+    --skew-angle: 45deg;
+    }
+
+    .border {
+    border: var(--border) solid black;
+    }
+
+    .flex-row {
+    display: flex;
+    flex-direction: row;
+    }
+
+    .flex-col {
+    display: flex;
+    flex-direction: column;
+    width: 600px;
+    }
+
+    .flex-col-reverse {
+    flex-direction: column-reverse;
+    }
+
+    .boxes-rows {
+    gap: 10px;
+    }
+
+    .box {
+    width: var(--width);
+    height: var(--height);
+    transform: scale(1, -1);
+    text-align: center;
+    padding: 5px 0;
+    }
+
+    .box-solution {
+    width: var(--width);
+    height: var(--height);
+    transform: scale(1, 1);
+    text-align: center;
+    padding: 5px 0;
+    }
+
+    .box-end {
+    height: var(--height);
+    width: 100%;
+    padding: 5px 0;
+    }
+
+    .box-row-end {
+    width: 100%;
+    }
+
+    .box-end-container {
+    flex-grow: 1;
+    }
+
+    .bottom-outline-end {
+    width: calc(100% - 20px);
+    height: var(--outline);
+    border-top-width: 0px !important;
+    transform: skew(var(--skew-angle)) translateX(var(--translate));
+    }
+
+    .bottom-outline {
+    width: var(--width);
+    height: var(--outline);
+    border-top-width: 0px !important;
+    transform: skew(var(--skew-angle)) translateX(var(--translate));
+    }
+
+    /* height would be implicitly same as box */
+    .right-outline {
+    width: var(--outline);
+    border-left-width: 0 !important;
+    border-bottom-width: 0 !important;
+    transform: skew(0deg, var(--skew-angle)) translateY(var(--translate));
+    }
+
+    .missing {
+    width: 130px;
+    }
+
+    .box-container {
+    position: relative;
+    padding: 0px 100px;
+    }
+
+    #lone-box-1 {
+    position: absolute;
+    bottom: 35px;
+    right: 50px;
+    }
+
+    #lone-box-2 {
+    position: absolute;
+    bottom: 80px;
+    right: 0px;
+    }
+    #lone-box-3 {
+    position: absolute;
+    bottom: 250px;
+    right: 20px;
+    }
+    #lone-box-4 {
+    position: absolute;
+    bottom: 230px;
+    left: 50px;
+    }
+    #lone-box-5 {
+    position: absolute;
+    bottom: 260px;
+    left: 0px;
+    }
+    #lone-box-6 {
+    position: absolute;
+    top: 380px;
+    left: 30px;
+    }
+
+    #lone-box-1-solution {
+    position: absolute;
+    top: 35px;
+    right: 50px;
+    }
+
+    #lone-box-2-solution {
+    position: absolute;
+    top: 80px;
+    right: 0px;
+    }
+    #lone-box-3-solution {
+    position: absolute;
+    top: 250px;
+    right: 20px;
+    }
+    #lone-box-4-solution {
+    position: absolute;
+    top: 230px;
+    left: 50px;
+    }
+    #lone-box-5-solution {
+    position: absolute;
+    top: 260px;
+    left: 0px;
+    }
+    #lone-box-6-solution {
+    position: absolute;
+    bottom: 380px;
+    left: 30px;
+    }
+
+    table,
+    th,
+    td {
+    border: 2px solid black;
+    }
+
+    #title {
+    text-align: center;
+    }
+
+    .solution {
+    max-width: 700px;
+    }
+
+    b {
+    /* Underline */
+    text-decoration: underline;
+    }
+
+    #reminder-box {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    }
+
+    .prompt {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid black;
+    padding: 10px 25px;
+}
+</style>
+
+<div class="puzzle-body">
+    <div>
+      <table cellpadding="4" cellspacing="2" style="margin: auto">
+        <tbody>
+          <tr style="text-align: center">
+            <td colspan="25"><strong>Case 1</strong></td>
+          </tr>
+          <tr style="text-align: center">
+            <td>1</td>
+            <td>2</td>
+            <td><span style="font-size: 87%">3</span></td>
+            <td><span style="font-size: 87%">4</span></td>
+            <td>5</td>
+            <td>6</td>
+            <td rowspan="3" colspan="2">7</td>
+            <td rowspan="7"></td>
+            <td>8</td>
+            <td>9</td>
+            <td>10</td>
+            <td>11</td>
+            <td>12</td>
+            <td>13</td>
+            <td>14</td>
+            <td>15</td>
+            <td rowspan="7"></td>
+            <td>16</td>
+            <td>17</td>
+            <td>18</td>
+            <td>19</td>
+            <td>20</td>
+            <td>21</td>
+            <td>22</td>
+          </tr>
+          <tr style="text-align: center">
+            <td>23<br />&nbsp;</td>
+            <td rowspan="2">24</td>
+            <td rowspan="2" colspan="2">25</td>
+            <td rowspan="2" colspan="2">26</td>
+            <td rowspan="2" colspan="2">27</td>
+            <td rowspan="2" colspan="2">28</td>
+            <td rowspan="2">29</td>
+            <td rowspan="2">30</td>
+            <td>31</td>
+            <td>32</td>
+            <td>33</td>
+            <td>34</td>
+            <td>35</td>
+            <td>36</td>
+            <td>37</td>
+            <td>38</td>
+            <td>39</td>
+          </tr>
+          <tr style="text-align: center">
+            <td>39</td>
+            <td>40</td>
+            <td>41</td>
+            <td rowspan="2">42</td>
+            <td rowspan="2">43</td>
+            <td rowspan="2">44</td>
+            <td rowspan="2">45</td>
+            <td rowspan="2">46</td>
+            <td rowspan="2">47</td>
+            <td rowspan="2">48</td>
+          </tr>
+          <tr style="text-align: center">
+            <td>49</td>
+            <td rowspan="2">50</td>
+            <td rowspan="2" colspan="2">51</td>
+            <td rowspan="2" colspan="2">52</td>
+            <td rowspan="2" colspan="2">53</td>
+            <td rowspan="2" colspan="2">54</td>
+            <td rowspan="2">55</td>
+            <td rowspan="2">56</td>
+            <td rowspan="2">57</td>
+            <td rowspan="2">58</td>
+            <td rowspan="2"><span style="font-size: 87%">59</span></td>
+            <td rowspan="2"><span style="font-size: 87%">60</span></td>
+          </tr>
+          <tr style="text-align: center">
+            <td>61</td>
+            <td rowspan="2">62</td>
+            <td rowspan="2">63</td>
+            <td rowspan="2">64</td>
+            <td rowspan="2">65</td>
+            <td rowspan="2">66</td>
+            <td rowspan="2">67</td>
+            <td rowspan="2">68</td>
+          </tr>
+          <tr style="text-align: center">
+            <td>69</td>
+            <td rowspan="2">70</td>
+            <td rowspan="2" colspan="2">71</td>
+            <td rowspan="2" colspan="2" style="text-align: center">72</td>
+            <td rowspan="2" colspan="2">
+              <span style="font-size: 87%">73</span>
+            </td>
+            <td rowspan="2" colspan="2" style="text-align: center">74</td>
+            <td rowspan="2" colspan="2" style="text-align: center">75</td>
+            <td>76</td>
+            <td>77</td>
+            <td rowspan="2" colspan="2">
+              <span style="font-size: 87%">78</span>
+            </td>
+          </tr>
+          <tr style="text-align: center">
+            <td>79<br />&nbsp;</td>
+            <td>80</td>
+            <td>81</td>
+            <td>82</td>
+            <td>83</td>
+            <td>84</td>
+            <td>85</td>
+            <td>86</td>
+            <td>&amp;</td>
+            <td>87</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="box-container">
+      <div class="boxes">
+        <div class="flex-col flex-col-reverse boxes-rows">
+          <div class="flex-row">
+            <div>
+              <div class="flex-row">
+                <div class="box border">65</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">80</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">73</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">66</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">75</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">71</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">7</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">72</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">72</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">73</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">35</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">74</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">72</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">53</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">55</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div class="box-end-container">
+              <div class="flex-row box-row-end">
+                <div class="box-end border"></div>
+                <div class="right-outline border"></div>
+              </div>
+              <div class="bottom-outline-end border"></div>
+            </div>
+          </div>
+
+          <div class="flex-row">
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div class="box-end-container">
+              <div class="flex-row box-row-end">
+                <div class="box-end border"></div>
+                <div class="right-outline border"></div>
+              </div>
+              <div class="bottom-outline-end border"></div>
+            </div>
+          </div>
+
+          <div class="flex-row">
+            <div class="box-end-container">
+              <div class="flex-row box-row-end">
+                <div class="box-end border"></div>
+                <div class="right-outline border"></div>
+              </div>
+              <div class="bottom-outline-end border"></div>
+            </div>
+          </div>
+
+          <div class="flex-row">
+            <div>
+              <div class="flex-row">
+                <div class="box border">66</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">7</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">26</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">73</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">45</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">71</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">25</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">74</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">28</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div class="box-end-container">
+              <div class="flex-row box-row-end">
+                <div class="box-end border"></div>
+                <div class="right-outline border"></div>
+              </div>
+              <div class="bottom-outline-end border"></div>
+            </div>
+          </div>
+
+          <div class="flex-row">
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div class="box-end-container">
+              <div class="flex-row box-row-end">
+                <div class="box-end border"></div>
+                <div class="right-outline border"></div>
+              </div>
+              <div class="bottom-outline-end border"></div>
+            </div>
+          </div>
+
+          <div class="flex-row">
+            <div class="box-end-container">
+              <div class="flex-row box-row-end">
+                <div class="box-end border"></div>
+                <div class="right-outline border"></div>
+              </div>
+              <div class="bottom-outline-end border"></div>
+            </div>
+          </div>
+
+          <div class="flex-row">
+            <div>
+              <div class="flex-row">
+                <div class="box border">44</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">7</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">70</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">27</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">52</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">73</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">64</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">54</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">28</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">7</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div class="box-end-container">
+              <div class="flex-row box-row-end">
+                <div class="box-end border"></div>
+                <div class="right-outline border"></div>
+              </div>
+              <div class="bottom-outline-end border"></div>
+            </div>
+          </div>
+
+          <div class="flex-row">
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div class="box-end-container">
+              <div class="flex-row box-row-end">
+                <div class="box-end border"></div>
+                <div class="right-outline border"></div>
+              </div>
+              <div class="bottom-outline-end border"></div>
+            </div>
+          </div>
+
+          <div class="flex-row">
+            <div class="box-end-container">
+              <div class="flex-row box-row-end">
+                <div class="box-end border"></div>
+                <div class="right-outline border"></div>
+              </div>
+              <div class="bottom-outline-end border"></div>
+            </div>
+          </div>
+
+          <div class="flex-row">
+            <div>
+              <div class="flex-row">
+                <div class="box border">45</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">80</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">73</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">62</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">74</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">30</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">7</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div class="box-end-container">
+              <div class="flex-row box-row-end">
+                <div class="box-end border"></div>
+                <div class="right-outline border"></div>
+              </div>
+              <div class="bottom-outline-end border"></div>
+            </div>
+          </div>
+
+          <div class="flex-row">
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div class="box-end-container">
+              <div class="flex-row box-row-end">
+                <div class="box-end border"></div>
+                <div class="right-outline border"></div>
+              </div>
+              <div class="bottom-outline-end border"></div>
+            </div>
+          </div>
+
+          <div class="flex-row">
+            <div class="box-end-container">
+              <div class="flex-row box-row-end">
+                <div class="box-end border"></div>
+                <div class="right-outline border"></div>
+              </div>
+              <div class="bottom-outline-end border"></div>
+            </div>
+          </div>
+
+          <div class="flex-row">
+            <div>
+              <div class="flex-row">
+                <div class="box border">46</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">27</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">25</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">53</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">74</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">73</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">44</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">74</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">71</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">29</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">51</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">74</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">52</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div class="box-end-container">
+              <div class="flex-row box-row-end">
+                <div class="box-end border"></div>
+                <div class="right-outline border"></div>
+              </div>
+              <div class="bottom-outline-end border"></div>
+            </div>
+          </div>
+
+          <div class="flex-row">
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div class="box-end-container">
+              <div class="flex-row box-row-end">
+                <div class="box-end border"></div>
+                <div class="right-outline border"></div>
+              </div>
+              <div class="bottom-outline-end border"></div>
+            </div>
+          </div>
+
+          <div class="flex-row">
+            <div class="box-end-container">
+              <div class="flex-row box-row-end">
+                <div class="box-end border"></div>
+                <div class="right-outline border"></div>
+              </div>
+              <div class="bottom-outline-end border"></div>
+            </div>
+          </div>
+
+          <div class="flex-row">
+            <div>
+              <div class="flex-row">
+                <div class="box border">45</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">80</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">73</div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border">65</div>
+                <div class="right-outline border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div class="missing"></div>
+
+            <div class="box-end-container">
+              <div class="flex-row box-row-end">
+                <div class="box-end border"></div>
+                <div class="right-outline border"></div>
+              </div>
+              <div class="bottom-outline-end border"></div>
+            </div>
+          </div>
+
+          <div class="flex-row">
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div>
+              <div class="flex-row">
+                <div class="box border"></div>
+              </div>
+              <div class="bottom-outline border"></div>
+            </div>
+
+            <div class="box-end-container">
+              <div class="flex-row box-row-end">
+                <div class="box-end border"></div>
+                <div class="right-outline border"></div>
+              </div>
+              <div class="bottom-outline-end border"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="boxes" id="lone-box-1">
+        <div class="flex-row">
+          <div class="box border">7</div>
+          <div class="right-outline border"></div>
+        </div>
+        <div class="bottom-outline border"></div>
+      </div>
+      <div class="boxes" id="lone-box-2">
+        <div class="flex-row">
+          <div class="box border">72</div>
+          <div class="right-outline border"></div>
+        </div>
+        <div class="bottom-outline border"></div>
+      </div>
+      <div class="boxes" id="lone-box-5">
+        <div class="flex-row">
+          <div class="box border">74</div>
+          <div class="right-outline border"></div>
+        </div>
+        <div class="bottom-outline border"></div>
+      </div>
+      <div class="boxes" id="lone-box-4">
+        <div class="flex-row">
+          <div class="box border">52</div>
+          <div class="right-outline border"></div>
+        </div>
+        <div class="bottom-outline border"></div>
+      </div>
+      <div class="boxes" id="lone-box-3">
+        <div class="flex-row">
+          <div class="box border">26</div>
+          <div class="right-outline border"></div>
+        </div>
+        <div class="bottom-outline border"></div>
+      </div>
+      <div class="boxes" id="lone-box-6">
+        <div class="flex-row">
+          <div class="box border">54</div>
+          <div class="right-outline border"></div>
+        </div>
+        <div class="bottom-outline border"></div>
+      </div>
+    </div>
+    <div class="prompt">
+      <p>Reminder: type is vertically mirrored for printing!</p>
+      <div id="reminder-box">
+        <div class="boxes">
+          <div class="boxes">
+            <div class="flex-row">
+              <div class="box border"><strong>67</strong></div>
+              <div class="right-outline border"></div>
+            </div>
+            <div class="bottom-outline border"></div>
+          </div>
+        </div>
+        <p>prints as <strong>67</strong></p>
+      </div>
+    </div>
+  </div>
 
 {% endblock %}
