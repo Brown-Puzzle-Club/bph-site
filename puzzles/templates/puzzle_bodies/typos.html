@@ -5,6 +5,39 @@
 <!-- Initial attempt at formatting this up - not nearly in a presentable state yet, and also currently spoilers -->
 
 <style>
+
+    /* FIX BASE STYLING: */
+   
+    h1 {
+      font-family: Georgia;
+      color: black;
+    }
+    main {
+      display: block;
+    }
+    th:last-child, td:last-child {
+      padding-right: 6px;
+    }
+    th:first-child, td:first-child {
+      padding-left: 6px;
+    }
+    tr:last-child td {
+      border-bottom: solid;
+  }
+
+    th, td {
+      padding: 5px;
+      text-align: center;
+    }
+
+    table {
+      border-collapse: separate;
+      text-indent: initial;
+      border-spacing: 2px;
+    }
+
+    /* NEW STYLING: */
+
     .puzzle-body {
     font-family: Georgia, "Times New Roman", Times, serif;
     display: flex;
@@ -52,6 +85,7 @@
     transform: scale(1, -1);
     text-align: center;
     padding: 5px 0;
+    line-height: 1.15;
     }
 
     .box-solution {
