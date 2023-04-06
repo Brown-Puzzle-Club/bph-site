@@ -118,6 +118,12 @@ body {
   src: url("../fonts/FingerPaint-Regular.ttf") format("truetype");
 }
 
+@font-face {
+  font-family: "Consolas";
+  src: url("../fonts/CONSOLAB.TTF") format("truetype");
+  font-weight: normal;
+}
+
 @media print {
   nav,
   .shortcuts,

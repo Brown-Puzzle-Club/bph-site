@@ -1,11 +1,33 @@
 {% extends "puzzle.html" %}
 {% block puzzle-body-md %}
 
+
 <style>
+  html {
+    --page-bg-rgb: 140, 163, 163;
+    --accent-rgb: 58, 70, 70; /*0, 85, 170;*/
+    
+    --neutral-color: rgb(140, 163, 163);
+    --accent-hover-color: #5b6f6f;
+  
+    --btn3-bg-color: #97998b;
+    --btn3-hover-color: #5d604c;
+  
+    --tray-text-color: white;
+    --tray-text-light-color: #a3b3b3;
+    --tray-bg-color: #415a5a;
+    --tray-hover-color: #6c8484;
+  }
   #output {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
+  }
+
+  /* For some reason need to fix...*/
+  .top-tabs { 
+    display: block;
   }
 
   html {
@@ -20,7 +42,7 @@
     color: cadetblue;
   }
 
-  form {
+  #space-piracy-form {
     display: flex;
   }
 
@@ -50,7 +72,7 @@
 
 
 
-To hack the space station, you'll need more fingers than the average astronaut and familiarity with the crew's favorite functions.  
+<p style="text-align: center;">To hack the space station, you'll need more fingers than the average astronaut and familiarity with the crew's favorite functions.</p>
 
 <form id="space-piracy-form" autocomplete="off" action="javascript:void(0);">
     {# Adding the csrf_token tag is sort of a hack, because we don't care about having an <input> tag with the token; we just care about having the cookie. #}
@@ -89,6 +111,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     $('#output').text(`Error: ${res.error}`);
                     $('#output').css('color', '#ae7575');
                 } else {
+                    $('#output').append(`<p style="color: #b3bcc9;">YOUR GUESS: ${res.guess}</p>`);
+
                     $('#output').append(`<table id="table"></table>`);
 
                     $('#table').append(`<tr id="tr-${0}" style="color: white;"></tr>`);
