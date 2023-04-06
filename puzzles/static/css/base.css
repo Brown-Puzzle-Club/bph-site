@@ -373,7 +373,7 @@ figcaption {
   .top-tabs {
     display: flex;
     white-space: nowrap;
-    justify-content: space-evenly;
+    /* justify-content: space-evenly; */
     font-size: 2rem;
     margin: 5px 0 0.5rem;
     line-height: 1;

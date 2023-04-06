@@ -31,6 +31,9 @@
 
 {% block content %}
 
+{% if round.slug != "blueno" %}
+<link rel="stylesheet" href="/static/css/rounds/themes/cthulu-purple.css" />
+{% endif %}
 <h1>
     {{ puzzle.name }}
     {% if puzzle_answer %}
