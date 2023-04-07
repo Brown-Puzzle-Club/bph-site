@@ -2,12 +2,33 @@
 {% load static %}
 {% block puzzle-body-md %}
 
+<style>
+    img {
+        display: block; 
+        margin-left: auto; 
+        margin-right: auto; 
+        width: 50%;
+    }
+    video {
+        display: block; 
+        margin-left: auto; 
+        margin-right: auto;
+        width: 100%;
+    }
+</style>
+
 Blueno is using his Pisot powers to approximate Blueno posts as best he can.<br><br>How can you stop Blueno's internet takeover?
 {: .flavor}
 
-<video src="{% static 'puzzle_resources/dear-blueno-meta/examples.mp4' %}"></video>
+
 
 <img src="{% static 'puzzle_resources/dear-blueno-meta/attempts.jpg' %}">
+
+<br><br>
+
+<video controls>
+    <source src="{% static 'puzzle_resources/dear-blueno-meta/examples.mp4' %}" type="video/mp4">
+</video>
 
 <div style="text-align: center;">
 Space Piracy - 3<br>
