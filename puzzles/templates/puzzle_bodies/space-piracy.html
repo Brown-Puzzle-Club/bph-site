@@ -116,9 +116,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     $('#output').append(`<table id="table"></table>`);
 
                     $('#table').append(`<tr id="tr-${0}" style="color: white;"></tr>`);
-                    $(`#tr-${0}`).append(`<td></td>`);
+                    $(`#tr-${0}`).append(`<td></td>`);  
                     $(`#tr-${0}`).append(`<td><b>Errors/Warnings</b></td>`);
-                    $(`#tr-${0}`).append(`<td><b>Results</b></td>`);
+                    $(`#tr-${0}`).append(`<td><b>Result Overlap</b></td>`);
                     
                     for (let i = 0; i < res.table.length; i++) {
                       const result = res.table[i].response_text;
