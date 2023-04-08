@@ -1,0 +1,93 @@
+{% extends "puzzle.html" %}
+{% load static %}
+{% block puzzle-body-md %}
+
+<style>
+    .title {
+        text-align: center;
+    }
+    .notice {
+        width: 100%;
+        text-align: center;
+        padding: 10px;
+        border-style: dashed;
+        border-width: 3px;
+        border-color: black;
+    }
+</style>
+
+<div class="notice">
+    Note for testsolvers: this puzzle requires both on-site presence and current student card swipe access for access to important parts of the puzzle. 
+<br>If you don't have both of those things, you unfortunately won't be able to get anywhere.
+</div>
+
+<br>When you do science, it gets written on the walls.
+{: .flavor}
+
+<span class="title"><b>Тетрис</b></span>
+
+You're playing Tetris with your old buddies... unfortunately, your screen is in black and white! How many possible arrangements of pieces could have produced the observed screen?
+
+<span class="title"><b>Exploring the Cosmos</b></span>
+
+You are an orbit explorer! You begin on the orbit in the bottom right corner that circles each center. After this orbit, 
+you only care about orbits that are completely contained in the diagram. You start moving along the orbit clockwise, and 
+whenever you encounter a new orbit for the first_time, you switch to it. You'll reach a point where there's a tiny gap 
+later on, and you find your spaceship can jump across it just fine. How many orbits do you partially explore before you start 
+spinning in circles?
+
+<span class="title"><b>Leaves Always Tell You Something</b></span>
+
+Blue = 0 and red = 1
+
+(image)
+
+<span class="title"><b>The Molecules of Life</b></span>
+
+VNV-HLD VNV-NPK NPK-HVD HVD-LDN
+
+<span class="title"><b>The Fish!</b></span>
+
+Every night, when you dream, you find yourself an intelligent cod fish that speaks with its
+owner. While you usually have a varied diet, today you feel very picky, and you decide to
+play a game to tell them what you want to eat.
+
+<ol>
+    <li>I do NOT want something that is alone in its own phylum.</li>
+    <li>I do NOT want to eat anything that can fly.</li>
+    <li>I do NOT want to eat anything that burrows into the ground.</li>
+    <li>I do NOT want to eat anything that eats lots of jellyfish.</li>
+    <li>My food should NOT have to scavenge to find its own shell.</li>
+    <li>I do NOT want to eat things even resembling rodents OR spiders.</li>
+    <li>There should NOT be a gesture with a name similar to my prey's name.</li>
+    <li>I do NOT want my prey to be from the class with the most unique orders among what I usually eat.</li>
+    <li>I do NOT want my prey to be from the same genus as another creature that I already eliminated.</li>
+</ol>
+
+I hope you give me the right prey! >:|
+
+<span class="title"><b>A Great School</b></span>
+
+<div style="font-family: monospace;">
+    Fourth came the Egyptian who taught about the One,<br>
+    Fifth came the Roman with the geocentric model,<br>
+    Sixth came he who wrote the Elements,<br>
+    Seventh came the cynic, the son of the mintmaster,<br>
+    Eighth came she who taught the masses and developed conic sections,<br>
+    Ninth came the hedonist.<br>
+</div>
+
+<br><br>Each of the six have their own favorite integers that form a sequence. What number is
+next to follow them?
+
+<span class="title"><b>Putting It All Together</b></span>
+<ul>
+    <li>-4</li>
+    <li>+4</li>
+    <li>MOD 26</li>
+    <li>AS GIVEN</li>
+    <li>(5)</li>
+    <li>SMALLEST PRIME FACTOR + 1</li>
+</ul>
+
+{% endblock %}
