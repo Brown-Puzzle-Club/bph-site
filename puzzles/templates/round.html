@@ -22,13 +22,9 @@
 <br><br>
 {% endblock %}
 
-<!-- TODO: include puzzle list again (include puzzles_list.html with round=round)-->
-{% include 'puzzles_list.html' with round=round %}
+<div class="puzzles-list">
+  {% include 'puzzles_list.html' with round=round %}
+</div>
 
-{% if hunt_is_prereleased %}
-<footer style="font-weight: bold;">
-    {% translate "PRE-RELEASE MODE" %}
-</footer>
-{% endif %}
 
 {% endblock %}
