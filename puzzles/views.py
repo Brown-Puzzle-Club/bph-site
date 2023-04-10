@@ -492,8 +492,15 @@ def puzzles(request):
 
     Most teams will visit this page a lot.'''
 
+    rounds = render_puzzles(request)
     if request.context.hunt_has_started:
-        return render(request, 'puzzles.html', {'rounds': render_puzzles(request)})
+        # if only one round available, go straight to blueno round
+        if len(rounds) == 1:
+            print(rounds)
+            slug = 'blueno'
+            template_name = 'round_bodies/{}.html'.format(slug)
+            return render(request, template_name, {'round': rounds[slug]})
+        return render(request, 'puzzles.html', {'rounds': rounds})
     elif request.context.hunt_has_almost_started:
         return render(request, 'countdown.html', {'start': request.context.start_time})
     else:

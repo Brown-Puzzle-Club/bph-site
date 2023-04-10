@@ -200,8 +200,12 @@
     <div class="content">
         {% block content %}{% endblock %}
     </div>
+    
     <footer>
-        {% translate 'Powered by <a href="https://github.com/galacticpuzzlehunt/gph-site">gph-site</a>' %}
+      {% if hunt_is_prereleased %}
+        <p style="font-weight: bold; font-size: 80%; margin-bottom: 0rem;"> {% translate "PRE-RELEASE MODE" %} </p>
+      {% endif %}
+      {% translate 'Powered by <a href="https://github.com/galacticpuzzlehunt/gph-site">gph-site</a>' %}
     </footer>
 </body>
 </html>

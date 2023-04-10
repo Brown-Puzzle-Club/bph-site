@@ -4,9 +4,9 @@ import math
 from django.views.decorators.http import require_POST
 from puzzles.messaging import log_puzzle_info
 
-passwords = [
+inputs = [
     'A5C1C0DE',
-    '0B51D1A5',
+    'DEC15105',
     'D1DAC1C5',
     '60DD55E5',
     'F0CEFEED',
@@ -18,7 +18,7 @@ passwords = [
     'A550C1AE',
     '6E0D51C5',
 ]
-
+result_col_width = 16;
 error_col_width = 60
 
 def hex_function_machine(f):
@@ -44,6 +44,27 @@ def reverse_string(s):
         return ""
     else:
         return reverse_string(s[1:]) + s[0]
+    
+def length_sensitive(f, hexit):
+    """
+    Takes an operator f on numbers and a single hexit and returns a function that uses the
+    hexit to generate a number of the same length as its input and combines them using f.
+    This is to be used to create functions to provide to hex_function_machine.
+    """
+    if len(hexit) != 1:
+        raise ValueError("Hexit length must be exactly 1. {0} has length {1}.".format(hexit, len(hexit)))
+
+    def wrapper(n):
+        hex_str = "{0:X}".format(n).zfill(len(hexit))
+        return f(int(hex_str, 16), int(hexit * len(hex_str), 16))
+
+    return wrapper
+
+def reverse_string(s):
+    if s == "":
+        return ""
+    else:
+        return reverse_string(s[1:]) + s[0]
 
 def peel_string(s):
     if len(s) <= 1:
@@ -52,23 +73,25 @@ def peel_string(s):
         return s[0] + s[-1] + peel_string(s[1:-1])
 
 def cut_and_swap(s):
-    cut_index = math.floor(len(s) / 2) + len(s) % 2
+    cut_index = len(s) // 2 + len(s) % 2
     return s[cut_index:] + s[:cut_index]
 
 transformations = [
-    hex_function_machine(lambda n: n * 2),
+    hex_function_machine(lambda n: n / 2),
     lambda hex_str: reverse_string(simplify_hex_string(hex_str)),
-    hex_function_machine(lambda n: n / 3),
-    hex_function_machine(lambda n: n / 5),
-    hex_function_machine(lambda n: n + int("11111111", 16)),
     hex_function_machine(lambda n: n * 3),
-    hex_function_machine(lambda n: n - int("22222222", 16)),
+    hex_function_machine(lambda n: n * 5),
+    hex_function_machine(length_sensitive(lambda a, b: a + b, "1")),
+    hex_function_machine(lambda n: n / 3),
+    hex_function_machine(length_sensitive(lambda a, b: a - b, "2")),
     lambda hex_str: peel_string(simplify_hex_string(hex_str)),
+    hex_function_machine(lambda n: n / 5),
+    hex_function_machine(length_sensitive(lambda a, b: b - a, "F")),
+    hex_function_machine(lambda n: n * n),
     lambda hex_str: cut_and_swap(simplify_hex_string(hex_str)),
-    hex_function_machine(lambda n: int("FFFFFFFF", 16) - n),
-    hex_function_machine(lambda n: int(math.sqrt(n))),
-    hex_function_machine(lambda n: n + int("12345678", 16)),
 ]
+
+passwords = [transformations[i](x) for i,x in enumerate(inputs)]
 
 def password_guess_overlap(password, guess):
     """
@@ -77,14 +100,14 @@ def password_guess_overlap(password, guess):
     """
     result = ""
     remainder = ""
-    limit = len(guess) if len(guess) < 8 else 8
+    limit = len(guess) if len(guess) < len(password) else len(password)
     for i in range(limit):
         if password[i] == guess[i]:
             result += password[i]
         else:
             result += "•"
     if len(guess) < 8:
-        remainder += "•" * (8 - len(guess))
+        remainder += "•" * (len(password) - len(guess))
     return (result, remainder)
 
 def display_results(guess):
@@ -105,7 +128,7 @@ def display_results(guess):
         try:
             transformed = transformations[i](guess)
 
-            if len(transformed) != 8:
+            if len(transformed) != len(passwords[i]):
                 message = " WARNING: Result has length " + str(len(transformed)).upper() + "."
                 response_text += message.ljust(error_col_width)
                 has_errors = True
@@ -122,7 +145,7 @@ def display_results(guess):
         except Exception as e:
             m = str(e)
             response_text += m.ljust(error_col_width)
-            overlap += "<span style='color: darkred;'>{}</span>".format("█" * 8)
+            overlap += "<span style='color: darkred;'>{}</span>".format("█" * result_col_width)
             has_errors = True
 
         results.append({
