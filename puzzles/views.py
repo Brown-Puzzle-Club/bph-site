@@ -241,7 +241,7 @@ def register(request):
                 brown_affiliation_desc=logistics_data.get('brown_affiliation_desc'),
                 in_person_sat=logistics_data.get('in_person_sat'),
                 in_person_sun=logistics_data.get('in_person_sun'),
-                classroom_need=logistics_data.get('classroom_need'),
+                classroom_need=False,
                 location=logistics_data.get('where_to_find'),
                 phone_number=logistics_data.get('phone_number'),
                 # merge info
@@ -495,8 +495,10 @@ def puzzles(request):
     rounds = render_puzzles(request)
     if request.context.hunt_has_started:
         # if only one round available, go straight to blueno round
+
+        #TODO: be careful with the existence of event round.
         if len(rounds) == 1:
-            print(rounds)
+            # print(rounds)
             slug = 'blueno'
             template_name = 'round_bodies/{}.html'.format(slug)
             return render(request, template_name, {'round': rounds[slug]})

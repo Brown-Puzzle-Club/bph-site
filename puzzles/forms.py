@@ -95,7 +95,7 @@ class LogisticsForm(forms.Form):
     brown_affiliation_desc = forms.CharField(label=_('For each member, please describe their affiliation to Brown/RISD (if applicable)'), max_length=200, required=False)
     in_person_sat = forms.CharField(label=_('How many of your team members will be attending the event in person on Saturday, April 15th?'), required=True)
     in_person_sun = forms.CharField(label=_('How many of your team members will be attending the event in person on Sunday, April 16th?'), required=True)
-    classroom_need = forms.BooleanField(label=_('Do you want to request a classroom to hunt in?'),help_text=_('Our availability will be limited, so please do not request one if you can make alternate plans.'), required=False)
+    # classroom_need = forms.BooleanField(label=_('Do you want to request a classroom to hunt in?'),help_text=_('Our availability will be limited, so please do not request one if you can make alternate plans.'), required=False)
     where_to_find = forms.CharField(label=_("Where can we best find you during the hunt while you're solving puzzles?"), help_text=_('(e.g: Hegeman Common Room, Barus and Holley Room ###, Zoom, Discord, etc.)'), max_length=200)
     # phone_regex = RegexValidator(regex=r'^[0-9\.-]$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
     phone_number = forms.CharField(label=_('Phone number of your team captain'), help_text=_('Required for teams with on-site presence. If the team captain is not on-site, the phone number of whoever you trust most who is. Please don`t include country code (+#).. we cannot service international numbers.'), max_length=16, required=False)
@@ -106,7 +106,7 @@ class LogisticsForm(forms.Form):
         brown_affiliation_desc = cleaned_data.get('brown_affiliation_desc')
         in_person_sat = cleaned_data.get('in_person_sat')
         in_person_sun = cleaned_data.get('in_person_sun')
-        classroom_need = cleaned_data.get('classroom_need')
+        #classroom_need = cleaned_data.get('classroom_need')
         where_to_find = cleaned_data.get('where_to_find')
         phone_number = cleaned_data.get('phone_number')
 
