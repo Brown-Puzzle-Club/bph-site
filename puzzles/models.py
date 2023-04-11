@@ -426,6 +426,7 @@ class Team(models.Model):
     def num_free_answers_total(self):
         if not FREE_ANSWERS_ENABLED or self.hunt_is_over:
             return 0
+        # TODO: FREE ANSWERS (VOUCHER) : count the number of puzzles in event that a team has
         if self.now < self.creation_time + TEAM_AGE_BEFORE_FREE_ANSWERS:
             return self.total_free_answers_awarded
         days = max(0, (self.now - (FREE_ANSWER_TIME - self.start_offset)).days + 1)
