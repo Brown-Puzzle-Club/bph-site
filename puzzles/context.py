@@ -176,6 +176,14 @@ class Context:
 
     def round(self):
         return self.puzzle.round if self.puzzle else None
+    
+    #custom context definitions:
+
+    def events_live(self): #returns true if the user has access to events
+        for puzzle in self.unlocks:
+          if puzzle.round.slug == "events":
+            return True
+        return False
 
     # The purpose of this logic is to keep archive links current. For example,
     # https://2019.galacticpuzzlehunt.com/archive is a page that exists but only

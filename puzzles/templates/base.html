@@ -55,6 +55,11 @@
                     {% translate "Puzzles" %}
                 </a>
                 {% endif %}
+                {% if events_live %}
+                <a{% if '/events' in request.path %} class="selected-tab"{% endif %} href="{% url 'events' %}">
+                    {% translate "Events" %}
+                </a>
+                {% endif %}
                 <a{% if '/team' in request.path %} class="selected-tab"{% endif %} href="{% url 'teams' %}">
                     {% translate "Teams" %}
                 </a>
@@ -69,6 +74,7 @@
                     {% translate "Updates" %}
                 </a> -->
                 {% endif %}
+                
                 {% if wrapup_page_visible %}
                 <a{% if '/wrapup' in request.path %} class="selected-tab"{% endif %} href="{% url 'wrapup' %}">
                     {% translate "- Wrap-Up -" %}
