@@ -144,7 +144,7 @@ def require_before_hunt_closed_or_admin(request):
     if request.context.hunt_is_closed:
         messages.error(request, _('Sorry, the hunt is over.'))
         return redirect('index')
-    
+
 #TODO: possibly add a new access restrictors for:
 # - between registration close and hunt start
 # - between hunt end and solutions open.
@@ -173,7 +173,6 @@ def on_campus(request):
 @require_GET
 def archive(request):
     return render(request, 'archive.html')
-
 
 recaptcha_logger = logging.getLogger('puzzles.recaptcha')
 
@@ -493,6 +492,13 @@ def puzzles(request):
     Most teams will visit this page a lot.'''
 
     rounds = render_puzzles(request)
+
+    # remove key 'events' from rounds: (not displayed on puzzles page, has its own page.)
+    if 'events' in rounds:
+        del rounds['events']
+    
+    print(rounds.keys())
+
     if request.context.hunt_has_started:
         # if only one round available, go straight to blueno round
 
