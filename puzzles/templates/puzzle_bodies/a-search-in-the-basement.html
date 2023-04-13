@@ -4,6 +4,10 @@
 
 <style>
     .title {
+        display: block;
+        margin: 10px auto;
+        font-size: 20px;
+        width: 100%;
         text-align: center;
     }
     .notice {
@@ -27,11 +31,11 @@
 <br>When you do science, it gets written on the walls.
 {: .flavor}
 
-<span class="title"><b>Тетрис</b></span>
+<div class="title"><b>1. Тетрис</b></div>
 
 You're playing Tetris with your old buddies... unfortunately, your screen is in black and white! How many possible arrangements of pieces could have produced the observed screen?
 
-<span class="title"><b>Exploring the Cosmos</b></span>
+<div class="title"><b>2. Exploring the Cosmos</b></div>
 
 You are an orbit explorer! You begin on the orbit in the bottom right corner that circles each center. After this orbit, 
 you only care about orbits that are completely contained in the diagram. You start moving along the orbit clockwise, and 
@@ -39,17 +43,17 @@ whenever you encounter a new orbit for the first_time, you switch to it. You'll 
 later on, and you find your spaceship can jump across it just fine. How many orbits do you partially explore before you start 
 spinning in circles?
 
-<span class="title"><b>Leaves Always Tell You Something</b></span>
+<div class="title"><b>3. Leaves Always Tell You Something</b></div>
 
-Blue = 0 and red = 1
+Blue = 0 and red = 1.
 
 <img src="{% static 'puzzle_resources/a-search-in-the-basement/roots-rotated.png' %}">
 
-<span class="title"><b>The Molecules of Life</b></span>
+<div class="title"><b>4. The Molecules of Life</b></div>
 
 VNV-HLD VNV-NPK NPK-HVD HVD-LDN
 
-<span class="title"><b>The Fish!</b></span>
+<div class="title"><b>5. The Fish!</b></div>
 
 Every night, when you dream, you find yourself an intelligent cod fish that speaks with its
 owner. While you usually have a varied diet, today you feel very picky, and you decide to
@@ -69,7 +73,7 @@ play a game to tell them what you want to eat.
 
 I hope you give me the right prey! >:|
 
-<span class="title"><b>A Great School</b></span>
+<div class="title"><b>6. A Great School</b></div>
 
 <div style="font-family: monospace;">
     Fourth came the Egyptian who taught about the One,<br>
@@ -80,17 +84,19 @@ I hope you give me the right prey! >:|
     Ninth came the hedonist.<br>
 </div>
 
-Each of the six have their own favorite integers that form a sequence. What number is
+<br>Each of the six have their own favorite integers that form a sequence. What number is
 next to follow them?
 
-<span class="title"><b>Putting It All Together</b></span>
-<ul>
-    <li>-4</li>
-    <li>+4</li>
-    <li>MOD 26</li>
+<div class="title"><b>M. Putting It All Together</b></div>
+<ol>
+    <li>-5 (A1Z26)</li>
+    <li>+3 (A1Z26)</li>
+    <li>MOD 26 (A1Z26)</li>
     <li>AS GIVEN</li>
     <li>(5)</li>
-    <li>SMALLEST PRIME FACTOR + 1</li>
-</ul>
+    <li>MOD 3 (A1Z26)</li>
+</ol>
+
+...are all a kind of what?
 
 {% endblock %}
