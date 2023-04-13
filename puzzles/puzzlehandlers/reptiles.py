@@ -121,42 +121,44 @@ clue_map = {
   100: "Where are we from?"
 }
 
-def adjacency(n):
-    # return the list of adjacent number cells.
+def adjacent(n):
+    if n < 1:
+        return []
 
-    # a cell is adjacent if it is +1 or -1 in either the x or y direction.
-    # as the cells are numbered in a snaking fashion, this is a bit more
-    # complicated than it might seem at first.
+    def position(num):
+        row = (num - 1) // 10
+        if row % 2 == 0:
+            col = (num - 1) % 10
+        else:
+            col = 9 - (num - 1) % 10
+        return row, col
 
-    # if the tens digt of n is even (including the first row (0)), 
-    # then the cell to the left is n-1, and the cell to the right is n+1.
-    # and the cell above is
+    def number(row, col):
+        if row % 2 == 0:
+            return row * 10 + 1 + col
+        else:
+            return (row + 1) * 10 - col
 
-    if int(n/10) % 2 == 0:
-        adj = [n-1, n+1, n+20 - (1 + 2*(n%10 - 1)), n-10]
+    row, col = position(n)
+    adjacents = []
 
-    # 1,2,3,4,5
-    # 1,3,5,7,11
+    if row > 0:
+        adjacents.append(number(row - 1, col))
+    if row < 9:
+        adjacents.append(number(row + 1, col))
+    if col > 0:
+        adjacents.append(number(row, col - 1))
+    if col < 9:
+        adjacents.append(number(row, col + 1))
 
-    # 20 + 1 - 2 = 
-
-    # 1 20
-    # 2 19
-    # 3 18
-    # 4 17
-    # ...
-    # 10 11
-
-    1 + 2*(n-1)
-
-    final = []
-    for a in adj:
-        if a >= 1 and a <= 100:
-            final.append(a)
-    
-    return adj
+    return adjacents
 
     
+def found_adjacent(n, adjs):
+    for adj in adjs:
+        if n in adj:
+            return True
+    return False
 
 @require_POST
 def submit(request):
@@ -165,18 +167,34 @@ def submit(request):
     try:
         body = json.loads(request.body)
         nums = body['nums']
+        nums_int = [int(n) for n in nums]
 
         cnt_even = 0
         cnt_odd = 0
-        for n in nums:
-            if int(n) % 2 == 0:
+        for n in nums_int:
+            if n % 2 == 0:
                 cnt_even += 1
             else:
                 cnt_odd += 1
             
-      #  return 
+        if cnt_even != 2 and cnt_odd != 1:
+            return {'error': 'You must build a snake out of 2 even squares and 1 odd.'} 
 
-        # return {'correct': correct}
+        adjs = [adjacent(n) for n in nums_int]
+        for n in nums_int:
+            if not found_adjacent(n, adjs): 
+              return {'error': 'All cells chosen must be adjacent to each other.'} 
+
+        result_dict = {}
+        for n in sorted(nums_int):
+            clue = clue_map[n]
+            if clue.startswith('IMAGE'):
+                result_dict[n] = f'puzzle_resources/reptiles-all-the-way-down/{n}.jpg'
+            else:
+                result_dict[n] = clue
+
+
+        return {'result': result_dict}
     except (KeyError, AttributeError):
         # This error handling is pretty rough.
         return {
