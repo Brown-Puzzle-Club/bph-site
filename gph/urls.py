@@ -94,6 +94,9 @@ urlpatterns = [
     path('puzzle/space-piracy/submit',
          puzzlehandlers.space_piracy_submit,
          name='space_piracy_submit'),
+    path('puzzle/reptiles/submit',
+         puzzlehandlers.reptiles_submit,
+         name='reptiles_submit'),
 
     path('story', views.story, name='story'),
     path('victory', views.victory, name='victory'),
