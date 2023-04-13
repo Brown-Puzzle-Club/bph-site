@@ -43,7 +43,7 @@ footer a:hover {
 /* INDIVIDUAL ROUND STYLE AND PLACEMENT: */
 .blueno {
   position: absolute;
-  top: 15%;
+  top: 14.5%;
   left: 55px;
   transform: translate(-50%, -50%);
   content: url("/static/images/cthulu-landing/brs1.png");
