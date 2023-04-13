@@ -4,7 +4,7 @@
 
 <!-- If only one round is open, load the first round -->
 {% block extra_css_landing %}
-{% if rounds.values|length == 1 %}
+{% if rounds.keys|length == 1 %}
   <link rel="stylesheet" href="/static/css/rounds/brs-landing.css">
 {% else %}
   <link rel="stylesheet" href="/static/css/rounds/cthulu-landing.css">

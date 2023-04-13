@@ -13,7 +13,9 @@
 {% block content %}
 
 {% block round-title-override %}
-<h1>{{ round.round.name }}</h1>
+{% if round.round.slug != "events" %}
+  <h1>{{ round.round.name }}</h1>
+{% endif %}
 {% endblock %}
 
 
@@ -22,9 +24,11 @@
 <br><br>
 {% endblock %}
 
+{% if round.round.slug != "events" %}
 <div class="puzzles-list">
   {% include 'puzzles_list.html' with round=round %}
 </div>
+{% endif %}
 
 
 {% endblock %}
