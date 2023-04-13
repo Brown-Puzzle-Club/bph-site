@@ -20,7 +20,7 @@ from puzzles.messaging import log_puzzle_info
 
 clue_map = {
   1: "https://reptile-database.reptarium.cz/",
-  2: "My first venomous bite was recorded in 2009.",
+  2: "My first venomous bite was recorded in 2009",
   3: "IMAGE",
   4: "I have been known to eat subadult tapirs",
   5: "IMAGE",
