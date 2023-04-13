@@ -87,3 +87,4 @@ interactive_demo_submit = error_ratelimit(interactive_demo.submit, '2/m', {'erro
 
 from . import space_piracy
 space_piracy_submit = error_ratelimit(space_piracy.submit, '20/m', {'error': 'Please limit your attempts to twenty per minute.'}, lambda response: response['correct'], json.dumps)
+
