@@ -92,7 +92,7 @@
                       let result = `<p id="clue-text">${resultText}<span>`;
                       if (resultText.endsWith('jpg')) { // if image
                         let path = `/static/puzzle_resources/reptiles-all-the-way-down/${resultText}`
-                        console.log(path)
+                        // console.log(path)
                         result = `<img id="img-${n}" src="${path}">`;
                       }
                       $(`#td-0-${i}`).append(`<p id="clue-num"><b>${n}</b></span>`);

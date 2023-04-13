@@ -169,6 +169,9 @@ def submit(request):
         nums = body['nums']
         nums_int = [int(n) for n in nums]
 
+        if len(nums_int) != 3 or len(set(nums_int)) != 3:
+            return {'error': 'You must choose 3 unique cells.'}
+
         cnt_even = 0
         cnt_odd = 0
         for n in nums_int:
