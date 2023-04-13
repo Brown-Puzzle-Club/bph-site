@@ -16,13 +16,10 @@
     }
     table {
         table-layout: fixed;
-        margin-left: auto;
-        margin-right: auto;
+        margin: 0 auto;
         border: 1px solid black;
-        position: absolute;
         width: 800px;
         left: 50%;
-        margin-left: -350px;
     }
     .notice {
         width: 100%;
@@ -32,7 +29,111 @@
         border-width: 3px;
         border-color: black;
     }
+
+    table td {
+      text-align: center; /* Center align the text in the cell */
+      vertical-align: middle; /* Vertically center the text in the cell */
+      padding: 10px; /* Add some padding to the cell */
+    }
+
+    input[type="text"] {
+      width: 32%;
+      margin: 0 2px;
+    }
+
+    input[type="submit"] {
+      margin-top: 10px;
+    }
+  
+    
 </style>
+
+
+<script type="text/javascript">
+  // This demo code uses jQuery and modern JavaScript features flagrantly.
+  // You should evaluate your own needs.
+  document.addEventListener('DOMContentLoaded', () => {
+      async function submit() {
+          $('#output').empty()
+          $('#output').css('color', '#000000');
+  
+          $('#n1').prop("disabled", true);
+          $('#n2').prop("disabled", true);
+          $('#n3').prop("disabled", true);
+          $('#submit').prop("disabled", true);
+  
+          let csrftoken = getCookie('csrftoken');
+          try {
+              let result = await fetch("/puzzle/reptiles/submit", {
+                  method: 'POST',
+                  body: JSON.stringify({
+                      nums: [$('#n1').val(),$('#n2').val(),$('#n3').val()]
+                  }),
+                  headers: { "X-CSRFToken": csrftoken },
+              });
+              if (!result.ok) {
+                  // HTTP response code was not 2xx. Maybe introspect more...
+                  $('#output').text(`Error: ${result.status} ${result.statusText}`);
+              } else {
+                  let res = await result.json();
+                  if (res.error) {
+                      $('#output').text(`Error: ${res.error}`);
+                      $('#output').css('color', '#ae7575');
+                  } else {
+                    if (Object.keys(res.result).length != 3) {
+                      let e = "Unhandled count error. Please contact puzzle@brown.edu."
+                      $('#output').text(`Error: ${e}`);
+                    }
+
+                    $('#output').append(`<table id="table"></table>`);
+                    $('#table').append(`<tr id="tr-0"></tr>`);
+                    let i = 0;
+                    for (const [n,resultText] of Object.entries(res.result)) {
+                      $('#tr-0').append(`<td id="td-0-${i}"></td>`);
+                      let result = `<p id="clue-text">${resultText}<span>`;
+                      if (resultText.endsWith('jpg')) { // if image
+                        result = `<img id="img-${n}" src="{% static '${resultText}' %}">`;
+                      }
+                      $(`#td-0-${i}`).append(`<p id="clue-num"><b>${n}</b></span>`);
+                      $(`#td-0-${i}`).append(result);
+                      i++;
+                    }
+                    
+                      
+                  }
+              }
+          } catch (e) {
+              // This error handling will be very poor.
+              $('#output').text(`Error: ${e}`);
+              $('#output').css('color', '#ae7575');
+          }
+          // calls you might make: .val(""), .select(), .focus()
+          $('#n1').prop("disabled", false);
+          $('#n2').prop("disabled", false);
+          $('#n3').prop("disabled", false);
+          $('#submit').prop("disabled", false);
+      }
+  
+      // https://docs.djangoproject.com/en/dev/ref/csrf/#ajax
+      function getCookie(name) {
+          var cookieValue = null;
+          if (document.cookie && document.cookie !== '') {
+              var cookies = document.cookie.split(';');
+              for (var i = 0; i < cookies.length; i++) {
+                  var cookie = cookies[i].trim();
+                  // Does this cookie string begin with the name we want?
+                  if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                      cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                      break;
+                  }
+              }
+          }
+          return cookieValue;
+      }
+  
+      $('#reptiles-form').on('submit', submit);
+  });
+  </script>
 
 <div class="notice">
     Notice for testsolvers (hey guys!): I will share a board key with text and images because I know the image below is low-quality. Lmk when you get here and I'll share it.
@@ -44,6 +145,16 @@ Put the heads in line, but don't get cousins mixed up!
 You're playing snakes and ladders... but all the snakes have escaped! Thankfully, you remember that each snake took up three squares - two even, one odd - without any of them overlapping. Oh, and each square they visited was smaller in number than the last, with their heads on the largest square.
 
 <img src="{% static 'puzzle_resources/reptiles-all-the-way-down/fixed-puzzle.jpg' %}">
+
+<form id="reptiles-form" autocomplete="off" action="javascript:void(0);">
+    {# Adding the csrf_token tag is sort of a hack, because we don't care about having an <input> tag with the token; we just care about having the cookie. #}
+    {% csrf_token %}
+    <input type="text" name="num1" id="n1" placeholder="1">
+    <input type="text" name="num2" id="n2" placeholder="2">
+    <input type="text" name="num3" id="n3" placeholder="3">
+    <input type="submit" value="Make Snake!">
+</form>
+<div id="output"><i>Type a number in the field above and submit to make a snake.</i></div>
 
 Start on space 1.<br>
 Roll a 4 and move to space 17.<br>
