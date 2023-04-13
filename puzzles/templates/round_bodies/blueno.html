@@ -4,6 +4,7 @@
   html {
     --page-bg-rgb: 254, 224, 224;
     --heading-text-color: #746161;
+    --link-text-color: 
   }
 
   .round-puzzles {
@@ -97,6 +98,37 @@
   .round-puzzles .puzzle:nth-of-type(5) img {
     content: url("/static/images/rounds/brs/puzzle_5.png");
   }
+
+  .puzzles-list {
+    margin: 0 auto;
+    width: fit-content;
+    padding-right: 20px;
+    max-width: 100%;
+    background-color: #e8bbc5;
+    border-radius: 10px;
+  }
+
+  .puzzles-list li {
+    padding: 10px;
+    border-bottom: 1px solid #fff;
+  }
+
+  .puzzles-new {
+    background-color: #b3708c;
+  }
+
+  .puzzles-new:hover, a:hover .puzzles-new  {
+    background-color: #2f25e0;
+  }
+
+  a:hover, a:focus {
+    color: #2f25e0;
+  }
+
+  .puzzles-answer > :first-child {
+    border-bottom: 2px dashed #687378;
+  }
+
 </style>
 
 <section class="round-puzzles">
