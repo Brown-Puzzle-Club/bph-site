@@ -91,7 +91,9 @@
                       $('#tr-0').append(`<td id="td-0-${i}"></td>`);
                       let result = `<p id="clue-text">${resultText}<span>`;
                       if (resultText.endsWith('jpg')) { // if image
-                        result = `<img id="img-${n}" src="{% static '${resultText}' %}">`;
+                        let path = `puzzle_resources/reptiles-all-the-way-down/${resultText}`
+                        console.log(path)
+                        result = `<img id="img-${n}" src="{% static '${path}' %}">`;
                       }
                       $(`#td-0-${i}`).append(`<p id="clue-num"><b>${n}</b></span>`);
                       $(`#td-0-${i}`).append(result);

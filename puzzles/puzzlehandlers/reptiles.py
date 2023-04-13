@@ -189,7 +189,7 @@ def submit(request):
         for n in sorted(nums_int):
             clue = clue_map[n]
             if clue.startswith('IMAGE'):
-                result_dict[n] = f'puzzle_resources/reptiles-all-the-way-down/{n}.jpg'
+                result_dict[n] = f'{n}.jpg'
             else:
                 result_dict[n] = clue
 
