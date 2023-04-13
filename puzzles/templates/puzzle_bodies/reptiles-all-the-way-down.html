@@ -134,18 +134,19 @@
   
       $('#reptiles-form').on('submit', submit);
   });
-  </script>
-
-<div class="notice">
-    Notice for testsolvers (hey guys!): I will share a board key with text and images because I know the image below is low-quality. Lmk when you get here and I'll share it.
-</div>
+</script>
 
 Put the heads in line, but don't get cousins mixed up!
 {: .flavor}
 
-You're playing snakes and ladders... but all the snakes have escaped! Thankfully, you remember that each snake took up three squares - two even, one odd - without any of them overlapping. Oh, and each square they visited was smaller in number than the last, with their heads on the largest square.
+You're playing snakes and ladders... but all the snakes have escaped! Thankfully, you remember that:
+<ul>
+    <li>each snake took up three adjacent squares - two even, one odd</li>
+    <li>no two snakes overlapped</li>
+    <li>each square they visited was smaller in number than the last, with their heads on the largest square</li>
+</ul>
 
-<img src="{% static 'puzzle_resources/reptiles-all-the-way-down/fixed-puzzle.jpg' %}">
+IMAGE HERE WITH BOARD, 1 and 100, LADDERS
 
 <form id="reptiles-form" autocomplete="off" action="javascript:void(0);">
     {# Adding the csrf_token tag is sort of a hack, because we don't care about having an <input> tag with the token; we just care about having the cookie. #}
