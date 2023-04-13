@@ -13,7 +13,7 @@
 {% block content %}
 
 {% block round-title-override %}
-{% if round.round.slug != "events" and round.round.slug != "lamp"  %}
+{% if round.round.slug != "events" and round.round.slug != "lamp" and round.round.slug != "dear-blueno"  %}
   <h1>{{ round.round.name }}</h1>
 {% endif %}
 {% endblock %}
@@ -27,8 +27,8 @@
 {% if round.round.slug != "events" %}
 
 <div class="puzzles-list">
-  {% if round.round.slug == "lamp" %}
-    <h1>{% translate "The Lamp" %}</h1>
+  {% if round.round.slug == "lamp" or round.round.slug == "dear-blueno" %}
+    <h1>{{ round.round.name }}</h1>
   {% endif %}
   {% include 'puzzles_list.html' with round=round %}
 </div>
