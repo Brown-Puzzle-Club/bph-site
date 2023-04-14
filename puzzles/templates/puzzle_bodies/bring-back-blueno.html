@@ -3,6 +3,29 @@
 {% block puzzle-body-md %}
 
 <style>
+    html {
+      --page-bg-rgb: 158, 140, 163;
+      --accent-rgb: 61, 51, 65; /*0, 85, 170;*/
+      
+      --neutral-color: rgb(134, 114, 139);
+      --accent-hover-color: #3d3341;
+
+      --btn-bg-color: #3d344345;
+    
+      --btn3-bg-color: #97998b;
+      --btn3-hover-color: #3d3341;
+    
+      --tray-text-color: white;
+      --tray-text-light-color: #9e92a6;
+      --tray-bg-color: #4d4652;
+      --tray-hover-color: #86728b;
+
+      --heading-text-color: #3d3341;
+      --link-hover-color: #3f0750;
+    }
+    h1 {
+      font-family: fantasy
+    }
     .instructions {
         font-family: Georgia, "Times New Roman", Times, serif;
     }
@@ -11,6 +34,8 @@
         display: block; 
         margin-left: auto; 
         margin-right: auto;
+        font-weight: bold;
+        font-family: fantasy;
     }
     img {
         display: block; 
@@ -20,6 +45,11 @@
     }
     .dark {
         background-color: black;
+    }
+
+    .puzzle-main {
+      border-radius: 10px;
+      border: #4d4652 solid 5px;
     }
 </style>
 
