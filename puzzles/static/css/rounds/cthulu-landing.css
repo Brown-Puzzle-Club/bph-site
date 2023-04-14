@@ -102,3 +102,30 @@ footer a:hover {
   /* -webkit-filter: drop-shadow(12px 12px 7px rgba(254, 226, 136, 0.5));
   filter: drop-shadow(12px 12px 7px rgba(254, 226, 136, 0.5)); */
 }
+
+.final-button {
+
+  background-color: #1e1729; /* #d0cccb */
+  position: absolute;
+  color: white;
+  top: 16%;
+  left: 93%;
+  font-size: 2rem;
+  font-family: cursive;
+  font-weight: bold;
+  border: #392f48 solid 5px;
+  border-radius: 10px;
+  transform: translate(-50%, -50%);
+}
+.final-button:hover {
+  background-color: #d0cccb;
+  color: black;
+  -webkit-filter: drop-shadow(0px 0px 7px rgba(255, 255, 255, 0.3));
+  filter: drop-shadow(0px 0px 7px rgba(255, 255, 255, 0.3));
+}
+@media screen and (max-width: 960px) {
+  .final-button {
+    top: 23%;
+    left: 50%;
+  }
+}

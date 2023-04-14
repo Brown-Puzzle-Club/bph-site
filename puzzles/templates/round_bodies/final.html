@@ -1,0 +1,59 @@
+{% extends "round.html" %} {% load static %} {% block round-body %}
+<link rel="stylesheet" href="/static/css/rounds/themes/cthulu-purple.css" />
+<style>
+  html {
+    --page-bg-rgb: 37, 35, 41;
+    --link-text-color: #99989b;
+    --link-hover-color: #cdb4f9;
+  }
+
+  footer {
+    color: white;
+  }
+
+  .content {
+    width: 100%;
+  }
+
+  .map {
+    display: flex;
+    width: 100%;
+    margin: 0 auto;
+    margin-top: 20px;
+  }
+
+  .round-runarounds .runaround img {
+    width: 100%;
+    border: 10px solid transparent;
+  }
+
+  .round-runarounds .runaround img:hover {
+    border: 10px solid #d0d0d0;
+  }
+
+  .runaround {
+    margin: 10px;
+  }
+
+  .round-runarounds .runaround:nth-of-type(1) img {
+    content: url("/static/images/rounds/events/event1.png");
+  }
+  .round-runarounds .runaround:nth-of-type(2) img {
+    content: url("/static/images/rounds/events/event2.png");
+  }
+</style>
+
+<section class="round-runarounds">
+  <div class="map">
+    {% for data in round.puzzles %}
+    <div class="runaround">
+      <a href="{% url 'puzzle' data.puzzle.slug %}">
+        <img class="{{ data.puzzle.slug }}" />
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<br /><br />
+{% endblock %}

@@ -17,7 +17,11 @@
 
 {% for round in rounds.values %}
   <a href="{% url 'round' round.round.slug %}">
-    <img class="{{ round.round.slug }}">
+    {% if round.round.slug != "final" %}
+      <img class="{{ round.round.slug }}">
+    {% else %}
+      <h1 class="final-button">FINAL</h1>
+    {% endif %}
   </a>
 {% endfor %}
 
