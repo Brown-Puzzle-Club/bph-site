@@ -8,12 +8,23 @@
 h1 {
   color: black;
   font-family: "Kollektif";
-  border-right: 3px solid black;
-  text-align: right;
+  
+  
   font-size: 6rem;
   letter-spacing: 10px;
   padding-top: 0;
   padding-bottom: 0;
+}
+.bph-header {
+  border-right: 3px solid black;
+  text-align: right;
+}
+#countdown {
+  text-align: center;
+  margin-top: 5%;
+  font-size: 10rem;
+  color: #244252;
+
 }
 @media screen and (max-width: 960px) {
   h1 {
@@ -159,7 +170,7 @@ h1 {
 
 .title-center {
   display: flex;
-  margin-top: 10rem;
+ /* margin-top: 10rem;*/
 }
 
 .info-desc {
@@ -195,12 +206,14 @@ h1 {
   }
 } -->
 
+<h1 id="countdown" style="text-align: center"></h1>
+
 <!-- <h1>{{ hunt_title }}</h1> -->
 <div class="title-center">
   <div class="landing-image">
     <img src={% static "images/bphlogo.png" %} alt="blueno logo">
   </div>
-  <h1>brown <br> 
+  <h1 class="bph-header">brown <br> 
     puzzle <br> 
     hunt</h1>
   <div class="event-invite">
@@ -249,6 +262,27 @@ h1 {
   </div>
 </div>
 <br>
+
+
+
+<!-- <script>
+var start = new Date('{{ start_time.isoformat }}');
+setInterval(function() {
+    var diff = (start - new Date) / 1000;
+    var elt = document.getElementById('countdown');
+    if (diff >= 0) {
+        var hours = diff / 60 / 60 | 0;
+        var min = diff / 60 - hours*60 | 0;
+        var sec = diff % 60 | 0;
+        if (sec < 10) {
+            sec = '0' + sec;
+        }
+        elt.textContent = hours + ':' + min + ':' + sec;
+    } else {
+        elt.textContent = '{% translate "Happy hunting!" %}';
+    }
+}, 100);
+</script> -->
 
 <!-- <div class="info-row">
     <div>
