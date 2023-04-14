@@ -150,7 +150,16 @@ def adjacent(n):
         adjacents.append(number(row, col - 1))
     if col < 9:
         adjacents.append(number(row, col + 1))
-
+    # and the adjacent corners
+    if row > 0 and col > 0:
+        adjacents.append(number(row - 1, col - 1))
+    if row > 0 and col < 9:
+        adjacents.append(number(row - 1, col + 1))
+    if row < 9 and col > 0:
+        adjacents.append(number(row + 1, col - 1))
+    if row < 9 and col < 9:
+        adjacents.append(number(row + 1, col + 1))
+        
     return adjacents
 
     
