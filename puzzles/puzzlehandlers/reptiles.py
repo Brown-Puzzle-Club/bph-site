@@ -3,21 +3,6 @@ import json
 from django.views.decorators.http import require_POST
 from puzzles.messaging import log_puzzle_info
 
-    # <tr>
-    #     <td style="border: 1px solid white; border-right: 1px solid black;"></td>
-    #     <td>Where are we from?</td>
-    #     <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/99.jpg' %}"></td>
-    #     <td>My name indicates that I was an unexpected find</td>
-    #     <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/97.jpg' %}"></td>
-    #     <td>My diet is entirely made of fish eggs</td>
-    #     <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/95.jpg' %}"></td>
-    #     <td>Spiny tubercules cover every part of my body</td>
-    #     <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/93.jpg' %}"></td>
-    #     <td>I am often found on cashew and cacao plantations</td>
-    #     <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/91.jpg' %}"></td>
-    #     <td style="border: 1px solid white;"></td>
-    # </tr>
-
 clue_map = {
   1: "https://reptile-database.reptarium.cz/",
   2: "My first venomous bite was recorded in 2009",
