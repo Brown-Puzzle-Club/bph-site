@@ -6,12 +6,24 @@
     img {
         width: 100px;
     }
+    .puzzle-pdf {
+      width: 100%;
+      margin: 0 auto;
+      display: block;
+    }
 </style>
 
-Excited to spend a day in Manhattan? Here's an itinerary to get you arranged in the city that never sleeps.
-{: .flavor}
+<script>
+  var firstH1 = $('h1:first');
 
-<table>
+  firstH1.remove();
+</script>
+
+<embed src="/static/puzzle_resources/day-in-the-city/day in the city.pdf#toolbar=0&navpanes=0&scrollbar=0"
+  class="puzzle-pdf" width="500" height="699"
+/>
+
+<!-- <table>
     <tr>
         <td colspan="2"><b>Things To Do:</b></td>
     </tr>
@@ -80,6 +92,6 @@ Katz's Delicatessen serves as the final receptor in the electron transport chain
     Manhattan Bridge -> Chrystie St -> 2nd Ave<br>
     Pike St -> Allen St -> 1st Ave <br>
     Montgomery St. -> Pitt St. -> Avenue C<br>
-</div>
+</div> -->
 
 {% endblock %}
