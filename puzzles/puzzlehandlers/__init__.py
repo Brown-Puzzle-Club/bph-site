@@ -90,3 +90,7 @@ space_piracy_submit = error_ratelimit(space_piracy.submit, '20/m', {'error': 'Pl
 
 from . import reptiles
 reptiles_submit = error_ratelimit(reptiles.submit, '20/m', {'error': 'Please limit your attempts to twenty per minute.'}, lambda response: response['correct'], json.dumps)
+
+
+from . import tic_tac_toe
+tic_tac_toe_submit = error_ratelimit(tic_tac_toe.submit, '20/m', {'error': 'Please limit your attempts to twenty per minute.'}, lambda response: response['correct'], json.dumps)
