@@ -345,8 +345,8 @@ class Team(models.Model):
               output_field=BooleanField(),
         )
         ).order_by(
-            F('metameta_solve_time').asc(nulls_last=True),
-            F('total_solves').desc(),
+            # F('metameta_solve_time').asc(nulls_last=True),
+            # F('total_solves').desc(),
             F('in_person').desc(),
             F('last_solve_or_creation_time'),
         )
@@ -506,8 +506,8 @@ class Team(models.Model):
                 if unlock_time <= context.now:
                     unlocked_at = unlock_time
             # TODO: REMOVE TO REENABLE PRERELEASE FULL-VISIBILITY
-            # if context.hunt_is_prereleased or context.hunt_is_over:
-            #     unlocked_at = context.start_time
+            if context.is_admin or context.hunt_is_over:
+                unlocked_at = context.start_time
             elif context.team and context.hunt_has_started:
                 (global_solves, local_solves) = context.team.main_round_solves
                 if 0 <= puzzle.unlock_global <= global_solves: # and (global_solves or any(metas_solved)):
