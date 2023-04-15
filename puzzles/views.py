@@ -501,7 +501,7 @@ def puzzles(request):
     if 'events' in rounds:
         del rounds['events']
     
-    print(rounds.keys())
+    # print(rounds.keys())
 
     if request.context.hunt_has_started:
         # if only one round available, go straight to blueno round
