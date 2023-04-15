@@ -37,7 +37,7 @@
                     {% endif %}
                 </td>
                 <td>{% if team.in_person %}🐻{% endif %}</td>
-                {% if hunt_has_started and is_superuser %}
+                {% if hunt_has_started and is_admin %}
                     <td>{{ team.total_solves }}</td>
                     <td>{% format_time team.metameta_solve_time %}</td>
                 {% endif %}
