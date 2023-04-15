@@ -22,11 +22,14 @@
     img {
         width: 100%;
     }
+    .diagram {
+        width: 50%;
+    }
 </style>
 
 <div class="notice">
-    Notice for solvers: this puzzle requires both on-site presence and current student card swipe access for access to important parts of the puzzle. 
-<br>If you're not on-site, we can't help you. If you're on-site and don't have current student card swipe access, email us at bluenoresurrectionsociety@gmail.com with the subject line of "(Your Team Name Here) - Basement". We'll try to give you early access to this puzzle, but we can't promise anything.
+    Notice for on-site solvers: this puzzle requires current student card swipe access for access to important parts of the puzzle. If you're on-site and don't have current student card swipe access, email us at bluenoresurrectionsociety@gmail.com with the subject line of "(Your Team Name Here) - Basement". We'll try to give you early access to this puzzle, but we can't promise anything.
+<br>Notice for off-site solvers: The puzzle is fully solvable using just the information on this page.
 </div>
 
 <br>When you do science, it gets written on the walls.
@@ -38,13 +41,13 @@
     The online-accessible version of this puzzle will unlock at {{ new_date }}
   {% endwith %}
   {% else %}
-You will need the following diagrams (in no particular order):<br>
-<img src="{% static 'puzzle_resources/a-search-in-the-basement/search1.jpg' %}">
-<img src="{% static 'puzzle_resources/a-search-in-the-basement/search2.jpg' %}">
-<img src="{% static 'puzzle_resources/a-search-in-the-basement/search3.jpg' %}">
-<img src="{% static 'puzzle_resources/a-search-in-the-basement/search4.jpg' %}">
-<img src="{% static 'puzzle_resources/a-search-in-the-basement/search5.jpg' %}">
-<img src="{% static 'puzzle_resources/a-search-in-the-basement/search6.jpg' %}">
+You will need the following diagrams (in no particular order):<br><br>
+<img class="diagram" src="{% static 'puzzle_resources/a-search-in-the-basement/search1.jpg' %}">
+<img class="diagram" src="{% static 'puzzle_resources/a-search-in-the-basement/search2.jpg' %}">
+<img class="diagram" src="{% static 'puzzle_resources/a-search-in-the-basement/search3.jpg' %}">
+<img class="diagram" src="{% static 'puzzle_resources/a-search-in-the-basement/search4.jpg' %}">
+<img class="diagram" src="{% static 'puzzle_resources/a-search-in-the-basement/search5.jpg' %}">
+<img class="diagram" src="{% static 'puzzle_resources/a-search-in-the-basement/search6.jpg' %}">
   {% endif %}
 {% endwith %}
 
