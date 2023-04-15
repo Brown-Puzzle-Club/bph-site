@@ -165,6 +165,10 @@ def rules(request):
 def faq(request):
     return render(request, 'faq.html')
 
+@require_GET
+def contact_hq(request):
+    return render(request, 'contact_hq.html')
+
 
 @require_GET
 def on_campus(request):
