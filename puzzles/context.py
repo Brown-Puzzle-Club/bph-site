@@ -168,6 +168,18 @@ class Context:
 
     def puzzle(self):
         return None  # set by validate_puzzle
+    
+    def puzzle_unlock_time(self):   
+        return self.unlocks[self.puzzle]
+    
+    def time_since_unlock(self):
+        return (self.now - self.unlocks[self.puzzle])
+    
+    def hours_since_unlock(self):
+        return self.time_since_unlock.total_seconds() // 3600
+    
+    def test(self,n):
+        return n * 3
 
     def puzzle_answer(self):
         return self.team and self.puzzle and self.team.puzzle_answer(self.puzzle)

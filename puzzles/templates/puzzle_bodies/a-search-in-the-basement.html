@@ -1,6 +1,7 @@
 {% extends "puzzle.html" %}
 {% load static %}
 {% block puzzle-body-md %}
+{% load puzzle_tags %}
 
 <style>
     .title {
@@ -31,72 +32,82 @@
 <br>When you do science, it gets written on the walls.
 {: .flavor}
 
-<div class="title"><b>1. Тетрис</b></div>
+{% with HOURS_DELAY=4 %}
+  {% if request.context.hours_since_unlock < HOURS_DELAY %}
+  {% with new_date=request.context.puzzle_unlock_time|add_hours:HOURS_DELAY %}
+    The online-accessible version of this puzzle will unlock at {{ new_date }}
+  {% endwith %}
+  {% else %}
+  <div class="title"><b>1. Тетрис</b></div>
 
-You're playing Tetris with your old buddies... unfortunately, your screen is in black and white! How many possible arrangements of pieces could have produced the observed screen?
+  You're playing Tetris with your old buddies... unfortunately, your screen is in black and white! How many possible arrangements of pieces could have produced the observed screen?
+  
+  <div class="title"><b>2. Exploring the Cosmos</b></div>
+  
+  You are an orbit explorer! You begin on the orbit in the bottom right corner that circles each center. After this orbit, 
+  you only care about orbits that are completely contained in the diagram. You start moving along the orbit clockwise, and 
+  whenever you encounter a new orbit for the first_time, you switch to it. You'll reach a point where there's a tiny gap 
+  later on, and you find your spaceship can jump across it just fine. How many orbits do you partially explore before you start 
+  spinning in circles?
+  
+  <div class="title"><b>3. Leaves Always Tell You Something</b></div>
+  
+  Blue = 0 and red = 1.
+  
+  <img src="{% static 'puzzle_resources/a-search-in-the-basement/roots.png' %}">
+  
+  <div class="title"><b>4. The Molecules of Life</b></div>
+  
+  VNV-HLD VNV-NPK NPK-HVD HVD-LDN
+  
+  <div class="title"><b>5. The Fish!</b></div>
+  
+  Every night, when you dream, you find yourself an intelligent cod fish that speaks with its
+  owner. While you usually have a varied diet, today you feel very picky, and you decide to
+  play a game to tell them what you want to eat.
+  
+  <ol>
+      <li>I do NOT want something that is alone in its own phylum.</li>
+      <li>I do NOT want to eat anything that can fly.</li>
+      <li>I do NOT want to eat anything that burrows into the ground.</li>
+      <li>I do NOT want to eat anything that eats lots of jellyfish.</li>
+      <li>My food should NOT have to scavenge to find its own shell.</li>
+      <li>I do NOT want to eat things even resembling rodents OR spiders.</li>
+      <li>There should NOT be a gesture with a name similar to my prey's name.</li>
+      <li>I do NOT want my prey to be from the class with the most unique orders among what I usually eat.</li>
+      <li>I do NOT want my prey to be from the same genus as another creature that I already eliminated.</li>
+  </ol>
+  
+  I hope you give me the right prey! >:|
+  
+  <div class="title"><b>6. A Great School</b></div>
+  
+  <div style="font-family: monospace;">
+      Fourth came the Egyptian who taught about the One,<br>
+      Fifth came the Roman with the geocentric model,<br>
+      Sixth came he who wrote the Elements,<br>
+      Seventh came the cynic, the son of the mintmaster,<br>
+      Eighth came she who taught the masses and developed conic sections,<br>
+      Ninth came the hedonist.<br>
+  </div>
+  
+  <br>Each of the six have their own favorite integers that form a sequence. What number is
+  next to follow them?
+  
+  <div class="title"><b>M. Putting It All Together</b></div>
+  <ol>
+      <li>-5 (A1Z26)</li>
+      <li>+3 (A1Z26)</li>
+      <li>MOD 26 (A1Z26)</li>
+      <li>AS GIVEN</li>
+      <li>(5)</li>
+      <li>MOD 3 (A1Z26)</li>
+  </ol>
+  
+  ...are all a kind of what?
+  {% endif %}
+{% endwith %}
 
-<div class="title"><b>2. Exploring the Cosmos</b></div>
 
-You are an orbit explorer! You begin on the orbit in the bottom right corner that circles each center. After this orbit, 
-you only care about orbits that are completely contained in the diagram. You start moving along the orbit clockwise, and 
-whenever you encounter a new orbit for the first_time, you switch to it. You'll reach a point where there's a tiny gap 
-later on, and you find your spaceship can jump across it just fine. How many orbits do you partially explore before you start 
-spinning in circles?
-
-<div class="title"><b>3. Leaves Always Tell You Something</b></div>
-
-Blue = 0 and red = 1.
-
-<img src="{% static 'puzzle_resources/a-search-in-the-basement/roots.png' %}">
-
-<div class="title"><b>4. The Molecules of Life</b></div>
-
-VNV-HLD VNV-NPK NPK-HVD HVD-LDN
-
-<div class="title"><b>5. The Fish!</b></div>
-
-Every night, when you dream, you find yourself an intelligent cod fish that speaks with its
-owner. While you usually have a varied diet, today you feel very picky, and you decide to
-play a game to tell them what you want to eat.
-
-<ol>
-    <li>I do NOT want something that is alone in its own phylum.</li>
-    <li>I do NOT want to eat anything that can fly.</li>
-    <li>I do NOT want to eat anything that burrows into the ground.</li>
-    <li>I do NOT want to eat anything that eats lots of jellyfish.</li>
-    <li>My food should NOT have to scavenge to find its own shell.</li>
-    <li>I do NOT want to eat things even resembling rodents OR spiders.</li>
-    <li>There should NOT be a gesture with a name similar to my prey's name.</li>
-    <li>I do NOT want my prey to be from the class with the most unique orders among what I usually eat.</li>
-    <li>I do NOT want my prey to be from the same genus as another creature that I already eliminated.</li>
-</ol>
-
-I hope you give me the right prey! >:|
-
-<div class="title"><b>6. A Great School</b></div>
-
-<div style="font-family: monospace;">
-    Fourth came the Egyptian who taught about the One,<br>
-    Fifth came the Roman with the geocentric model,<br>
-    Sixth came he who wrote the Elements,<br>
-    Seventh came the cynic, the son of the mintmaster,<br>
-    Eighth came she who taught the masses and developed conic sections,<br>
-    Ninth came the hedonist.<br>
-</div>
-
-<br>Each of the six have their own favorite integers that form a sequence. What number is
-next to follow them?
-
-<div class="title"><b>M. Putting It All Together</b></div>
-<ol>
-    <li>-5 (A1Z26)</li>
-    <li>+3 (A1Z26)</li>
-    <li>MOD 26 (A1Z26)</li>
-    <li>AS GIVEN</li>
-    <li>(5)</li>
-    <li>MOD 3 (A1Z26)</li>
-</ol>
-
-...are all a kind of what?
 
 {% endblock %}

@@ -12,6 +12,8 @@ from django.utils.translation import gettext as _
 from django.utils.html import strip_spaces_between_tags
 from django.utils.safestring import mark_safe
 
+from datetime import datetime, timedelta
+
 register = template.Library()
 
 @register.simple_tag
@@ -60,6 +62,22 @@ def percentage(a, b):
 @register.filter
 def hash(obj):
     return hashlib.md5(str(obj).encode('utf8')).hexdigest()
+
+@register.filter
+def add_days(value, days):
+    return value + timedelta(days=days)
+
+@register.filter
+def add_hours(value, hours):
+    return value + timedelta(hours=hours)
+
+@register.filter
+def add_minutes(value, minutes):
+    return value + timedelta(minutes=minutes)
+
+@register.filter
+def add_seconds(value, seconds):
+    return value + timedelta(seconds=seconds)
 
 @register.tag
 class puzzleblock(template.Node):
