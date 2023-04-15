@@ -45,8 +45,10 @@ urlpatterns = [
 
     path('rules', views.rules, name='rules'),
     path('on-campus', views.on_campus, name='on_campus'),
+    path('contact-hq', views.contact_hq, name='contact-hq'),
     path('archive', views.archive, name='archive'),
     path('register', views.register, name='register'),
+    
 
     path('login',
         auth_views.LoginView.as_view(template_name='login.html'),

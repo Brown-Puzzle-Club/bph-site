@@ -60,6 +60,11 @@
                     {% translate "Events" %}
                 </a>
                 {% endif %}
+                {% if hunt_has_started %}
+                <a{% if request.path == '/contact-hq' %} class="selected-tab"{% endif %} href="{% url 'contact-hq' %}">
+                    {% translate "Contact" %}
+                </a>
+                {% endif %}
 
                 
 
@@ -77,6 +82,7 @@
                     {% translate "Updates" %}
                 </a> -->
                 {% endif %}
+                
                 
                 {% if wrapup_page_visible %}
                 <a{% if '/wrapup' in request.path %} class="selected-tab"{% endif %} href="{% url 'wrapup' %}">
