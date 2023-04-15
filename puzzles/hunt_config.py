@@ -53,10 +53,12 @@ MAX_MEMBERS_PER_TEAM = 10
 # If this is disabled, teams will not get any hints.
 HINTS_ENABLED = True
 # Teams accumulate this many hints each day.
-HINTS_PER_DAY = (2, 2, 2, 2, 2, 2, 2, 2, 2, 2)
+# HINTS_PER_DAY = (2, 2, 2, 2, 2, 2, 2, 2, 2, 2) 
+# number of hours a team has to wait for their next hint.
+HOURS_PER_HINT = 3
 # Teams get the first number in HINTS_PER_DAY at this time, and subsequent
 # numbers every day after until the end of HINTS_PER_DAY.
-HINT_TIME = HUNT_START_TIME + datetime.timedelta(hours=1)
+HINT_TIME = HUNT_START_TIME + datetime.timedelta(hours=3)
 # To discourage teams from creating sockpuppets to grab more hints, teams
 # created less than this time ago get nothing. Once the time elapses, they
 # get the full number of hints, including retroactively.
@@ -69,7 +71,7 @@ TEAM_AGE_BEFORE_HINTS = datetime.timedelta(hours=1)
 # If set, a team's first N hints are usable only on puzzles in the intro round.
 # (They don't go away or convert into regular hints after some time; if a team
 # doesn't use them, they can still use regular hints they receive afterward.)
-INTRO_HINTS = 2
+INTRO_HINTS = 0
 # If this is enabled, a team may only have one open hint, and must wait for it
 # to be answered before submitting another request.
 ONE_HINT_AT_A_TIME = True
