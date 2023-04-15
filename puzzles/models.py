@@ -398,10 +398,12 @@ class Team(models.Model):
 
 
 
+    
     def num_hints_total(self):
         '''
         Compute the total number of hints (used + remaining) available to this team.
         '''
+        FREE_HINT_CNT = 1
         if not HINTS_ENABLED or self.hunt_is_over:
             return 0
         if self.now < self.creation_time + TEAM_AGE_BEFORE_HINTS:
@@ -409,7 +411,7 @@ class Team(models.Model):
         # print("f")
         hours = max(0, (self.now - (HINT_TIME - self.start_offset)).total_seconds() // 3600)
         hints = math.floor(hours / HOURS_PER_HINT)
-        return self.total_hints_awarded + hints
+        return self.total_hints_awarded + hints + FREE_HINT_CNT
 
     def num_hints_used(self):
         return sum(hint.consumes_hint for hint in self.asked_hints)
