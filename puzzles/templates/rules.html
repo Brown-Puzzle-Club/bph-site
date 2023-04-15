@@ -62,7 +62,7 @@
         <ul>
             {% format_time hint_time "WEEKDATE" as hint_date %}
             {% format_time hint_time "TIME" as hint_time %}
-            <li>{% blocktranslate %}Starting on <strong>{{ hint_date }}</strong>, at 2pm, teams will gain one hint request every three hours, which they can use to ask for help on any puzzle.{% endblocktranslate %}</li>
+            <li>{% blocktranslate %}Starting on <strong>{{ hint_date }}</strong>, at 4pm, teams will gain one hint request every three hours, which they can use to ask for help on any puzzle.{% endblocktranslate %}</li>
             <li>{% blocktranslate %}If you are a beginner student team or a team with a strong on-site presence that is not in the running to win, we will also visit you frequently to check on your progress and help you along. <b>If you are struggling, do not hesitate to reach out</b> — the event is meant to be fun, and we want to ensure no hunter is left behind! If you want someone on HQ to come and visit you, you can email us at any time.{% endblocktranslate %}</li>
             <li>{% blocktranslate %}You can use a hint to get help on a puzzle. This can be something like a nudge in the right direction (i.e. you give us your progress on the puzzle and we&rsquo;ll try to get you unstuck) or an answer to a question (e.g. &ldquo;Which answers to these crossword clues are wrong?&rdquo;).{% endblocktranslate %}</li>
             {% if one_hint_at_a_time %}
