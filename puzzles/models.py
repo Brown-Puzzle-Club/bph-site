@@ -506,8 +506,8 @@ class Team(models.Model):
                 if unlock_time <= context.now:
                     unlocked_at = unlock_time
             # TODO: REMOVE TO REENABLE PRERELEASE FULL-VISIBILITY
-            # if context.hunt_is_prereleased or context.hunt_is_over:
-            #     unlocked_at = context.start_time
+            if context.is_admin or context.hunt_is_over:
+                unlocked_at = context.start_time
             elif context.team and context.hunt_has_started:
                 (global_solves, local_solves) = context.team.main_round_solves
                 if 0 <= puzzle.unlock_global <= global_solves: # and (global_solves or any(metas_solved)):
