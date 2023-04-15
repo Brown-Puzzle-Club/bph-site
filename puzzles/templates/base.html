@@ -45,11 +45,11 @@
                 <!-- <a{% if request.path == '/rules' %} class="selected-tab"{% endif %} href="{% url 'rules' %}">
                     {% translate "Rules" %}
                 </a> -->
-                {% if story_page_visible %}
+                <!-- {% if story_page_visible %}
                 <a{% if request.path == '/story' %} class="selected-tab"{% endif %} href="{% url 'story' %}">
                     {% translate "Story" %}
                 </a>
-                {% endif %}
+                {% endif %} -->
                 {% if hunt_has_started or hunt_has_almost_started %}
                 <a{% if '/puzzle' in request.path or puzzle %} class="selected-tab"{% endif %} href="{% url 'puzzles' %}">
                     {% translate "Puzzles" %}
@@ -60,6 +60,9 @@
                     {% translate "Events" %}
                 </a>
                 {% endif %}
+
+                
+
                 <a{% if '/team' in request.path %} class="selected-tab"{% endif %} href="{% url 'teams' %}">
                     {% translate "Teams" %}
                 </a>
