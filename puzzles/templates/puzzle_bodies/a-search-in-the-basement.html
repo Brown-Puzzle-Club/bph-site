@@ -36,7 +36,7 @@
 {: .flavor}
 
 {% with HOURS_DELAY=4 %}
-  {% if request.context.hours_since_unlock < HOURS_DELAY %}
+  {% if request.context.hours_since_unlock < HOURS_DELAY and request.context.in_person %}
   {% with new_date=request.context.puzzle_unlock_time|add_hours:HOURS_DELAY %}
     The online-accessible version of this puzzle will unlock at {{ new_date }}
   {% endwith %}
