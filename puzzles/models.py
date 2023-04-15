@@ -345,8 +345,8 @@ class Team(models.Model):
               output_field=BooleanField(),
         )
         ).order_by(
-            F('metameta_solve_time').asc(nulls_last=True),
-            F('total_solves').desc(),
+            # F('metameta_solve_time').asc(nulls_last=True),
+            # F('total_solves').desc(),
             F('in_person').desc(),
             F('last_solve_or_creation_time'),
         )
