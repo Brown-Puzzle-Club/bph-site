@@ -61,7 +61,7 @@ clue_map = {
   55: "IMAGE",
   56: "I have the largest length to width ratio of any snake",
   57: "IMAGE",
-  58: "I am known only from my original description",
+  58: "I live in subtropical dry forests and shrublands",
   59: "IMAGE",
   60: "I am a true cobra",
   61: "IMAGE",
