@@ -131,6 +131,10 @@ class Context:
 
     def request_user(self):
         return self.request.user
+    
+    def is_admin(self):
+        # print("checking if admin:", self.request_user.is_staff)
+        return self.request_user.is_staff
 
     def is_superuser(self):
         return self.request_user.is_superuser

@@ -31,9 +31,22 @@
     filter: drop-shadow(5px 5px 5px #777);
   }
 
+  .round-puzzles .puzzle:nth-of-type(6) img {
+    -webkit-filter: unset;
+    filter: unset;
+  }
+
   .round-puzzles .puzzle img:hover {
     -webkit-filter: drop-shadow(5px 5px 5px #444);
     filter: drop-shadow(5px 5px 5px #444);
+    cursor: pointer;
+  }
+
+  .round-puzzles .puzzle:nth-of-type(6) img:hover {
+    -webkit-filter: unset;
+    filter: unset;
+    content: url("/static/images/rounds/brs/meta_2.png");
+    cursor: pointer;
   }
 
   .round-puzzles .paper-bg img,
@@ -83,6 +96,12 @@
     width: 15%;
     z-index: 100;
   }
+  .round-puzzles .puzzle:nth-of-type(6) {
+    left: 45%;
+    top: 40%;
+    width: 17%;
+    z-index: 101;
+  }
 
   .round-puzzles .puzzle:nth-of-type(1) img {
     content: url("/static/images/rounds/brs/puzzle_1.png");
@@ -98,6 +117,9 @@
   }
   .round-puzzles .puzzle:nth-of-type(5) img {
     content: url("/static/images/rounds/brs/puzzle_5.png");
+  }
+  .round-puzzles .puzzle:nth-of-type(6) img {
+    content: url("/static/images/rounds/brs/meta_1.png");
   }
 
   .puzzles-list {
