@@ -20,7 +20,7 @@
                 <th>{% translate "Rank" %}</th>
                 <th>{% translate "Team" %}</th>
                 <th>{% translate "In-Person" %}</th>
-                {% if hunt_has_started and is_superuser %}
+                {% if hunt_has_started and is_admin %}
                     <th>{% translate "Solves" %}</th>
                     <th>{% translate "Finish time" %} ({{ start_time|date:"T" }})</th>
                 {% endif %}

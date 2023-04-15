@@ -64,8 +64,10 @@ Note that this means you may see fewer puzzles than if you were logged out. Also
         <div>
             <h4>{% translate "Stats" %}</h4>
             <div class="info-desc">
+                {% if modify_info_available or is_admin %}
                 <div class="stat-entry">{% translate "Rank:" %} <span class="stat-value">{{ rank }}</span></div>
                 <div class="stat-entry">{% translate "Puzzles solved:" %} <span class="stat-value">{{ solves }}</span></div>
+                {% endif %}
                 {% if view_info_available %}
                 {% if view_team.num_hints_remaining > 0 %}
                 <div class="stat-entry">{% translate "Hints available:" %} <span class="stat-value">{{ view_team.num_hints_remaining }}</span></div>
