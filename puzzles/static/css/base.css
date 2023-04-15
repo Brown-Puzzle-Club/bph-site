@@ -124,6 +124,12 @@ body {
   font-weight: normal;
 }
 
+@font-face {
+  font-family: "Fantasy";
+  src: url("../fonts/QuiteMagical.ttf") format("truetype");
+  font-weight: normal;
+}
+
 @media print {
   nav,
   .shortcuts,
