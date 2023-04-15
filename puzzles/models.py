@@ -3,6 +3,7 @@ import datetime
 import re
 import unicodedata
 from urllib.parse import quote_plus
+import math
 
 from django import forms
 from django.core.exceptions import ValidationError
@@ -34,7 +35,7 @@ from puzzles.hunt_config import (
     HUNT_END_TIME,
     MAX_GUESSES_PER_PUZZLE,
     HINTS_ENABLED,
-    HINTS_PER_DAY,
+    HOURS_PER_HINT,
     HINT_TIME,
     TEAM_AGE_BEFORE_HINTS,
     INTRO_HINTS,
@@ -395,17 +396,20 @@ class Team(models.Model):
     def asked_hints(self):
         return tuple(self.hint_set.select_related('puzzle', 'puzzle__round'))
 
+
+
     def num_hints_total(self):
         '''
         Compute the total number of hints (used + remaining) available to this team.
         '''
-
         if not HINTS_ENABLED or self.hunt_is_over:
             return 0
         if self.now < self.creation_time + TEAM_AGE_BEFORE_HINTS:
             return self.total_hints_awarded
-        days = max(0, (self.now - (HINT_TIME - self.start_offset)).days + 1)
-        return self.total_hints_awarded + sum(HINTS_PER_DAY[:days])
+        # print("f")
+        hours = max(0, (self.now - (HINT_TIME - self.start_offset)).total_seconds() // 3600)
+        hints = math.floor(hours / HOURS_PER_HINT)
+        return self.total_hints_awarded + hints
 
     def num_hints_used(self):
         return sum(hint.consumes_hint for hint in self.asked_hints)
