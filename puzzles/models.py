@@ -409,9 +409,21 @@ class Team(models.Model):
         if self.now < self.creation_time + TEAM_AGE_BEFORE_HINTS:
             return self.total_hints_awarded
         # print("f")
-        hours = max(0, (self.now - (HINT_TIME - self.start_offset)).total_seconds() // 3600)
-        print("HINT COMPUTE HOURS",hours)
+        # print(self.now)
+        # print(self.start_offset)
+        # print(HINT_TIME)
+        # print(HINT_TIME - self.start_offset)
+        time_since_hints = self.now - (HINT_TIME - self.start_offset)
+        hours_since_hints = (time_since_hints).total_seconds() // 3600
+        # print(time_since_hints)
+        # print(HOURS_PER_HINT)
+        # print(hours_since_hints)
+        
+        hours = max(0, hours_since_hints)
+        # print(hours)
+        # print("HINT COMPUTE HOURS",hours)
         hints = math.ceil(hours / HOURS_PER_HINT)
+        # print("HINT COMPUTE HINTS",hints)
         return self.total_hints_awarded + hints + FREE_HINT_CNT
 
     def num_hints_used(self):

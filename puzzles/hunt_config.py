@@ -58,7 +58,7 @@ HINTS_ENABLED = True
 HOURS_PER_HINT = 3
 # Teams get the first number in HINTS_PER_DAY at this time, and subsequent
 # numbers every day after until the end of HINTS_PER_DAY.
-HINT_TIME = HUNT_START_TIME + datetime.timedelta(hours=3)
+HINT_TIME = HUNT_START_TIME + datetime.timedelta(hours=2)
 # To discourage teams from creating sockpuppets to grab more hints, teams
 # created less than this time ago get nothing. Once the time elapses, they
 # get the full number of hints, including retroactively.
