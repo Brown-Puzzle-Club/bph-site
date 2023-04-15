@@ -111,7 +111,9 @@ footer a:hover {
   top: 16%;
   left: 93%;
   font-size: 2rem;
-  font-family: cursive;
+  font-family: "Fantasy";
+  letter-spacing: 2px;
+  font-size: 3rem;
   font-weight: bold;
   border: #392f48 solid 5px;
   border-radius: 10px;
