@@ -1,0 +1,55 @@
+{% extends "puzzle.html" %}
+{% load static %}
+{% block puzzle-body-md %}
+
+<style>
+    .notice {
+        width: 100%;
+        text-align: center;
+        padding: 10px;
+        border-style: dashed;
+        border-width: 3px;
+        border-color: black;
+    }
+    img {
+        width: 50%;
+    }
+</style>
+
+Seriously. Go find him. He knows the answer. He's on campus.
+
+<img src="{% static 'puzzle_resources/find-oren/oren.jpeg' %}">
+<br>
+<div class="notice">
+    Oren is nowhere to be found from 12:00am to 10am.<br>
+    Oren is nowhere to be found anywhere except Brown University Campus. Remote solvers should attempt the second portion of this puzzle instead.
+</div>
+<br>
+Oren too elusive? Select three of the following:
+
+<ul>
+    <li><b>Selfie Time</b>: Have a team member take a selfie with someone whose name starts with O (include proof of O name, such as driver's license).</li>
+    <li><b>Anger Management</b>: Submit video footage of a team member decapitating a stuffed bear.</li>
+    <li><b>Enjoy The Weather</b>: Submit a picture of a team member wearing all black and sunglasses at a landmark recognizable by HQ, as a symbol of the worldwide influence of the Blueno Resurrection Society.</li>
+    <li><b>Museum Trip</b>: Submit a picture of a team member in front of the lit-up sign in The Met.</li>
+    <li><b>Origin Story</b>: Did you know that Brown Puzzle Club was originally founded as the Bread People's Coalition? Submit a video documenting a team member making “bread” from scratch.</li>
+    <li><b>Portal to Providence</b>: Submit a video of a team member enjoying a meal containing: 
+        <ul>
+            <li>a donut (Providence has more donut shops per capita than any other metro area!)</li>
+            <li>either coffee milk, Del's lemonade, or a Narragansett lager</li>
+            <li>fresh seafood</li>
+        </ul>
+    <li><b>Time Travel</b>: Submit a 30 minute timelapse of one or more team members with a visible clock. When the clock reads a minute divisible by 3, at least one team member must switch from a seated to a standing position. When the clock reads a minute divisible by 5, a team member approach the camera and spin in a circle. During the final minute of the timelapse, all members should jump in the air in jubilation.</li>
+    <li><b>Bear's Lair</b>: Film a nature documentary involving bears in their natural habitat. Bears only know how to eat, sleep, growl, and defend their territory. HQ is conducting a study on how Bears communicate mathematical concepts, so you should send us some observations that we can learn from.</li>
+    <li><b>Open Curriculum</b>: Make a syllabus for the best course possible. Make sure that:
+        <ul>
+            <li>Nobody could ever fail the course (grading scheme must be outlined clearly)</li>
+            <li>Each exam mentioned is generously curved in the most complicated way possible</li>
+            <li>Semester-long outline of topics that will be covered in the course must be included (with diagrams where necessary)</li>
+        </ul>
+        Submit a video of a student using ChatGPT to successfully pass an assignment from this course. Please also provide the syllabus with your video submission.</li>
+</ul>
+
+Once you think you have finished three of the requirements above, please send a Contact HQ request providing shareable links to all the content expected. Once reviewed by our team (during our open hours), we will provide you with further instructions.
+
+{% endblock %}
