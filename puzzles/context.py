@@ -12,7 +12,7 @@ from django.urls import reverse
 from django.utils import timezone
 
 from puzzles import hunt_config
-from puzzles.hunt_config import HUNT_START_TIME, HUNT_END_TIME, HUNT_CLOSE_TIME
+from puzzles.hunt_config import HUNT_START_TIME, HUNT_END_TIME, HUNT_CLOSE_TIME, HUNT_SOLUTION_TIME
 from puzzles import models
 from puzzles.shortcuts import get_shortcuts
 
@@ -92,6 +92,9 @@ class BaseContext:
 
     def close_time(self):
         return HUNT_CLOSE_TIME
+    
+    def solution_time(self):
+        return HUNT_SOLUTION_TIME
 
     # XXX do NOT name this the same as a field on the actual Team model or
     # you'll silently be unable to update that field because you'll be writing
@@ -110,10 +113,14 @@ class BaseContext:
 
     def hunt_is_closed(self):
         return self.now >= self.close_time
+    
+    def hunt_solutions_open(self): #TODO: change this to be if the solution 
+        return self.now >= self.solution_time
+  
 
 # Also include the constants from hunt_config.
 for (key, value) in hunt_config.__dict__.items():
-    if key.isupper() and key not in ('HUNT_START_TIME', 'HUNT_END_TIME', 'HUNT_CLOSE_TIME'):
+    if key.isupper() and key not in ('HUNT_START_TIME', 'HUNT_END_TIME', 'HUNT_CLOSE_TIME', 'HUNT_SOLUTION_TIME'):
         (lambda v: setattr(BaseContext, key.lower(), lambda self: v))(value)
 
 # Also include select constants from settings.

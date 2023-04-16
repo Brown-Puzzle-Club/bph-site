@@ -31,7 +31,7 @@
             {% endif %}
         </td>
         <td>
-            {% if data.full_stats %}
+            {% if data.solution_access %}
             <a class="puzzles-new" href="{% url 'solution' data.puzzle.slug %}">{% translate "Solution" %}</a>
             {% elif 'hints' in data %}
             <a class="puzzles-new" href="{% url 'hints' data.puzzle.slug %}">{% translate "Hints" %}</a>

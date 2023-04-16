@@ -24,8 +24,10 @@
 <a href="{% url 'post-hunt-solve' puzzle.slug %}" class="btn">{% translate "Check your answer spoiler-free" %}</a>
 {% endif %}
 {% if hunt_is_over or is_superuser %}
-<a href="{% url 'solution' puzzle.slug %}" class="btn">{% translate "View solution" %}</a>
 <a href="{% url 'stats' puzzle.slug %}" class="btn">{% translate "Stats" %}</a>
+{% endif %}
+{% if hunt_solutions_open or is_superuser %}
+<a href="{% url 'solution' puzzle.slug %}" class="btn">{% translate "View solution" %}</a>
 {% endif %}
 {% endblock %}
 
