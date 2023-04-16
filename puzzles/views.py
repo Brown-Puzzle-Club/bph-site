@@ -549,6 +549,7 @@ def render_puzzles(request):
     guesses = defaultdict(int)
     teams = defaultdict(set)
     full_stats = request.context.is_superuser or request.context.hunt_is_over
+    solution_access = request.context.is_superuser or request.context.hunt_solutions_open  #TODO: change to open solutions when needed
     if full_stats or INITIAL_STATS_AVAILABLE:
         for submission in AnswerSubmission.objects.filter(
             used_free_answer=False,
@@ -588,6 +589,7 @@ def render_puzzles(request):
         if puzzle.id in hints:
             data['hints'] = hints[puzzle.id]
         data['full_stats'] = full_stats
+        data['solution_access'] = solution_access
         if puzzle.id in guesses:
             data['solve_stats'] = {
                 'correct': correct[puzzle.id],
