@@ -12,7 +12,7 @@ from django.urls import reverse
 from django.utils import timezone
 
 from puzzles import hunt_config
-from puzzles.hunt_config import HUNT_START_TIME, HUNT_END_TIME, HUNT_CLOSE_TIME, HUNT_SOLUTION_TIME, NUM_METAS
+from puzzles.hunt_config import HUNT_START_TIME, HUNT_END_TIME, HUNT_CLOSE_TIME, HUNT_SOLUTION_TIME, META_SLUGS
 from puzzles import models
 from puzzles.shortcuts import get_shortcuts
 
@@ -118,7 +118,7 @@ class BaseContext:
         return self.now >= self.solution_time
     
     def num_metas(self):
-        return NUM_METAS
+        return len(META_SLUGS)
   
 
 # Also include the constants from hunt_config.
