@@ -36,8 +36,8 @@ HUNT_END_TIME = timezone.make_aware(datetime.datetime(
     year=2023,
     month=4,
     day=16,
-    hour=23,
-    minute=59,
+    hour=20,
+    minute=0,
 ))
 HUNT_CLOSE_TIME = timezone.make_aware(datetime.datetime(
     year=2023,
@@ -96,9 +96,5 @@ TEAM_AGE_BEFORE_FREE_ANSWERS = datetime.timedelta(days=3)
 INTRO_ROUND_SLUG = 'intro'
 RUNAROUND_SLUG = 'final-procession'
 
-META_1_SLUG = 'bring-back-blueno'
-META_2_SLUG = 'the-bear'
-META_3_SLUG = 'the-lamp'
-META_4_SLUG = 'dear-blueno-meta'
+META_SLUGS = ['bring-back-blueno', 'the-bear', 'the-lamp', 'dear-blueno-meta']
 
-NUM_METAS = 4

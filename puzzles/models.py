@@ -46,10 +46,7 @@ from puzzles.hunt_config import (
     TEAM_AGE_BEFORE_FREE_ANSWERS,
     INTRO_ROUND_SLUG,
     RUNAROUND_SLUG,
-    META_1_SLUG,
-    META_2_SLUG,
-    META_3_SLUG,
-    META_4_SLUG,
+    META_SLUGS
 )
 
 
@@ -293,6 +290,7 @@ class Team(models.Model):
             'total_solves',
             'last_solve_or_creation_time',
             'runaround_solve_time',
+            'recent_meta_solve_time',
             'all_metas_solve_time',
             'meta_solve_count'
         )
@@ -334,7 +332,7 @@ class Team(models.Model):
                 condition=Q(
                     answersubmission__used_free_answer=False,
                     answersubmission__is_correct=True,
-                    answersubmission__submitted_datetime__lt=HUNT_END_TIME,
+                    # answersubmission__submitted_datetime__lt=HUNT_END_TIME,
                 )
             ),
             total_solves=Count('scoring_submissions'),
@@ -345,12 +343,9 @@ class Team(models.Model):
                 )
                 # else, null by default
             )),
-            all_metas_solve_time=Max(Case( #only usable when all metas are solved.. So check meta_solve_count first.
+            recent_meta_solve_time=Max(Case( #only usable when all metas are solved.. So check meta_solve_count first.
                 When(
-                    Q(scoring_submissions__puzzle__slug=META_1_SLUG) |
-                    Q(scoring_submissions__puzzle__slug=META_2_SLUG) |
-                    Q(scoring_submissions__puzzle__slug=META_3_SLUG) |
-                    Q(scoring_submissions__puzzle__slug=META_4_SLUG),
+                    Q(scoring_submissions__puzzle__slug__in=META_SLUGS),
                     then='scoring_submissions__submitted_datetime',
                 ),
                 default=None,
@@ -358,15 +353,24 @@ class Team(models.Model):
             )),
             meta_solve_count=Count(Case(
                 When(
-                    Q(scoring_submissions__puzzle__slug=META_1_SLUG) |
-                    Q(scoring_submissions__puzzle__slug=META_2_SLUG) |
-                    Q(scoring_submissions__puzzle__slug=META_3_SLUG) |
-                    Q(scoring_submissions__puzzle__slug=META_4_SLUG),
+                    Q(scoring_submissions__puzzle__slug__in=META_SLUGS),
                     then='scoring_submissions__submitted_datetime',
                 ),
                 default=None,
                 output_field=IntegerField(),
             )),
+            all_metas_solve_time=Case(
+                When(meta_solve_count=len(META_SLUGS), then=Max(Case(
+                    When(
+                        Q(scoring_submissions__puzzle__slug__in=META_SLUGS),
+                        then='scoring_submissions__submitted_datetime',
+                    ),
+                    default=None,
+                    output_field=models.DateTimeField(),
+                ))),
+                default=None,
+                output_field=models.DateTimeField(),
+            ),
             # Coalesce(things) = the first of things that isn't null
             last_solve_or_creation_time=Coalesce('last_solve_time', 'creation_time'),
             in_person=Case(
@@ -376,7 +380,7 @@ class Team(models.Model):
         )
         ).order_by(
             F('runaround_solve_time').asc(nulls_last=True),
-            # F('all_metas_solve_time').asc(nulls_last=True),
+            F('all_metas_solve_time').asc(nulls_last=True),
             F('meta_solve_count').desc(),
             F('total_solves').desc(),
             F('in_person').desc(),
