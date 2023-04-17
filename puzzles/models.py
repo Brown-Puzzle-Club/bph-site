@@ -378,8 +378,8 @@ class Team(models.Model):
             F('runaround_solve_time').asc(nulls_last=True),
             # F('all_metas_solve_time').asc(nulls_last=True),
             F('meta_solve_count').desc(),
-            F('in_person').desc(),
             F('total_solves').desc(),
+            F('in_person').desc(),
             F('last_solve_or_creation_time'),
         )
 
