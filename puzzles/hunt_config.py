@@ -94,4 +94,9 @@ TEAM_AGE_BEFORE_FREE_ANSWERS = datetime.timedelta(days=3)
 # they can view) and to classify puzzles as intro-round or not. They won't make
 # sense for every hunt.
 INTRO_ROUND_SLUG = 'intro'
-META_META_SLUG = 'meta-meta'
+RUNAROUND_SLUG = 'final-procession'
+
+META_1_SLUG = 'bring-back-blueno'
+META_2_SLUG = 'the-bear'
+META_3_SLUG = 'the-lamp'
+META_4_SLUG = 'dear-blueno-meta'
