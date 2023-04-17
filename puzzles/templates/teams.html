@@ -29,7 +29,6 @@
             {% for team in teams %}
             <tr {% if team.id == current_team.id %}class="current-team"{% endif %}>
                 <td>
-                  {{completed_hunt}}
                   {% if forloop.counter == 1 %}🏆
                   {% elif forloop.counter == 2 %}🏆 
                   {% else %}{{ forloop.counter }}
