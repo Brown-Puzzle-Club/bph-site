@@ -244,9 +244,9 @@ h1 {
 {% with feedback_url="https://FIXME" %}
 {% if wrapup_page_visible %}
 {% url 'wrapup' as wrapup_url %}
-{% blocktranslate %}Please fill out our <a href="{{ feedback_url }}">feedback form</a> and check out our <a href="{{ wrapup_url }}">wrap-up</a>!{% endblocktranslate %}
+{% blocktranslate %}Check out our <a href="{{ wrapup_url }}">wrap-up</a>!{% endblocktranslate %}
 {% else %}
-{% blocktranslate %}Please fill out our <a href="{{ feedback_url }}">feedback form</a> to let us know what you thought about the hunt.{% endblocktranslate %}
+{% blocktranslate %}{% endblocktranslate %}
 {% endif %}
 {% endwith %}
 </div>
