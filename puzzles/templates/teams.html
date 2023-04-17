@@ -20,26 +20,38 @@
                 <th>{% translate "Rank" %}</th>
                 <th>{% translate "Team" %}</th>
                 <th>{% translate "In-Person" %}</th>
-                {% if hunt_has_started and is_admin %}
+                {% if is_admin or hunt_is_over %}
                     <th>{% translate "Solves" %}</th>
                     <th>{% translate "Finish time" %} ({{ start_time|date:"T" }})</th>
+                    <th>{% translate "Finish time (Runaround)" %} ({{ start_time|date:"T" }})</th>
                 {% endif %}
             </tr>
             {% for team in teams %}
             <tr {% if team.id == current_team.id %}class="current-team"{% endif %}>
-                <td>{{ forloop.counter }}</td>
                 <td>
-                    {% if team.metameta_solve_time is not None %}🧩🧩🧩{% endif %}
+                  {{completed_hunt}}
+                  {% if forloop.counter == 1 %}🏆
+                  {% elif forloop.counter == 2 %}🥈
+                  {% elif forloop.counter == 3 %}🥉
+                  {% else %}{{ forloop.counter }}
+                  {% endif %}
+                </td>
+                <td>
+                    {% if team.runaround_solve_time is not None %}🐻🐻🐻
+                    {% elif team.all_metas_solve_time is not None %}🧩🧩🧩{% endif %}
                     <a href="{% url 'team' team.team_name %}">{{ team.team_name }}</a>
-                    {% if team.metameta_solve_time is not None %}🧩🧩🧩{% endif %}
+                    {% if team.runaround_solve_time is not None %}🐻🐻🐻
+                    {% elif team.all_metas_solve_time is not None %}🧩🧩🧩{% endif %}
+                    
                     {% if is_superuser %}
                         (<a href="{% url 'impersonate-start' team.user_id %}">{% translate "impersonate" %}</a>)
                     {% endif %}
                 </td>
-                <td>{% if team.in_person %}🐻{% endif %}</td>
-                {% if hunt_has_started and is_admin %}
+                <td>{% if team.in_person %}✅{% endif %}</td>
+                {% if is_admin or hunt_is_over %}
                     <td>{{ team.total_solves }}</td>
-                    <td>{% format_time team.metameta_solve_time %}</td>
+                    <td>{% format_time team.all_metas_solve_time %}
+                    <td>{% format_time team.runaround_solve_time %}</td>
                 {% endif %}
             </tr>
             {% endfor %}
