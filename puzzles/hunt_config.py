@@ -100,3 +100,5 @@ META_1_SLUG = 'bring-back-blueno'
 META_2_SLUG = 'the-bear'
 META_3_SLUG = 'the-lamp'
 META_4_SLUG = 'dear-blueno-meta'
+
+NUM_METAS = 4
