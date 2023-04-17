@@ -3,7 +3,8 @@
 
 {% block top-left-actions %}
 <a href="{% url 'finishers' %}" class="btn">{% translate "Finishers" %}</a>
-<a href="{% url 'bigboard' %}" class="btn">{% translate "Bigboard" %}</a>
+<a href="{% url 'bigboard' %}" class="btn">{% translate "Solve Board" %}</a>
+<a href="{% url 'biggraph' %}" class="btn">{% translate "Solve Graph" %}</a>
 <a href="{% url 'hunt-stats' %}" class="btn">{% translate "Hunt Stats" %}</a>
 {% endblock %}
 
@@ -37,6 +38,7 @@
 
     aside .highlight {
       font-weight: bold;
+      color: rgb(81, 78, 78);
     }
 
     .content {

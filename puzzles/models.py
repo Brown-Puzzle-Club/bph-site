@@ -332,7 +332,7 @@ class Team(models.Model):
                 condition=Q(
                     answersubmission__used_free_answer=False,
                     answersubmission__is_correct=True,
-                    # answersubmission__submitted_datetime__lt=HUNT_END_TIME,
+                    answersubmission__submitted_datetime__lt=HUNT_END_TIME,
                 )
             ),
             total_solves=Count('scoring_submissions'),
