@@ -117,7 +117,7 @@ def access_restrictor(check_request):
     def decorator(f):
         @wraps(f)
         def inner(request, *args, **kwargs):
-            if not request.context.is_superuser:
+            if not request.context.is_superuser or request.context.is_admin:
                 check_res = check_request(request)
                 if check_res is not None:
                     return check_res
