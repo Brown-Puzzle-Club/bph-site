@@ -47,7 +47,7 @@
                 </td>
                 <td>{% if team.in_person %}✅{% endif %}</td>
                 {% if is_admin or hunt_is_over %}
-                    <td>{{ team.total_solves }}</td>
+                    <td>{% if team.meta_solve_count == num_metas %}{{ team.total_solves }}{% endif %}</td>
                     <td>{% format_time team.all_metas_solve_time %}
                     <td>{% format_time team.runaround_solve_time %}</td>
                 {% endif %}
