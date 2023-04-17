@@ -345,7 +345,7 @@ class Team(models.Model):
                 )
                 # else, null by default
             )),
-            all_metas_solve_time=Max(Case(
+            all_metas_solve_time=Max(Case( #only usable when all metas are solved.. So check meta_solve_count first.
                 When(
                     Q(scoring_submissions__puzzle__slug=META_1_SLUG) |
                     Q(scoring_submissions__puzzle__slug=META_2_SLUG) |
@@ -376,7 +376,7 @@ class Team(models.Model):
         )
         ).order_by(
             F('runaround_solve_time').asc(nulls_last=True),
-            F('all_metas_solve_time').asc(nulls_last=True),
+            # F('all_metas_solve_time').asc(nulls_last=True),
             F('meta_solve_count').desc(),
             F('in_person').desc(),
             F('total_solves').desc(),
