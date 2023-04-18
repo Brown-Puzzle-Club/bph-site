@@ -193,9 +193,7 @@ class Context:
         return self.time_since_unlock.total_seconds() // 3600
     
     def in_person(self):
-        # print("CHECKING IN PERSON COUNT")
-        print(self.team.in_person_sat, self.team.in_person_sun)
-        return self.team.in_person_sat > 0 or self.team.in_person_sun > 0
+        return self.team.in_person
 
     def test(self,n):
         return n * 3

@@ -415,7 +415,8 @@ def teams_generic(request, hide_hidden):
     user_team = request.context.team
 
     return render(request, 'teams.html', {
-        'teams': Team.leaderboard(user_team, hide_hidden=hide_hidden),
+        'teams': Team.leaderboard(user_team, hide_hidden=hide_hidden, hide_remote=False),
+        'teams_in_person': Team.leaderboard(user_team, hide_hidden=hide_hidden, hide_remote=True),
         'current_team': user_team,
     })
 

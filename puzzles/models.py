@@ -228,6 +228,16 @@ class Team(models.Model):
     merge_in = models.BooleanField(verbose_name=_('Is the team interested in taking on lone-solvers.'), default=False)
     merge_in_preferences = models.CharField(default="", max_length=200, verbose_name=_('Lone solver merge in preferences'), help_text=_('(e.g. size, age-range, in-person vs remote, etc.). DO NOT GIVE A TEAM MORE THAN THE NUMBER OF MEMBERS THEY ARE ASKING FOR!'))
 
+    def in_person(self):
+        return self.in_person_sat + self.in_person_sun > 0
+    
+    # def meta_solve_count(self):
+    #     solve_cnt = 0
+    #     for solve in self.solves:
+    #         if solve.puzzle.is_meta:
+    #           solve_cnt += 1
+    #     return solve_cnt
+
     class Meta:
         verbose_name = _('team')
         verbose_name_plural = _('teams')
@@ -264,7 +274,7 @@ class Team(models.Model):
         return MAX_GUESSES_PER_PUZZLE + extra_guesses - wrong_guesses
 
     @staticmethod
-    def leaderboard(current_team, hide_hidden=True):
+    def leaderboard(current_team, hide_hidden=True, hide_remote=False):
         '''
         Returns a list of dictionaries with data of teams in the order they
         should appear on the leaderboard. Dictionaries have the following keys:
@@ -282,7 +292,7 @@ class Team(models.Model):
         This depends on the viewing team for hidden teams.
         '''
 
-        return Team.leaderboard_teams(current_team, hide_hidden).values(
+        return Team.leaderboard_teams(current_team, hide_hidden, hide_remote).values(
             'id',
             'user_id',
             'in_person',
@@ -296,7 +306,7 @@ class Team(models.Model):
         )
 
     @staticmethod
-    def leaderboard_teams(current_team, hide_hidden=True):
+    def leaderboard_teams(current_team, hide_hidden=True, hide_remote=False):
         '''
         Returns a (lazy, not-yet-evaluated) QuerySet of teams, in the order
         they should appear on the leaderboard, with the following annotations:
@@ -321,6 +331,9 @@ class Team(models.Model):
                 # ...but always show current team, regardless of hidden status
                 q |= Q(id=current_team.id)
 
+        if hide_remote:
+            q &= Q(in_person_sat__gt=0) | Q(in_person_sun__gt=0)
+
         all_teams = Team.objects.filter(q, creation_time__lt=HUNT_END_TIME)
 
         # https://docs.djangoproject.com/en/3.1/ref/models/querysets/#filteredrelation-objects
@@ -332,7 +345,7 @@ class Team(models.Model):
                 condition=Q(
                     answersubmission__used_free_answer=False,
                     answersubmission__is_correct=True,
-                    answersubmission__submitted_datetime__lt=HUNT_END_TIME,
+                    # answersubmission__submitted_datetime__lt=HUNT_END_TIME,
                 )
             ),
             total_solves=Count('scoring_submissions'),
