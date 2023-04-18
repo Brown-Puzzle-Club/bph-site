@@ -39,6 +39,23 @@
     display: none;
     overflow: hidden;
   }
+
+  .solved-runaround {
+    color:#4a3e5d;
+    font-family: "Finger-Paint";
+    text-shadow: 1px 1px 10px #78488e;
+  }
+
+  .solved-runaround:hover {
+    color: #834c7e;
+  }
+
+  .solved-metas {
+    color:#1479a2;
+    font-family: "Finger-Paint";
+    text-shadow: 1px 1px 10px grey;
+  }
+
 </style>
 
 <h1>{% translate "Team Scoreboard" %}</h1>
@@ -73,12 +90,15 @@
                 {{ forloop.counter }}
               </td>
               <td>
-                  {% if team.runaround_solve_time is not None %}🐻🐻🐻{% endif %}
-                  <a href="{% url 'team' team.team_name %}">{{ team.team_name }}</a>
-                  {% if team.runaround_solve_time is not None %}🐻🐻🐻{% endif %}
-                  
+                  <a 
+                  {% if team.runaround_solve_time is not None %}class="solved-runaround"
+                  {% elif team.meta_solve_count == num_metas %}class="solved-metas"{% endif %}
+                  href="{% url 'team' team.team_name %}">{{ team.team_name }}</a>
                   {% if is_superuser or is_admin %}
-                      (<a href="{% url 'impersonate-start' team.user_id %}">{% translate "impersonate" %}</a>)
+                      (<a 
+                      {% if team.runaround_solve_time is not None %}class="solved-runaround"
+                      {% elif team.meta_solve_count == num_metas %}class="solved-metas"{% endif %}
+                      href="{% url 'impersonate-start' team.user_id %}">{% translate "impersonate" %}</a>)
                   {% endif %}
               </td>
               {% if is_admin or hunt_is_over %}
@@ -124,17 +144,21 @@
                   {{ forloop.counter }}
                 </td>
                 <td>
-                    {% if team.runaround_solve_time is not None %}🐻🐻🐻
-                    {% elif team.meta_solve_count == num_metas %}🧩🧩🧩{% endif %}
-                    <a href="{% url 'team' team.team_name %}">{{ team.team_name }}</a>
-                    {% if team.runaround_solve_time is not None %}🐻🐻🐻
-                    {% elif team.meta_solve_count == num_metas %}🧩🧩🧩{% endif %}
                     
-                    {% if is_superuser %}
-                        (<a href="{% url 'impersonate-start' team.user_id %}">{% translate "impersonate" %}</a>)
+                    <a 
+                    {% if team.runaround_solve_time is not None %}class="solved-runaround"
+                    {% elif team.meta_solve_count == num_metas %}class="solved-metas"{% endif %}
+                    href="{% url 'team' team.team_name %}">{{ team.team_name }}</a>
+                    
+                    
+                    {% if is_superuser or is_admin %}
+                        (<a 
+                        {% if team.runaround_solve_time is not None %}class="solved-runaround"
+                        {% elif team.meta_solve_count == num_metas %}class="solved-metas"{% endif %}
+                        href="{% url 'impersonate-start' team.user_id %}">{% translate "impersonate" %}</a>)
                     {% endif %}
                 </td>
-                <td>{% if team.in_person %}✅{% endif %}</td>
+                <td>{% if team.in_person %}🐻{% endif %}</td>
                 {% if is_admin or hunt_is_over %}
                     <td>{%if team.meta_solve_count > 0 %}{{ team.meta_solve_count }}{% endif %}</td>
                     <td>{{ team.total_solves }}</td>
