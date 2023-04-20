@@ -44,7 +44,7 @@
     color:#4a3e5d;
     font-family: "Fantasy";
     text-shadow: 1px 1px 4px #c0b6d6;
-    font-size: 3rem;
+    font-size: 2.5rem;
     letter-spacing: 1px;
   }
 
@@ -56,7 +56,7 @@
     color:#1479a2;
     font-family: "Fantasy";
     text-shadow: 1px 1px 4px #a1aecc;
-    font-size: 3rem;
+    font-size: 2.5rem;
     letter-spacing: 1px;
   }
 
@@ -91,7 +91,13 @@
           {% for team in teams_in_person %}
           <tr {% if team.id == current_team.id %}class="current-team"{% endif %}>
               <td>
+                {% with NUM_WINNERS=2 %}
+                {% if forloop.counter <= NUM_WINNERS %}
+                🏆
+                {% else %}
                 {{ forloop.counter }}
+                {% endif %}
+                {% endwith %}
               </td>
               <td>
                   <a 
@@ -145,7 +151,19 @@
             {% for team in teams %}
             <tr {% if team.id == current_team.id %}class="current-team"{% endif %}>
                 <td>
-                  {{ forloop.counter }}
+                  {% with NUM_WINNERS=2 ONLINE_WINNER=9 %}
+                  {% if forloop.counter <= NUM_WINNERS %}
+                  🏆
+                  {% elif forloop.counter == ONLINE_WINNER %}
+                  🖥️🥇
+                  {% elif forloop.counter == ONLINE_WINNER|add:"1" %}
+                  🖥️🥈
+                  {% elif forloop.counter == ONLINE_WINNER|add:"2" %}
+                  🖥️🥉
+                  {% else %}
+                  {{ forloop.counter}}
+                  {% endif %}
+                  {% endwith %}
                 </td>
                 <td>
                     
