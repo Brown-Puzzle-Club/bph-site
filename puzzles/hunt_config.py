@@ -36,8 +36,8 @@ HUNT_END_TIME = timezone.make_aware(datetime.datetime(
     year=2023,
     month=4,
     day=16,
-    hour=20,
-    minute=0,
+    hour=23,
+    minute=59,
 ))
 HUNT_CLOSE_TIME = timezone.make_aware(datetime.datetime(
     year=2023,
@@ -94,4 +94,7 @@ TEAM_AGE_BEFORE_FREE_ANSWERS = datetime.timedelta(days=3)
 # they can view) and to classify puzzles as intro-round or not. They won't make
 # sense for every hunt.
 INTRO_ROUND_SLUG = 'intro'
-META_META_SLUG = 'meta-meta'
+RUNAROUND_SLUG = 'final-procession'
+
+META_SLUGS = ['bring-back-blueno', 'the-bear', 'the-lamp', 'dear-blueno-meta']
+

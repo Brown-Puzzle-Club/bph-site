@@ -10,7 +10,7 @@ from django.core.exceptions import ValidationError
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
-from django.db.models import F, FilteredRelation, Q, BooleanField, Value, Case, When, Count, Min
+from django.db.models import F, FilteredRelation, Q, BooleanField, Value, Case, When, Count, Min, Max, IntegerField
 from django.db.models.functions import Coalesce
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -33,6 +33,7 @@ from puzzles.messaging import (
 
 from puzzles.hunt_config import (
     HUNT_END_TIME,
+    HUNT_CLOSE_TIME,
     MAX_GUESSES_PER_PUZZLE,
     HINTS_ENABLED,
     HOURS_PER_HINT,
@@ -44,7 +45,8 @@ from puzzles.hunt_config import (
     FREE_ANSWER_TIME,
     TEAM_AGE_BEFORE_FREE_ANSWERS,
     INTRO_ROUND_SLUG,
-    META_META_SLUG,
+    RUNAROUND_SLUG,
+    META_SLUGS
 )
 
 
@@ -226,6 +228,16 @@ class Team(models.Model):
     merge_in = models.BooleanField(verbose_name=_('Is the team interested in taking on lone-solvers.'), default=False)
     merge_in_preferences = models.CharField(default="", max_length=200, verbose_name=_('Lone solver merge in preferences'), help_text=_('(e.g. size, age-range, in-person vs remote, etc.). DO NOT GIVE A TEAM MORE THAN THE NUMBER OF MEMBERS THEY ARE ASKING FOR!'))
 
+    def in_person(self):
+        return self.in_person_sat + self.in_person_sun > 0
+    
+    # def meta_solve_count(self):
+    #     solve_cnt = 0
+    #     for solve in self.solves:
+    #         if solve.puzzle.is_meta:
+    #           solve_cnt += 1
+    #     return solve_cnt
+
     class Meta:
         verbose_name = _('team')
         verbose_name_plural = _('teams')
@@ -262,7 +274,7 @@ class Team(models.Model):
         return MAX_GUESSES_PER_PUZZLE + extra_guesses - wrong_guesses
 
     @staticmethod
-    def leaderboard(current_team, hide_hidden=True):
+    def leaderboard(current_team, hide_hidden=True, hide_remote=False):
         '''
         Returns a list of dictionaries with data of teams in the order they
         should appear on the leaderboard. Dictionaries have the following keys:
@@ -273,33 +285,37 @@ class Team(models.Model):
           - 'total_solves': number of solves (before hunt end)
           - 'last_solve_or_creation_time': last non-free solve (before hunt
             end), or if none, team creation time
-          - 'metameta_solve_time': time of finishing the hunt (if before hunt
-            end)
+          - 'runaround_solve_time': time of finishing the runaround (if before hunt
+            end and in-person)
+          - 'all_metas_solve_time': time of finishing all the metas ()
 
         This depends on the viewing team for hidden teams.
         '''
 
-        return Team.leaderboard_teams(current_team, hide_hidden).values(
+        return Team.leaderboard_teams(current_team, hide_hidden, hide_remote).values(
             'id',
             'user_id',
             'in_person',
             'team_name',
             'total_solves',
             'last_solve_or_creation_time',
-            'metameta_solve_time',
+            'runaround_solve_time',
+            'recent_meta_solve_time',
+            'all_metas_solve_time',
+            'meta_solve_count'
         )
 
     @staticmethod
-    def leaderboard_teams(current_team, hide_hidden=True):
+    def leaderboard_teams(current_team, hide_hidden=True, hide_remote=False):
         '''
         Returns a (lazy, not-yet-evaluated) QuerySet of teams, in the order
         they should appear on the leaderboard, with the following annotations:
           - 'total_solves': number of solves (before hunt end)
           - 'last_solve_or_creation_time': last non-free solve (before hunt
             end), or if none, team creation time
-          - 'metameta_solve_time': time of finishing the hunt (if before hunt
-            end)
-          - 'in_person': whether or not the team is competing in person
+          - 'runaround_solve_time': time of finishing the runaround (if before hunt
+            end and in-person)
+          - 'all_metas_solve_time': time of finishing all the metas ()
 
         This depends on the viewing team for hidden teams.
         '''
@@ -314,6 +330,9 @@ class Team(models.Model):
             if current_team:
                 # ...but always show current team, regardless of hidden status
                 q |= Q(id=current_team.id)
+
+        if hide_remote:
+            q &= Q(in_person_sat__gt=0) | Q(in_person_sun__gt=0)
 
         all_teams = Team.objects.filter(q, creation_time__lt=HUNT_END_TIME)
 
@@ -330,13 +349,41 @@ class Team(models.Model):
                 )
             ),
             total_solves=Count('scoring_submissions'),
-            metameta_solve_time=Min(Case(
+            runaround_solve_time=Min(Case(
                 When(
-                    scoring_submissions__puzzle__slug=META_META_SLUG,
+                    scoring_submissions__puzzle__slug=RUNAROUND_SLUG,
                     then='scoring_submissions__submitted_datetime',
                 )
                 # else, null by default
             )),
+            recent_meta_solve_time=Max(Case( #only usable when all metas are solved.. So check meta_solve_count first.
+                When(
+                    Q(scoring_submissions__puzzle__slug__in=META_SLUGS),
+                    then='scoring_submissions__submitted_datetime',
+                ),
+                default=None,
+                output_field=models.DateTimeField(),
+            )),
+            meta_solve_count=Count(Case(
+                When(
+                    Q(scoring_submissions__puzzle__slug__in=META_SLUGS),
+                    then='scoring_submissions__submitted_datetime',
+                ),
+                default=None,
+                output_field=IntegerField(),
+            )),
+            all_metas_solve_time=Case(
+                When(meta_solve_count=len(META_SLUGS), then=Max(Case(
+                    When(
+                        Q(scoring_submissions__puzzle__slug__in=META_SLUGS),
+                        then='scoring_submissions__submitted_datetime',
+                    ),
+                    default=None,
+                    output_field=models.DateTimeField(),
+                ))),
+                default=None,
+                output_field=models.DateTimeField(),
+            ),
             # Coalesce(things) = the first of things that isn't null
             last_solve_or_creation_time=Coalesce('last_solve_time', 'creation_time'),
             in_person=Case(
@@ -345,9 +392,11 @@ class Team(models.Model):
               output_field=BooleanField(),
         )
         ).order_by(
-            # F('metameta_solve_time').asc(nulls_last=True),
-            # F('total_solves').desc(),
-            F('in_person').desc(),
+            F('runaround_solve_time').asc(nulls_last=True),
+            F('all_metas_solve_time').asc(nulls_last=True),
+            F('meta_solve_count').desc(),
+            F('total_solves').desc(),
+            # F('in_person').desc(),
             F('last_solve_or_creation_time'),
         )
 
@@ -371,7 +420,7 @@ class Team(models.Model):
         #     used_free_answer=False, is_correct=True, submitted_datetime__lt=HUNT_END_TIME
         # ).values_list('team__id', 'puzzle__slug', 'submitted_datetime'):
         #     total_solves[team_id] += 1
-        #     if slug == META_META_SLUG:
+        #     if slug == RUNAROUND_SLUG:
         #         meta_times[team_id] = time
 
         # return sorted(
@@ -531,7 +580,7 @@ class Team(models.Model):
                     unlocked_at = context.now
                 if 0 <= puzzle.unlock_meta <= len(metas_solved):
                     unlocked_at = context.now
-                if puzzle.slug == META_META_SLUG and all(metas_solved):
+                if puzzle.slug == RUNAROUND_SLUG and all(metas_solved):
                     unlocked_at = context.now
                 if puzzle.id in context.team.db_unlocks:
                     unlocked_at = context.team.db_unlocks[puzzle.id].unlock_datetime

@@ -12,7 +12,7 @@ from django.urls import reverse
 from django.utils import timezone
 
 from puzzles import hunt_config
-from puzzles.hunt_config import HUNT_START_TIME, HUNT_END_TIME, HUNT_CLOSE_TIME, HUNT_SOLUTION_TIME
+from puzzles.hunt_config import HUNT_START_TIME, HUNT_END_TIME, HUNT_CLOSE_TIME, HUNT_SOLUTION_TIME, META_SLUGS
 from puzzles import models
 from puzzles.shortcuts import get_shortcuts
 
@@ -116,6 +116,9 @@ class BaseContext:
     
     def hunt_solutions_open(self): #TODO: change this to be if the solution 
         return self.now >= self.solution_time
+    
+    def num_metas(self):
+        return len(META_SLUGS)
   
 
 # Also include the constants from hunt_config.
@@ -160,6 +163,10 @@ class Context:
 
     def unlocks(self):
         return models.Team.compute_unlocks(self)
+    
+    #
+    # def completed_hunt(self):
+    #     return (self.team.runaround_solve_time is not None or self.team.all_metas_solve_time is not None) if self.team else False
 
     def all_puzzles(self):
         return tuple(models.Puzzle.objects.select_related('round').order_by('round__order', 'order'))
@@ -186,9 +193,7 @@ class Context:
         return self.time_since_unlock.total_seconds() // 3600
     
     def in_person(self):
-        print("CHECKING IN PERSON COUNT")
-        print(self.team.in_person_sat, self.team.in_person_sun)
-        return self.team.in_person_sat > 0 or self.team.in_person_sun > 0
+        return self.team.in_person
 
     def test(self,n):
         return n * 3

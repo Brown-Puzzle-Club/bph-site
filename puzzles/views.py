@@ -69,7 +69,7 @@ from puzzles.hunt_config import (
     MAX_MEMBERS_PER_TEAM,
     ONE_HINT_AT_A_TIME,
     INTRO_ROUND_SLUG,
-    META_META_SLUG,
+    RUNAROUND_SLUG,
 )
 
 from puzzles.messaging import send_mail_wrapper, dispatch_victory_alert, show_victory_notification
@@ -117,7 +117,7 @@ def access_restrictor(check_request):
     def decorator(f):
         @wraps(f)
         def inner(request, *args, **kwargs):
-            if not request.context.is_superuser:
+            if not request.context.is_superuser or request.context.is_admin:
                 check_res = check_request(request)
                 if check_res is not None:
                     return check_res
@@ -415,7 +415,8 @@ def teams_generic(request, hide_hidden):
     user_team = request.context.team
 
     return render(request, 'teams.html', {
-        'teams': Team.leaderboard(user_team, hide_hidden=hide_hidden),
+        'teams': Team.leaderboard(user_team, hide_hidden=hide_hidden, hide_remote=False),
+        'teams_in_person': Team.leaderboard(user_team, hide_hidden=hide_hidden, hide_remote=True),
         'current_team': user_team,
     })
 
@@ -689,7 +690,7 @@ def solve(request):
                     team.last_solve_time = request.context.now
                     team.save()
                 messages.success(request, _('%s is correct!') % puzzle.answer)
-                if puzzle.slug == META_META_SLUG:
+                if puzzle.slug == RUNAROUND_SLUG:
                     dispatch_victory_alert(
                         _('Team %s has finished the hunt!') % team +
                         _('\n**Emails:** <%s>') % request.build_absolute_uri(reverse('finishers')))
@@ -1197,7 +1198,7 @@ def victory(request):
     if not request.context.hunt_is_over and not request.context.is_superuser:
         if not team or not request.context.hunt_has_started:
             raise Http404
-        finished = any(puzzle.slug == META_META_SLUG for puzzle in team.solves.values())
+        finished = any(puzzle.slug == RUNAROUND_SLUG for puzzle in team.solves.values())
         if not finished:
             raise Http404
     return render(request, 'victory.html')
@@ -1225,7 +1226,7 @@ def finishers(request):
     metas_by_team = defaultdict(list)
 
     for submission in AnswerSubmission.objects.filter(
-        puzzle__slug=META_META_SLUG,
+        puzzle__slug=RUNAROUND_SLUG,
         team__is_hidden=False,
         is_correct=True,
         submitted_datetime__lt=HUNT_END_TIME,
@@ -1233,7 +1234,7 @@ def finishers(request):
         unlocks[submission.team_id] = None
     for unlock in PuzzleUnlock.objects.select_related().filter(
         team__id__in=unlocks,
-        puzzle__slug=META_META_SLUG,
+        puzzle__slug=RUNAROUND_SLUG,
     ):
         unlocks[unlock.team_id] = unlock
     for solve in AnswerSubmission.objects.select_related().filter(
@@ -1286,7 +1287,7 @@ def bigboard_generic(request, hide_hidden):
     meta_meta_id = None
     for puzzle in puzzles:
         puzzle_map[puzzle.id] = puzzle
-        if puzzle.slug == META_META_SLUG:
+        if puzzle.slug == RUNAROUND_SLUG:
             meta_meta_id = puzzle.id
         if not puzzle.is_meta:
             puzzle_metas[puzzle.id] = puzzle.round.meta_id
@@ -1446,7 +1447,7 @@ def biggraph(request):
     meta_meta_id = None
     for puzzle in puzzles:
         puzzle_map[puzzle.id] = puzzle
-        if puzzle.slug == META_META_SLUG:
+        if puzzle.slug == RUNAROUND_SLUG:
             meta_meta_id = puzzle.id
 
     during_hunt_solve_time_map = defaultdict(dict) # team -> {puzzle id -> solve time}

@@ -24,7 +24,7 @@ from puzzles.hunt_config import (
     HUNT_ORGANIZERS,
     CONTACT_EMAIL,
     MESSAGING_SENDER_EMAIL,
-    META_META_SLUG,
+    RUNAROUND_SLUG,
 )
 
 logger = logging.getLogger('puzzles.messaging')
@@ -341,7 +341,7 @@ def show_unlock_notification(context, unlock):
     TeamNotificationsConsumer.send_to_team(unlock.team, data)
 
 def show_solve_notification(submission):
-    if not submission.puzzle.is_meta or submission.puzzle.slug == META_META_SLUG:
+    if not submission.puzzle.is_meta or submission.puzzle.slug == RUNAROUND_SLUG:
         return
     data = json.dumps({
         'title': str(submission.puzzle),

@@ -17,7 +17,6 @@
 body {
     width: auto;
     max-width: none;
-    margin: 0 5vw;
 }
 
 .bg {
@@ -138,11 +137,17 @@ small {
 .puzzle-title-header-link:hover::before {
     opacity: 1;
 }
+
+.big-table {
+  overflow-x: auto;
+}
+
 </style>
 
 <input type="checkbox" id="hide"><label for="hide">{% translate "Hide finished teams" %}</label>
 <p>{% translate "You can put ?30 after the URL to limit to 30 teams." %}</p>
 
+<div class="big-table">
 <table>
 {% spacelesser %}
 <col> {# team #}
@@ -272,5 +277,6 @@ small {
 {% endfor %}
 {% endspacelesser %}
 </table>
+</div>
 
 {% endblock %}
