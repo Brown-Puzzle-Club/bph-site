@@ -60,7 +60,7 @@
                     {% translate "Events" %}
                 </a>
                 {% endif %}
-                {% if hunt_has_started %}
+                {% if hunt_has_started and not hunt_is_closed %}
                 <a{% if request.path == '/contact-hq' %} class="selected-tab"{% endif %} href="{% url 'contact-hq' %}">
                     {% translate "Contact" %}
                 </a>
@@ -82,6 +82,10 @@
                     {% translate "Updates" %}
                 </a> -->
                 {% endif %}
+
+                <a{% if request.path == '/club' %} class="selected-tab"{% endif %} href="{% url 'club' %}">
+                    {% translate "Club" %}
+                </a>
                 
                 
                 {% if wrapup_page_visible %}

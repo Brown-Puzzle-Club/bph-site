@@ -48,6 +48,7 @@ urlpatterns = [
     path('contact-hq', views.contact_hq, name='contact-hq'),
     path('archive', views.archive, name='archive'),
     path('register', views.register, name='register'),
+    path('club', views.club, name='club' ),
     
 
     path('login',
