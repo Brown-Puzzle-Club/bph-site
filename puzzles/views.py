@@ -166,6 +166,10 @@ def faq(request):
     return render(request, 'faq.html')
 
 @require_GET
+def club(request):
+    return render(request, 'club.html')
+
+@require_GET
 def contact_hq(request):
     return render(request, 'contact_hq.html')
 
