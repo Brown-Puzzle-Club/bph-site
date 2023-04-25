@@ -74,13 +74,27 @@
                 <a{% if request.path == '/rules' %} class="selected-tab"{% endif %} href="{% url 'rules' %}">
                     {% translate "Rules" %}
                 </a>
+                {% if not hunt_is_closed %}
                 <a{% if request.path == '/on-campus' %} class="selected-tab"{% endif %} href="{% url 'on_campus' %}">
                     {% translate "On-Campus" %}
                 </a>
+                {% endif %}
                 {% if errata_page_visible %}
                 <!-- <a{% if request.path == '/errata' %} class="selected-tab"{% endif %} href="{% url 'errata' %}">
                     {% translate "Updates" %}
                 </a> -->
+                {% endif %}
+
+                {% if wrapup_page_visible or is_admin %}
+                <a{% if '/wrapup' in request.path %} class="selected-tab"{% endif %} href="{% url 'wrapup' %}">
+                    {% translate "Wrap-Up" %}
+                </a>
+                {% endif %}
+
+                {% if hunt_is_closed %}
+                <a{% if request.path == '/credits' %} class="selected-tab"{% endif %} href="{% url 'credits' %}">
+                    {% translate "Credits" %}
+                </a>
                 {% endif %}
 
                 <a{% if request.path == '/club' %} class="selected-tab"{% endif %} href="{% url 'club' %}">
@@ -88,11 +102,7 @@
                 </a>
                 
                 
-                {% if wrapup_page_visible %}
-                <a{% if '/wrapup' in request.path %} class="selected-tab"{% endif %} href="{% url 'wrapup' %}">
-                    {% translate "- Wrap-Up -" %}
-                </a>
-                {% endif %}
+                
                 <!-- <a{% if request.path == '/archive' %} class="selected-tab"{% endif %} href="{{ archive_link }}">
                     {% translate "Archive" %}
                 </a> -->

@@ -49,6 +49,7 @@ urlpatterns = [
     path('archive', views.archive, name='archive'),
     path('register', views.register, name='register'),
     path('club', views.club, name='club' ),
+    path('credits', views.credits, name='credits' ),
     
 
     path('login',

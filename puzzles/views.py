@@ -170,6 +170,10 @@ def club(request):
     return render(request, 'club.html')
 
 @require_GET
+def credits(request):
+    return render(request, 'credits.html')
+
+@require_GET
 def contact_hq(request):
     return render(request, 'contact_hq.html')
 
