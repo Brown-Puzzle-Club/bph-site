@@ -1,18 +1,94 @@
-{% extends "base.html" %}
-{% load i18n %}
-
+{% extends "base.html" %} 
+{% load puzzle_tags %} 
+{% load humanize %} 
+{% load static %} 
+{% load i18n %} 
 {% block top-left-actions %}
-<a href="{% url 'finishers' %}" class="btn">{% translate "Finishers" %}</a>
 <a href="{% url 'bigboard' %}" class="btn">{% translate "Solve Board" %}</a>
-<a href="{% url 'biggraph' %}" class="btn">{% translate "Solve Graph" %}</a>
+{% if is_admin %}<a href="{% url 'biggraph' %}" class="btn"
+  >{% translate "Solve Graph" %}</a
+>{% endif %}
 <a href="{% url 'hunt-stats' %}" class="btn">{% translate "Hunt Stats" %}</a>
-{% endblock %}
-
-{% block content %}
+{% endblock %} {% block content %}
 
 <style>
   aside {
     display: none;
+  }
+
+  a.centered {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .centered {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .centered-flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .centered-flex img {
+    margin: unset;
+    padding: 0 1rem;
+  }
+
+  .larger {
+    font-size: 24px;
+  }
+
+  table {
+    margin: 0 auto;
+  }
+
+  td:last-child {
+    text-align: center;
+  }
+
+  img {
+    max-width: 100%;
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 2rem;
+  }
+
+  .tooltip-colored-circle {
+    /* echarts:util/format.ts */
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 4px;
+    height: 10px;
+    width: 10px;
+    border-radius: 10px;
+  }
+
+  blockquote {
+    margin: 0;
+    padding: 1em;
+    border-left: 3px solid #ccc;
+    font-family: monospace;
+    margin-bottom: 2rem;
+  }
+
+  blockquote p {
+    margin: 0;
+    font-size: 0.8em;
+    line-height: 1.5;
+    text-align: center;
+  }
+
+  blockquote footer {
+    font-size: 0.8em;
+    text-align: right;
+  }
+
+  blockquote footer:before {
+    content: "- ";
   }
 
   @media screen and (min-width: 961px) {
@@ -20,7 +96,7 @@
       display: block;
       position: fixed;
       width: 240px;
-      top: 120px;
+      top: 90px;
       left: 0;
     }
 
@@ -40,36 +116,640 @@
       font-weight: bold;
       color: rgb(81, 78, 78);
     }
-
-    .content {
-      margin-left: calc(240px - 10vw);
-    }
   }
 </style>
 
 <h1>{% translate "Wrap-Up" %}</h1>
 
 <main>
+  <div class="centered">Welcome to the wrapup for Brown Puzzlehunt!</div>
 
-<p>{% translate "Congratulations!" %}</p>
+  <h3>Opening Notes</h3>
+  <p>
+    Congratulations to the <b>36</b> teams that finished the hunt, and to the
+    <b>123</b> teams that solved the first meta <b>Bring Back Blueno.</b>
+  </p>
+
+  <p>
+    Congratulations also to our first on site teams who completed the runaround
+    (a two-way tie!):
+  </p>
+
+  <div class="centered larger">
+    <b>The ‘zzlers</b> and <b>The Geese Geese</b>
+  </div>
+
+  <p>and our first remote team to complete all 4 metas:</p>
+
+  <div class="centered larger"><b>💰💰💰 Galactic Tax Exempt 🤑🤑🤑</b></div>
+
+  <h4>Stats</h4>
+  <p class="centered">
+    <i>Here are some quick statistics for Brown Puzzlehunt 2023:</i>
+  </p>
+
+  <div class="centered larger">
+    <b>Total teams</b>: 248<br />
+    <b>Total participants</b>: 652<br />
+    <b>Hints asked</b>: 559<br />
+    <br />
+    <b>Total guesses</b>: 5130<br />
+    <b>Total solves</b>: 1919<br />
+    <b>Metas solved</b>: 269<br />
+  </div>
+
+  <div class="centered">
+    <b>36</b> teams defeated all three aspects of Blueno<br />
+    <b>8</b> in-person teams successfully stopped the Final Procession and found
+    Blueno<br />
+    <br />
+    <b>First in-person puzzle solve</b>: <i>Living Off Hope</i> solved Work
+    Together <b>7 seconds</b> after answer submission opened.<br />
+    <b>First remote puzzle solve</b>: 💰💰💰 <i>Galactic Tax Evaders</i> 🤑🤑🤑
+    solved Work Together at <b>1:04pm</b><br />
+  </div>
+
+  <div class="centered">
+    <i>Winning teams with the <b>fewest incorrect answers</b>:</i>
+  </div>
+  <table>
+    <tr>
+      <th>Team</th>
+      <th>Incorrect Answers</th>
+    </tr>
+    <tr>
+      <td>turtle</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <td>Callie's Enterprise</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <td>ჰ GEORGIAN BEAR PAW</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <td>Living Off Hope</td>
+      <td>12</td>
+    </tr>
+    <tr>
+      <td>plugh</td>
+      <td>16</td>
+    </tr>
+  </table>
+  <br />
+  <div class="centered">
+    <i>Winning teams with the <b>most incorrect answers</b>:</i>
+  </div>
+  <table>
+    <tr>
+      <th>Team</th>
+      <th>Incorrect Answers</th>
+    </tr>
+    <tr>
+      <td>Amateur Hour</td>
+      <td>115</td>
+    </tr>
+    <tr>
+      <td>????</td>
+      <td>102</td>
+    </tr>
+    <tr>
+      <td>The C@r@line Syzygy</td>
+      <td>77</td>
+    </tr>
+    <tr>
+      <td>HILL "MOUNTAIN" CHANG BROWN VALEDICTORIAN ...</td>
+      <td>71</td>
+    </tr>
+    <tr>
+      <td>🐆 Cheatahs 🐆</td>
+      <td>66</td>
+    </tr>
+  </table>
+  <br />
+  <div class="centered">
+    <i>Winning teams with the <b>best answer accuracy</b>:</i>
+  </div>
+  <table>
+    <tr>
+      <th>Team</th>
+      <th>Correct Answers</th>
+      <th>Total Answers</th>
+      <th>Answer Accuracy</th>
+    </tr>
+    <tr>
+      <td>turtle</td>
+      <td>23</td>
+      <td>28</td>
+      <td>82.14%</td>
+    </tr>
+    <tr>
+      <td>ჰ GEORGIAN BEAR PAW</td>
+      <td>26</td>
+      <td>36</td>
+      <td>72.22%</td>
+    </tr>
+    <tr>
+      <td>Living Off Hope</td>
+      <td>28</td>
+      <td>40</td>
+      <td>70.00%</td>
+    </tr>
+    <tr>
+      <td>Callie's Enterprise</td>
+      <td>20</td>
+      <td>29</td>
+      <td>68.97%</td>
+    </tr>
+    <tr>
+      <td>plugh</td>
+      <td>27</td>
+      <td>43</td>
+      <td>62.79%</td>
+    </tr>
+    <tr>
+      <td>befuddlers</td>
+      <td>26</td>
+      <td>45</td>
+      <td>57.78%</td>
+    </tr>
+    <tr>
+      <td>Blueno of the Elite Four</td>
+      <td>22</td>
+      <td>39</td>
+      <td>56.41%</td>
+    </tr>
+    <tr>
+      <td>beep boop puzzles go brrr</td>
+      <td>26</td>
+      <td>47</td>
+      <td>55.32%</td>
+    </tr>
+    <tr>
+      <td>💰💰💰 Galactic Tax Exempt 🤑🤑🤑</td>
+      <td>26</td>
+      <td>48</td>
+      <td>54.17%</td>
+    </tr>
+    <tr>
+      <td>The Geese Geese</td>
+      <td>29</td>
+      <td>54</td>
+      <td>53.70%</td>
+    </tr>
+  </table>
+  <br />
+  <div class="centered">
+    <i>Teams that finished with <b>0 hints</b>:</i>
+  </div>
+  <table>
+    <tr>
+      <th style="text-align: center">Team</th>
+    </tr>
+    <tr>
+      <td>????</td>
+    </tr>
+    <tr>
+      <td>ClueCurio</td>
+    </tr>
+    <tr>
+      <td>💰💰💰 Galactic Tax Evaders 🤑🤑🤑</td>
+    </tr>
+    <tr>
+      <td>💰💰💰 Galactic Tax Exempt 🤑🤑🤑</td>
+    </tr>
+    <tr>
+      <td>plugh</td>
+    </tr>
+    <tr>
+      <td>The Geese Geese</td>
+    </tr>
+    <tr>
+      <td>[URGENT] DOES BROWN AI DREAM OF RAINBOW?</td>
+    </tr>
+    <tr>
+      <td>Ye Olde Brown Puzzle Club 🎏</td>
+    </tr>
+  </table>
+  <br />
+  <!-- <a class="centered larger" href="{% url 'biggraph' %}">Solve Graph</a> -->
+  <h5 class="centered larger">Solve Graph</h5>
+  <div id="biggraph" style="min-height: 400px"></div>
+
+  <p>
+    This was our first time running a hunt, and we’re very proud of how it
+    turned out! This wrapup will talk about our process and how we approached
+    this, as well as some cute spoilers about the lore of the hunt. We also have
+    a slidedeck of photos from the weekend and puzzle solving!
+  </p>
+  <b>TODO: turn slidedeck into gallery view</b><br />
+
+  <h3>Lore</h3>
+
+  <p>
+    At kickoff, teams were told of the efforts of a remarkable student group on
+    campus. The Blueno Resurrection Society, adorned in black robes, was
+    attempting to return Blueno to campus through the use of a mysterious
+    ritual. Solvers were instructed to solve puzzles in order to determine the
+    specific elements required for the ritual, and help the Blueno Resurrection
+    Society complete their goal.
+  </p>
+
+  <p>
+    For the teams that were solving on campus, there was an in-person
+    interaction after the first meta was solved. At this point in the hunt, the
+    teams had successfully “resurrected Blueno”, and they received an urgent
+    call asking them to provide their location for an emergency meeting.
+    Representatives of the BlueNope Group, mortal enemies of the Blueno
+    Resurrection Society, went to visit the teams to tell them how foolish they
+    were for resurrecting Blueno, and to give them instructions for defeating
+    the creature they had released on this world.
+  </p>
+
+  <p>The mini interaction came with the added bonus of pins!</p>
+  <img src="{% static 'images/wrapup/pin3.png' %}" style="width: 25%" />
+
+  <p>
+    It turned out that Blueno was actually a manifestation of an all-powerful
+    eldritch creature, and his return meant the incarnation of “aspects of
+    Blueno” that were wreaking havoc across campus: his physical form, “the
+    Bear”, was beginning to devour campus; his spectral light, “the Lamp”, was
+    beginning to twist everything it touched; and his internet presence, “Dear
+    Blueno”, was launching digital attacks on the campus’ websites.
+  </p>
+
+  <p>
+    Upon defeating all three “aspects” of Blueno, on-site teams were contacted
+    by the BlueNope group once again: this time, to ask them to help stop the
+    Blueno Resurrection Society once and for all. The BRS was attempting to
+    complete a Final Procession, a ritual which would complete Blueno’s
+    emergence into this plane of reality, allowing him to descend fully upon
+    Brown’s campus. Thankfully, there was a way to stop this: by finding and
+    stealing an icon representing Blueno’s power, hidden somewhere on campus.
+    Teams had to disguise themselves as Blueno Resurrection Society members,
+    forge an invitation, and infiltrate their meet-up.
+  </p>
+
+  <p>
+    Teams then received a set of mysterious instructions as to how to place
+    Blueno and successfully resurrect him. With a bit of ingenuity, this
+    information could be used to figure out where the icon Blueno was placed: in
+    the tunnels beneath Morris-Champlin Hall!
+  </p>
+
+  <b>(TODO: photos from the runaround)</b>
+
+  <h3>Art Direction</h3>
+
+  <p>
+    We have seen some amazing art work in the recent years of online hunts, and
+    wish to acknowledge how much the art of others in the community has inspired
+    us in putting together this hunt.
+  </p>
+
+  <p>
+    Quality round art has had an impact on how we have enjoyed hunts we’ve
+    participated in—often, good art can become a secret enjoyment factor for
+    unlocking puzzles, as it can help drive the allure of “what is next?”
+  </p>
+
+  <p><b>We were hopeful that our hunt art could:</b></p>
+  <ul>
+    <li>Clearly share our hunt’s story without words</li>
+    <li>Excite solvers to unlock and see more of the hunt.</li>
+    <li>Embellish each round’s uniqueness in story and form (no same-old)</li>
+    <li>
+      .. and overall emphasize the light-hearted, beginner friendly nature of
+      the hunt.
+    </li>
+  </ul>
+
+  <p>
+    We were blessed to collaborate with such driven, talented student artists
+    from Brown and RISD for our hunt. Please see the credits page for full
+    attribution. We valued striking a diversity of art direction per round page,
+    and gave each artist the liberty to make their round their own.
+  </p>
+
+  <blockquote>
+    <p>
+      “I loved being a part of this process from start to finish. I am infamous
+      for doing little drawings of Blueno everywhere I go and having the
+      opportunity to be a part of a giant project involving so much Blueno is
+      everything I could hope for. This project gave a lot of room for
+      experimentation and fun in ways other projects rarely do. Thank you to
+      Orion, the Art Squad, and the rest of the team for a wonderful break from
+      this semester. I hope to do it again next year!”
+    </p>
+    <footer>Lucid Clairvoyant</footer>
+  </blockquote>
+
+  <p>
+    We leaned heavily on the iconography of Blueno as a grounding element in our
+    art, and hope everyone in-person cherishes their chibi cthulhu-blueno pins.
+  </p>
+
+  <img src="{% static 'images/wrapup/pin_man.png' %}" style="width: 25%" />
+  <div class="centered">
+    (cthulhu-no pin specifications sent to the manufacturer, designed by Jackie
+    Cohen)
+  </div>
+
+  <blockquote>
+    <p>
+      “Huge thanks to Orion for giving me the freedom to be as silly as I wanted
+      and letting me build a collaged Blueno out of an exploded battery, a
+      cigarette butt, potatoes, and a wok, among other things. Also, huge thanks
+      to my roommates for helping with the constellations.”
+    </p>
+    <footer>Chrstine Wang</footer>
+  </blockquote>
+
+  <p>
+    We were also hopeful to utilize art to increase the appeal and visible
+    accessibility of medium-round puzzles. We are thoughtful of our University
+    teams new to hunting, and how conquering your first meta is often met with
+    hesitation or unease.
+  </p>
+
+  <p>
+    Keeping in mind the common hunt sentiment on simplifying your puzzle’s
+    visuals to reduce red-herrings, Camille had a strength in making designs
+    that could pop without adding any new information, and spent most of the
+    hunt prep time cleaning designs across the board.
+  </p>
+
+  <div class="centered-flex">
+    <img src="{% static 'images/wrapup/bek.png' %}" style="width: 28%" >
+    <img src="{% static 'images/wrapup/bek2.png' %}" style="width: 25%" >
+    
+  </div>
+  <div class="centered">(before and after of <a href="../puzzle/butterfly-evolution-kit">Butterfly Evolution Kit</a>, Camille Leung)</div>
+
+
+  <img src="{% static 'images/wrapup/ditc.png' %}" style="width: 40%" >
+  <div class="centered">(<a href="../puzzle/day-in-the-city">Day in the City</a>, Camille Leung)</div>
+  
+  <p>
+    Starting to figure out our formula for next year’s hunt, our hope is to
+    increase our scope further. We are already brainstorming ideas on designing
+    interactive art, non-sequitur page layouts, and other tighter theme-art
+    integrations. Bolstered by such a brilliant team spanning art and CS
+    backgrounds, we are excited to push the envelope of what can be expected
+    from a University hunt’s art, and see this future work as critical for the
+    inclusivity and allure of our event.
+  </p>
+
+  <p>
+    We are always looking for more! If you are interested in joining our art
+    team, please reach out to <a href="{% url 'club' %}">Brown Puzzle Club</a>.
+  </p>
+
+  <p><b>WIP Photos:</b></p>
+
+  <img src="{% static 'images/wrapup/wip1.png' %}" style="width: 40%" >
+  <div class="centered">(The first cthulu-blueno, inspiring the rest of the hunt theme. Jackie Cohen)</div>
+  <img src="{% static 'images/wrapup/wip2.png' %}" style="width: 40%" >
+  <div class="centered">(The Bear page, Jackie Cohen)</div>
+  <img src="{% static 'images/wrapup/wip3.png' %}" style="width: 40%" >
+  <div class="centered">(An alternative BPH logo, Lucid Clairvoyant)</div>
+  <img src="{% static 'images/wrapup/wip4.png' %}" style="width: 40%" >
+  <div class="centered">(The initial opening round view, Christine Wang)</div>
+  <img src="{% static 'images/wrapup/wip5.png' %}" style="width: 40%" >
+  <div class="centered">(A constellation that got veto-ed :( , Chrstine’s roommates)</div>
+
+  <h3>Website</h3>
+  
+  <p>We ran our hunt on a slightly modified gph-site for PostgreSQL + Heroku deployment. (shoutout to jenna-h and the gph-site development team).</p>
+
+  <p>Our goal for the development cycle of this hunt was to:</p>
+  <ul>
+    <li>Build an extensible framework for round art, puzzle icons hover, and site theme changing that maintains accessibility.</li>
+    <li>Redesign the base styling to make the site look our own.</li>
+    <li>Assure polish in our puzzles through careful styling and interactive helpers</li>
+    <li>Rework the leaderboard and unlock structure to have different end points for in-person versus online teams.</li>
+  </ul>
+  
+  <p>Other misc. changes we’ve had to make:</p>
+  <ul>
+    <li>Rework the prerelease testsolver system to be progression-based.</li>
+    <li>Rework the hint delivery system to give teams hints every N hours.</li>
+    <li>Registration, database, admin-panel revisions for flagging teams as in-person versus online.</li>
+    <li>Small layout differences for puzzles for in-person versus online teams. (unlock timers, Django templating conditional extra text)</li>
+    <li>Adding unlock parameters for puzzles by the number of metas solved.</li>
+    <li>Adding voucher based on specific solved puzzles.</li>
+  </ul>
+
+  <p>Due to our tight schedule, the majority of site dev work was putting out fires as testsolvers found them. We were miraculously able to stay afloat during the hunt’s runtime with few to no site-breaking issues! With the scope of unlock structure and hint modifications alone, we were expecting much worse, and are only left to thank our online teams stress-testing and full-hunt run-thru-ing the days before launch (credited <a href="{% url 'credits' %}">here</a>, thank you so much!)</p>
+
+
+  <blockquote>
+    <p>
+      “I was a one-person team tasked with all the web dev and troubleshooting. I have had experience running hunt sites before, but all through Wix or other static approaches. It was also my first time working with Django. Coming out of this hunt, my knowledge-base for full-stack integration has blossomed. To manage an entire tournament site and prep new admins/writers/hinters/test-solvers all at the same time, you have to wear a lot of hats. I am very grateful to have been able to lean on the savviness of gph-site throughout as it is incredibly extensible. I am leaving this year’s hunt with two strong messages: 1) The site didn’t break, so we have room to grow our scope, and 2) I am in dire need of more cooks in the kitchen. 
+      <br><br>I have already been in contact with my more Django-dexterous friends, and have been brainstorming some larger-scale round format developments I cannot share yet 😎. I want to push the hunt next year to challenge University hunt conventions further, and I am overall so excited for the future of our event. 
+      <br><br>I was set up for success by our master-class art team, and wish to direct all compliments on the site to them.”
+    </p>
+    <footer>Orion Bloomfield</footer>
+  </blockquote>
+
+  <img src="{% static 'images/wrapup/site-mock.png' %}" style="width: 50%;">
+  <div class="centered">(Initial landing page mockup, Camille Leung)</div>
+  
+  <p>We hoped that our design elements (font, spacing, etc) could emanate the light-hearted, bubbly nature of our event, and wished to build general base styling that could breathe life into the otherwise stale puzzle pages.</p>
+
+  <div class="centered-flex">
+    <img src="{% static 'images/wrapup/bear.png' %}" style="width: 35%;">
+    <img src="{% static 'images/wrapup/the-lamp.png' %}" style="width: 35%;">
+    <img src="{% static 'images/wrapup/db.png' %}" style="width: 35%;">
+  </div>
+  <div class="centered">All main round pages (Art by Jackie Cohen, Christine Wang, and Lucid Clairvoyant respectively)</div>
+  
+  <p>One of the pain points we ran into is that we did not have time (or funding) to set up an email service for our event. This resulted in some teams having issues with correspondences for hints, unlocks, as well as password reset. Next year, we will have plenty more time to bolster the services and stability of our site, and hope to start our next-year-dev cycle honing in on these important details.</p>
+
+  <h3>Physical Puzzles</h3>
+
+  <p><i>Brown Puzzlehunt had a number of puzzles which involved receiving physical objects, either at kickoff or by collecting them from HQ. The Author’s Notes for each of the puzzles contain more information about the specifics of designing and crafting physical puzzles for this event.</i></p>
+
+  <p><i>This section will contain no significant spoilers for archive-solvable portions of the hunt, but will discuss the physical nature of the items, and spoilers for a fully physical puzzle (The Impossible).</i></p>
+
+  <p><i>All three physical puzzles were written by Thomas Gordon ‘26, with Jackie Cohen also writing for Butterfly Evolution Kit.</i></p>
+
+  <h5>Work Together</h5>
+
+  <h5>Butterfly Evolution Kit</h5>
+
+  <h5>The Impossible</h5>
+
+  <h3>Events</h3>
+
+  <h5>An Afternoon with Pirates</h5>
+
+  <h5>An Evening with Atlach-Nacha</h5>
+
+  <h3>Find Oren</h3>
+
+  <h3>The Final Runaround</h3>
+
+  <h5>Put Blueno Back Whence He Came</h5>
+  <h5>The Final Procession</h5>
+  
+  <h3>Our Timeline</h3>
+  <h3>Testsolving</h3>
+  <h3>Reflections</h3>
+  <h5>Hunt Structure</h5>
+  <h5>Puzzle Writing</h5>
+  <h5>Organization</h5>
+  <h3>Credits</h3>
+  <h3>Exit</h3>
+  <h5>Survey & Merch</h5>
 
 </main>
 
 <aside>
   <script>
-    const heads = [...$('h1,h2,h3,h4,h5,h6')].map(head => [head, $('<div>')
-      .text(head.textContent)
-      .css('padding-left', head.tagName.substr(1) + 'em')
-      .click(() => head.scrollIntoView())
-      .appendTo('aside')]);
+    const heads = [...$("h1,h2,h3,h4,h5,h6")].map((head) => [
+      head,
+      $("<div>")
+        .text(head.textContent)
+        .css("padding-left", head.tagName.substr(1) + "em")
+        .click(() => head.scrollIntoView({ behavior: "smooth" }))
+        .appendTo("aside"),
+    ]);
     function highlight() {
       const rects = heads.map(([head]) => head.getBoundingClientRect());
-      heads.forEach(([head, link], i) => link.toggleClass('highlight',
-        (!rects[i + 1] || rects[i + 1].top > 0) && rects[i].top < innerHeight));
+      heads.forEach(([head, link], i) =>
+        link.toggleClass(
+          "highlight",
+          (!rects[i + 1] || rects[i + 1].top > 0) && rects[i].top < innerHeight
+        )
+      );
     }
-    document.addEventListener('scroll', highlight, { passive: true });
+    document.addEventListener("scroll", highlight, { passive: true });
     highlight();
   </script>
 </aside>
+
+<script
+  src="https://cdn.jsdelivr.net/npm/echarts@5.1.1/dist/echarts.min.js"
+  integrity="sha256-Yhe8c0oOs2dPYVQKLAi1aBB9uhr7yMmh67ukoWBqDuU="
+  crossorigin="anonymous"
+></script>
+<script type="text/javascript">
+  echarts.init(document.getElementById('biggraph')).setOption({
+    title: {
+      left: "center",
+      text: "{% blocktranslate with teams=teams|length|escapejs %}Top {{ teams }} Teams{% endblocktranslate %}",
+    },
+    tooltip: {
+      trigger: "axis",
+      axisPointer: {
+        type: "cross"
+      }
+    },
+    legend: {
+      type: "scroll",
+      orient: "horizontal",
+      align: "left",
+      bottom: 35,
+      data: [
+        {% for team in teams %}
+          "{{ team.team_name|escapejs }}",
+        {% endfor %}
+      ],
+    },
+    toolbox: {
+      feature: {
+        dataZoom: {
+          yAxisIndex: "none"
+        },
+        saveAsImage: {}
+      }
+    },
+    grid: {
+      containLabel: true
+    },
+    xAxis: [
+      {
+        type: "time",
+        boundaryGap: false,
+        data: []
+      }
+    ],
+    yAxis: [
+      {
+        type: "value"
+      }
+    ],
+    dataZoom: [
+      {
+        id: "dataZoomX",
+        type: "slider",
+        xAxisIndex: [0],
+        filterMode: "filter",
+        height: 20,
+        top: 35,
+        fillerColor: "rgba(233, 236, 241, 0.4)"
+      }
+    ],
+    tooltip: {
+      formatter: function(params) {
+        var teamName = params.seriesName;
+
+        var date = params.data[0];
+        var score = params.data[1];
+        var info = params.data[2];
+
+        // team name and color;
+        var div1 = document.createElement('div');
+        var span = document.createElement('span');
+        span.className = 'tooltip-colored-circle';
+        span.style.backgroundColor = params.color;
+        div1.appendChild(span);
+        div1.appendChild(document.createTextNode(teamName));
+
+        var div2 = document.createElement('div');
+        var sl = document.createElement('small');
+        sl.textContent = 'Solved: '
+        div2.appendChild(sl);
+        div2.appendChild(document.createTextNode(info));
+        var ns = document.createElement('strong');
+        ns.textContent = ' → ' + score;
+        div2.appendChild(ns);
+
+        var div3 = document.createElement('div');
+        div3.textContent = date.toLocaleString();
+
+        var div = document.createElement('div');
+        div.appendChild(div1);
+        div.appendChild(div2);
+        div.appendChild(div3);
+        return div.outerHTML;
+      },
+    },
+    series: [
+      {% spacelesser %}
+      {% for team in teams %}
+      {
+        name: "{{ team.team_name|escapejs }}",
+        type: "line",
+        itemStyle: {
+          normal: {
+            color: "{{ team.color|escapejs }}",
+          }
+        },
+        symbolSize: function(data) { return data[3] ? 10 : 4; },
+        data: [
+          {% for point in team.graph_data %}
+          [new Date({{ point.0|escapejs }}), {{ point.1|escapejs }}, '{{ point.2|escapejs }}', {% if point.3 %}1{% else %}0{% endif %}],
+          {% endfor %}
+        ],
+      },
+      {% endfor %}
+      {% endspacelesser %}
+    ],
+  });
+</script>
 
 {% endblock %}
