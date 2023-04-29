@@ -1223,7 +1223,59 @@ def errata(request):
 def wrapup(request):
     if not WRAPUP_PAGE_VISIBLE and not request.context.is_superuser:
         raise Http404
-    return render(request, 'wrapup.html')
+    
+    # BIGGRAPH STUFF
+    puzzles = request.context.all_puzzles
+    puzzle_map = {}
+    meta_meta_id = None
+    for puzzle in puzzles:
+        puzzle_map[puzzle.id] = puzzle
+        if puzzle.slug == RUNAROUND_SLUG:
+            meta_meta_id = puzzle.id
+
+    during_hunt_solve_time_map = defaultdict(dict) # team -> {puzzle id -> solve time}
+    team_point_changes = defaultdict(list)
+    team_score = defaultdict(int) # ???
+
+    for team_id, puzzle_id, submitted_datetime in (
+        AnswerSubmission.objects
+        .filter(is_correct=True, team__is_hidden=False, used_free_answer=False)
+        .order_by('submitted_datetime')
+        .values_list('team_id', 'puzzle_id', 'submitted_datetime')
+    ):
+        team_score[team_id] += 1
+        puzzle = puzzle_map[puzzle_id]
+        team_point_changes[team_id].append((
+            submitted_datetime.timestamp() * 1000,
+            team_score[team_id],
+            puzzle.name,
+            puzzle.is_meta,
+        ))
+        if submitted_datetime < HUNT_END_TIME:
+            during_hunt_solve_time_map[team_id][puzzle_id] = submitted_datetime
+
+    teams = Team.objects.filter(is_hidden=False)
+    leaderboard = sorted(teams, key=lambda team: (
+        during_hunt_solve_time_map[team.id].get(meta_meta_id, HUNT_END_TIME),
+        -len(during_hunt_solve_time_map[team.id]),
+        team.last_solve_time or team.creation_time,
+    ))
+
+    limit = request.META.get('QUERY_STRING', '')
+    limit = int(limit) if limit.isdigit() else 30
+    if limit:
+        leaderboard = leaderboard[:limit]
+
+    for team in leaderboard:
+        nh = 0
+        for c in team.team_name:
+            nh = (31 * nh + ord(c)) & 0xffffffff;
+        team.color = 'hsl({}, {}%, {}%)'.format(nh % 360, 77 + nh % 23, 41 + nh % 19)
+        team.graph_data = team_point_changes[team.id]
+
+    return render(request, 'wrapup.html', {
+        'teams': leaderboard
+    })
 
 
 @require_GET
