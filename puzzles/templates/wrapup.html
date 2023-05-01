@@ -12,6 +12,9 @@
 {% endblock %} {% block content %}
 
 <style>
+  h5 {
+    font-size: 24px;
+  }
   aside {
     display: none;
   }
@@ -40,6 +43,13 @@
 
   .larger {
     font-size: 24px;
+  }
+  
+  .round-link {
+    background: #eff7ff;
+    border-radius: 3px;
+    padding-bottom: 5px;
+
   }
 
   table {
@@ -302,7 +312,7 @@
   </table>
   <br />
   <div class="centered">
-    <i>Teams that finished with <b>0 hints</b>:</i>
+    <i>Teams that finished with <b>0 hints used</b>:</i>
   </div>
   <table>
     <tr>
@@ -399,7 +409,11 @@
     the tunnels beneath Morris-Champlin Hall!
   </p>
 
-  <b>(TODO: photos from the runaround)</b>
+  <div class="centered-flex">
+    <img src="{% static 'images/wrapup/blueno-hiding.jpg' %}" style="width: 25%" />
+    <img src="{% static 'images/wrapup/run-2.jpg' %}" style="width: 25%" />
+  </div>
+  
 
   <h3>Art Direction</h3>
 
@@ -577,33 +591,155 @@
   <p><i>All three physical puzzles were written by Thomas Gordon ‘26, with Jackie Cohen also writing for Butterfly Evolution Kit.</i></p>
 
   <h5>Work Together</h5>
+  <p>At kickoff, teams were given one paper square, and told the title of the puzzle. Additionally, seven teams were given a paper slip, which also provided puzzle information.</p>
+
+  <p>By working together, teams were able to assemble the paper squares into a larger image, which would then allow them to get a head-start on the puzzle.</p>
+
+  <img src="{% static 'images/wrapup/work-together-solved.jpg' %}" style="width: 35%;">
+
+  <p>Unfortunately, one paper square went missing in the process, so teams had to work with incomplete information. Despite this, a number of teams successfully solved Work Together before the puzzles dropped, leading to a blazingly fast first solve of the hunt by Living Off Hope (only 7 seconds)!</p>
+
+  <p>The paper squares were created in a special print-run by FedEx on sturdy, waterproof paper, with the art for the image created by Camille Leung and Orion Bloomfield. The creation of the image led to some interesting and unusual challenges. Because we had no capability to make specially-shaped jigsaw pieces, each image square had to be distinct, with a unique final arrangement, based only on the background patterns.</p>
+
+  <p>We were very interested in the possibility of puzzles which put teams in a collaborative, rather than competitive, setting; a theme that returned unexpectedly later in the hunt. We’re excited to try and build on this idea in future events.</p>
 
   <h5>Butterfly Evolution Kit</h5>
+  <p>In-person teams received a manilla envelope containing fifteen modified origami butterflies and sheets of paper containing puzzle content. On paper (ha) this sounds extremely simple; in practice, creating fifteen butterflies for each team involves making a lot of butterflies.</p>
+
+  <img src="{% static 'images/wrapup/butterflies.jpg' %}" style="width: 35%;">
+
+  <p>In the end, over 600 butterflies were folded by hand (including draft versions of the puzzle and mistakes). These paper butterflies were then each individually drawn on in pen and cut with scissors in order to encode the relevant puzzle content.</p>
+
+  <p>Special thanks to Jackie Cohen (‘26), who provided both the origami paper, and made the vast majority of the butterflies (nearly 400)!</p>
 
   <h5>The Impossible</h5>
+  <div class="centered-flex">
+    <img src="{% static 'images/wrapup/cube-1.png' %}" style="width: 35%;">
+    <img src="{% static 'images/wrapup/cube-2.jpg' %}" style="width: 15%;">
+  </div>
+
+  <p>In-person teams received a scrambled Rubik’s cube with letters drawn on the faces in sharpie. Upon further investigation, solvers may also have discovered a very strange property that these Rubik’s cubes possessed, which to our knowledge no other cubes in the world had: the insides of the cubes were adorned with colored stickers.</p>
+
+  <p>Sometimes clever ideas should remain ideas. Creating The Impossible involved a painstaking process of disassembling the cubes, sorting the pieces, carefully adding stickers on the insides of the moving pieces, and then reassembling the cubes into a solved state so the letters could be written on the faces. Fun fact: the insides of Rubik’s cubes are lubricated to allow for smoother rotation – this meant that some of the colored stickers in the cube’s interior were left unstuck, causing some teams to run into some trouble. This led to the disclaimers that you saw on the puzzle page - despite our concerns, we only had to fix cubes for a few teams!</p>
+
+  <p>In the end, nearly 30 cubes were made. We still have about half of them. If you want to take one off of our hands, let us know.</p>
 
   <h3>Events</h3>
 
+  <p>For both of our events, we planned to do them in coordination with student-run clubs on campus. This was extremely successful for both the involved clubs and the hunt - it gave the events unique Brown spirit, and allowed those groups to focus on making their events special separate from the hunt itself. Due to the tight timelines, we reached out to clubs that we already had some crossovers with. In future years, we expect to reach out to new student clubs, to get them involved with the hunt and to emphasize more of Brown’s student culture.</p>
+
   <h5>An Afternoon with Pirates</h5>
+  <a href="https://drive.google.com/file/d/1FBimmpmd7VNeBC1HvLmltwo9NrNFEr5b/view?usp=sharing">
+    <img src="{% static 'images/wrapup/pirates-play-img.png' %}" style="width: 35%;">
+  </a>
+  <p>Yarrrrr!</p>
+
+  <p>This here be the first event conceived by our swashbuckling crew. We partnered with the “only acapella group at Brown”, ARRR!!!, a sea-shanty slinging set of singers who menace the arches of campus and will sing any song… for a price. Our plucky cabin boy (Thomas Gordon, ‘26) moonlights as the fearsome and famed pirate Atlas the Antipodean, which allowed the events to be organized quickly and serendipitously.</p>
+
+  <p>Like most parts of the Brown Puzzlehunt (and, indeed, most things at Brown), the details of An Afternoon With Pirates were organized largely at the last minute. Our peg-legged puzzle writers owe a debt to all of ARRR!!! and its Very Important Pirates who gave their time and energy to the hunt; but in particular we owe great amounts of booty to Captain Bucky the Bodacious Buccaneer (Connor Jordan, ‘23), who helped Atlas organize the event and write the script (and most of the jokes).</p>
+
+  <p>We would also like to give a shout-out to the person in the middle of the crowd who was clearly and deeply moved by our rendition of Northwest Passage; we hope that, wherever you are, that you’re having a good day.</p>
 
   <h5>An Evening with Atlach-Nacha</h5>
+  <img src="{% static 'images/wrapup/atlach.jpeg' %}" style="width: 35%;">
+  <p>The hunt writers would like to thank the Magus of Night for organizing this event, purchasing the relevant materials, and preparing hundreds of meters of puzzle-related string without too much complaint. We hope you all enjoyed the modular arithmetic.</p>
 
   <h3>Find Oren</h3>
+
+  <blockquote>
+    <p>“Find Oren” was inspired by "findsatoshi," a group of people online dedicated to finding a man named Satoshi based only on his photo. I had the idea to put a puzzle like this in a day or two before the hunt, but it was kind of a crackhead idea unlike anything else in the hunt, and I didn't really think it would work until it was fully written. I was also pretty sure Orion would veto it but I forgot he's super chill and cool. Pretty much the instant I thought of doing this on Brown's campus, for some reason Oren popped in my head. He is a distinct enough figure on campus to make him a great candidate.</p>
+    <footer>Ian Rider, puzzle creator</footer>
+  </blockquote>
+
+  <img src="{% static 'images/wrapup/find-oren.jpeg' %}" style="width: 35%;">
+
+  <blockquote>
+    <p>“Oh it was a great time and super cool
+      <br><br>
+      I think everyone who found me had a different experience. Some people I just told them where I was (if it was late and I just wanted them to find me), for some people I sent them a picture of the ground/surroundings and they had to work to figure out where it was.
+      <br><br>
+      One person found me during my BSE club meeting which was super cool.
+      I was with someone while they solved the first meta and opened the “find Oren” puzzle for the first time and they did a triple-take looking from their phone to me and back again trying to understand if I was really the same person
+      Overall 10/10 puzzle
+      <br><br>
+      I also had people who managed to find my phone number online and just called me”
+      </p>
+    <footer>Oren Kohavi</footer>
+  </blockquote>
+
+  <p>We are very glad Find Oren panned out to be a success. It was one of our last-minute, chaotic adds to the hunt to fill an empty slot, and we found it struck a huge value for our event. To this day, Oren is still being “found”. More than just the in-person chase factor of the puzzle, we had many HQ-adored submissions from remote teams. Here are a few that we’d love to highlight:</p>
+
+  <a class="centered larger" href="https://drive.google.com/drive/folders/1RviVepvDRQz-CA1NQh1nNqv65HEqTUxF?usp=sharing"><b>FIND OREN HIGHLIGHTS</b></a>
 
   <h3>The Final Runaround</h3>
 
   <h5>Put Blueno Back Whence He Came</h5>
+  TODO
   <h5>The Final Procession</h5>
+  TODO
   
   <h3>Our Timeline</h3>
+  <ul>
+    <li><b>Jan 5th</b>: first logistics meeting</li>
+    <li><b>Feb 6th</b>: First actual meeting to discuss the hunt</li>
+    <li><b>Feb 22nd</b>: Kickoff rooms reserved</li>
+    <li><b>March 6th</b>: First meeting with Student Activities Office</li>
+    <li><b>March 13th</b>: Brown Puzzlehunt announced!</li>
+    <li><b>March 25th - April 2nd</b>: Spring break! No club meetings!</li>
+    <li><b>April 3rd</b>: Club meetings become actually focused on Brown Puzzlehunt (no more group solves)</li>
+    <li><b>April 10th</b>: Physical puzzle making session! Last club meeting pre-hunt</li>
+    <li><b>April 13th</b>: SAO formally approves Brown Puzzlehunt</li>
+    <li><b>April 15th-16th</b>: Brown Puzzlehunt!</li>
+    <li><b>April 17th</b>: sleep.</li>
+  </ul>
+
+  <p>Looking back on this timeline, we managed to get an incredible amount of work done in the little time that we gave ourselves. We as a club meet once a week for about an hour and a half, and by the time we started really getting into puzzle writing, we were only 7 meetings away from the hunt. 
+  <br>Aside from the writing, we gave ourselves an extremely short timeline to interact with Student Activities to get approval to host an event on campus. We were simultaneously crafting the hunt and seeking permission to host it, and that permission was not fully granted until 2 days before kickoff. </p>
+
   <h3>Testsolving</h3>
+  <p>We could not have run this hunt without the incredible work of our testsolvers. In addition to the members of our club (who all testsolved various puzzles and metas), we would like to explicitly shout out our <a href="{% url 'credits' %}">remote team of testsolvers</a> who really helped to ensure that our puzzles were (mostly) erratum free!</p>
   <h3>Reflections</h3>
   <h5>Hunt Structure</h5>
+  <p>Brown Puzzlehunt presents a new formula for puzzlehunts; it is not in any way original on its own, but it is a blend of different events that makes something new. In most ways, we viewed it as a mini-MIT Mystery Hunt: an event with the unique possibility spaces of events, physical puzzles, HQ interactions, post-meta prizes, scavenger hunts, and on-site runarounds, but without the hundreds of puzzles and difficulty that would completely alienate a student team of less than ten.</p>
+
+  <p>Our main goal was to make the hunt interesting and fun for a team that only had a few people and finished the first round. We think we were successful! Teams which engaged with the puzzles generally managed to solve the first meta, at which point they would have been rewarded with a custom interaction and cute chibi Blueno pins. Teams could also attend the events without solving any puzzles, which gives us a good benchmark to see how many teams were actively trying to solve through the hunt. (Indeed, more on-site teams solved the first meta than attended either of the events, which is extremely promising).</p>
+
+  <p>We also tried to front-load interesting physical puzzles which in-person teams would find rewarding, and back-load the more complex, interactive puzzles which would reward online-only teams who regularly did puzzlehunts. For this reason, we made Butterfly Evolution Kit and Find Oren the opening unlocks in The Bear round (both of which were extremely well-received on-campus), and positioned other puzzles which encouraged physicality (A Search in the Basement and The Impossible) relatively early in the main rounds.</p>
+
+  <p>This meant that we had high engagement among the student body at Brown. Despite extremely minimal advertising and the fact that we had never run an event like this before, we had a turnout of hundreds of students at kickoff at midday on a weekend. And, despite the surprising difficulty of the early rounds, every team that we talked to said that they planned to hunt again next year. While there’s likely some selection bias there, we’re still extremely pleased with the reception of the event and the level of enthusiasm we received.</p>
+
+  <p>However, this did mean that the hunt was more hostile for a selection of online-only teams. We are definitely aware of some remote teams who struggled with the hunt; either because they lacked critical campus lore knowledge which gate-kept them at important points, or because they were bottlenecked by the influx of puzzles early in the Bear and Lamp rounds designed to favor on-site teams. There was also a technical issue early in the hunt where the countdown timers designed to unlock remote versions of the puzzles for on-site teams after a delay were also applied to the leading remote teams; while this issue was fixed relatively quickly, it undoubtedly was a contributing factor to this experience.</p>
+
+  <p>While Brown Puzzlehunt is (and will remain) an experience that can only be experienced fully by a team with on-site individuals, it was also marketed as being accessible to remote solvers; as we discovered during the event, this was true in a more limited sense than we expected. We’re planning to do more work in the future around making the hunt fully enjoyable to those who aren’t on-site, while still offering more to those who are. Seeing different teams interact with the hunt has helped us understand the dynamics of the event, so we already have several plans for this!</p>
+
+  <p>The hunt was also much more difficult than advertised. Part of this was a disconnect between the “puzzle” department and the “marketing” department; miscommunications about the expectations of the event led to claims at kickoff that teams would be able to finish within 6 hours. That was technically true; the first remote team (💰💰💰 Galactic Tax Exempt 🤑🤑🤑) was able to finish in 6 hours and 46 minutes. </p>
+
+  <p>…oops.</p>
+
+  <p>There was also a claim made on the website that there would be “between 20 and 25 puzzles”. This, again, was technically true; there are 22 feeder puzzles in the hunt. Unfortunately, there are also 4 metas, 2 events, and 2 puzzles in the final runaround sequence, making 30 puzzles total.</p>
+
+  <p>…double oops.</p>
+
+  <p>Neither of these things are a significant issue, but they did present an interesting learning experience about estimating (and communicating) the size and scope of our event. Going forward, we expect to have and give a much clearer understanding of Brown Puzzlehunt’s length and difficulty.</p>
+
   <h5>Puzzle Writing</h5>
+  TODO
   <h5>Organization</h5>
+  <p>Overall, our organization structure was very narrow (and that’s something we hope to improve upon for next year!) </p>
+  <p>It is an interesting challenge to explain to the Student Activities Office (SAO) what a puzzlehunt is (not jigsaw, which is what they thought for the first few weeks until we managed to meet in person) and why we wouldn’t know exactly where everyone was located all weekend. It is even more difficult when we say that for some parts of the weekend, we would have hunters, both Brown students and people from the general population, visiting specific places on campus in a scavenger-hunt-esque way (and also that we were not exactly sure when that would happen). We were not sure how high the interest level would be from Brown students (and it ended up being much higher than expected), so we did not have an accurate estimate of numbers either :).</p>
+
+  <p>Despite our very vague descriptions, through numerous emails back and forth we managed to convince them to approve this event with promises that we would collect physical waivers and run fire safety checks on all of our locations. We also ended up having to register the hunt as 4 separate events (not just 1), and all 4 had to be approved by SAO before we were cleared to run. While this approval was going through, we were also booking spaces on campus for HQ, solving spaces for teams that requested them, events, and kickoff. These bookings involved repeatedly calling the university Space Scheduling office, as well as briefly interacting with media services and DPS. We also had numerous back and forths with UFB to discuss funding for this event.</p>
+
+  <p>Because more in person teams registered than we expected, we had to keep reserving more classrooms for solving spaces throughout March. A week before the hunt, we had to close the option for teams to request a room on campus because we had booked out every single room we could find. Next  year, because we are going to reserve more rooms farther in advance in hopes of being able to offer this option to more teams. We are also not reserving a space for HQ on the third floor of a building with no elevator and no bathrooms on the floor :(.</p>
+
+  <p>All logistics were handled by one person (see initial statement about narrow structure). Our goal for next year is to not run the event like this, and to have more responsibility spread out in terms of the actual on-site planning. Super big shoutout to our SAO rep Cassie Sutten Coats, for asking the right questions to make sure we were well equipped to run this event. In general, a bus factor of 1 is not a great idea, and we were definitely in that position this year.</p>
+
+  <p>All a learning experience though! A major plus for us is that no one from HQ is graduating this year, so we’ll all be around for next time. Very excited for BPH 2024 :)</p>
+
   <h3>Credits</h3>
+  See <a class="round-link" href="{% url 'credits' %}">/credits</a>  
   <h3>Exit</h3>
-  <h5>Survey & Merch</h5>
+  TODO: survery and merch
 
 </main>
 
