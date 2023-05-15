@@ -1,0 +1,23 @@
+{% extends "solution.html" %}
+
+{% block puzzle-author %}
+Jiahua Chen
+{% endblock %}
+
+{% block solution-body-md %}
+
+You might first start by noticing the title, labeling of the table, and the reminder at the bottom. The table doesn’t fully resemble a perfect grid, nor does it resemble a keyboard. The combination of “typos”, “type” and “case” might lead you to the California job case, which was used to store and transport handset type before machine printing. (The numbers are on lines of <i>type</i>, which are metal imprints of characters. Together, this was used to print onto paper.)
+
+The case has a very unique layout that is well documented. Each character is placed in a unique position on the case.
+
+<img src="{% static 'puzzle_resources/typos/casesol.png' %}">
+
+The natural thing to do is to translate each number (mirrored vertically) into the corresponding characters. Doing so will yield a series of names. Some are famous, some are less so.
+
+You might start to consider what all the company names have in common. They all have typos in them! Chick-fil-a is meant to be “Chick Filet”, etc. Remember that letter pairings like 'fi' and 'ffi' were spelled using a single block of type! You might also have translated the extra characters on the side of the blocks and found that these were the extraneous characters in the correctly spelt version. 
+
+<img src="{% static 'puzzle_resources/typos/typesol.png' %}">
+
+Taking every extra character and filling it into the missing name, you spell L. S<b>anger</b>, who was one of the founders of <span class="spoiler">WIKIPEDIA</span>. 
+
+{% endblock %}
