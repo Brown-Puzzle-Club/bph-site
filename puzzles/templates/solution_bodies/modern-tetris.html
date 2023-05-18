@@ -1,0 +1,51 @@
+{% extends "solution.html" %}
+
+{% block puzzle-author %}
+Ian Rider
+{% endblock %}
+
+{% block solution-body-md %}
+
+The puzzle consists of 8 sections with controller inputs, and 8 representations of a Tetris board with black and gray pieces in the board and a few pieces with some squares colored in black on the right.
+
+The title clues that modern Tetris mechanics should be used. These include:
+<ul>
+    <li>Hold piece: You can hold a piece to use later.</li>
+    <li>Bag randomizer: The game generates “bags” containing each of the seven Tetrominoes and pieces are randomly drawn from the bag without replacement until it is empty. Then a new bag is generated, and the process repeats (see <a href="https://tetris.wiki/Random_Generator">Random Generator</a>)</li>
+</ul>
+
+Googling NES Tetris, one can find that the buttons pressed correspond to valid NES Tetris moves (except for the hold button, whose function is explicitly named). Pressing left and right on the D-pad corresponds to moving a piece left and right, respectively. Pressing the A and B buttons correspond to turning a piece 90 degrees clockwise and counterclockwise, respectively. Pressing the hold button corresponds to holding a piece.
+
+One should infer that these are controller inputs to an actual game of Tetris. Note that between commas, only one of A and B is pressed and only one of L and R is pressed, this suggests that each sequence of presses corresponds to one piece being placed.
+
+One should also note that the representations of Tetris boards between controller inputs resemble what the board might look like at different times while playing. The pieces in black are the pieces that were just placed in the previous segment of controller inputs, whereas the gray pieces are those placed previously. While on Jstris, one can note that the default non-multiplayer game mode is 40-line sprint. A rough estimation given the number of controller inputs confirms that a 40-line sprint is being played out. This isn’t necessarily important for solving the puzzle.
+
+From here, one has enough information to reconstruct the game. Some helpful tips:
+<ol>
+    <li>Keep track of where new bags of Tetrominoes begin.</li>
+    <li>Moves are always optimal, which have several implications:
+        <ol>
+            <li>The O piece is never rotated.</li>
+            <li>The only pieces that can be rotated twice are J, L, and T.</li>
+            <li>Rotating an I, S, or Z piece also moves it in that direction (see <a href="https://tetris.wiki/Super_Rotation_System">SRS</a>)... Therefore, if a piece has opposite rotation and movement, it must be a J, L, or T piece.</li>
+            <li>Only some pieces can move four/five units to the left/right.</li>
+        </ol>
+    </li>
+    <li>Pieces fit nicely into the spots they are placed (with only a few exceptions).</li>
+    <li>Piece order is not always significant: it is possible to skip around and build multiple pieces on the left first before tackling those on the right, and vice versa.</li>
+    <li>The final board has no leftover pieces, which means the 40-line sprint ended in a perfect clear, and exactly 100 pieces were placed.</li>
+</ol>
+
+Full reconstructions can be found <a href="https://docs.google.com/spreadsheets/d/18r57hJilmOljpO-iwcjxv3XHHDLTsKksoDXY9odNFq4/edit#gid=0">here</a>. Some things to note:
+<ol>
+    <li>Null pieces have a small range of locations they can belong in.</li>
+    <li>New bags are indicated with a solid line.</li>
+    <li>The piece being placed is indicated next to its moves.</li>
+    <li>The piece being held is indicated next to a hold move, and the piece following is the one that was being held. Thus, the piece following a hold is not always from the current bag.</li>
+</ol>
+
+After reconstructing all the boards, one should keep track of the locations of the pieces placed, including those that were removed during line clears. For each screenshot, one should locate all the pieces that are indicated to the right and color the corresponding squares black. Notice that the pieces are given in default orientation, and the corresponding squares to color should be the same as if performing the moves on the piece. 
+
+After coloring in the black squares, a single number (as well as other debris) will appear on each board. The numbers give the sequence 68240602. Flavor text will reveal that eight-digit numbers correspond to replay IDs. Using this sequence, one gets <a href="https://jstris.jezevec10.com/replay/68240602">this replay</a>. Reading the top of the replay gives you the answer, <span class="spoiler">JACK THE RIPPER</span>.
+
+{% endblock %}
