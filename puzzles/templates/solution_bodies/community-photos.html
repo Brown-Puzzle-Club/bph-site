@@ -1,0 +1,109 @@
+{% extends "solution.html" %}
+
+{% block puzzle-author %}
+Soni
+{% endblock %}
+
+{% block solution-body-md %}
+
+This is a simple identification puzzle. There are 13 images of people with everyone’s eyes <s>blacked</s> browned out. Using Reverse Image Search should give us the exact images, or at least identify everyone.
+
+From the flavourtext or trying to find common things between these people, we notice exactly one person in each image has studied at Brown University. We take their names.
+
+The numbers given are indexes. For each name, take the Nth letter (excluding spaces). This spells out our answer <span class="spoiler">ENSEMBLE PIECE</span>.
+
+<table>
+    <tr>
+        <td><b>#</b></td>
+        <td><b>Brown Alumni</td>
+        <td><b>Number</b></td>
+        <td><b>Letter</b></td>
+    </tr>
+    <tr>
+        <td>1</td>
+        <td>EMMA WATSON</td>
+        <td>1</td>
+        <td>E</td>
+    </tr>
+    <tr>
+        <td>2</td>
+        <td>JOHN KRASINSKI</td>
+        <td>4</td>
+        <td>N</td>
+    </tr>
+    <tr>
+        <td>3</td>
+        <td>DAVIS GUGGENHEIM</td>
+        <td>5</td>
+        <td>S</td>
+    </tr>
+    <tr>
+        <td>4</td>
+        <td>TED CHIANG</td>
+        <td>2</td>
+        <td>E</td>
+    </tr>
+    <tr>
+        <td>5</td>
+        <td>OTTO MANN</td>
+        <td>5</td>
+        <td>M</td>
+    </tr>
+    <tr>
+        <td>6</td>
+        <td>BYRON LICHTENBERG</td>
+        <td>1</td>
+        <td>B</td>
+    </tr>
+    <tr>
+        <td>7</td>
+        <td>LAURA LINNEY</td>
+        <td>1</td>
+        <td>L</td>
+    </tr>
+    <tr>
+        <td>8</td>
+        <td>JULIE BOWEN</td>
+        <td>5</td>
+        <td>E</td>
+    </tr>
+    <tr>
+        <td>9</td>
+        <td>CLIPPY</td>
+        <td>4</td>
+        <td>P</td>
+    </tr>
+    <tr>
+        <td>10</td>
+        <td>BRIAN GRIFFIN</td>
+        <td>3</td>
+        <td>I</td>
+    </tr>
+    <tr>
+        <td>11</td>
+        <td>ANDREW YANG</td>
+        <td>5</td>
+        <td>E</td>
+    </tr>
+    <tr>
+        <td>12</td>
+        <td>RICHARD HOLBROOKE</td>
+        <td>3</td>
+        <td>C</td>
+    </tr>
+    <tr>
+        <td>13</td>
+        <td>JESSICA MEIR</td>
+        <td>2</td>
+        <td>E</td>
+    </tr>
+</table>
+
+{% endblock %}
+
+{% block author-notes-html %}
+Yes, Clippy does in fact have a degree in art–semiotics from Brown, as noted <a href="https://en.wikipedia.org/wiki/Brown_University_in_popular_culture">here</a>. 
+
+Seth MacFarlane (Voice Actor for Brian) being an RISD alumni was a missed coincidence, but ultimately easy to resolve.
+
+{% endblock %}

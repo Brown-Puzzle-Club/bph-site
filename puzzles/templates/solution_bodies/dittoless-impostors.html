@@ -1,0 +1,116 @@
+{% extends "solution.html" %}
+
+{% block puzzle-author %}
+Arnav Singhal
+{% endblock %}
+
+{% block solution-body-md %}
+
+Solvers must first identify that the ASCII in each cover's title spells out a Pokemon. Searching for these now-complete titles should lead you to the original manga covers (such as on Bulbapedia). We might notice that taking this manga's PS number (which is replaced by a ? in the puzzle covers) and converting them to ASCII yields the cluephrase USEDEXNUMBERS.
+
+This might prompt us to notice that there is one more discrepancy in each puzzle cover – there is an extra Pokemon hidden in each cover that was not there in the original cover.
+
+As clued, finding the dex numbers of these Pokemon and converting them to ASCII gives us the answer to this puzzle, <span class="spoiler">ADVENTURE TIME</span>.
+
+<table>
+    <tr>
+        <td>Volume</td>
+        <td>Volume -&gt; ASCII</td>
+        <td>New Pokemon</td>
+        <td>Dex Number</td>
+        <td>Dex -&gt; ASCII</td>
+    </tr>
+    <tr>
+        <td>117</td>
+        <td>U</td>
+        <td>Hypno</td>
+        <td>97</td>
+        <td>A</td>
+    </tr>
+    <tr>
+        <td>115</td>
+        <td>S</td>
+        <td>Voltorb</td>
+        <td>100</td>
+        <td>D</td>
+    </tr>
+    <tr>
+        <td>101</td>
+        <td>E</td>
+        <td>Goldeen</td>
+        <td>118</td>
+        <td>V</td>
+    </tr>
+    <tr>
+        <td>100</td>
+        <td>D</td>
+        <td>Electrode</td>
+        <td>101</td>
+        <td>E</td>
+    </tr>
+    <tr>
+        <td>101</td>
+        <td>E</td>
+        <td>Weezing</td>
+        <td>110</td>
+        <td>N</td>
+    </tr>
+    <tr>
+        <td>120</td>
+        <td>X</td>
+        <td>Horsea</td>
+        <td>116</td>
+        <td>T</td>
+    </tr>
+    <tr>
+        <td>110</td>
+        <td>N</td>
+        <td>Seadra</td>
+        <td>117</td>
+        <td>U</td>
+    </tr>
+    <tr>
+        <td>117</td>
+        <td>U</td>
+        <td>Tangela</td>
+        <td>114</td>
+        <td>R</td>
+    </tr>
+    <tr>
+        <td>109</td>
+        <td>M</td>
+        <td>Electrode</td>
+        <td>101</td>
+        <td>E</td>
+    </tr>
+    <tr>
+        <td>98</td>
+        <td>B</td>
+        <td>Horsea</td>
+        <td>116</td>
+        <td>T</td>
+    </tr>
+    <tr>
+        <td>101</td>
+        <td>E</td>
+        <td>Marowak</td>
+        <td>105</td>
+        <td>I</td>
+    </tr>
+    <tr>
+        <td>114</td>
+        <td>R</td>
+        <td>Koffing</td>
+        <td>109</td>
+        <td>M</td>
+    </tr>
+    <tr>
+        <td>115</td>
+        <td>S</td>
+        <td>Electrode</td>
+        <td>101</td>
+        <td>E</td>
+    </tr>
+</table>
+
+{% endblock %}
