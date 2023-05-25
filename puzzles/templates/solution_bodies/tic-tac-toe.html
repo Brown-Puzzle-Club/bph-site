@@ -21,72 +21,93 @@ These are the solutions to the boards:
 
 <table>
     <tr>
+        <th>#</th>
+        <th>Winner</th>
+        <th>Explanation</th>
+    </tr>
+    <tr>
         <td>1</td>
         <td>X</td>
+        <td>Only X can form three in a row, whereas O is restricted to only three spaces</td>
     </tr>
     <tr>
         <td>2</td>
         <td>X</td>
+        <td>O can form a three-in-a-row, but it crosses a red barrier, so it does not count as a win</td>
     </tr>
     <tr>
         <td>3</td>
         <td>O</td>
+        <td>O wins with normal strategy (they move first; X has no winning strategy)</td>
     </tr>
     <tr>
         <td>4</td>
         <td>X</td>
+        <td>Identical to board 2</td>
     </tr>
     <tr>
         <td>5</td>
         <td>X</td>
+        <td>X can form an unstoppable three-in-a-row along the reserved spaces, and can win as long as they also block O when needed</td>
     </tr>
     <tr>
         <td>6</td>
         <td>O</td>
+        <td>O wins with normal strategy (or: X has no winning strategy)</td>
     </tr>
     <tr>
         <td>7</td>
         <td>O</td>
+        <td>Identical to 6, but with one less reserved space for X; O therefore wins</td>
     </tr>
     <tr>
         <td>8</td>
         <td>O</td>
+        <td>O wins with normal strategy</td>
     </tr>
     <tr>
         <td>9</td>
         <td>X</td>
+        <td>X wins starting in any of the corners if O starts in the centre, or in the centre if O starts anywhere else</td>
     </tr>
     <tr>
         <td>10</td>
         <td>X</td>
+        <td>X can win along their reserved spaces, as long as they make sure to block O when needed</td>
     </tr>
     <tr>
         <td>11</td>
         <td>X</td>
+        <td>X wins starting at either the top or bottom space (as long as they make sure to block O), or in the centre if possible</td>
     </tr>
     <tr>
         <td>12</td>
         <td>O</td>
+        <td>O wins with standard strategy (using the glued edges)</td>
     </tr>
     <tr>
         <td>13</td>
         <td>O</td>
+        <td>O wins starting in the centre, and threatening three different wins simultaneously with an r-shape (with the diagonal running along the glued edge and NOT down the typical diagonal)</td>
     </tr>
     <tr>
         <td>14</td>
         <td>O</td>
+        <td>Same as 13, with the position of the r-shape changed to avoid the different position of the reserved spaces</td>
     </tr>
     <tr>
         <td>15</td>
         <td>O</td>
+        <td>O wins with standard strategy (using the glued edges)</td>
     </tr>
     <tr>
         <td>16</td>
         <td>X</td>
+        <td>X wins due to the typical standard strategy failing for O along the left-glued edge (since diagonals are forbidden); X can construct a 3-in-a-row using their reserved spaces and block any of O's non-diagonal attempts</td>
     </tr>
 </table>
 
-Getting enough boards right will unlock the final exam.
+Getting enough boards correct will unlock the final exam, which lists four different topological shapes, each with four multi-choice options associated with them.
 
 The key is that 4 of the 16 boards are homeomorphically equivalent to each of these three shapes. Broadly speaking, two surfaces are homeomorphic if they have the same number of twists and holes. It also means that one surface can be stretched into the other, without any cutting or gluing. If we take those boards in order, and cross out the options which X wins, and 'circle' the options which O wins, we will get a number of circled letters:
 
