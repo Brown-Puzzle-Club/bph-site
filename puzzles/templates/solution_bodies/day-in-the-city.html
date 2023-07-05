@@ -1,4 +1,5 @@
 {% extends "solution.html" %}
+{% load static %}
 
 {% block puzzle-author %}
 Lorenzo Mahoney
@@ -16,9 +17,9 @@ In fact, these 'fun facts' all refer to properties of specific chemical elements
 
 <table>
     <tr>
-        <td>Location</td>
-        <td>Fact</td>
-        <td>Element</td>
+        <td><b>Location</b></td>
+        <td><b>Fact</b></td>
+        <td><b>Element</b></td>
     </tr>
     <tr>
         <td>Rockefeller Center</td>
@@ -57,8 +58,8 @@ Mapping the locations from the “Things to do section” generates the followin
 
 <table>
     <tr>
-        <td>Location</td>
-        <td>Element</td>
+        <td><b>Location</b></td>
+        <td><b>Element</b></td>
     </tr>
     <tr>
         <td>Nuyorican Poets Cafe</td>
@@ -91,7 +92,5 @@ The elements from the locations serve as the letters involved in the final answe
 To obtain the answer, the resulting elements are ordered according to the subway line associated with each stop, provided in the “things to do section”. The subway lines do not correspond to the location of each spot (i.e. the 7 train does not service anywhere near the Nuyorican Poets Cafe), so teams could get hung up connecting them without any results. The correct ordering is drawn from using the ROYBGIV color sequence to reorder the location’s elements: Db (Red 1) - As (Orange D) - I (Yellow N) - C (Green 4) - La (Blue A) - N (Purple 7).
 
 This results in DBASICLAN, which when read cyclically gives the apt answer <span class="spoiler">BASIC LAND</span>.
-
-
 
 {% endblock %}

@@ -17,19 +17,21 @@ The first step is to find the accomplices of “Henry Bascome“ in the Suspects
     <li>Accomplice 4: Adrian Turner, The Neighbor. They live on the same street with addresses differing by 2 (i.e. next door).</li>
 </ul>
 
-If the solver combines the information of these five people, they will realize that they must fill in a large number of gaps in six columns (Arrests, Pets, Favorite Drinks, Favorite Movies, Favorite Foods, and Favorite Sports). Combining these unknowns with the information given in the briefing (including the knowledge that no two of the accomplices have been arrested the same number of times), the solver will realize they are solving an Einstein/Zebra puzzle.
+If the solver combines the information of these five people, they will realize that they must fill in a large number of gaps in six columns (Arrests, Pets, Favorite Drinks, Favorite Movies, Favorite Foods, and Favorite Sports). Combining these unknowns with the information given in the briefing (including the knowledge that no two of the accomplices have been arrested the same number of times), the solver will realize they are solving an <a href="https://en.wikipedia.org/wiki/Zebra_Puzzle">Zebra puzzle</a>.
 
 <table>
-    <tr>
-        <td>First Name</td>
-        <td>Last Name</td>
-        <td>Drink</td>
-        <td>Eats</td>
-        <td>Sport</td>
-        <td>Arrests</td>
-        <td>Pet</td>
-        <td>Movies</td>
-    </tr>
+    <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Drink</th>
+            <th>Eats</th>
+            <th>Sport</th>
+            <th>Arrests</th>
+            <th>Pet</th>
+            <th>Movies</th>
+        </tr>
+    </thead>
     <tr>
         <td>Melanie</td>
         <td>Bascombe</td>
@@ -82,6 +84,8 @@ If the solver combines the information of these five people, they will realize t
     </tr>
 </table>
 
-Upon solving that puzzle, they will know what Adrian Turner (the suspect in question) has bought. Using the other documents provided, the solver can calculate how much Turner has spent in the past calendar year ($1693116). This total spending number can then be searched for in the “Filing” document to get the associated filing number, 5557182. Searching <a href="https://icis.corp.delaware.gov/ecorp/entitysearch/namesearch.aspx">Delaware's state business filing database</a> for this filing number tells us the name of this company and our answer, <span class="spoiler">MYSTERY INC</span>.
+Since we know that the leader owns the horse, we can therefore determine that Adrian Turner is the leader. 
+
+Upon solving that puzzle, they will also know what Adrian Turner (the suspect in question) has bought. Using the other documents provided, the solver can calculate how much Turner has spent in the past calendar year (remember that we need annual expenditure here, not monthyl!). This comes out to $1693116 in total. This total spending number can then be searched for in the “Filing” document to get the associated filing number, 5557182. Searching <a href="https://icis.corp.delaware.gov/ecorp/entitysearch/namesearch.aspx">Delaware's state business filing database</a> for this filing number tells us the name of this company and our answer, <span class="spoiler">MYSTERY INC</span>.
 
 {% endblock %}

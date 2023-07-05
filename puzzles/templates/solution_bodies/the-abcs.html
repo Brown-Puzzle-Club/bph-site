@@ -22,15 +22,18 @@ SHARKS
 Dividing the grid into these categories will have a few ambiguities, which can be resolved by understanding that each column (A-F) has one element of each category, with one exception. The correctly matched elements are:
 
 <table>
+    <thead>
     <tr>
-        <td></td>
-        <td>A</td>
-        <td>B</td>
-        <td>C</td>
-        <td>D</td>
-        <td>E</td>
-        <td>F</td>
+        <th></th>
+        <th>A</th>
+        <th>B</th>
+        <th>C</th>
+        <th>D</th>
+        <th>E</th>
+        <th>F</th>
     </tr>
+</thead>
+<tbody>
     <tr>
         <td>LEMURS</td>
         <td>ANOSY MOUSE</td>
@@ -103,6 +106,7 @@ Dividing the grid into these categories will have a few ambiguities, which can b
         <td>EPAULETTE</td>
         <td>FINETOOTH</td>
     </tr>
+</tbody>
 </table>
 
 Each category also has exactly one “mistake”: an item that's similar but not in the actual category.
@@ -155,16 +159,19 @@ We might now notice that each category is exactly 6 letters long. And there are 
 For example, MOVIES had the mistake as the 4th entry (Column D = Doctor Who) so we take the 4th letter of MOVIES.
 
 <table>
-    <tr>
-        <td></td>
-        <td></td>
-        <td>A</td>
-        <td>B</td>
-        <td>C</td>
-        <td>D</td>
-        <td>E</td>
-        <td>F</td>
-    </tr>
+    <thead>
+        <tr>
+            <th></th>
+            <th></th>
+            <th>A</th>
+            <th>B</th>
+            <th>C</th>
+            <th>D</th>
+            <th>E</th>
+            <th>F</th>
+        </tr>
+    </thead>
+    <tbody>
     <tr>
         <td>LEMURS</td>
         <td>EASTERN GREY</td>
@@ -172,7 +179,7 @@ For example, MOVIES had the mistake as the 4th entry (Column D = Doctor Who) so 
         <td>E</td>
         <td>M</td>
         <td>U</td>
-        <td><b>R</b></td>
+        <td><u><b>R</b></u></td>
         <td>S</td>
     </tr>
     <tr>
@@ -181,14 +188,14 @@ For example, MOVIES had the mistake as the 4th entry (Column D = Doctor Who) so 
         <td>Q</td>
         <td>U</td>
         <td>E</td>
-        <td><b>E</b></td>
+        <td><u><b>E</b></u></td>
         <td>N</td>
         <td>S</td>
     </tr>
     <tr>
         <td>CITIES</td>
         <td>ANDREWS, OREGON</td>
-        <td><b>C</b></td>
+        <td><u><b>C</b></u></td>
         <td>I</td>
         <td>T</td>
         <td>I</td>
@@ -197,11 +204,11 @@ For example, MOVIES had the mistake as the 4th entry (Column D = Doctor Who) so 
     </tr>
     <tr>
         <td>APPLES</td>
-        <td>D&#39;ANJOU</td>
+        <td>D'ANJOU</td>
         <td>A</td>
         <td>P</td>
         <td>P</td>
-        <td><b>L</b></td>
+        <td><u><b>L</b></u></td>
         <td>E</td>
         <td>S</td>
     </tr>
@@ -211,7 +218,7 @@ For example, MOVIES had the mistake as the 4th entry (Column D = Doctor Who) so 
         <td>M</td>
         <td>O</td>
         <td>V</td>
-        <td><b>I</b></td>
+        <td><u><b>I</b></u></td>
         <td>E</td>
         <td>S</td>
     </tr>
@@ -220,7 +227,7 @@ For example, MOVIES had the mistake as the 4th entry (Column D = Doctor Who) so 
         <td>CASS OLE</td>
         <td>P</td>
         <td>O</td>
-        <td><b>N</b></td>
+        <td><u><b>N</b></u></td>
         <td>I</td>
         <td>E</td>
         <td>S</td>
@@ -231,20 +238,21 @@ For example, MOVIES had the mistake as the 4th entry (Column D = Doctor Who) so 
         <td>N</td>
         <td>O</td>
         <td>V</td>
-        <td><b>E</b></td>
+        <td><u><b>E</b></u></td>
         <td>L</td>
         <td>S</td>
     </tr>
     <tr>
         <td>SHARKS</td>
-        <td>DALL&#39;S PORPOISE</td>
+        <td>DALL'S PORPOISE</td>
         <td>S</td>
         <td>H</td>
         <td>A</td>
-        <td><b>R</b></td>
+        <td><u><b>R</b></u></td>
         <td>K</td>
         <td>S</td>
     </tr>
+    </tbody>
 </table>
 
 From top to bottom, this spells out our answer, <span class="spoiler">RECLINER</span>.
@@ -253,7 +261,7 @@ From top to bottom, this spells out our answer, <span class="spoiler">RECLINER</
 
 {% block author-notes-html %}
 
-Zach was originally the one to pitch an idea for this puzzle to me (although utilizing a slightly different flavor). When he was ultimately unable to write it, I got his permission to construct it instead, and (with some iteration) it eventually turned into the puzzle you see today!
+Zach was originally the one to pitch an idea for this puzzle to me (although utilizing a slightly different flavor). When he was ultimately unable to write it, I got his permission to construct it instead, and (with some iteration) it eventually turned into the puzzle you see today!<br><br>
 
 In hindsight, the extraction is far too hard for an opening round puzzle, and the flavortext should have been trimmed further: the "lazy" bit is me trying to be cute, and if there's one thing that a puzzle author should never do unless they're absolutely positively certain they know what they're doing, it's try to be cute. Especially in flavortext.
 

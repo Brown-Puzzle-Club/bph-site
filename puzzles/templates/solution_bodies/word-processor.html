@@ -1,4 +1,5 @@
 {% extends "solution.html" %}
+{% load static %}
 
 {% block puzzle-author %}
 Thomas Mowen
@@ -48,10 +49,10 @@ Here are the keyboard layouts used:
     </tr>
 </table>
 
-Now you are probably wondering how the black words fit it, since they don’t match any existing keyboard layout. Instead of corresponding to a keyboard that already exists, the red words form an entirely new layout that you must create to solve the puzzle. For example “musk = send” is telling you that “s” on this new keyboard will be in the same place that “m” is on the Colemak keyboard. Once you transcribe all the red words onto a new keyboard layout, this is what you get:
+Now you are probably wondering how the black words fit it, since they don’t match any existing keyboard layout. Instead of corresponding to a keyboard that already exists, the black words form an entirely new layout that you must create to solve the puzzle. For example “musk = send” is telling you that “s” on this new keyboard will be in the same place that “m” is on the Colemak keyboard. Once you transcribe all the black words onto a new keyboard layout, this is what you get:
 
 <img src="{% static 'puzzle_resources/dear-blueno-meta/keyboardsol.png' %}">
 
-This new keyboard pretty clearly contains the name <span class="spoiler">ALICE MUNRO</span> which is the answer to the puzzle!
+This new keyboard pretty clearly contains the name <span class="spoiler">ALICE MUNRO</span>, which is the answer to this puzzle!
 
 {% endblock %}

@@ -1,4 +1,5 @@
 {% extends "solution.html" %}
+{% load static %}
 
 {% block puzzle-author %}
 Thomas Gordon; with help from Jaclyn Cohen
@@ -24,15 +25,17 @@ Time to extract!
 For each trait, add up the number of times it appears in each butterfly (ie the number of Left Wing Cuts on O plus the number of Left Wing Cuts on M plus.... and so on gives you the value for Left Wing Cuts). Then A1Z26 that number (as clued by the Fun Fact) to get letters that spell the answer, <span class="spoiler">GENOME</span>.
 
 <table>
-    <tr>
-        <td>Butterfly</td>
-        <td>Thorax Spots</td>
-        <td>Left-Wing Cuts</td>
-        <td>Left-Wing Spots</td>
-        <td>Abdomen Spots</td>
-        <td>Right-Wing Spots</td>
-        <td>Right-Wing Cuts</td>
-    </tr>
+    <thead>
+        <tr>
+            <th>Butterfly</th>
+            <th>Thorax Spots</th>
+            <th>Left-Wing Cuts</th>
+            <th>Left-Wing Spots</th>
+            <th>Abdomen Spots</th>
+            <th>Right-Wing Spots</th>
+            <th>Right-Wing Cuts</th>
+        </tr>
+    </thead>
     <tr>
         <td>O</td>
         <td>0</td>
@@ -135,6 +138,7 @@ Puzzle historians may find the internal document for puzzle distribution of curi
     <li>Repeat: GIVE THEM THE SHEET. DO NOT GIVE THEM THE ENVELOPE WITHOUT PUTTING BOTH THE INSTRUCTIONS AND THE ANCESTRAL TREE INSIDE THE ENVELOPE.</li>
     <li>Give 'em the puzzle and wish 'em luck.</li>
 </ul>
+
 <b>IF SOMEONE CONTACTS YOU ABOUT A BROKEN BUTTERFLY:</b>
 <ul>
     <li>If they really want a complete set, just make a new one. There should be origami sheets in HQ. And some leftover butterflies.</li>
@@ -145,9 +149,9 @@ Puzzle historians may find the internal document for puzzle distribution of curi
 
 {% block author-notes-html %}
 
-The credit for the original idea for this puzzle goes to Jackie, who said to me in passing, "hey, I have a thousand sheets of origami paper. Do you want to write a puzzle about that?" Everything followed downstream from there.
+The credit for the original idea for this puzzle goes to Jackie, who said to me in passing, "hey, I have a thousand sheets of origami paper. Do you want to write a puzzle about that?" Everything followed downstream from there.<br><br>
 
-For nearly two months, I had a bucket of hundreds of large hand-folded origami butterflies sitting by my desk, much to the bemusement of my roommate. The folding was the easy part (because Jackie handled it all - thank you, Jackie!); the hard part was modifying all the butterflies, without mistakes, where each butterfly is distinct. Hundreds of butterflies. Dozens of manila envelopes. Origami paper clippings everywhere. I can still hear the flapping.
+For nearly two months, I had a bucket of hundreds of large hand-folded origami butterflies sitting by my desk, much to the bemusement of my roommate. The folding was the easy part (because Jackie handled it all - thank you, Jackie!); the hard part was modifying all the butterflies, without mistakes, where each butterfly is distinct. Hundreds of butterflies. Dozens of manila envelopes. Origami paper clippings everywhere. I can still hear the flapping.<br><br>
 
 I am aware of some teams who skipped the butterfly logic step and simply took every set of possible "top-level" butterflies. For one team, this was probably about twenty minutes quicker than the intended solve path; for another, it slowed them down by at least a few hours.
 
