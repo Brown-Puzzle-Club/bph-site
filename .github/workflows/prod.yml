@@ -17,4 +17,4 @@ jobs:
           ssh-keyscan ${{ secrets.REMOTE_SERVER }} >> ~/.ssh/known_hosts
       - name: Pull from Git
         run: |
-          ssh -i ~/.ssh/id_rsa ${{ secrets.REMOTE_SERVER }} "cd /path/to/repo && git pull"
+          ssh -i ~/.ssh/id_rsa ${{ secrets.REMOTE_SERVER }} "cd /home/obloomfi/dev/bph-site && git pull"
