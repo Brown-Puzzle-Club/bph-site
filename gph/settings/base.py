@@ -31,7 +31,7 @@ RECAPTCHA_SECRETKEY = None
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '0.0.0.0']
 
 # Application definition
 
@@ -117,9 +117,20 @@ ASGI_APPLICATION = 'gph.asgi.application'
 
 # Apparently conn_max_age=0 is better for Heroku:
 # https://stackoverflow.com/questions/48644208/django-postgresql-heroku-operational-error-fatal-too-many-connections-for-r
+#DATABASES = {
+#    'default': dj_database_url.config(conn_max_age=0, ssl_require=True),
+#}
+
 DATABASES = {
-    'default': dj_database_url.config(conn_max_age=0, ssl_require=True),
-}
+     'default': {
+         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+         'NAME': 'bphdb',
+         'USER': 'bph', 
+         'PASSWORD': 'puzzle_hunting_is_so_cool',
+         'HOST': 'localhost', # '127.0.0.1' probably works also
+         'PORT': '5432',
+     }
+ }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
