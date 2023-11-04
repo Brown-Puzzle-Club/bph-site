@@ -14,7 +14,6 @@ jobs:
           mkdir -p ~/.ssh/
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          cat ~/.ssh/id_rsa
           ssh-keyscan ${{ secrets.REMOTE_SERVER }} >> ~/.ssh/known_hosts
       - name: Pull from Git
         run: |
