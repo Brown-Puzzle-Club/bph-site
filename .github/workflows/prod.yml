@@ -1,0 +1,20 @@
+name: Deploy Prod
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  pull:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan ${{ secrets.REMOTE_SERVER }} >> ~/.ssh/known_hosts
+      - name: Pull from Git
+        run: |
+          ssh -i ~/.ssh/id_rsa ${{ secrets.REMOTE_SERVER }} "cd /path/to/repo && git pull"
