@@ -27,7 +27,7 @@ GA_CODE = '''
 DATABASES = {
      'default': {
          'ENGINE': 'django.db.backends.postgresql_psycopg2',
-         'NAME': 'bphdb',
+         'NAME': 'bphdb2023',
          'USER': 'bph', 
          'PASSWORD': 'puzzle_hunting_is_so_cool',
          'HOST': 'localhost', # '127.0.0.1' probably works also
