@@ -124,4 +124,6 @@ urlpatterns = [
     path('jsi18n/', cache_page(86400, key_prefix='js18n-V1')
         (JavaScriptCatalog.as_view()), name='javascript-catalog'),
 
+    path('test', views.test)
+
 ]
