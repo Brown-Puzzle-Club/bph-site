@@ -152,10 +152,6 @@ def require_before_hunt_closed_or_admin(request):
 # These are basically static pages:
 
 @require_GET
-def test(request):
-    return render(request, "home.html")
-
-@require_GET
 def index(request):
     return render(request, 'home.html')
 
