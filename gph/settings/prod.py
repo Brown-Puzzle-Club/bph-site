@@ -6,11 +6,11 @@ IS_TEST = False
 
 # Used for constructing URLs; include the protocol and trailing
 # slash (e.g. 'https://galacticpuzzlehunt.com/')
-DOMAIN = 'https://www.brownpuzzlehunt.com/'
+DOMAIN = 'https://2023.brownpuzzlehunt.com/'
 
 # List of places you're serving from, e.g.
 # ['galacticpuzzlehunt.com', 'gph.example.com']; or just ['*']
-ALLOWED_HOSTS = ['www.brownpuzzlehunt.com','174.138.34.115','127.0.0.1','0.0.0.0','localhost']
+ALLOWED_HOSTS = ['2023.brownpuzzlehunt.com','174.138.34.115','127.0.0.1','0.0.0.0','localhost']
 
 # Google Analytics
 GA_CODE = '''
