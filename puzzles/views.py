@@ -153,7 +153,7 @@ def require_before_hunt_closed_or_admin(request):
 
 @require_GET
 def test(request):
-    return render(request, "test.html")
+    return render(request, "home.html")
 
 @require_GET
 def index(request):
