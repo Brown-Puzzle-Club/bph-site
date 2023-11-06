@@ -18,4 +18,4 @@ jobs:
           ssh-keyscan ${{ secrets.REMOTE_SERVER }} >> ~/.ssh/known_hosts
       - name: Pull from Git
         run: |
-          ssh obloomfi@${{ secrets.REMOTE_SERVER }} -i ~/.ssh/id_rsa "cd /home/obloomfi/dev/bph-site && git pull && ps aux |grep gunicorn |grep bph-site | awk '{ print $2 }' |xargs kill -HUP"
+          ssh obloomfi@${{ secrets.REMOTE_SERVER }} -i ~/.ssh/id_rsa "./update_server"
