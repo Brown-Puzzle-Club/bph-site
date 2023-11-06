@@ -8,10 +8,13 @@ https://docs.djangoproject.com/en/3.2/howto/deployment/wsgi/
 '''
 
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'gph.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'gph.settings.dev')
 # os.environ['DJANGO_SETTINGS_MODULE'] = 'gph.settings.dev'
 
 application = get_wsgi_application()

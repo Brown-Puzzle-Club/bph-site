@@ -22,6 +22,7 @@ DATABASES = {
   'default': dj_database_url.parse('postgres://obloomfield:darXA3ZULj5C@ep-cold-mode-52856082.us-east-2.aws.neon.tech/bph-db')
 }
 
+
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels.layers.InMemoryChannelLayer",
