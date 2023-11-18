@@ -38,8 +38,7 @@ We will try to respond to emails or pull requests when we can, but this isn't gu
   - In the top level puzzlord directory, create a file called `.env` except in `DATABASE_URL`, replace the username, password, and database name with whatever you used above.
 
   ```
-  DATABASE_URL=postgres://username:password@127.0.0.1:5432/db_name
-  DJANGO_SETTINGS_MODULE=settings.dev
+  DJANGO_SETTINGS_MODULE=gph.settings.dev
   ```
 
     - Note: You may have to use `DJANGO_SETTINGS_MODULE=gph.settings.dev` instead.
