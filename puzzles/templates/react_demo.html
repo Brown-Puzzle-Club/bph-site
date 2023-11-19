@@ -1,0 +1,10 @@
+{% extends 'base.html' %}  <!-- Extend your base template if you have one -->
+
+{% block content %}
+  <div id="app"></div>  <!-- This is where your React app will be mounted -->
+
+  {% load static %}
+  <!-- Include React JS and your main script -->
+  <script src="{% static 'myreactapp/js/vendor.[hash].js' %}"></script>
+  <script src="{% static 'myreactapp/js/myreactapp.[hash].js' %}" defer></script>
+{% endblock %}
