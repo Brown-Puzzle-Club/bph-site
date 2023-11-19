@@ -76,6 +76,10 @@ from puzzles.messaging import send_mail_wrapper, dispatch_victory_alert, show_vi
 from puzzles.shortcuts import dispatch_shortcut
 
 
+@require_GET
+def react_demo(request):
+    return render(request, 'react_demo.html')
+
 def validate_puzzle(require_team=False):
     '''
     Indicates an endpoint that takes a single URL parameter, the slug for the
