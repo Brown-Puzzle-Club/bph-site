@@ -9,4 +9,14 @@ export default defineConfig({
       '/api': 'http://localhost:8000',  // Adjust the URL to match your Django server
     },
   },
+  build: {
+    outDir: `../puzzles/static/react`,/*`../puzzles/react-build`,*/
+    rollupOptions: {
+      output: {
+        entryFileNames: `[name].js`,
+        chunkFileNames: `[name].js`,
+        assetFileNames: `[name].[ext]`
+      }
+    }
+  }
 })

@@ -3,4 +3,6 @@
 __pycache__/
 logs/
 venv/
-db.sqlite3  
+db.sqlite3
+puzzles/static/react/
+static/
