@@ -18,3 +18,4 @@ Twisted==22.10.0
 uvicorn[standard]==0.14.0
 whitenoise==5.1.0
 python-dotenv==1.0.0
+jsonpickle==3.0.2

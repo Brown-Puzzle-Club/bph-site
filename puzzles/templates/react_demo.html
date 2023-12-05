@@ -1,7 +1,12 @@
 {% extends 'base.html' %}  <!-- Extend your base template if you have one -->
 
 {% block content %}
+  <!-- {{context}} -->
+  <script>
+    var my_context = '{{ context|escapejs }}';
+  </script>
   <div id="root"></div>  <!-- This is where your React app will be mounted -->
+  {{ page_context | json_script:'page-context' }}
 
   {% load static %}
   <!-- Include React JS and your main script -->

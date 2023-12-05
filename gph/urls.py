@@ -125,4 +125,5 @@ urlpatterns = [
         (JavaScriptCatalog.as_view()), name='javascript-catalog'),
 
     path('react', views.react_demo, name='react'),
+    path('route-two', views.react_route_two, name='react-2'),
 ]

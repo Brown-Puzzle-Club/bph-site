@@ -19,7 +19,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
 from django.db.models import F, Q, Avg, Count
 from django.forms import formset_factory, modelformset_factory
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, JsonResponse
 from django.shortcuts import redirect, render
 from django.template import TemplateDoesNotExist
 from django.urls import reverse
@@ -75,10 +75,26 @@ from puzzles.hunt_config import (
 from puzzles.messaging import send_mail_wrapper, dispatch_victory_alert, show_victory_notification
 from puzzles.shortcuts import dispatch_shortcut
 
+import jsonpickle
+
+
+
+def react_base(request):
+    # TODO: package request.context into a json object.
+    # https://stackoverflow.com/questions/16790375/django-object-is-not-json-serializable
+    # context = request.context.objects.all().values()
+    return render(request, 'react_demo.html', {
+        'page_context': {"test": 1, "test2" : 2},
+        "context": jsonpickle.encode(request.context),
+    })
 
 @require_GET
 def react_demo(request):
-    return render(request, 'react_demo.html')
+    return react_base(request)
+
+@require_GET
+def react_route_two(request):
+    return react_base(request)
 
 def validate_puzzle(require_team=False):
     '''
