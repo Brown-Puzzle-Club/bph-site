@@ -243,7 +243,7 @@ class Team(models.Model):
         verbose_name_plural = _('teams')
 
     def __str__(self):
-        return self.team_name
+        return self.team_name # possibly return JSON of all safe fields?
 
     def get_emails(self, with_names=False):
         return [

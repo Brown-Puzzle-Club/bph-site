@@ -89,11 +89,7 @@ def react_base(request):
     })
 
 @require_GET
-def react_demo(request):
-    return react_base(request)
-
-@require_GET
-def react_route_two(request):
+def react(request):
     return react_base(request)
 
 def validate_puzzle(require_team=False):
