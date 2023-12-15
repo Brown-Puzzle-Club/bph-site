@@ -1,9 +1,6 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
 import Root from "./routes/Root";
 import RouteTwo from "./routes/RouteTwo";
@@ -11,12 +8,12 @@ import RouteTwo from "./routes/RouteTwo";
 const router = createBrowserRouter([
   {
     path: "/react",
-    element: <Root/>,
+    element: <Root />,
   },
   {
     path: "/route-two",
-    element: <RouteTwo/>
-  }
+    element: <RouteTwo />,
+  },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
