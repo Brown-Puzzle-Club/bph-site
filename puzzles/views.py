@@ -73,19 +73,12 @@ from puzzles.hunt_config import (
 )
 
 from puzzles.messaging import send_mail_wrapper, dispatch_victory_alert, show_victory_notification
+from puzzles.react_bridge import process_context
 from puzzles.shortcuts import dispatch_shortcut
 
-import jsonpickle
-
-
-
 def react_base(request):
-    # TODO: package request.context into a json object.
-    # https://stackoverflow.com/questions/16790375/django-object-is-not-json-serializable
-    # context = request.context.objects.all().values()
     return render(request, 'react_demo.html', {
-        'page_context': {"test": 1, "test2" : 2},
-        "context": jsonpickle.encode(request.context),
+        "context": process_context(request, render_puzzles(request)), # process context for react
     })
 
 @require_GET
