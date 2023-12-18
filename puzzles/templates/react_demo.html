@@ -3,8 +3,7 @@
 {% block content %}
   <!-- {{context}} -->
   <script>
-    var my_context = '{{ context|escapejs }}';
-    var team = `{{ team }}`;
+    var djangoContext = `{{ context|escapejs }}`;
   </script>
   <div id="root"></div>  <!-- This is where your React app will be mounted -->
   {{ page_context | json_script:'page-context' }}

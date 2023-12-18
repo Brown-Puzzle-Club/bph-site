@@ -1,10 +1,33 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite + React + TS</title>
+    <script>
+      var djangoContext = {
+        team: {
+          team_name: "Team Name",
+          total_hints_awarded: 0,
+          num_hints_remaining: 0,
+          total_free_answers_awarded: 0,
+          num_free_answers_remaining: 0,
+          is_prerelease_testsolver: false,
+          brown_members: false,
+          in_person: false,
+        },
+        unlocks: {},
+        rounds: {},
+        is_admin: false,
+        is_superuser: false,
+        hunt_has_started: false,
+        hunt_has_almost_started: false,
+        hunt_is_over: false,
+        hunt_is_closed: false,
+        hunt_solutions_open: false,
+      };
+    </script>
   </head>
   <body>
     <div id="root"></div>

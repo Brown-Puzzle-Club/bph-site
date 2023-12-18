@@ -25,4 +25,5 @@ const contextSchema = z.object({
   hunt_solutions_open: z.boolean(),
 });
 
-export const context = contextSchema.parse({}); // TODO: get from global vars
+// @ts-expect-error djangoContext is defined in the template html
+export const context = contextSchema.parse(djangoContext);
