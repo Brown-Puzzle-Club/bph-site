@@ -5,8 +5,8 @@
   <script>
     var my_context = '{{ context|escapejs }}';
   </script>
+  <script type="module" crossorigin src="/react/index.js"></script>
+  <link rel="stylesheet" crossorigin href="/react/index.css">
   <div id="root"></div>  <!-- This is where your React app will be mounted -->
   {% load static %}
-  <!-- Include React JS and your main script -->
-  <script src="{% static 'react/index.js' %}"></script>
 {% endblock %} 
