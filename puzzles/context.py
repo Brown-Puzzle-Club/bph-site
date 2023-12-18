@@ -25,6 +25,8 @@ def context_middleware(get_response):
 
 # A context processor takes a request and returns a dictionary of (key: value)s
 # to merge into the request's context.
+
+
 def context_processor(request):
     def thunk(name):
         return lambda: getattr(request.context, name)
@@ -33,6 +35,8 @@ def context_processor(request):
 # Construct a get/set property from a name and a function to compute a value.
 # Doing this with name="foo" causes accesses to self.foo to call fn and cache
 # the result.
+
+
 def wrap_cacheable(name, fn):
     def fget(self):
         if not hasattr(self, '_cache'):
@@ -40,6 +44,7 @@ def wrap_cacheable(name, fn):
         if name not in self._cache:
             self._cache[name] = fn(self)
         return self._cache[name]
+
     def fset(self, value):
         if not hasattr(self, '_cache'):
             self._cache = {}
@@ -50,6 +55,8 @@ def wrap_cacheable(name, fn):
 # model, that replaces all non-special methods that take no arguments other
 # than `self` with a get/set property as constructed above, and also gather
 # their names into the property `_cached_names`.
+
+
 def context_cache(cls):
     cached_names = []
     for c in (BaseContext, cls):
@@ -92,7 +99,7 @@ class BaseContext:
 
     def close_time(self):
         return HUNT_CLOSE_TIME
-    
+
     def solution_time(self):
         return HUNT_SOLUTION_TIME
 
@@ -100,7 +107,7 @@ class BaseContext:
     # you'll silently be unable to update that field because you'll be writing
     # to this instead of the actual model field!
     def hunt_is_prereleased(self):
-        return self.team and self.team.is_prerelease_testsolver
+        return not not self.team and self.team.is_prerelease_testsolver
 
     def hunt_has_started(self):
         return self.hunt_is_prereleased or self.now >= self.start_time
@@ -113,13 +120,13 @@ class BaseContext:
 
     def hunt_is_closed(self):
         return self.now >= self.close_time
-    
-    def hunt_solutions_open(self): #TODO: change this to be if the solution 
+
+    def hunt_solutions_open(self):  # TODO: change this to be if the solution
         return self.now >= self.solution_time
-    
+
     def num_metas(self):
         return len(META_SLUGS)
-  
+
 
 # Also include the constants from hunt_config.
 for (key, value) in hunt_config.__dict__.items():
@@ -128,7 +135,8 @@ for (key, value) in hunt_config.__dict__.items():
 
 # Also include select constants from settings.
 for key in ('RECAPTCHA_SITEKEY', 'GA_CODE', 'DOMAIN'):
-    (lambda v: setattr(BaseContext, key.lower(), lambda self: v))(getattr(settings, key))
+    (lambda v: setattr(BaseContext, key.lower(), lambda self: v))(
+        getattr(settings, key))
 
 
 # The properties of a request Context are accessible both from views and from
@@ -141,7 +149,7 @@ class Context:
 
     def request_user(self):
         return self.request.user
-    
+
     def is_admin(self):
         # print("checking if admin:", self.request_user.is_staff)
         return self.request_user.is_staff
@@ -163,7 +171,7 @@ class Context:
 
     def unlocks(self):
         return models.Team.compute_unlocks(self)
-    
+
     #
     # def completed_hunt(self):
     #     return (self.team.runaround_solve_time is not None or self.team.all_metas_solve_time is not None) if self.team else False
@@ -182,20 +190,20 @@ class Context:
 
     def puzzle(self):
         return None  # set by validate_puzzle
-    
-    def puzzle_unlock_time(self):   
+
+    def puzzle_unlock_time(self):
         return self.unlocks[self.puzzle]
-    
+
     def time_since_unlock(self):
         return (self.now - self.unlocks[self.puzzle])
-    
+
     def hours_since_unlock(self):
         return self.time_since_unlock.total_seconds() // 3600
-    
+
     def in_person(self):
         return self.team.in_person
 
-    def test(self,n):
+    def test(self, n):
         return n * 3
 
     def puzzle_answer(self):
@@ -209,13 +217,13 @@ class Context:
 
     def round(self):
         return self.puzzle.round if self.puzzle else None
-    
-    #custom context definitions:
 
-    def events_live(self): #returns true if the user has access to events
+    # custom context definitions:
+
+    def events_live(self):  # returns true if the user has access to events
         for puzzle in self.unlocks:
-          if puzzle.round.slug == "events":
-            return True
+            if puzzle.round.slug == "events":
+                return True
         return False
 
     # The purpose of this logic is to keep archive links current. For example,

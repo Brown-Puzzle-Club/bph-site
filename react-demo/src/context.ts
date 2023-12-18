@@ -21,7 +21,7 @@ const contextSchema = z.object({
   // nice-to-have extras from Context
   is_admin: z.boolean(),
   is_superuser: z.boolean(),
-  
+
   // all from BaseContext
   now: z.string().transform((x) => new Date(x)),
   start_time: z.string().transform((x) => new Date(x)),
@@ -39,4 +39,7 @@ const contextSchema = z.object({
 });
 
 // @ts-expect-error djangoContext is defined in the template html
-export const context = contextSchema.parse(djangoContext);
+console.log("djangoContext", djangoContext);
+
+// @ts-expect-error djangoContext is defined in the template html
+export const context = contextSchema.parse(JSON.parse(djangoContext));
