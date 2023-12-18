@@ -5,6 +5,9 @@ import "./index.css";
 import Root from "./routes/Root";
 import RouteTwo from "./routes/RouteTwo";
 
+import { context } from "./context";
+console.log(context);
+
 const router = createBrowserRouter([
   {
     path: "/react",

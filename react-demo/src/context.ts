@@ -38,4 +38,5 @@ const contextSchema = z.object({
   num_metas: z.number().int(),
 });
 
-export const context = contextSchema.parse({}); // TODO: get from global vars
+// @ts-expect-error djangoContext is defined in the template html
+export const context = contextSchema.parse(djangoContext);
