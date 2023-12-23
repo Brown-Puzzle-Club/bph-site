@@ -22,11 +22,15 @@ def process_team(context):
 def process_unlocks(context):
     unlocks = {}
     for puzzle, unlock_time in context.unlocks.items():
+        print(puzzle.slug)
+        print(unlock_time)
+        print(puzzle.order)
+        print(puzzle.round.slug)
         unlocks[puzzle.slug] = {
             "name": puzzle.name,
             "unlock_time": unlock_time,
-            "order": puzzle.order,
-            "round": puzzle.round.name,
+            # "order": puzzle.order,
+            # "round": puzzle.round.slug,
         }
     return unlocks
 
@@ -51,9 +55,6 @@ def process_context(request, rounds):
         react_context["team"] = process_team(context)
     react_context["unlocks"] = process_unlocks(context)
     react_context["rounds"] = process_rounds(request, context, rounds)
-    
-
-    print(react_context['rounds'])
 
     react_context["is_admin"] = context.is_admin
     react_context["is_superuser"] = context.is_superuser
