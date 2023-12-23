@@ -18,7 +18,12 @@ const contextSchema = z.object({
       }))
     })
     .optional(),
-  unlocks: z.record(z.string().transform((x) => new Date(x))),
+  unlocks: z.record(z.object({
+    name: z.string(),
+    unlock_time: z.string().transform((x) => new Date(x)),
+    order: z.number().int(),
+    round: z.string(),
+  })),
   rounds: z.record(z.object({
     name: z.string(),
     order: z.number().int(),
