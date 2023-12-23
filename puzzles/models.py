@@ -527,6 +527,17 @@ class Team(models.Model):
             for submission in self.submissions
             if submission.is_correct
         }
+    
+    def solves_with_info(self):
+        return {
+            submission.puzzle.slug: {
+                'puzzle': submission.puzzle.name,
+                'solve_time': submission.submitted_datetime,
+                'answer': submission.submitted_answer,
+            }
+            for submission in self.submissions
+            if submission.is_correct
+        }
 
     def db_unlocks(self):
         return {

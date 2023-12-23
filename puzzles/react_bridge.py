@@ -12,6 +12,8 @@ def process_team(context):
     team["brown_members"] = context.team.brown_members
     team["in_person"] = context.team.in_person
 
+    team["solves"] = process_solves(context)
+
     # ADD MORE FIELDS HERE IF NEEDED, SEE TEAM MODEL FOR REFERENCE
     # ... you would also need to add them to context.ts in the frontend
     return team
@@ -19,17 +21,27 @@ def process_team(context):
 
 def process_unlocks(context):
     unlocks = {}
-    for key, value in context.unlocks.items():
-        unlocks[key] = value.isoformat()
+    for puzzle, unlock_time in context.unlocks.items():
+        unlocks[puzzle.slug] = {
+            "name": puzzle.name,
+            "unlock_time": unlock_time,
+            "order": puzzle.order,
+            "round": puzzle.round.name,
+        }
     return unlocks
-
 
 def process_rounds(request, context, rounds_raw):
     rounds = {}
     for key, value in rounds_raw.items():
-        rounds[key] = value.isoformat()
+        cur_round = value['round']
+        rounds[cur_round.slug] = {
+            "name": cur_round.name,
+            "order": cur_round.order,
+        }
     return rounds
 
+def process_solves(context):
+    return context.team.solves_with_info
 
 def process_context(request, rounds):
     context = request.context
@@ -39,6 +51,7 @@ def process_context(request, rounds):
         react_context["team"] = process_team(context)
     react_context["unlocks"] = process_unlocks(context)
     react_context["rounds"] = process_rounds(request, context, rounds)
+    
 
     print(react_context['rounds'])
 

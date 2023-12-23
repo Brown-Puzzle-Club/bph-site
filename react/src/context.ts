@@ -11,10 +11,18 @@ const contextSchema = z.object({
       is_prerelease_testsolver: z.boolean(),
       brown_members: z.boolean(),
       in_person: z.boolean(),
+      solves: z.record(z.object({
+        puzzle: z.string(),
+        solve_time: z.string().transform((x) => new Date(x)),
+        answer: z.string(),
+      }))
     })
     .optional(),
   unlocks: z.record(z.string().transform((x) => new Date(x))),
-  rounds: z.record(z.string().transform((x) => new Date(x))),
+  rounds: z.record(z.object({
+    name: z.string(),
+    order: z.number().int(),
+  })),
   // TODO: make this work with minor case / major case system
   // TODO: also add events as separate.
 
