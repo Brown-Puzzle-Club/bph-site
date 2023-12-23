@@ -82,6 +82,12 @@ def react_base(request):
         "context": json.dumps(process_context(request, render_puzzles(request)), default=str),
     })
 
+@require_GET
+def prerelease_locked_react(request):
+    if not request.context.team or not request.context.team.is_prerelease_testsolver:
+        raise Http404
+    return react_base(request)
+
 def validate_puzzle(require_team=False):
     '''
     Indicates an endpoint that takes a single URL parameter, the slug for the

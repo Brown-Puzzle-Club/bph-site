@@ -124,7 +124,7 @@ urlpatterns = [
     path('jsi18n/', cache_page(86400, key_prefix='js18n-V1')
         (JavaScriptCatalog.as_view()), name='javascript-catalog'),
 
-    path('react', views.react_base, name='react'),
-    path('route-two', views.react_base, name='react-2'),
+    path('react', views.prerelease_locked_react, name='react'),
+    path('route-two', views.prerelease_locked_react, name='react-2'),
 ]
   
