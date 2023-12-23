@@ -22,15 +22,11 @@ def process_team(context):
 def process_unlocks(context):
     unlocks = {}
     for puzzle, unlock_time in context.unlocks.items():
-        print(puzzle.slug)
-        print(unlock_time)
-        print(puzzle.order)
-        print(puzzle.round.slug)
         unlocks[puzzle.slug] = {
             "name": puzzle.name,
             "unlock_time": unlock_time,
-            # "order": puzzle.order,
-            # "round": puzzle.round.slug,
+            "order": puzzle.order,
+            "round": puzzle.round.slug,
         }
     return unlocks
 
