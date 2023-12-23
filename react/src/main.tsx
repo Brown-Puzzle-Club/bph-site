@@ -17,6 +17,7 @@ const router = createBrowserRouter([
     path: "/route-two",
     element: <RouteTwo />,
   },
+  
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

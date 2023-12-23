@@ -76,18 +76,11 @@ from puzzles.messaging import send_mail_wrapper, dispatch_victory_alert, show_vi
 from puzzles.react_bridge import process_context
 from puzzles.shortcuts import dispatch_shortcut
 
-
+@require_GET
 def react_base(request):
-    return render(request, 'react_demo.html', {
-        # process context for react
+    return render(request, 'react_base.html', {
         "context": json.dumps(process_context(request, render_puzzles(request)), default=str),
     })
-
-
-@require_GET
-def react(request):
-    return react_base(request)
-
 
 def validate_puzzle(require_team=False):
     '''
