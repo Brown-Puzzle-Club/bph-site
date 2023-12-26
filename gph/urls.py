@@ -125,6 +125,6 @@ urlpatterns = [
         (JavaScriptCatalog.as_view()), name='javascript-catalog'),
 
     path('react', views.prerelease_locked_react, name='react'),
-    path('route-two', views.prerelease_locked_react, name='react-2'),
+    path('social-deduction', views.prerelease_locked_react, name='social-deduction'),
 ]
   

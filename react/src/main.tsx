@@ -3,10 +3,7 @@ import * as ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
 import Root from "./routes/Root";
-import RouteTwo from "./routes/RouteTwo";
-
-import { context } from "./context";
-console.log(context);
+import SocialDeduction from "./routes/major_cases/SocialDeduction";
 
 const router = createBrowserRouter([
   {
@@ -14,9 +11,9 @@ const router = createBrowserRouter([
     element: <Root />,
   },
   {
-    path: "/route-two",
-    element: <RouteTwo />,
-  },
+    path: "/social-deduction",
+    element: <SocialDeduction />
+  }
   
 ]);
 
