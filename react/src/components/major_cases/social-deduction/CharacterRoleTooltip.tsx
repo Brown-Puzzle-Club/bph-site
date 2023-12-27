@@ -1,4 +1,4 @@
-import { Character, Role } from "./SocialDeductionEnums";
+import { InternalCharacter, Role, CHAR_NAME } from "./SocialDeductionEnums";
 
 import pfpDaisycula from "../../../assets/major_cases/social-deduction/pfp-daisycula.png";
 import pfpGorgon from "../../../assets/major_cases/social-deduction/pfp-gorgon.png";
@@ -7,39 +7,40 @@ import pfpInvisiguy from "../../../assets/major_cases/social-deduction/pfp-invis
 import pfpWolfguy from "../../../assets/major_cases/social-deduction/pfp-wolfguy.png";
 
 // map  all the enum values of Character or Role to their respective asset strings
-const CharacterRoleAssetMap = {
-  [Character.NONE]: "",
-  [Character.INVISIGUY]: pfpInvisiguy,
-  [Character.DAISYCULA]: pfpDaisycula,
-  [Character.GORGON]: pfpGorgon,
-  [Character.GREEN_RIBBON]: pfpGreenribbon,
-  [Character.WOLF_GUY]: pfpWolfguy,
-  [Character.ANXIOUS_GHOST]: "",
-  [Character.HAPPY_GHOST]: "",
-  [Character.HEART_GHOST]: "",
-  [Character.NORMAL_GHOST]: "",
-  [Character.SLEEPY_GHOST]: "",
+const  CharacterRoleAssetMap = {
+  [InternalCharacter.NONE]: "",
+  [InternalCharacter.INVISIGUY]: pfpInvisiguy,
+  [InternalCharacter.DAISYCULA]: pfpDaisycula,
+  [InternalCharacter.GORGON]: pfpGorgon,
+  [InternalCharacter.GREEN_RIBBON]: pfpGreenribbon,
+  [InternalCharacter.WOLF_GUY]: pfpWolfguy,
+  [InternalCharacter.ANXIOUS_GHOST]: "",
+  [InternalCharacter.HAPPY_GHOST]: "",
+  [InternalCharacter.HEART_GHOST]: "",
+  [InternalCharacter.NORMAL_GHOST]: "",
+  [InternalCharacter.SLEEPY_GHOST]: "",
   [Role.TANNER]: "",
 }
 
 const CharacterRoleColorMap = {
-  [Character.NONE]: "",
-  [Character.INVISIGUY]: "#947fc14f",
-  [Character.DAISYCULA]: "#79493d6e",
-  [Character.GORGON]: "#97d0ae36",
-  [Character.GREEN_RIBBON]: "#c4c05645",
-  [Character.WOLF_GUY]: "#a5592a61",
-  [Character.ANXIOUS_GHOST]: "#2c282887",
-  [Character.HAPPY_GHOST]: "#2c282887",
-  [Character.HEART_GHOST]: "#2c282887",
-  [Character.NORMAL_GHOST]: "#2c282887",
-  [Character.SLEEPY_GHOST]: "#2c282887",
+  [InternalCharacter.NONE]: "",
+  [InternalCharacter.INVISIGUY]: "#947fc14f",
+  [InternalCharacter.DAISYCULA]: "#79493d6e",
+  [InternalCharacter.GORGON]: "#97d0ae36",
+  [InternalCharacter.GREEN_RIBBON]: "#c4c05645",
+  [InternalCharacter.WOLF_GUY]: "#a5592a61",
+  [InternalCharacter.ANXIOUS_GHOST]: "#2c282887",
+  [InternalCharacter.HAPPY_GHOST]: "#2c282887",
+  [InternalCharacter.HEART_GHOST]: "#2c282887",
+  [InternalCharacter.NORMAL_GHOST]: "#2c282887",
+  [InternalCharacter.SLEEPY_GHOST]: "#2c282887",
   [Role.TANNER]: "",
 }
 
-export default function CharacterRoleTooltip({char_role, scale}: {char_role: Character | Role, scale: number})  {
+export default function InternalCharacterRoleTooltip({char_role, scale}: {char_role: InternalCharacter | Role, scale: number})  {
   const tooltipColor = CharacterRoleColorMap[char_role];
   const tooltipAsset = CharacterRoleAssetMap[char_role];
+  const name = (char_role in InternalCharacter) ? CHAR_NAME[char_role as InternalCharacter] : char_role;
 
   return (
     <div
@@ -49,7 +50,7 @@ export default function CharacterRoleTooltip({char_role, scale}: {char_role: Cha
         fontSize: `${1.5*scale}vw`,
       }}
     >
-      <b className="block">{char_role}</b>
+      <b className="block">{name}</b>
       {tooltipAsset && (
         <img
           src={tooltipAsset}

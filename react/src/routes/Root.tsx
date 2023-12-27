@@ -3,8 +3,7 @@ import { useState } from "react";
 import thing from "../assets/thing.svg";
 import viteLogo from "../assets/vite.svg";
 
-import { context } from "../context";
-console.log(context);
+
 
 export default function Root() {
   const [count, setCount] = useState(0);

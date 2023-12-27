@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { MOCK_CONTEXTS } from "./mock/mockContexts";
 
 const contextSchema = z.object({
   team: z
@@ -11,11 +12,11 @@ const contextSchema = z.object({
       is_prerelease_testsolver: z.boolean(),
       brown_members: z.boolean(),
       in_person: z.boolean(),
-      solves: z.record(z.object({
+      solves: z.record(z.record(z.object({
         puzzle: z.string(),
         solve_time: z.string().transform((x) => new Date(x)),
         answer: z.string(),
-      }))
+      })))
     })
     .optional(),
   unlocks: z.record(z.object({
@@ -56,14 +57,12 @@ function mockContext() {
   const currentUrl = window.location.href;
   // part of endpoint past brownpuzzlehunt.com/
   const path = currentUrl.split("/").slice(3).join("/");
-  console.log(path)
 
-
-  return {}
+  return (path in MOCK_CONTEXTS) ? MOCK_CONTEXTS[path] : {};
 }
 
 
-let context;
+let context: unknown | undefined;
 try {
   // @ts-expect-error djangoContext is defined in the template html
   context = contextSchema.parse(JSON.parse(djangoContext));

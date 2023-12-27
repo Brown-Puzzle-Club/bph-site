@@ -530,7 +530,7 @@ class Team(models.Model):
     
     def solves_by_round(self):
         return {
-            submission.puzzle.round.slug : {
+            submission.puzzle.round.slug: {
                 submission.puzzle.slug: {
                     'puzzle': submission.puzzle.name,
                     'solve_time': submission.submitted_datetime,
