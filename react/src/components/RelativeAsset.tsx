@@ -6,9 +6,10 @@ interface AssetProps {
   hoverImageSrc?: string;
   extraStyles?: CSSProperties;
   onHover?: () => void;
+  onLeave?: () => void;
 }
 
-const RelativeAsset: React.FC<AssetProps> = ({ imageSrc, linkTo, hoverImageSrc, extraStyles, onHover }) => {
+const RelativeAsset: React.FC<AssetProps> = ({ imageSrc, linkTo, hoverImageSrc, extraStyles, onHover, onLeave }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   const curImageSrc = isHovered && hoverImageSrc ? hoverImageSrc : imageSrc;
@@ -16,8 +17,8 @@ const RelativeAsset: React.FC<AssetProps> = ({ imageSrc, linkTo, hoverImageSrc, 
   return (
     <div
       className={`relative-asset absolute${isHovered ? ' hover-effect' : ''}`}
-      onMouseEnter={() => { setIsHovered(true); (onHover ? onHover() : (() => {})()) } }
-      onMouseLeave={() => setIsHovered(false) }
+      onMouseEnter={() => { setIsHovered(true) ; (onHover ? onHover() : (() => {})()) } }
+      onMouseLeave={() => { setIsHovered(false); (onLeave ? onLeave() : (() => {})()) } }
       style={extraStyles}
     >
       <a href={linkTo}>
