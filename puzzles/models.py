@@ -528,12 +528,14 @@ class Team(models.Model):
             if submission.is_correct
         }
     
-    def solves_with_info(self):
+    def solves_by_round(self):
         return {
-            submission.puzzle.slug: {
-                'puzzle': submission.puzzle.name,
-                'solve_time': submission.submitted_datetime,
-                'answer': submission.submitted_answer,
+            submission.puzzle.round.slug: {
+                submission.puzzle.slug: {
+                    'puzzle': submission.puzzle.name,
+                    'solve_time': submission.submitted_datetime,
+                    'answer': submission.submitted_answer,
+                }
             }
             for submission in self.submissions
             if submission.is_correct

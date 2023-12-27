@@ -41,7 +41,7 @@ def process_rounds(request, context, rounds_raw):
     return rounds
 
 def process_solves(context):
-    return context.team.solves_with_info
+    return context.team.solves_by_round
 
 def process_context(request, rounds):
     context = request.context

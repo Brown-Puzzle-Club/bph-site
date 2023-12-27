@@ -9,13 +9,13 @@ const contextSchema = z.object({
       total_free_answers_awarded: z.number().int(),
       num_free_answers_remaining: z.number().int(),
       is_prerelease_testsolver: z.boolean(),
-      brown_members: z.boolean(),
+      brown_members: z.boolean(), 
       in_person: z.boolean(),
-      solves: z.record(z.object({
+      solves: z.record(z.record(z.object({ // round -> puzzle -> solve info
         puzzle: z.string(),
         solve_time: z.string().transform((x) => new Date(x)),
         answer: z.string(),
-      }))
+      })))
     })
     .optional(),
   unlocks: z.record(z.object({
