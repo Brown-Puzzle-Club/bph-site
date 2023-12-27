@@ -8,6 +8,7 @@ function titleCase(s: string): string{
 }
 
 // TODO: update with actual puzzle slugs
+// puzzle slugs are techincally safe for anyone to see, but we should still keep them secret
 const NUM_TO_SLUG: { [key: number]: string } = {
   0: "slug1",
   1: "slug2",
@@ -49,6 +50,7 @@ export const CHAR_NAME : { [key in InternalCharacter]: string } = {
   GORGON: "Lady Gorgon Baker",
   GREEN_RIBBON: "Mournful Wilson",
   WOLF_GUY: "Werewolfsheim",
+  // THIS IS TO MAKE SURE THAT NOBODY CAN READ THE ANSWERS FROM THE SOURCE CODE
   ANXIOUS_GHOST: fetchMinorCaseCharacterName(0),
   HAPPY_GHOST: fetchMinorCaseCharacterName(1),
   HEART_GHOST: fetchMinorCaseCharacterName(2),
