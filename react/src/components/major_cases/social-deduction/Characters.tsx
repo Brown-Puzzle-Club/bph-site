@@ -152,6 +152,8 @@ export default function Characters () {
             src={background}
           />
         </div>
+
+        
       </div>
     </section>
   )

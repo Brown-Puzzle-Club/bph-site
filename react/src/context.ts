@@ -51,8 +51,24 @@ const contextSchema = z.object({
   num_metas: z.number().int(),
 });
 
-// @ts-expect-error djangoContext is defined in the template html
-console.log("djangoContext", djangoContext);
 
-// @ts-expect-error djangoContext is defined in the template html
-export const context = contextSchema.parse(JSON.parse(djangoContext));
+function mockContext() {
+  const currentUrl = window.location.href;
+  // part of endpoint past brownpuzzlehunt.com/
+  const path = currentUrl.split("/").slice(3).join("/");
+  console.log(path)
+
+
+  return {}
+}
+
+
+let context;
+try {
+  // @ts-expect-error djangoContext is defined in the template html
+  context = contextSchema.parse(JSON.parse(djangoContext));
+} catch (error) {
+  context = mockContext();
+}
+
+export { context };
