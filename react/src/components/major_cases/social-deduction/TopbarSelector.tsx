@@ -21,7 +21,4 @@ const TopbarSelector = ({children, setPanel}: {children: ReactNode, setPanel: (p
   );
 }
 
-
-
-
 export default TopbarSelector;

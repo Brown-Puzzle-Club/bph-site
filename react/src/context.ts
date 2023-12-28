@@ -52,28 +52,23 @@ const contextSchema = z.object({
   num_metas: z.number().int(),
 });
 
-
+type DjangoContext = z.infer<typeof contextSchema>;
 
 function mockContext() {
   const currentUrl = window.location.href;
   // part of endpoint past brownpuzzlehunt.com/
   const path = currentUrl.split("/").slice(3).join("/");
 
-  return (path in MOCK_CONTEXTS) ? MOCK_CONTEXTS[path] : {};
+  return (path in MOCK_CONTEXTS) ? contextSchema.parse(MOCK_CONTEXTS[path]) : null;
 }
 
-const FORCE_MOCK_CONTEXT = false;
-let context: unknown | undefined;
-if (FORCE_MOCK_CONTEXT) {
+// contextSchema type or empty record
+let context: DjangoContext | null;
+try {
+  // @ts-expect-error djangoContext is defined in the template html
+  context = contextSchema.parse(JSON.parse(djangoContext));
+} catch (error) {
   context = mockContext();
-} else {
-  try {
-    // @ts-expect-error djangoContext is defined in the template html
-    context = contextSchema.parse(JSON.parse(djangoContext));
-  } catch (error) {
-    context = mockContext();
-  }
 }
-
 
 export { context };

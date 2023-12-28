@@ -17,16 +17,13 @@ const NUM_TO_SLUG: { [key: number]: string } = {
   4: "slug5"
 }
 
-// TODO: fix typing errors
 export function fetchMinorCaseCharacterName(n: number): string {
-  if (!isMinorCaseCharacterSolved(n)) return "?????";
-  // @ts-expect-error context could be mocked
-  return titleCase(context["team"]["solves"]["social-deduction"][NUM_TO_SLUG[n]]["answer"]);
+  return titleCase(context?.team?.solves?.["social-deduction"]?.[NUM_TO_SLUG[n]]?.["answer"] ?? "?????");
 }
 
 export function isMinorCaseCharacterSolved(n: number): boolean {
-  // @ts-expect-error context could be mocked
-  return "team" in context && "solves" in context["team"] && "social-deduction" in context["team"]["solves"] && NUM_TO_SLUG[n] in context["team"]["solves"]["social-deduction"];
+  const solves = context?.team?.solves;
+  return solves !== undefined && "social-deduction" in solves && NUM_TO_SLUG[n] in solves["social-deduction"]
 }
 
 export enum InternalCharacter {
@@ -51,10 +48,10 @@ export const CHAR_NAME : { [key in InternalCharacter]: string } = {
   GREEN_RIBBON: "Mournful Wilson",
   WOLF_GUY: "Werewolfsheim",
   // THIS IS TO MAKE SURE THAT NOBODY CAN READ THE ANSWERS FROM THE SOURCE CODE
-  ANXIOUS_GHOST: fetchMinorCaseCharacterName(0),
-  HAPPY_GHOST: fetchMinorCaseCharacterName(1),
-  HEART_GHOST: fetchMinorCaseCharacterName(2),
-  NORMAL_GHOST: fetchMinorCaseCharacterName(3),
+  HEART_GHOST: fetchMinorCaseCharacterName(0),
+  NORMAL_GHOST: fetchMinorCaseCharacterName(1),
+  HAPPY_GHOST: fetchMinorCaseCharacterName(2),
+  ANXIOUS_GHOST: fetchMinorCaseCharacterName(3),
   SLEEPY_GHOST: fetchMinorCaseCharacterName(4),
 }
 
