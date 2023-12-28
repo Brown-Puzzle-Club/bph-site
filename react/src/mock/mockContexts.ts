@@ -14,3 +14,8 @@ export const MOCK_CONTEXTS: { [key: string]: unknown } = {
   }
   // TODO: add more mock contexts here (use the endpoint of the page you are working on!)
 }
+
+
+
+//
+// url -> {subset of context}

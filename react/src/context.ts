@@ -53,6 +53,7 @@ const contextSchema = z.object({
 });
 
 
+
 function mockContext() {
   const currentUrl = window.location.href;
   // part of endpoint past brownpuzzlehunt.com/
@@ -61,13 +62,18 @@ function mockContext() {
   return (path in MOCK_CONTEXTS) ? MOCK_CONTEXTS[path] : {};
 }
 
-
+const FORCE_MOCK_CONTEXT = false;
 let context: unknown | undefined;
-try {
-  // @ts-expect-error djangoContext is defined in the template html
-  context = contextSchema.parse(JSON.parse(djangoContext));
-} catch (error) {
+if (FORCE_MOCK_CONTEXT) {
   context = mockContext();
+} else {
+  try {
+    // @ts-expect-error djangoContext is defined in the template html
+    context = contextSchema.parse(JSON.parse(djangoContext));
+  } catch (error) {
+    context = mockContext();
+  }
 }
+
 
 export { context };

@@ -43,7 +43,8 @@ export default function InternalCharacters () {
   }
 
   return (
-    <section className="characters">
+    // TODO: setup repeating texture
+    <section className="characters" style={{backgroundColor: "#0e0c05"}}>
       <div className="map relative left-1/2 transform -translate-x-1/2 aspect-w-4 aspect-h-3 max-w-screen-xl w-full">
         
         {/* MAIN CHARACTERS */}
@@ -136,7 +137,7 @@ export default function InternalCharacters () {
             className="selected-character absolute opacity-0 transition-opacity duration-300 ease-out"
             style={{
               top: '95%',
-              left: '53%',
+              left: '50%',
               transform: 'translate(-50%, -50%)', // anchors from the center
               zIndex: 4,
             }}

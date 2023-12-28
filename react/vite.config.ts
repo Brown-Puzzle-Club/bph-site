@@ -9,8 +9,10 @@ export default defineConfig({
       "/api": "http://localhost:8000", // Adjust the URL to match your Django server
     },
   },
+  base: "/static/react/",
   build: {
     outDir: `../puzzles/static/react` /*`../puzzles/react-build`,*/,
+    
     emptyOutDir: true,
     rollupOptions: {
       output: {
