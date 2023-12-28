@@ -9,7 +9,7 @@ export default defineConfig({
       "/api": "http://localhost:8000", // Adjust the URL to match your Django server
     },
   },
-  base: "/static/react/",
+  
   build: {
     outDir: `../puzzles/static/react` /*`../puzzles/react-build`,*/,
     
@@ -22,4 +22,7 @@ export default defineConfig({
       },
     },
   },
+  ...(process.env.NODE_ENV === "django" && {
+    base: "/static/react/",
+  }),
 });
