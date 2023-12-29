@@ -56,5 +56,18 @@ export const CHAR_NAME : { [key in InternalCharacter]: string } = {
 }
 
 export enum Role {
-  TANNER = "TANNER",
+  ASSASSIN = "Assassin",
+  BODYGUARD = "Bodyguard",
+  DOCTOR = "Doctor",
+  ENCHANTER = "Enchanter",
+  FOOL = "Fool",
+  GOSSIP = "Gossip",
+  HEADHUNTER = "Headhunter",
+  INVESTIGATOR = "Investigator",
+  LOVER = "Lover",
+  RESURRECTED = "Resurrected",
+  SILENCER = "Silencer",
+  TELEPATH = "Telepath",
+  VILLAGER = "Villager",
+  ZEALOT = "Zealot",
 }

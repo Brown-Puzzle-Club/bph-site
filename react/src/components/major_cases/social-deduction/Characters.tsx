@@ -142,7 +142,7 @@ export default function InternalCharacters () {
               zIndex: 4,
             }}
           >
-            <InternalCharacterRoleTooltip char_role={selectedInternalCharacter} scale={1.5} />
+            <InternalCharacterRoleTooltip char_role={selectedInternalCharacter} scale={true} />
           </div>
         
 

@@ -1,3 +1,5 @@
+import CharacterRoleTooltip from "./CharacterRoleTooltip";
+import { Role } from "./SocialDeductionEnums";
 
 
 export default function Rules() {
@@ -11,7 +13,7 @@ export default function Rules() {
         <li>During the night phase, if a player has a nighttime ability, they will perform that action in the following order
           <ul className="list-[circle] list-inside ps-10">
             <li>Silencer + Enchanter + Assassin (evil team)</li>
-            <li>Lover</li>
+            <li><CharacterRoleTooltip char_role={Role.LOVER} scale={false}/></li>
             <li>Body Guard</li>
             <li>Doctor</li>
             <li>Telepath</li>
