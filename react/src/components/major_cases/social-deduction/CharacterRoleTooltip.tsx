@@ -6,6 +6,15 @@ import pfpGreenribbon from "../../../assets/major_cases/social-deduction/pfp-gre
 import pfpInvisiguy from "../../../assets/major_cases/social-deduction/pfp-invisiguy.png";
 import pfpWolfguy from "../../../assets/major_cases/social-deduction/pfp-wolfguy.png";
 
+export const GOOD_ROLE_COLOR = "#218c3a59";
+export const EVIL_ROLE_COLOR = "#c4565645";
+export const NEUTRAL_ROLE_COLOR = "#e8d25a61";
+export const SOLO_ROLE_COLOR = "#7748986e";
+
+export const GOOD_TEXT_COLOR = "#aae17c";
+export const EVIL_TEXT_COLOR = "#ff8585";
+export const SOLO_TEXT_COLOR = "#caaff4";
+
 // map  all the enum values of Character or Role to their respective asset strings
 const  CharacterRoleAssetMap = {
   [InternalCharacter.NONE]: "",
@@ -34,11 +43,6 @@ const  CharacterRoleAssetMap = {
   [Role.VILLAGER]: "",
   [Role.ZEALOT]: "",
 }
-
-const GOOD_ROLE_COLOR = "#218c3a59";
-const EVIL_ROLE_COLOR = "#c4565645";
-const NEUTRAL_ROLE_COLOR = "#a5592a61";
-const SOLO_ROLE_COLOR = "#79493d6e";
 
 const CharacterRoleColorMap = {
   [InternalCharacter.NONE]: "",

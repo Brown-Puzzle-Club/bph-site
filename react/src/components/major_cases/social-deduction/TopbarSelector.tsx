@@ -8,7 +8,7 @@ const TopbarSelector = ({children, setPanel}: {children: ReactNode, setPanel: (p
     // 6.5rem for normal screensize, some vw for smaller screensizes
     <div className="sidebar-selector py-10 px-[20px] md:px-[10rem]" style={{backgroundColor: "#1c160d"}}>
       {/* TAILWIND CENTER DIV, HAVE ALL ITEMS FLEX IN SAME LINE */}
-      <div className="pt-5 rounded-md" style={{backgroundColor: "#796d54"}}>
+      <div className="pt-5 rounded-md" style={{backgroundColor: "#352c20"}}>
         {/* MAKE BUTTONS SIZE CONSISTENT TO THE TOTAL SCREEN SIZE */}
         <div className="flex justify-center space-x-2 px-10">
           <button className='w-full md:w-auto' onClick={() => setPanel(SelectedPanel.RULES)}>RULES</button>
