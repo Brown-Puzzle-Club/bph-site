@@ -35,11 +35,10 @@ const  CharacterRoleAssetMap = {
   [Role.ZEALOT]: "",
 }
 
-const GOOD_ROLE_COLOR = "#97d0ae36";
-const EVIL_ROLE_COLOR = "#c4c05645";
+const GOOD_ROLE_COLOR = "#218c3a59";
+const EVIL_ROLE_COLOR = "#c4565645";
 const NEUTRAL_ROLE_COLOR = "#a5592a61";
 const SOLO_ROLE_COLOR = "#79493d6e";
-
 
 const CharacterRoleColorMap = {
   [InternalCharacter.NONE]: "",
@@ -76,11 +75,12 @@ export default function CharacterRoleTooltip({char_role, scale}: {char_role: Int
 
   return (
     <div
-      className={`flex items-center px-2 py-1 rounded-xl`}
+      className={`flex items-center px-2 py-0.5 my-0.5 rounded-xl`}
       style={{
         backgroundColor: tooltipColor,
-        fontSize: scale ? `2.25vw` : undefined,
         width: 'fit-content',
+        fontSize: scale ? `2.25vw` : undefined,
+        display: !scale ? `inline-block` : undefined,
       }}
     >
       <b className="block">{name}</b>

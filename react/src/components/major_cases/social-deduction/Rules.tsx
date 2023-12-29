@@ -5,19 +5,19 @@ import { Role } from "./SocialDeductionEnums";
 export default function Rules() {
   return (
     <div className="rules content px-10 py-10">
-      <ul className="space-y-1 list-disc list-inside">
+      <ul className="space-y-1 list-disc list-insid">
         <li>This game consists of multiple rounds, each with two phases: a night phase and a day phase.</li>
-        <li>Night Phase 1 is a set-up round. Each player will be assigned a role in secret and no roles will be duplicated, though some roles will remain unused. During night 1, every player except the Assassin will be able to perform their role-designated action if they have one. No one will be killed by the Assassin on the first night.</li>
+        <li>Night Phase 1 is a set-up round. Each player will be assigned a role in secret and no roles will be duplicated, though some roles will remain unused. During night 1, every player except the <CharacterRoleTooltip char_role={Role.ASSASSIN} scale={false}/> will be able to perform their role-designated action if they have one. No one will be killed by the <CharacterRoleTooltip char_role={Role.ASSASSIN} scale={false}/> on the first night.</li>
         <li>Every role belongs to one of three designations: Village, Evil, and Solo. All Village players are trying to work together to identify the Assassin and exile them by voting. The Evil players are trying to kill all the Village and Solo players. Any Solo player is on their own team (Solo players do not work together) and has a separate win condition.</li>
-        <li>The Assassin must be a part of every game.</li>
+        <li >The <CharacterRoleTooltip char_role={Role.ASSASSIN} scale={false}/> must be a part of every game.</li>
         <li>During the night phase, if a player has a nighttime ability, they will perform that action in the following order
           <ul className="list-[circle] list-inside ps-10">
-            <li>Silencer + Enchanter + Assassin (evil team)</li>
+            <li><CharacterRoleTooltip char_role={Role.SILENCER} scale={false}/>, <CharacterRoleTooltip char_role={Role.ENCHANTER} scale={false}/>, <CharacterRoleTooltip char_role={Role.ASSASSIN} scale={false}/>  (evil team)</li>
             <li><CharacterRoleTooltip char_role={Role.LOVER} scale={false}/></li>
-            <li>Body Guard</li>
-            <li>Doctor</li>
-            <li>Telepath</li>
-            <li>Investigator</li>
+            <li><CharacterRoleTooltip char_role={Role.BODYGUARD} scale={false}/></li>
+            <li><CharacterRoleTooltip char_role={Role.DOCTOR} scale={false}/></li>
+            <li><CharacterRoleTooltip char_role={Role.TELEPATH} scale={false}/></li>
+            <li><CharacterRoleTooltip char_role={Role.INVESTIGATOR} scale={false}/></li>
           </ul>
         </li>
         <li>All players must use their action if they are able to.</li>
