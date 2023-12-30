@@ -10,8 +10,10 @@ Past these major features, we have tailored the site to work best for our event,
 # Quick Start
 
 - Set up your environment.
+> **NOTE**: If these steps do not work / if you are more comfortable, you can setup a similar environment by creating a new **Python 3.10** conda environment
   - Make sure you have Python 3 and the corresponding `pip`. (This may be named `pip3` depending on your environment.)
   - We recommend that you install virtualenv: `pip install virtualenv`. This allows you to install this project's dependencies into a "virtual environment" contained in this directory.
+
     - You can also proceed without virtualenv (skip these steps), which will install the dependencies globally. This is not recommended if you develop in other Python projects on the same machine.
   - Create a virtualenv: `virtualenv venv`
     - If you have both Python 2 and Python 3 on your system, use the `-p` argument to `virtualenv` to point to the correct Python runtime, for example: `virtualenv venv -p python3`
