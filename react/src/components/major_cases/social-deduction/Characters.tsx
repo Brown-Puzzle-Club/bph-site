@@ -3,9 +3,14 @@ import RelativeAsset from '../../RelativeAsset'
 
 // characters
 import invisiguy from '../../../assets/major_cases/social-deduction/Invisiguy.png'
+import daisyculaPose from '../../../assets/major_cases/social-deduction/daisycula-pose.png'
 import daisycula from '../../../assets/major_cases/social-deduction/daisycula.png'
+import gorgonPose from '../../../assets/major_cases/social-deduction/gorgon-pose.png'
 import gorgon from '../../../assets/major_cases/social-deduction/gorgon.png'
+import greenribbonPose from '../../../assets/major_cases/social-deduction/greenribbon-pose.png'
 import greenribbon from '../../../assets/major_cases/social-deduction/greenribbon.png'
+import invisiguyPose from '../../../assets/major_cases/social-deduction/invisiguy-pose.png'
+import wolfguyPose from '../../../assets/major_cases/social-deduction/wolfguy-pose.png'
 import wolfguy from '../../../assets/major_cases/social-deduction/wolfguy.png'
 
 // ghosts
@@ -18,6 +23,8 @@ import sleepyghost from '../../../assets/major_cases/social-deduction/sleepyghos
 
 import InternalCharacterRoleTooltip from './CharacterRoleTooltip'
 import { InternalCharacter } from './SocialDeductionEnums'
+
+const GHOST_HOVER = 'hover:drop-shadow-[0_15px_15px_rgba(255,255,255,0.2)]'
 
 export default function InternalCharacters () {
   const [selectedInternalCharacter, setSelectedInternalCharacter] = useState<InternalCharacter>(InternalCharacter.ANXIOUS_GHOST)
@@ -33,9 +40,9 @@ export default function InternalCharacters () {
   }, [selectedInternalCharacter]);
   // console.log(selectedInternalCharacter)
 
-  const InternalCharacterAsset = ({imageSrc, extraStyles, character}: {imageSrc: string, extraStyles: CSSProperties, character: InternalCharacter}) => {
+  const InternalCharacterAsset = ({imageSrc, hoverImageSrc, extraStyles, extraClasses, character}: {imageSrc: string, hoverImageSrc?: string, extraStyles: CSSProperties, extraClasses?: string, character: InternalCharacter}) => {
     return (
-      <RelativeAsset imageSrc={imageSrc} extraStyles={extraStyles} 
+      <RelativeAsset imageSrc={imageSrc} hoverImageSrc={hoverImageSrc} extraStyles={extraStyles} extraClasses={extraClasses}
         onHover={() => { setSelectedInternalCharacter(character) }}
         onLeave={() => { setSelectedInternalCharacter(InternalCharacter.NONE) }}
       />
@@ -48,7 +55,7 @@ export default function InternalCharacters () {
       <div className="map relative left-1/2 transform -translate-x-1/2 aspect-w-4 aspect-h-3 max-w-screen-xl w-full">
         
         {/* MAIN CHARACTERS */}
-        <InternalCharacterAsset character={InternalCharacter.GREEN_RIBBON} imageSrc={greenribbon}
+        <InternalCharacterAsset character={InternalCharacter.GREEN_RIBBON} imageSrc={greenribbon} hoverImageSrc={greenribbonPose}
           extraStyles={{
             top: '16%',
             left: '7%',
@@ -56,23 +63,23 @@ export default function InternalCharacters () {
             zIndex: 1,
           }}
         />
-        <InternalCharacterAsset character={InternalCharacter.DAISYCULA} imageSrc={daisycula}
+        <InternalCharacterAsset character={InternalCharacter.DAISYCULA} imageSrc={daisycula} hoverImageSrc={daisyculaPose}
           extraStyles={{
-            top: '30%',
-            left: '14%',
+            top: '28%',
+            left: '13%',
             width: '30%',
             zIndex: 2,
           }}
         />
-        <InternalCharacterAsset character={InternalCharacter.INVISIGUY} imageSrc={invisiguy}
+        <InternalCharacterAsset character={InternalCharacter.INVISIGUY} imageSrc={invisiguy} hoverImageSrc={invisiguyPose}
           extraStyles={{
-            top: '24%',
+            top: '25%',
             left: '36%',
             width: '22%',
             zIndex: 1,
           }}
         />
-        <InternalCharacterAsset character={InternalCharacter.WOLF_GUY} imageSrc={wolfguy}
+        <InternalCharacterAsset character={InternalCharacter.WOLF_GUY} imageSrc={wolfguy} hoverImageSrc={wolfguyPose}
           extraStyles={{
             top: '24%',
             left: '56%',
@@ -80,7 +87,7 @@ export default function InternalCharacters () {
             zIndex: 1,
           }}
         />
-        <InternalCharacterAsset character={InternalCharacter.GORGON} imageSrc={gorgon}
+        <InternalCharacterAsset character={InternalCharacter.GORGON} imageSrc={gorgon} hoverImageSrc={gorgonPose}
           extraStyles={{
             top: '30%',
             left: '63%',
@@ -91,6 +98,7 @@ export default function InternalCharacters () {
 
         {/* GHOSTS */}
         <InternalCharacterAsset character={InternalCharacter.HEART_GHOST} imageSrc={heartghost}
+          extraClasses={GHOST_HOVER}
           extraStyles={{
             top: '46%',
             left: '2%',
@@ -99,6 +107,7 @@ export default function InternalCharacters () {
           }}
         />
         <InternalCharacterAsset character={InternalCharacter.NORMAL_GHOST} imageSrc={normalghost}
+          extraClasses={GHOST_HOVER}
           extraStyles={{
             top: '4%',
             left: '21%',
@@ -107,6 +116,7 @@ export default function InternalCharacters () {
           }}
         />
         <InternalCharacterAsset character={InternalCharacter.HAPPY_GHOST} imageSrc={happyghost}
+          extraClasses={GHOST_HOVER}
           extraStyles={{
             top: '13%',
             left: '78%',
@@ -115,6 +125,7 @@ export default function InternalCharacters () {
           }}
         />
         <InternalCharacterAsset character={InternalCharacter.ANXIOUS_GHOST} imageSrc={anxiousghost}
+          extraClasses={GHOST_HOVER}
           extraStyles={{
             top: '19%',
             left: '86%',
@@ -123,6 +134,7 @@ export default function InternalCharacters () {
           }}
         />
         <InternalCharacterAsset character={InternalCharacter.SLEEPY_GHOST} imageSrc={sleepyghost}
+          extraClasses={GHOST_HOVER}
           extraStyles={{
             top: '70%',
             left: '91%',
