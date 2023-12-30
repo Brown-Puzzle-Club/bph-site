@@ -1,8 +1,11 @@
-This is a Django app for running puzzlehunts, written by several members of ✈✈✈ Galactic Trendsetters ✈✈✈ for running the [Galactic Puzzle Hunt](https://galacticpuzzlehunt.com/).
+This is a Django app for running puzzlehunts, a modified branch of Galactic Trendsetter's [gph-site](https://github.com/galacticpuzzlehunt/gph-site), to run [Brown Puzzlehunt](https://www.brownpuzzlehunt.com/)
 
-This repository is not formally maintained; expect it to be based on an export of the most recently run GPH, with any updates at other times of year being best-effort. In particular, while we've stripped out most of the hunt-specific logic, some fundamental pieces are still in place: GPH 2019 unlocked puzzles sequentially using DEEP (a combination of time and solves), while GPH 2020 had puzzles divided by round, so those conditions are reflected in the model schema and unlocking code. If you want to do something different, say an Australian-style hunt, it should still be possible, but you'll have to do some legwork.
+On top of the core features of gph-site (teams, puzzle unlocks, interactive puzzles, hints, email + discord hooks, admin panel), we have also implemented:
+- PostgreSQL compatibility as an alternative to sqlite.
+- React integration with Django state visibility.
+- Team site events with websockets (puzzle choice voting)
 
-We will try to respond to emails or pull requests when we can, but this isn't guaranteed, especially during the months when we aren't actively working on the current GPH. As several other online hunts have used this codebase, you may be able to direct questions to one of them, although at this time there does not seem to be any listing of such teams.
+Past these major features, we have tailored the site to work best for our event, including restructuring the solve structure to fit our BPH2024 major-minor case structre.
 
 # Quick Start
 
@@ -23,50 +26,21 @@ We will try to respond to emails or pull requests when we can, but this isn't gu
 - Start the development server with `./manage.py runserver`
   - If you get a warning (red text) about making migrations, stop the server, run `./manage.py migrate`, then start it again.
   - If all went well, the dev server should start, printing its local URL to stdout.
+- Build and serve React
+  - Requirements: [Node LTS](https://nodejs.org/en/download)
+  - `cd` into the `react/` directory and run `npm istall`
+  - *React-only development*
+    - `npm run dev` and type the route you are developing into your browser url. 
+  - *Django-integrated development*
+    - Build the react project to Django static files by running `npm run build`. Alternatively, you can run `npm run build-watch` to have rebuilds occur on new file edits.
+    - View the react page served on the Django route you made by following the `./manage.py runserver` steps above.
+  - Django context data
+    - The React page you are building may likely need to know info about the hunt or about the team. To interface with the imporatant, non-spoiling context, we made a react-side hook with Zod typing.
+    - You can access context data by importing:
+    `import { context } from "../../../context";`
+    - For *Django-side dev*, Django context data should be filled in based on the team you are logged into and the current hunt status. You can access this by importing context: 
+    - For *React-only dev*, Django context is mocked based on the url. See `react/src/mock`
 
-## Heroku local
-
-- One time: Setup psql
-  - You'll need to acquire [PostgreSQL](https://www.postgresql.org/) somehow (depending on your operating system) and make sure the server is running. [Heroku](https://devcenter.heroku.com/articles/heroku-postgresql#local-setup) has some docs.
-  - [Enable SSL for PostgreSQL](https://www.postgresql.org/docs/current/ssl-tcp.html#SSL-SETUP).
-  - Run `psql` to enter the psql shell. You may need to add `sudo` for permissions.
-  - If you don't have one, create a user: `CREATE USER yourusername PASSWORD 'yourpassword';`
-    - You can check whether you already have a superuser by using the `\du` command in the `psql` terminal.
-  - Then create a database for this project `CREATE DATABASE yourdbname;`
-  - If you're on a Mac, the PostgreSQL app should be running and you should be able to see your database.
-- One time: configure local db environment
-  - In the top level puzzlord directory, create a file called `.env` except in `DATABASE_URL`, replace the username, password, and database name with whatever you used above.
-
-  ```
-  DJANGO_SETTINGS_MODULE=gph.settings.dev
-  ```
-
-    - Note: You may have to use `DJANGO_SETTINGS_MODULE=gph.settings.dev` instead.
-
-  - Install the necessary packages: `heroku local:run pip install -r requirements.txt` (you may also need to run just the `pip install...` part locally, unclear)
-  - Create the necessary tables by running `heroku local:run ./manage.py migrate`
-  - Create a superuser for local `/admin` access: `heroku local:run ./manage.py createsuperuser`
-    - This is just for local db use, so feel free to use "test" for everything :)
-- Every time:
-  - Make sure psql is running before running your server locally.
-  - The first time you're running the website locally or any time you change the static assets, run `heroku local:run ./manage.py collectstatic`
-  - Use `heroku local` to bring up the local server.
-  - If you get a warning (red text) about making migrations run `heroku local:run ./manage.py migrate`
-    - In general, if you're reading other docs on django, and are asked to run `./manage.py ...`, use `heroku local:run ./manage.py` instead.
-  - To run locally, use `heroku local:run ./manage.py runserver` for dev settings and `heroku local web` for more prod-like settings.
-- Notes:
-  - To make sure your print outputs show up in Heroku logs, use `flush=True`.
-  - More details are available in DEPLOY.md.
-
-## Heroku prod
-  - Set environment variable: `heroku config:set -a yourappname DJANGO_SETTINGS_MODULE=gph.settings.prod`.
-  - If you require Redis, you will need to provision an add-on through Heroku. The configuration in this repo assumes you are using [Redis Enterprise Cloud](https://devcenter.heroku.com/articles/rediscloud). If you wish to use a different Redis add-on, go to `gph/settings/base.py` and edit `CACHES` and `CHANNEL_LAYERS` appropriately.
-
-# Areas for Improvement
-
-- We rely on Redis, specifically for WebSocket support and rate limiting. Unfortunately, our deploy configuration doesn't do a good job of ensuring a compatible Redis environment. This could use some attention from someone who understands Ansible.
-- Our database writes are not atomic; if a request handler loads a model instance, does some other stuff, then calls `.save()`, that will save all the fields of the object and possibly overwrite some other handler that ran in the meantime. Our schema so happens to be set up so that (apart from Hints) we don't often have to update existing objects at all, let alone within fractions of a second of each other in a non-idempotent way. But we could address this with transactions, shortening the time between read and write, and/or limiting the fields written.
-- In production we use gunicorn. It does not appear that gunicorn has a rolling restart mechanism. That is, even though it uses many worker processes, all of those workers die and restart at the same time when redeploying the server, which leads to many noticeable seconds of downtime. It would be nice to fix this.
 
 # How Do I...?
 
@@ -76,13 +50,11 @@ We will try to respond to emails or pull requests when we can, but this isn't gu
 
 - ...set up the database?
 
-  + The site is set up to use a `db.sqlite3` file in the root of this repository as its database. If this doesn't exist, Django will create a new empty database when you run `./manage.py migrate`. It's perfectly fine to start with this, but you won't have any puzzles populated and you almost certainly want to create a superuser.
-
-    If you just want to try out the website quickly with some sample data, you can run `./manage.py loaddata sample.yaml` (after `./manage.py migrate`) to load a sample hunt, an admin account (username and password `admin`), and a test account with a team (username and password `test`). You can view the templates used to render the puzzles in the [puzzles/templates/puzzle_bodies](puzzles/templates/puzzle_bodies) and [puzzles/templates/solution_bodies](puzzles/templates/solution_bodies) folders, which you can also base your puzzles/solutions off of.
+  + Local hosting the site should directly hook to our neon test database (email orion@brown.edu if you need access). A successful localhost should have this data connected already, and then all you need to do is go into `/admin` with the admin account given to you to make DB changes.
 
 - ...be a superuser?
 
-  + Superusers are a Django concept that allows users access to the `/admin` control panel on the server. We have additionally set it to control access to certain site pages/actions, such as replying to hint requests from teams, or viewing solutions before the deadline. `./manage.py createsuperuser` will make a new superuser from the command line, but this user won't be associated with any team on the site (so it won't be able to e.g. solve puzzles). To fix this, you can either get a prepopulated `db.sqlite3` from a friend, hit the `Create team` button in the top bar on the main site to attach a new team to your user, or go into `/admin` and swap out the user on an existing team for your new one.
+  + Superusers are a Django concept that allows users access to the `/admin` control panel on the server. We have additionally set it to control access to certain site pages/actions, such as replying to hint requests from teams, or viewing solutions before the deadline. `./manage.py createsuperuser` will make a new superuser from the command line, but this user won't be associated with any team on the site (so it won't be able to e.g. solve puzzles). To fix this, you can head to `/admin` to create a new Team and attach the user.
 
 - ...edit the database?
 
@@ -170,31 +142,15 @@ We will try to respond to emails or pull requests when we can, but this isn't gu
 
   + You can find the hint interface at `/hints`, through links in Discord hint messages, or via the red hint icon that appears for superusers browsing the site when there are unanswered hints. The interface lets you claim a hint, write a response, and send it off to the team. If a hint is marked as obsolete, that means the team solved the puzzle while it was open; if refunded, then the responder decided not to charge them a hint token. If a hint is a followup, that means it's part of a conversation thread with the team and doesn't cost a token either.
 
-- ... use websockets?
 
-  + We now have somewhat experimental websocket support! Take a look at the consumer classes in `messaging.py`; there are prototypes for two-way communication with a single browser tab, or for broadcasting to all members of a team or all logged-in admins. If you want something different, say for a "Teamwork Time" puzzle where team members interact with each other, it shouldn't be hard to add. Then add your consumer to `routing.py` and use `openSocket` in JS to connect to it.
+- ...add a React page?
 
-- ... provide the site in my language?
-
-  + Generate the translations placeholders for your language `lang_COUNTRY` (e.g. en_US):
-    + `django-admin makemessages -e html,txt,py,svg -l lang_COUNTRY`
-    + `django-admin makemessages -d djangojs -l lang_COUNTRY`
-  + add your translations in msgstr in the django.po and djangojs.po files under locale/`lang_COUNTRY`
-  + Compile the translations:
-    + `django-admin compilemessages`
-  + create a gph/formats/`lang` (e.g. en) folder and copy an existing one (e.g. en to be translated, see https://docs.djangoproject.com/en/4.0/ref/settings/#std:setting-FORMAT_MODULE_PATH). This contains the date/time formats used in django templates (see https://docs.djangoproject.com/en/4.0/ref/templates/builtins/#std:templatefilter-date)
-  + set LANGUAGE_CODE in base/settings.py as `lang-country` (e.g. en-us)
-  + note that the compiled .mo translated files are not in the repo, make sure to make them part of the deploy to your site
-  + see https://docs.djangoproject.com/en/4.0/topics/i18n/ for more info
-  + note that django-admin makemessages doesn't handle escaped characters correctly in python strings, make sure to use the actual unicode character or its html sequence instead of its escaped code value (e.g. `’` instead of `\u2019`)
-  + contact [enigmatix](mailto:gaulois.team@gmail.com) if you need help with localization of your site
-
+  + There is a single base view for all react pages, `react_base()`. If you set a url to serve this view, it will then show whatever react page is set for that given route (see `react/src/main.tsx` for routing). From there, all static content from assets should be able to
 
 # Repository Details
 
 The GPH server is built on Django. We use Ansible to manage deploys to our cloud VMs and nginx as the web server in production, but you're free to use whatever web server setup makes sense for you.
 
-- `db.sqlite3`: This is the database used by Django. An empty one is automatically created if you start the server without it, but for testing many features, you may wish to get one with teams, puzzles, etc. populated.
 - `manage.py`: This is Django's way of administering the server from the command line. It includes help features that will tell you the things it can do. Common commands are `createsuperuser`, `shell`/`dbshell`, `migrate`/`makemigrations`, and `runserver`. There are also custom commands, defined in `puzzles/management/commands`.
 - `README.md`: You're reading me.
 - `requirements.txt`: A file that `pip` can read to install the Python packages needed by the server. If you want to add one, put it in the file. Locally, you'll need to run `pip install -r requirements.txt` to pick it up (inside the virtualenv if you're using one). The production server will pick it up when it next gets deployed.
@@ -202,9 +158,11 @@ The GPH server is built on Django. We use Ansible to manage deploys to our cloud
   - `wsgi.py`: Boilerplate for hooking Django up to a web server in production.
   - `settings/`: Here are a few sets of Django settings depending on environment. Most of the options are built-in to Django, so you can consult the docs. You can also put new things here if they should be global or differ by environment. They'll be accessible anywhere in the Django project.
   - `urls.py`: Routing configuration for the server. If you add a new page in `views.py`, you'll need to add it here as well.
+- `react/`: The base of the react app that can serve various pages for the hunt.
 - `logs/`: Holds logs written by the server while it runs.
 - `static/`: If you run `collectstatic`, which you probably should in production, Django gathers files from `puzzles/static` and puts them here. If you're seeing weird static file caching behavior or files you thought you'd deleted still showing up, try clearing this out.
 - `venv/`: Contains the virtualenv if you're using one, including all the Python packages you installed for this project.
+
 
 ## Puzzles
 
@@ -231,24 +189,6 @@ This directory contains all of the business logic for the site.
   - `puzzle_bodies/`: All templates for individual puzzles. Put any static resources in `static/puzzle_resources/$PUZZLE/`.
   - `solution_bodies/`: All templates for individual solutions. Put any static resources in `templates/solution_bodies/$PUZZLE/`.
 - `templatetags/`: If you want to define a function callable from within a template, put it in `puzzle_tags.py`. This is for stuff like formatting timestamps.
-
-# Deployment
-
-If you are new to web development and deployment, you can check out [DEPLOY.md](DEPLOY.md) for some **work in progress** suggestions on places to deploy this site and instructions on how to deploy them. Otherwise, here is a short list of things you should fix
-
-(The most accurate way is probably just to grep for the string `FIXME`.
-
-**Required:**
-
-- **Set the SECRET_KEY in gph/settings/base.py** to a secure random key. (TODO: what's actually the best way to do this? Should we use an environment variable?) Also probably set up the email credentials and titles.
-- Change all the settings in `puzzles/hunt_config.py`: hunt times, title, organizers, email, etc.
-- Set the domain in `gph/settings/prod.py` and `gph/settings/staging.py` if you're using that.
-
-Optional:
-
-- Configure the paths where logs are stored in `settings/base.py`.
-- Put the text you want in the home page and other static pages via the templates. (See [CONTENT.md](CONTENT.md))
-- `puzzles/messaging.py` contains some configurable settings for Discord webhooks.
 
 # Hunt Administration
 
