@@ -22,7 +22,7 @@ import normalghost from '../../../assets/major_cases/social-deduction/normalghos
 import sleepyghost from '../../../assets/major_cases/social-deduction/sleepyghost.png'
 
 import InternalCharacterRoleTooltip from './CharacterRoleTooltip'
-import { InternalCharacter } from './SocialDeductionEnums'
+import { InternalCharacter } from './constants'
 
 const GHOST_HOVER = 'hover:drop-shadow-[0_15px_15px_rgba(255,255,255,0.2)]'
 

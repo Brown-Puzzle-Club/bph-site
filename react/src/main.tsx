@@ -13,7 +13,7 @@ const router = createBrowserRouter([
   {
     path: "/social-deduction",
     element: <SocialDeduction />
-  }
+  },
   
 ]);
 

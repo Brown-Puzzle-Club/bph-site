@@ -1,5 +1,5 @@
 import CharacterRoleTooltip, { EVIL_TEXT_COLOR, GOOD_TEXT_COLOR, SOLO_TEXT_COLOR } from "./CharacterRoleTooltip";
-import { Role } from "./SocialDeductionEnums";
+import { Role } from "./constants";
 
 export default function Rules() {
   return (

@@ -1,4 +1,4 @@
-import { CHAR_NAME, InternalCharacter, Role } from "./SocialDeductionEnums";
+import { CHAR_NAME, InternalCharacter, Role } from "./constants";
 
 import pfpDaisycula from "../../../assets/major_cases/social-deduction/pfp-daisycula.png";
 import pfpGorgon from "../../../assets/major_cases/social-deduction/pfp-gorgon.png";
@@ -69,10 +69,10 @@ const CharacterRoleColorMap = {
   [Role.SILENCER]: EVIL_ROLE_COLOR,
   [Role.TELEPATH]: GOOD_ROLE_COLOR,
   [Role.VILLAGER]: GOOD_ROLE_COLOR,
-  [Role.ZEALOT]: EVIL_ROLE_COLOR,
+  [Role.ZEALOT]: GOOD_ROLE_COLOR,
 }
 
-export default function CharacterRoleTooltip({char_role, scale}: {char_role: InternalCharacter | Role, scale: boolean})  {
+export default function CharacterRoleTooltip({char_role, scale}: {char_role: InternalCharacter | Role, scale?: boolean})  {
   const tooltipColor = CharacterRoleColorMap[char_role];
   const tooltipAsset = CharacterRoleAssetMap[char_role];
   const name = (char_role in InternalCharacter) ? CHAR_NAME[char_role as InternalCharacter] : char_role;
@@ -84,7 +84,7 @@ export default function CharacterRoleTooltip({char_role, scale}: {char_role: Int
         backgroundColor: tooltipColor,
         width: 'fit-content',
         fontSize: scale ? `2.25vw` : undefined,
-        display: !scale ? `inline-block` : undefined,
+        display: !scale ? `inline-flex  ` : undefined,
       }}
     >
       <b className="block">{name}</b>
@@ -94,8 +94,8 @@ export default function CharacterRoleTooltip({char_role, scale}: {char_role: Int
           alt={`${char_role} profile`}
           className="rounded-full top-0 left-0 br-1 ml-2"
           style={{
-            width: scale ? `3vw` : undefined,
-            height: scale ? `3vw` : undefined,
+            width: scale ? `3vw` : `1.5rem`,
+            height: scale ? `3vw` : `1.5rem`,
           }}
         />
       )}

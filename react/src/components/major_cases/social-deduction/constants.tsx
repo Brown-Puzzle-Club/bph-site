@@ -2,6 +2,8 @@
 
 import { context } from "../../../context";
 
+export const MISS_TEXT = "?????"
+
 function titleCase(s: string): string{
   const words = s.split(" ");
   return words.map(w => w[0].toUpperCase() + w.slice(1).toLowerCase()).join(" ");
@@ -18,7 +20,7 @@ const NUM_TO_SLUG: { [key: number]: string } = {
 }
 
 export function fetchMinorCaseCharacterName(n: number): string {
-  return titleCase(context?.team?.solves?.["social-deduction"]?.[NUM_TO_SLUG[n]]?.["answer"] ?? "?????");
+  return titleCase(context?.team?.solves?.["social-deduction"]?.[NUM_TO_SLUG[n]]?.["answer"] ?? MISS_TEXT)
 }
 
 export function isMinorCaseCharacterSolved(n: number): boolean {
