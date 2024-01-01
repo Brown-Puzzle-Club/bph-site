@@ -104,6 +104,9 @@ urlpatterns = [
     path('puzzle/tic-tac-toe/submit',
          puzzlehandlers.tic_tac_toe_submit,
          name='tic_tac_toe_submit'),
+    path('social-deduction/submit',
+         puzzlehandlers.soc_ded_confirm_submit,
+         name='social_deduction_submit'),
 
     path('story', views.story, name='story'),
     path('victory', views.victory, name='victory'),
@@ -125,6 +128,6 @@ urlpatterns = [
         (JavaScriptCatalog.as_view()), name='javascript-catalog'),
 
     path('react', views.prerelease_locked_react, name='react'),
-    path('route-two', views.prerelease_locked_react, name='react-2'),
+    path('social-deduction', views.prerelease_locked_react, name='social-deduction'),
 ]
   

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { MOCK_CONTEXTS } from "./mock/mockContexts";
 
 const contextSchema = z.object({
   team: z
@@ -11,7 +12,7 @@ const contextSchema = z.object({
       is_prerelease_testsolver: z.boolean(),
       brown_members: z.boolean(), 
       in_person: z.boolean(),
-      solves: z.record(z.record(z.object({ // round -> puzzle -> solve info
+      solves: z.record(z.record(z.object({
         puzzle: z.string(),
         solve_time: z.string().transform((x) => new Date(x)),
         answer: z.string(),
@@ -51,8 +52,23 @@ const contextSchema = z.object({
   num_metas: z.number().int(),
 });
 
-// @ts-expect-error djangoContext is defined in the template html
-console.log("djangoContext", djangoContext);
+type DjangoContext = z.infer<typeof contextSchema>;
 
-// @ts-expect-error djangoContext is defined in the template html
-export const context = contextSchema.parse(JSON.parse(djangoContext));
+function mockContext() {
+  const currentUrl = window.location.href;
+  // part of endpoint past brownpuzzlehunt.com/
+  const path = currentUrl.split("/").slice(3).join("/");
+
+  return (path in MOCK_CONTEXTS) ? contextSchema.parse(MOCK_CONTEXTS[path]) : null;
+}
+
+// contextSchema type or empty record
+let context: DjangoContext | null;
+try {
+  // @ts-expect-error djangoContext is defined in the template html
+  context = contextSchema.parse(JSON.parse(djangoContext));
+} catch (error) {
+  context = mockContext();
+}
+
+export { context };
