@@ -2,6 +2,7 @@
 
 import { ReactNode } from 'react';
 import { SelectedPanel } from '../../../routes/major_cases/SocialDeduction';
+import { NUM_CASES_SOLVED } from './constants';
 
 const TopbarSelector = ({children, setPanel}: {children: ReactNode, setPanel: (panel: SelectedPanel) => void}) => {
   return (
@@ -14,6 +15,7 @@ const TopbarSelector = ({children, setPanel}: {children: ReactNode, setPanel: (p
           <button className='w-full md:w-auto' onClick={() => setPanel(SelectedPanel.RULES)}>RULES</button>
           <button className='w-full md:w-auto' onClick={() => setPanel(SelectedPanel.ROLES)}>ROLES</button>
           <button className='w-full md:w-auto' onClick={() => setPanel(SelectedPanel.CHRONOLOGY)}>CHRONOLOGY</button>
+          {NUM_CASES_SOLVED > 3 ? <button className='w-full md:w-auto' onClick={() => setPanel(SelectedPanel.VERDICT)}>VERDICT</button> : <></>}
         </div>
         {children}
       </div>

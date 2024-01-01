@@ -529,17 +529,18 @@ class Team(models.Model):
         }
     
     def solves_by_round(self):
-        return {
-            submission.puzzle.round.slug: {
-                submission.puzzle.slug: {
-                    'puzzle': submission.puzzle.name,
-                    'solve_time': submission.submitted_datetime,
-                    'answer': submission.submitted_answer,
+        out = {}
+
+        for submit in self.submissions:
+            if submit.puzzle.round.slug not in out:
+                out[submit.puzzle.round.slug] = {}
+            if submit.puzzle.slug not in out[submit.puzzle.round.slug]:
+                out[submit.puzzle.round.slug][submit.puzzle.slug] = {
+                    'puzzle': submit.puzzle.name,
+                    'solve_time': submit.submitted_datetime,
+                    'answer': submit.submitted_answer,
                 }
-            }
-            for submission in self.submissions
-            if submission.is_correct
-        }
+        return out
 
     def db_unlocks(self):
         return {

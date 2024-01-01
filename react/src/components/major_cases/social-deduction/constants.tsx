@@ -28,6 +28,15 @@ export function isMinorCaseCharacterSolved(n: number): boolean {
   return solves !== undefined && "social-deduction" in solves && NUM_TO_SLUG[n] in solves["social-deduction"]
 }
 
+function numberOfCasesSolves(): number {
+  const solves = context?.team?.solves;
+  if (solves === undefined || !("social-deduction" in solves)) {
+    return 0;
+  }
+  return Object.keys(solves["social-deduction"]).length;
+}
+export const NUM_CASES_SOLVED: number = numberOfCasesSolves();
+
 export enum InternalCharacter {
   NONE = "NONE",
   INVISIGUY = "INVISIGUY",

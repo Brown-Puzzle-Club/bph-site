@@ -60,7 +60,7 @@ def error_ratelimit(handler, rate, error, check_response=None, encode_response=N
     @require_POST
     @wraps(handler)
     def rate_limiter(request):
-        ## QUICK FIX FOR NOW..
+        ## TODO: add actual rate limiting.
         response = handler(request)
         if encode_response is not None:
             response = encode_response(response)
@@ -91,6 +91,8 @@ space_piracy_submit = error_ratelimit(space_piracy.submit, '20/m', {'error': 'Pl
 from . import reptiles
 reptiles_submit = error_ratelimit(reptiles.submit, '20/m', {'error': 'Please limit your attempts to twenty per minute.'}, lambda response: response['correct'], json.dumps)
 
+from . import soc_ded_confirm
+soc_ded_confirm_submit = error_ratelimit(soc_ded_confirm.submit, '20/m', {'error': 'Please limit your attempts to twenty per minute.'}, lambda response: response['correct'], json.dumps)
 
 from . import tic_tac_toe
 tic_tac_toe_submit = error_ratelimit(tic_tac_toe.submit, '20/m', {'error': 'Please limit your attempts to twenty per minute.'}, lambda response: response['correct'], json.dumps)
