@@ -1,5 +1,5 @@
-import CharacterRoleTooltip, { EVIL_TEXT_COLOR, GOOD_TEXT_COLOR, SOLO_TEXT_COLOR } from "./CharacterRoleTooltip";
-import { Role } from "./constants";
+import { EVIL_TEXT_COLOR, GOOD_TEXT_COLOR, Role, SOLO_TEXT_COLOR } from "../../../utils/major_cases/social-deduction/constants";
+import CharacterRoleTooltip from "./CharacterRoleTooltip";
 
 function TextBreak () {
   return (

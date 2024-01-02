@@ -1,14 +1,27 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { BeatLoader } from 'react-spinners';
+import { InternalCharacter, Role } from '../../../utils/major_cases/social-deduction/constants';
 import CharacterRoleTooltip from './CharacterRoleTooltip';
-import { InternalCharacter, Role } from './constants';
 
 export default function Verdict() {
   const [output, setOutput] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [assignments, setAssignments] = useState({});
-  // console.log(assignments)
+
+  // Load assignments from localStorage on component mount
+  useEffect(() => {
+    const cachedAssignments = localStorage.getItem('assignments');
+    const parsed = JSON.parse(cachedAssignments || '{}')
+    if (Object.keys(parsed).length !== 0) {
+      setAssignments(parsed);
+    }
+  }, []);
+
+  // Save assignments to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('assignments', JSON.stringify(assignments));
+  }, [assignments]);
 
   const handleAssignRole = (character: InternalCharacter, role: Role) => {
     setAssignments((prevAssignments) => ({
@@ -52,7 +65,6 @@ export default function Verdict() {
         setOutput(`Error: ${result.status} ${result.statusText}`);
       } else {
         const res = await result.json();
-        console.log(res)
         setOutput(res['content']);
       }
     } catch (e) {
@@ -119,9 +131,9 @@ export default function Verdict() {
     });
     return (
       <div ref={drop} className="verdict roles space-x-2 text-xl bg-[#26222252] rounded-md border-2 border-[#5c51514d] p-3">
-          {Object.values(Role).map((role) => {
+          {Object.values(Role).map((role, i) => {
             return (
-                <RoleDraggable role={role} />
+                <RoleDraggable role={role} key={"roledrag-" + i}/>
             )}
           )}
         </div>
@@ -132,13 +144,13 @@ export default function Verdict() {
   return (
       <div className="roles content p-10">
         <div className="verdict characters text-lg">
-          {Object.values(InternalCharacter).map((character) => {
-            if (character === InternalCharacter.NONE) return <></>;
+          {Object.values(InternalCharacter).map((character, i) => {
+            if (character === InternalCharacter.NONE) return <div key={"verdict-" + i}></div>;
             return (
-              <div className={"text-xl py-1 flex items-center space-x-1 character " + character}>
+              <div className={"text-xl py-1 flex items-center space-x-1 character " + character} key={"verdict-" + i}>
                 <CharacterRoleTooltip char_role={character}/>
                 <p>was the</p>
-                <RoleDropTarget character={character} />
+                <RoleDropTarget character={character}/>
                 <br/>
               </div>
             )}
@@ -149,10 +161,10 @@ export default function Verdict() {
       <br></br>
       
       <div className="flex justify-center space-x-2 px-10">
-        <button onClick={submit} disabled={isSubmitting}>
+        <button onClick={() => submit()} disabled={isSubmitting}>
           Submit
         </button>
-        <button onClick={handleResetAssignments}>
+        <button onClick={() => handleResetAssignments()}>
           Reset
         </button>
       </div>

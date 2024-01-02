@@ -1,5 +1,5 @@
+import { CHAR_NAME, InternalCharacter, MISS_TEXT, Role } from "../../../utils/major_cases/social-deduction/constants";
 import CharacterRoleTooltip from "./CharacterRoleTooltip";
-import { CHAR_NAME, InternalCharacter, MISS_TEXT, Role } from "./constants";
 
 
 function collectObscured(roles: [InternalCharacter, string][], combineMisses: boolean): JSX.Element {

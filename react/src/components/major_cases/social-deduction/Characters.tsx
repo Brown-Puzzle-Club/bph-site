@@ -21,8 +21,8 @@ import heartghost from '../../../assets/major_cases/social-deduction/heartghost.
 import normalghost from '../../../assets/major_cases/social-deduction/normalghost.png'
 import sleepyghost from '../../../assets/major_cases/social-deduction/sleepyghost.png'
 
+import { InternalCharacter } from '../../../utils/major_cases/social-deduction/constants'
 import InternalCharacterRoleTooltip from './CharacterRoleTooltip'
-import { InternalCharacter } from './constants'
 
 const GHOST_HOVER = 'hover:drop-shadow-[0_15px_15px_rgba(255,255,255,0.2)]'
 
