@@ -51,11 +51,11 @@ const CharacterRoleColorMap = {
   [InternalCharacter.GORGON]: "#97d0ae36",
   [InternalCharacter.GREEN_RIBBON]: "#c4c05645",
   [InternalCharacter.WOLF_GUY]: "#a5592a61",
-  [InternalCharacter.ANXIOUS_GHOST]: "#2c282887",
-  [InternalCharacter.HAPPY_GHOST]: "#2c282887",
-  [InternalCharacter.HEART_GHOST]: "#2c282887",
-  [InternalCharacter.NORMAL_GHOST]: "#2c282887",
-  [InternalCharacter.SLEEPY_GHOST]: "#2c282887",
+  [InternalCharacter.ANXIOUS_GHOST]: "#1e1b1b5e",
+  [InternalCharacter.HAPPY_GHOST]: "#1e1b1b5e",
+  [InternalCharacter.HEART_GHOST]: "#1e1b1b5e",
+  [InternalCharacter.NORMAL_GHOST]: "#1e1b1b5e",
+  [InternalCharacter.SLEEPY_GHOST]: "#1e1b1b5e",
   [Role.ASSASSIN]: EVIL_ROLE_COLOR,
   [Role.BODYGUARD]: GOOD_ROLE_COLOR,
   [Role.DOCTOR]: GOOD_ROLE_COLOR,
@@ -72,14 +72,14 @@ const CharacterRoleColorMap = {
   [Role.ZEALOT]: GOOD_ROLE_COLOR,
 }
 
-export default function CharacterRoleTooltip({char_role, scale}: {char_role: InternalCharacter | Role, scale?: boolean})  {
+export default function CharacterRoleTooltip({char_role, scale, extraClasses}: {char_role: InternalCharacter | Role, scale?: boolean, extraClasses?: string})  {
   const tooltipColor = CharacterRoleColorMap[char_role];
   const tooltipAsset = CharacterRoleAssetMap[char_role];
   const name = (char_role in InternalCharacter) ? CHAR_NAME[char_role as InternalCharacter] : char_role;
 
   return (
     <div
-      className={`flex items-center px-2 py-0.5 my-0.5 rounded-xl`}
+      className={`flex items-center px-2 py-0.5 my-0.5 rounded-xl ${extraClasses}`}
       style={{
         backgroundColor: tooltipColor,
         width: 'fit-content',

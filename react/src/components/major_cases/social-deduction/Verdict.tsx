@@ -88,7 +88,7 @@ export default function Verdict() {
     return (
       (assigned_character && !assigned) ? <></> :
       <div ref={roleRef} className="draggable-role inline-flex cursor-grab">
-        <CharacterRoleTooltip char_role={role} />
+        <CharacterRoleTooltip char_role={role} extraClasses={assigned ? 'border-2 border-[#b8a38738]' : ''}/>
       </div>
     );
   };
@@ -105,34 +105,47 @@ export default function Verdict() {
     <div ref={drop} className="role-drop-target inline-flex items-center ml-1">
       {" "}{
       character in assignments ? <RoleDraggable role={assignments[character as keyof typeof assignments]} assigned={true} /> 
-      : <div className="empty-slot bg-[#67676a45] rounded-xl w-30 h-6 px-10">...</div>}
+      : <div className="empty-slot bg-[#67676a2b] rounded-xl w-30 h-7 px-10 border-2 border-[#595454]"></div>}
     </div>
     );
   };
 
+  const RoleBox = () => {
+    const [, drop] = useDrop({
+      accept: "role",
+      drop: (item : { role: Role }) => {
+        handleRemoveAssignment(item.role)
+      },
+    });
+    return (
+      <div ref={drop} className="verdict roles space-x-2 text-xl bg-[#26222252] rounded-md border-2 border-[#5c51514d] p-3">
+          {Object.values(Role).map((role) => {
+            return (
+                <RoleDraggable role={role} />
+            )}
+          )}
+        </div>
+    )
+  }
+
+
   return (
       <div className="roles content p-10">
-        <div className="verdict characters">
+        <div className="verdict characters text-lg">
           {Object.values(InternalCharacter).map((character) => {
             if (character === InternalCharacter.NONE) return <></>;
             return (
-              <div className={"character " + character}>
+              <div className={"text-xl py-1 flex items-center space-x-1 character " + character}>
                 <CharacterRoleTooltip char_role={character}/>
-                {" "}was the 
+                <p>was the</p>
                 <RoleDropTarget character={character} />
                 <br/>
               </div>
             )}
           )}
         </div>
-        <br></br><br></br>
-        <div className="verdict roles space-x-2">
-          {Object.values(Role).map((role) => {
-            return (
-                <RoleDraggable role={role} />
-            )}
-          )}
-      </div>
+        <div className="text-break h-1 w-50 bg-[#80808024] mx-auto mb-8 mt-5 rounded-md"></div>
+        <RoleBox />
       <br></br>
       
       <div className="flex justify-center space-x-2 px-10">

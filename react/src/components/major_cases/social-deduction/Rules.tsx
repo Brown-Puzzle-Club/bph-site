@@ -1,16 +1,30 @@
+import { GiBatwingEmblem } from "react-icons/gi";
 import CharacterRoleTooltip, { EVIL_TEXT_COLOR, GOOD_TEXT_COLOR, SOLO_TEXT_COLOR } from "./CharacterRoleTooltip";
 import { Role } from "./constants";
 
 export default function Rules() {
   return (
-    <div className="rules content p-10">
-      <ul className="space-y-1 list-disc list-inside">
+    <div className="rules content px-20 pb-10">
+      <div className="flavor-card bg-[#bcb193] rounded-sm m-6 border-2 border-[#00000054] text-slate-950 flex flex-col items-center">
+        <GiBatwingEmblem className="mt-4"/>
+        <p className="p-5 text-center font-serif">
+          You are cordially invited to witness the game of a lifetime (or the end of many).<br/>
+          Hotel Ghoulsby is hosting the 10th annual Assassin's Tournament whereby 10 lucky players will take on their chosen roles in a game of intrigue, lies, and horribly difficult deductions. It's the last night of the game and you must determine which guest is masquerading as which role in order to help the village win.<br/>
+          Be there or be scared.<br/>
+          <br/><br/>
+          B.Y.O.M.<br/>
+          (Bring your own moonshine)
+        </p>
+      </div>
+      <div className="text-break h-1 w-50 bg-[#80808024] mx-auto mb-5 mt-5 rounded-md"></div>
+      <p className="font-bold pb-3 text-3xl">The Rules</p>
+      <ul className="space-y-3 list-disc list-outside">
         <li>This game consists of multiple rounds, each with two phases: a night phase and a day phase.</li>
         <li>Night Phase 1 is a set-up round. Each player will be assigned a role in secret and no roles will be duplicated, though some roles will remain unused. During night 1, every player except the <CharacterRoleTooltip char_role={Role.ASSASSIN} scale={false}/> will be able to perform their role-designated action if they have one. No one will be killed by the <CharacterRoleTooltip char_role={Role.ASSASSIN} scale={false}/> on the first night.</li>
         <li>Every role belongs to one of three designations: <b style={{color: GOOD_TEXT_COLOR}}>Village</b>, <b style={{color: EVIL_TEXT_COLOR}}>Evil</b>, and <b style={{color: SOLO_TEXT_COLOR}}>Solo</b>. All <b style={{color: GOOD_TEXT_COLOR}}>Village</b> players are trying to work together to identify the <CharacterRoleTooltip char_role={Role.ASSASSIN} scale={false}/> and exile them by voting. The <b style={{color: EVIL_TEXT_COLOR}}>Evil</b> players are trying to kill all the <b style={{color: GOOD_TEXT_COLOR}}>Village</b> and <b style={{color: SOLO_TEXT_COLOR}}>Solo</b> players. Any <b style={{color: SOLO_TEXT_COLOR}}>Solo</b> player is on their own team (<b style={{color: SOLO_TEXT_COLOR}}>Solo</b> players do not work together) and has a separate win condition.</li>
         <li >The <CharacterRoleTooltip char_role={Role.ASSASSIN} scale={false}/> must be a part of every game.</li>
         <li>During the night phase, if a player has a nighttime ability, they will perform that action in the following order
-          <ul className="list-[circle] list-inside ps-10">
+          <ul className="list-[circle] list-outside ps-10 space-y-1">
             <li><CharacterRoleTooltip char_role={Role.SILENCER} scale={false}/>, <CharacterRoleTooltip char_role={Role.ENCHANTER} scale={false}/>, <CharacterRoleTooltip char_role={Role.ASSASSIN} scale={false}/>  (evil team)</li>
             <li><CharacterRoleTooltip char_role={Role.LOVER} scale={false}/></li>
             <li><CharacterRoleTooltip char_role={Role.BODYGUARD} scale={false}/></li>
