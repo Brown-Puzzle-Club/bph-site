@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+{% load i18n %}
+<!-- {% load puzzle_tags %} -->
+
+{% block page-title %}
+<title>Main Page</title>
+{% endblock %}
+
+{% block top-left-actions %}
+<!-- <a href="{% url 'puzzles' %}" class="btn">{% translate "All puzzles" %}</a> -->
+{% endblock %}
+
+{% block content %}
+
+<!-- {% block round-title-override %}
+{% endblock %}
+
+{% block round-body %} -->
+<!-- <p style="text-align: center">{% translate "Main Page" %}</p> -->
+
+<style>
+    .column {
+      flex:20%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .row {
+      display: flex;
+      justify-content: center;
+      padding: 5px;
+    }
+    
+    .users {
+      flex:20%;
+      display: flex;
+      height: 6vh;
+      border: 2px solid black;
+      background-color: white;
+      border-radius: 10px;
+      align-items: center;
+
+    }
+
+    .bruno-input {
+      flex:33%;
+      height: 6vh;
+      border: 3px solid lightgrey;
+      background-color: lightgrey;
+      border-radius: 10px;
+    }
+    
+    .table {
+      display: flex;
+      margin: auto;
+      width: 60%;
+      height: 30vh;
+      border: 3px solid gray;
+      padding: 10px;
+      background-color: gray;
+    }
+
+    .incoming-files {
+      display: flex;
+      margin: auto;
+      width: 50%;
+      height: 12vh;
+      border: 3px solid black;
+      border-radius: 15px;
+      padding: 10px;
+    }
+  
+    .minor-files {
+        border: 3px solid gray;
+        margin-top: 20%;
+        height: 12vh;
+    }
+  
+    ul {
+      font-family: 'Monteserrat';
+      margin-bottom: 0rem;
+    }
+  
+    li {
+      font-size: 15px;
+      margin-bottom: 0px;
+      margin-top: 0px;
+    }
+
+    .case-box-container {
+      width: 50%;
+      display: flex;
+      flex-direction: row; /* Arrange case boxes side by side */
+      justify-content: space-between; /* Distribute space between case boxes */
+      margin: 10px; /* Add some spacing around the case boxes */
+      border: solid black;
+      border-radius: 10px;
+      padding: 12px;
+    }
+    
+    .case-box {
+      flex: 20%; /* Adjust the flex values to control the width of each case box */
+      border: 2px solid black; /* Define your desired style for the case box */
+      padding: 10px; /* Add padding to the case box content */
+      border-radius: 10px;
+      background-color: lightyellow; /* Define your desired background color */
+      margin-left: 2%;
+      margin-right: 2%;
+      height: 10vh;
+    }
+    
+    .new-cases {
+      flex: 20%; /* Adjust the flex values to control the width of each case box */
+      border: 2px solid black; /* Define your desired style for the case box */
+      padding: 10px; /* Add padding to the case box content */
+      background-color: lightyellow; /* Define your desired background color */
+      height: 10vh;
+    }
+
+    .closed-cases {
+      flex: 20%; /* Adjust the flex values to control the width of each case box */
+      border: 2px solid black; /* Define your desired style for the case box */
+      padding: 10px; /* Add padding to the case box content */
+      background-color: lightyellow; /* Define your desired background color */
+      height: 10vh;
+    }
+
+    .user-circle {
+      width: 5vh;
+      height: 5vh;
+      background-color: lightblue;
+      border-radius: 50%; /* Make it a circle */
+      margin-right: 3%; /* Add some spacing between user circles */
+      margin-left: 3%;
+      text-align: center;
+    }
+</style>
+
+
+<h1>Main Page</h1>
+<main>
+    <div class="row" style="height: 12vh;">
+        <div class = "bruno-input"></div>
+        <div class = "column"></div>
+        <div class="users">
+            {% for user in usernames %}
+                <div class="user-circle">
+                    <p>{{ user }}</p>
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="column">
+            <div class="incoming-files">
+                <div class="closed-cases">
+                    <p>closed cases</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="table"></div>
+        
+        <div class="column">
+            <div class="incoming-files">
+                <div class="new-cases">
+                    <p>new cases</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class = "row">
+        <div class="case-box-container">
+            {% for case in opencases %}
+                <div class="case-box">
+                    <p>minor case {{ case }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    
+</main>
+{% endblock %}
+
+
+{% endblock %}
