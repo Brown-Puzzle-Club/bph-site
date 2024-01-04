@@ -3,11 +3,14 @@ from django.urls import reverse
 from django import forms
 
 from puzzles.models import (
+    MajorCase,
     Round,
     Puzzle,
     Team,
     TeamMember,
     PuzzleUnlock,
+    MinorCaseActive,
+    MinorCaseIncoming,
     AnswerSubmission,
     ExtraGuessGrant,
     PuzzleMessage,
@@ -16,12 +19,20 @@ from puzzles.models import (
     Hint,
 )
 
+class MajorCaseAdmin(admin.ModelAdmin):
+    def view_on_site(self, obj):
+        return reverse('major_case', args=(obj.slug,))
+
+    ordering = ('order',)
+    list_display = ('name', 'slug', 'order')
+
 class RoundAdmin(admin.ModelAdmin):
     def view_on_site(self, obj):
         return reverse('round', args=(obj.slug,))
 
     ordering = ('order',)
-    list_display = ('name', 'slug', 'order')
+    
+    list_display = ('name', 'slug', 'major_case', 'meta_answer', 'order')
 
 class PuzzleMessageInline(admin.TabularInline):
     model = PuzzleMessage
@@ -64,6 +75,14 @@ class PuzzleUnlockAdmin(admin.ModelAdmin):
     list_display = ('team', 'puzzle', 'unlock_datetime')
     list_filter = ('puzzle', 'puzzle__round', 'team')
 
+class MinorCaseIncomingAdmin(admin.ModelAdmin):
+    list_display = ('team', 'minor_case_round', 'incoming_datetime')
+    list_filter = ('minor_case_round', 'minor_case_round__major_case', 'team')
+
+class MinorCaseActiveAdmin(admin.ModelAdmin):
+    list_display = ('team', 'minor_case_round', 'active_datetime')
+    list_filter = ('minor_case_round', 'minor_case_round__major_case', 'team')
+
 class AnswerSubmissionAdmin(admin.ModelAdmin):
     list_display = ('team', 'puzzle', 'submitted_answer', 'submitted_datetime', 'is_correct', 'used_free_answer')
     list_filter = ('is_correct', 'used_free_answer', 'puzzle', 'puzzle__round', 'team')
@@ -91,11 +110,14 @@ class HintAdmin(admin.ModelAdmin):
     list_filter = ('status', 'puzzle', 'puzzle__round', 'team', 'claimer')
     search_fields = ('hint_question', 'response')
 
+admin.site.register(MajorCase, MajorCaseAdmin)
 admin.site.register(Round, RoundAdmin)
 admin.site.register(Puzzle, PuzzleAdmin)
 admin.site.register(Team, TeamAdmin)
 admin.site.register(TeamMember, TeamMemberAdmin)
 admin.site.register(PuzzleUnlock, PuzzleUnlockAdmin)
+admin.site.register(MinorCaseIncoming, MinorCaseIncomingAdmin)
+admin.site.register(MinorCaseActive, MinorCaseActiveAdmin)
 admin.site.register(AnswerSubmission, AnswerSubmissionAdmin)
 admin.site.register(ExtraGuessGrant, ExtraGuessGrantAdmin)
 admin.site.register(Erratum, ErratumAdmin)

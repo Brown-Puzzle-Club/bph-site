@@ -9,16 +9,18 @@ export const MOCK_CONTEXTS: Record<string, unknown> = {
       is_prerelease_testsolver: false,
       brown_members: true,
       in_person: false,
-      solves: { // THE ONLY IMPORTANT PART BEING MOCKED...
+      solves: {},
+      minor_case_solves: { // THE ONLY IMPORTANT PART BEING MOCKED...
         "social-deduction": {
-          "slug1" : {"answer": "Gourd Wilson", puzzle: "socded1", solve_time: "2021-04-10T16:00:00.000Z"},
-          "slug2" : {"answer": "MR. EWING KILLSPRINGER", puzzle: "socded2", solve_time: "2021-04-10T16:00:00.000Z"},
-          "slug3" : {"answer": "Nick Blocktheway", puzzle: "socded3", solve_time: "2021-04-10T16:00:00.000Z"},
-          "slug4" : {"answer": "Transparent J. Eckleburg", puzzle: "socded4", solve_time: "2021-04-10T16:00:00.000Z"},
-          "slug5" : {"answer": "Tom Boouchanan", puzzle: "socded5", solve_time: "2021-04-10T16:00:00.000Z"}
+          "sd-mc-1" : {"answer": "Gourd Wilson", minor_case: "socded1", solve_time: "2021-04-10T16:00:00.000Z"},
+          "sd-mc-2" : {"answer": "MR. EWING KILLSPRINGER", minor_case: "socded2", solve_time: "2021-04-10T16:00:00.000Z"},
+          "sd-mc-3" : {"answer": "Nick Blocktheway", minor_case: "socded3", solve_time: "2021-04-10T16:00:00.000Z"},
+          "sd-mc-4" : {"answer": "Transparent J. Eckleburg", minor_case: "socded4", solve_time: "2021-04-10T16:00:00.000Z"},
+          "sd-mc-5" : {"answer": "Tom Boouchanan", minor_case: "socded5", solve_time: "2021-04-10T16:00:00.000Z"}
         }
-      }
-
+      },
+      minor_case_incoming: {},
+      minor_case_active: {},
     },
     unlocks: {},
     rounds: {

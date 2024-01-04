@@ -12,11 +12,28 @@ const contextSchema = z.object({
       is_prerelease_testsolver: z.boolean(),
       brown_members: z.boolean(), 
       in_person: z.boolean(),
-      solves: z.record(z.record(z.object({
+      solves: z.record(z.record(z.record(z.object({ // major-case -> minor-case -> solve
         puzzle: z.string(),
         solve_time: z.string().transform((x) => new Date(x)),
         answer: z.string(),
-      })))
+      })))),
+      minor_case_solves: z.record(z.record(z.object({
+        minor_case: z.string(),
+        solve_time: z.string().transform((x) => new Date(x)),
+        answer: z.string(),
+      }))),
+      minor_case_incoming: z.record(z.object({
+        name: z.string(),
+        description: z.string(),
+        major_case_name: z.string(),
+        major_case_slug: z.string(),
+      })),
+      minor_case_active: z.record(z.object({
+        name: z.string(),
+        description: z.string(),
+        major_case_name: z.string(),
+        major_case_slug: z.string(),
+      })),
     })
     .optional(),
   unlocks: z.record(z.object({

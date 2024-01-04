@@ -1,7 +1,7 @@
 
 
 import { context } from "../../../context";
-
+// console.log(context)
 import pfpDaisycula from "../../../assets/major_cases/social-deduction/pfp-daisycula.png";
 import pfpGorgon from "../../../assets/major_cases/social-deduction/pfp-gorgon.png";
 import pfpGreenribbon from "../../../assets/major_cases/social-deduction/pfp-greenribbon.png";
@@ -18,24 +18,24 @@ function titleCase(s: string): string{
 // TODO: update with actual puzzle slugs
 // puzzle slugs are techincally safe for anyone to see, but we should still keep them secret
 const NUM_TO_SLUG: { [key: number]: string } = {
-  0: "slug1",
-  1: "slug2",
-  2: "slug3",
-  3: "slug4",
-  4: "slug5"
+  0: "sd-mc-1",
+  1: "sd-mc-2",
+  2: "sd-mc-3",
+  3: "sd-mc-4",
+  4: "sd-mc-5"
 }
 
 export function fetchMinorCaseCharacterName(n: number): string {
-  return titleCase(context?.team?.solves?.["social-deduction"]?.[NUM_TO_SLUG[n]]?.["answer"] ?? MISS_TEXT)
+  return titleCase(context?.team?.minor_case_solves?.["social-deduction"]?.[NUM_TO_SLUG[n]]?.["answer"] ?? MISS_TEXT)
 }
 
 export function isMinorCaseCharacterSolved(n: number): boolean {
-  const solves = context?.team?.solves;
+  const solves = context?.team?.minor_case_solves;
   return solves !== undefined && "social-deduction" in solves && NUM_TO_SLUG[n] in solves["social-deduction"]
 }
 
 function numberOfCasesSolves(): number {
-  const solves = context?.team?.solves;
+  const solves = context?.team?.minor_case_solves;
   if (solves === undefined || !("social-deduction" in solves)) {
     return 0;
   }

@@ -12,12 +12,26 @@ def process_team(context):
     team["brown_members"] = context.team.brown_members
     team["in_person"] = context.team.in_person
 
-    team["solves"] = process_solves(context)
+    team["solves"] = context.team.solves_by_case
+    team["minor_case_solves"] = context.team.minor_case_solves
+    
+    team["minor_case_incoming"] = process_incoming_active(context.team.db_minor_case_incoming)
+    team["minor_case_active"] = process_incoming_active(context.team.db_minor_case_active)
 
     # ADD MORE FIELDS HERE IF NEEDED, SEE TEAM MODEL FOR REFERENCE
     # ... you would also need to add them to context.ts in the frontend
     return team
 
+def process_incoming_active(incoming_actives):
+  return {
+    inc_act.minor_case_round.slug: {
+      "name": inc_act.minor_case_round.name,
+      "description" : inc_act.minor_case_round.description,
+      "major_case_name" : inc_act.minor_case_round.major_case.name,
+      "major_case_slug" : inc_act.minor_case_round.major_case.slug,
+    }
+    for inc_act in incoming_actives.values()
+  } 
 
 def process_unlocks(context):
     unlocks = {}
@@ -40,9 +54,6 @@ def process_rounds(request, context, rounds_raw):
         }
     return rounds
 
-def process_solves(context):
-    return context.team.solves_by_round
-
 def process_context(request, rounds):
     context = request.context
 
@@ -60,5 +71,4 @@ def process_context(request, rounds):
             react_context[name] = value(context)
         if name == "__dict__":  # do not get anything past BaseContext
             break
-
     return react_context
