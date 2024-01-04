@@ -49,6 +49,17 @@ from puzzles.hunt_config import (
     META_SLUGS
 )
 
+class MajorCase(models.Model):
+    name = models.CharField(max_length=255, verbose_name=_('Name'))
+    slug = models.SlugField(max_length=255, unique=True, verbose_name=_('Slug'))
+    order = models.IntegerField(default=0, verbose_name=_('Order'))
+
+    class Meta:
+        verbose_name = _('major case')
+        verbose_name_plural = _('major cases')
+
+    def __str__(self):
+        return self.name
 
 class Round(models.Model):
     name = models.CharField(max_length=255, verbose_name=_('Name'))
@@ -58,9 +69,20 @@ class Round(models.Model):
         null=True, blank=True, on_delete=models.SET_NULL, verbose_name=_('meta'))
     order = models.IntegerField(default=0, verbose_name=_('Order'))
 
+    major_case = models.ForeignKey(MajorCase, on_delete=models.CASCADE, verbose_name=_('major case'), blank=True, null=True)
+    description = models.TextField(default="", blank=True, verbose_name=_('Description'))
+
+    unlock_global_minor = models.IntegerField(default=-1, verbose_name=_('Unlock global minor'),
+        help_text=_('If nonnegative, round unlocks after N solves in any major case.'))
+    unlock_local_major = models.IntegerField(default=-1, verbose_name=_('Unlock local minor'),
+        help_text=_('If nonnegative, round unlocks after N solves in this major case.'))
+
     class Meta:
-        verbose_name = _('round')
-        verbose_name_plural = _('rounds')
+        verbose_name = _('round (minor case)')
+        verbose_name_plural = _('rounds (minor cases)')
+
+    def meta_answer(self):
+        return self.meta.answer if self.meta else None
 
     def __str__(self):
         return self.name
@@ -528,19 +550,53 @@ class Team(models.Model):
             if submission.is_correct
         }
     
-    def solves_by_round(self):
+    def solves_by_case(self):
         out = {}
-
+        # major_case : minor_case : puzzle : {puzzle, solve_time, answer}
+        # DOES NOT INCLUDE EVENT PUZZLES, RUNAROUND.
         for submit in self.submissions:
-            if submit.puzzle.round.slug not in out:
-                out[submit.puzzle.round.slug] = {}
-            if submit.puzzle.slug not in out[submit.puzzle.round.slug]:
-                out[submit.puzzle.round.slug][submit.puzzle.slug] = {
+            if not submit.puzzle.round.major_case:
+                continue
+            if submit.puzzle.round.major_case.slug not in out:
+                out[submit.puzzle.round.major_case.slug] = {}
+            if submit.puzzle.round.slug not in out[submit.puzzle.round.major_case.slug]:
+                out[submit.puzzle.round.major_case.slug][submit.puzzle.round.slug] = {}
+            if submit.puzzle.slug not in out[submit.puzzle.round.major_case.slug][submit.puzzle.round.slug]:
+                out[submit.puzzle.round.major_case.slug][submit.puzzle.round.slug][submit.puzzle.slug] = {
                     'puzzle': submit.puzzle.name,
                     'solve_time': submit.submitted_datetime,
                     'answer': submit.submitted_answer,
                 }
         return out
+    
+    def minor_case_solves(self):
+        out = {}
+        for submit in self.submissions:
+            if not submit.puzzle.round.major_case:
+                continue
+            if submit.puzzle.round.major_case.slug not in out:
+                out[submit.puzzle.round.major_case.slug] = {}
+            if submit.puzzle.slug == submit.puzzle.round.meta.slug:
+                out[submit.puzzle.round.major_case.slug][submit.puzzle.round.slug] = {
+                    'minor_case': submit.puzzle.round.name,
+                    'solve_time': submit.submitted_datetime,
+                    'answer': submit.submitted_answer,
+                }
+        return out
+    
+    def db_minor_case_incoming(self):
+        return {
+            incoming.minor_case_round_id: incoming
+            for incoming in self.minorcaseincoming_set
+            .select_related('minor_case_round')
+        }
+    
+    def db_minor_case_active(self):
+        return {
+            active.minor_case_round_id: active
+            for active in self.minorcaseactive_set
+            .select_related('minor_case_round')
+        }
 
     def db_unlocks(self):
         return {
@@ -667,6 +723,43 @@ class PuzzleUnlock(models.Model):
         verbose_name = _('puzzle unlock')
         verbose_name_plural = _('puzzle unlocks')
 
+
+class MinorCaseIncoming(models.Model):
+    '''Represents a team having a minor case incoming.'''
+
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_('team'))
+    minor_case_round = models.ForeignKey(Round, on_delete=models.CASCADE, verbose_name=_('minor case round'))
+
+    incoming_datetime = models.DateTimeField(verbose_name=_('Incoming datetime'))
+
+    def __str__(self):
+        return '%s -> %s @ %s' % (
+            self.team, self.minor_case_round, self.incoming_datetime
+        )
+
+    class Meta:
+        unique_together = ('team', 'minor_case_round')
+        verbose_name = _('minor case incoming')
+        verbose_name_plural = _('minor cases incoming')
+
+
+class MinorCaseActive(models.Model):
+    '''Represents a team having a minor case active.'''
+
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_('team'))
+    minor_case_round = models.ForeignKey(Round, on_delete=models.CASCADE, verbose_name=_('minor case round'))
+
+    active_datetime = models.DateTimeField(verbose_name=_('Active datetime'))
+
+    def __str__(self):
+        return '%s -> %s @ %s' % (
+            self.team, self.minor_case_round, self.active_datetime
+        )
+
+    class Meta:
+        unique_together = ('team', 'minor_case_round')
+        verbose_name = _('minor case active')
+        verbose_name_plural = _('minor cases active')
 
 class AnswerSubmission(models.Model):
     '''Represents a team making a solve attempt on a puzzle (right or wrong).'''
