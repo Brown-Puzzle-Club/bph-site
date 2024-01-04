@@ -2,8 +2,8 @@ import * as React from "react";
 import * as ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
+import EventPage from "./routes/EventPage";
 import SocialDeduction from "./routes/major_cases/SocialDeduction";
-import EventPage from "./routes/major_cases/EventPage";
 
 const router = createBrowserRouter([
   {

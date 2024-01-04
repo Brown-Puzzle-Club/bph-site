@@ -44,6 +44,71 @@ export const MOCK_CONTEXTS: Record<string, unknown> = {
     hunt_is_closed: false,
     hunt_solutions_open: false,
     num_metas: 1,
-  }
+  },
+  'eventpage': {
+    team: {
+      team_name: "breadpeople",
+      total_hints_awarded: 2,
+      num_hints_remaining: 1,
+      total_free_answers_awarded: 1,
+      num_free_answers_remaining: 0,
+      is_prerelease_testsolver: false,
+      brown_members: true,
+      in_person: false,
+      solves: {},
+      minor_case_solves: {},
+      minor_case_incoming: {
+        "test-mc-1": {
+          name: "Test Minor Case 1",
+          description: "Lorem ipsum and whatnot",
+          major_case_name: "Social Deduction",
+          major_case_slug: "social-deduction",
+        },
+        "test-mc-2": {
+          name: "Test Minor Case 2",
+          description: "Lorem ipsum and whatnot",
+          major_case_name: "Data",
+          major_case_slug: "data",
+        },
+        "test-mc-3": {
+          name: "Test Minor Case 3",
+          description: "Lorem ipsum and whatnot",
+          major_case_name: "Social Deduction",
+          major_case_slug: "social-deduction",
+        }
+      },
+      minor_case_active: {
+        "test-mc-4": {
+          name: "Test Minor Case 4",
+          description: "Lorem ipsum and whatnot",
+          major_case_name: "Colored Thread",
+          major_case_slug: "colored-thread",
+        },
+        "test-mc-5": {
+          name: "Test Minor Case 2",
+          description: "Lorem ipsum and whatnot",
+          major_case_name: "Colored Thread",
+          major_case_slug: "colored-thread",
+        },
+      },
+    },
+    unlocks: {},
+    rounds: {},
+    is_admin: false,
+    is_superuser: false,
+    now: "2021-04-10T16:00:00.000Z",
+    start_time: "2021-04-10T16:00:00.000Z",
+    time_since_start: "2021-04-10T16:00:00.000Z",
+    end_time: "2021-04-10T16:00:00.000Z",
+    close_time: "2021-04-10T16:00:00.000Z",
+    solution_time: "2021-04-10T16:00:00.000Z",
+    hunt_is_prereleased: false,
+    hunt_has_started: true,
+    hunt_has_almost_started: false,
+    hunt_is_over: false,
+    hunt_is_closed: false,
+    hunt_solutions_open: false,
+    num_metas: 1,
+  },
   // TODO: add more mock contexts here (use the endpoint of the page you are working on!)
 }

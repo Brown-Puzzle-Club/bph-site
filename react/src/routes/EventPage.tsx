@@ -1,3 +1,5 @@
+import { context } from "../context"
+console.log(context)
 
 function EventPage() {
   return (
