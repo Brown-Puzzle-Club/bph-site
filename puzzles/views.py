@@ -11,6 +11,8 @@ from collections import defaultdict, OrderedDict, Counter
 from functools import wraps
 from urllib.parse import unquote
 
+from django.http import HttpResponse, HttpRequest
+from django.contrib.postgres.search import SearchVector
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login, update_session_auth_hash
@@ -31,6 +33,8 @@ from django.utils.translation import gettext as _
 from django.views.decorators.clickjacking import xframe_options_sameorigin
 from django.views.decorators.http import require_GET, require_POST
 from django.views.static import serve
+
+from .models import VoiceRecording
 
 from puzzles.models import (
     Round,
@@ -76,17 +80,20 @@ from puzzles.messaging import send_mail_wrapper, dispatch_victory_alert, show_vi
 from puzzles.react_bridge import process_context
 from puzzles.shortcuts import dispatch_shortcut
 
+
 @require_GET
 def react_base(request):
     return render(request, 'react_base.html', {
         "context": json.dumps(process_context(request, render_puzzles(request)), default=str),
     })
 
+
 @require_GET
 def prerelease_locked_react(request):
     if not request.context.team or not request.context.team.is_prerelease_testsolver:
         raise Http404
     return react_base(request)
+
 
 def validate_puzzle(require_team=False):
     '''
@@ -1713,3 +1720,19 @@ def accept_ranges_middleware(get_response):
         response['Accept-Ranges'] = 'bytes'
         return response
     return process_request
+
+
+@require_GET
+def search_voice_recordings(request: HttpRequest) -> HttpResponse:
+    '''Search for voice recordings by text, for the interactive database puzzle.'''
+    query = request.GET.get('q', '').strip()
+    if not query or len(query) < 1 or len(query) > 100:
+        return JsonResponse({'error': 'Please enter a valid search query.'}, status=400)
+    results = VoiceRecording.objects.annotate(
+        search=SearchVector('transcript'),
+    ).filter(search=query).order_by('timestamp')[:5]
+
+    # Alternative search method, using icontains instead of SearchVector:
+    # results = VoiceRecording.objects.filter(transcript__icontains=query).order_by('timestamp')[:5]
+
+    return JsonResponse({'results': [result.to_dict() for result in results]}, safe=False)
