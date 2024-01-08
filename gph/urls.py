@@ -136,6 +136,7 @@ urlpatterns = [
 
     path('react', views.prerelease_locked_react, name='react'),
     path('social-deduction', views.prerelease_locked_react, name='social-deduction'),
+    path('data-mc', views.prerelease_locked_react, name='database-major-case'),
 
     path('api/search_voice_recordings/', views.search_voice_recordings,
          name='search_voice_recordings'),
