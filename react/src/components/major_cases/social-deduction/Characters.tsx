@@ -57,7 +57,7 @@ export default function InternalCharacters () {
         {/* MAIN CHARACTERS */}
         <InternalCharacterAsset character={InternalCharacter.GREEN_RIBBON} imageSrc={greenribbon} hoverImageSrc={greenribbonPose}
           extraStyles={{
-            top: '16%',
+            top: '12%',
             left: '7%',
             width: '28%',
             zIndex: 1,
