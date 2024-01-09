@@ -8,6 +8,24 @@ import pfpGreenribbon from "../../../assets/major_cases/social-deduction/pfp-gre
 import pfpInvisiguy from "../../../assets/major_cases/social-deduction/pfp-invisiguy.png";
 import pfpWolfguy from "../../../assets/major_cases/social-deduction/pfp-wolfguy.png";
 
+import deadProfile from "../../../assets/major_cases/social-deduction/dead.png";
+
+import assasinProfile from "../../../assets/major_cases/social-deduction/assassin.png";
+import bodyguardProfile from "../../../assets/major_cases/social-deduction/bodyguard.png";
+import doctorProfile from "../../../assets/major_cases/social-deduction/doctor.png";
+import enchanterProfile from "../../../assets/major_cases/social-deduction/enchanter.png";
+import foolProfile from "../../../assets/major_cases/social-deduction/fool.png";
+import gossipProfile from "../../../assets/major_cases/social-deduction/gossip.png";
+import headhunterProfile from "../../../assets/major_cases/social-deduction/headhunter.png";
+import investigatorProfile from "../../../assets/major_cases/social-deduction/investigator.png";
+import loverProfile from "../../../assets/major_cases/social-deduction/lover.png";
+import resurrectedProfile from "../../../assets/major_cases/social-deduction/resurrected.png";
+import silencerProfile from "../../../assets/major_cases/social-deduction/silencer.png";
+import telepathProfile from "../../../assets/major_cases/social-deduction/telepath.png";
+import villagerProfile from "../../../assets/major_cases/social-deduction/villager.png";
+import zealotProfile from "../../../assets/major_cases/social-deduction/zealot.png";
+
+
 export const MISS_TEXT = "?????"
 
 function titleCase(s: string): string{
@@ -95,6 +113,8 @@ export const EVIL_ROLE_COLOR = "#c4565645";
 export const NEUTRAL_ROLE_COLOR = "#e8d25a61";
 export const SOLO_ROLE_COLOR = "#7748986e";
 
+export const DEAD_ROLE_COLOR = '#1e1b1be6'; //#  bcbcbd54
+
 export const GOOD_TEXT_COLOR = "#aae17c";
 export const EVIL_TEXT_COLOR = "#ff8585";
 export const SOLO_TEXT_COLOR = "#caaff4";
@@ -107,25 +127,25 @@ export const  CharacterRoleAssetMap = {
   [InternalCharacter.GORGON]: pfpGorgon,
   [InternalCharacter.GREEN_RIBBON]: pfpGreenribbon,
   [InternalCharacter.WOLF_GUY]: pfpWolfguy,
-  [InternalCharacter.ANXIOUS_GHOST]: "",
-  [InternalCharacter.HAPPY_GHOST]: "",
-  [InternalCharacter.HEART_GHOST]: "",
-  [InternalCharacter.NORMAL_GHOST]: "",
-  [InternalCharacter.SLEEPY_GHOST]: "",
-  [Role.ASSASSIN]: "",
-  [Role.BODYGUARD]: "",
-  [Role.DOCTOR]: "",
-  [Role.ENCHANTER]: "",
-  [Role.FOOL]: "",
-  [Role.GOSSIP]: "",
-  [Role.HEADHUNTER]: "",
-  [Role.INVESTIGATOR]: "",
-  [Role.LOVER]: "",
-  [Role.RESURRECTED]: "",
-  [Role.SILENCER]: "",
-  [Role.TELEPATH]: "",
-  [Role.VILLAGER]: "",
-  [Role.ZEALOT]: "",
+  [InternalCharacter.ANXIOUS_GHOST]: deadProfile,
+  [InternalCharacter.HAPPY_GHOST]: deadProfile,
+  [InternalCharacter.HEART_GHOST]: deadProfile,
+  [InternalCharacter.NORMAL_GHOST]: deadProfile,
+  [InternalCharacter.SLEEPY_GHOST]: deadProfile,
+  [Role.ASSASSIN]: assasinProfile,
+  [Role.BODYGUARD]: bodyguardProfile,
+  [Role.DOCTOR]: doctorProfile,
+  [Role.ENCHANTER]: enchanterProfile,
+  [Role.FOOL]: foolProfile,
+  [Role.GOSSIP]: gossipProfile,
+  [Role.HEADHUNTER]: headhunterProfile,
+  [Role.INVESTIGATOR]: investigatorProfile,
+  [Role.LOVER]: loverProfile,
+  [Role.RESURRECTED]: resurrectedProfile,
+  [Role.SILENCER]: silencerProfile,
+  [Role.TELEPATH]: telepathProfile,
+  [Role.VILLAGER]: villagerProfile,
+  [Role.ZEALOT]: zealotProfile,
 }
 
 export const CharacterRoleColorMap = {
@@ -135,11 +155,11 @@ export const CharacterRoleColorMap = {
   [InternalCharacter.GORGON]: "#97d0ae36",
   [InternalCharacter.GREEN_RIBBON]: "#c4c05645",
   [InternalCharacter.WOLF_GUY]: "#d79e7b3d", // alt #a5592a61
-  [InternalCharacter.ANXIOUS_GHOST]: "#1e1b1b5e",
-  [InternalCharacter.HAPPY_GHOST]: "#1e1b1b5e",
-  [InternalCharacter.HEART_GHOST]: "#1e1b1b5e",
-  [InternalCharacter.NORMAL_GHOST]: "#1e1b1b5e",
-  [InternalCharacter.SLEEPY_GHOST]: "#1e1b1b5e",
+  [InternalCharacter.ANXIOUS_GHOST]: DEAD_ROLE_COLOR,
+  [InternalCharacter.HAPPY_GHOST]: DEAD_ROLE_COLOR,
+  [InternalCharacter.HEART_GHOST]: DEAD_ROLE_COLOR,
+  [InternalCharacter.NORMAL_GHOST]: DEAD_ROLE_COLOR,
+  [InternalCharacter.SLEEPY_GHOST]: DEAD_ROLE_COLOR,
   [Role.ASSASSIN]: EVIL_ROLE_COLOR,
   [Role.BODYGUARD]: GOOD_ROLE_COLOR,
   [Role.DOCTOR]: GOOD_ROLE_COLOR,

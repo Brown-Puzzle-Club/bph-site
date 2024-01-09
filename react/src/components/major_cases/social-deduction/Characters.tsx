@@ -1,4 +1,4 @@
-import background from '../../../assets/major_cases/social-deduction/Background.png'
+import background from '../../../assets/major_cases/social-deduction/Background.jpg'
 import RelativeAsset from '../../RelativeAsset'
 
 // characters
