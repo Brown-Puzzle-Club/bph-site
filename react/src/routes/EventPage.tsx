@@ -1,4 +1,4 @@
-import { context } from "../context"
+import { MinorCaseStatus, context } from "../context"
 import { useState } from 'react';
 import MinorCase from '../components/MinorCase';
 import MinorCaseModal from "../components/MinorCaseModal";
@@ -8,7 +8,7 @@ if (context != null) {
   console.log(context.team?.minor_case_active)
 }
 
-function renderActiveCases(casesRecord: Record<string, any>, openModal: (caseName: string) => void) : JSX.Element[] {
+function renderActiveCases(casesRecord: MinorCaseStatus | undefined, openModal: (caseName: string) => void) : JSX.Element[] {
   return casesRecord? Object.entries(casesRecord).map(([minorCase, values]) => (
     <MinorCase 
       key={minorCase} 
@@ -24,7 +24,7 @@ function renderActiveCases(casesRecord: Record<string, any>, openModal: (caseNam
 
 function EventPage() {
   const [newCases, setNewCases] = useState<JSX.Element[]>([]);
-  const [doneCases, setDoneCases] = useState<JSX.Element[]>([]);
+  const [, setDoneCases] = useState<JSX.Element[]>([]);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [selectedCase, setSelectedCase] = useState<string>('');
 
@@ -41,7 +41,7 @@ function EventPage() {
     if (side === 'left') {
       // Clear the middle column when clicking on the left box
       if (context != null) {
-        const solvedCasesFromContext = context.team?.minor_case_solves;
+        const solvedCasesFromContext = context.team?.minor_case_completed;
         const solvedCases = renderActiveCases(solvedCasesFromContext, openModal);
 
         setNewCases(solvedCases);

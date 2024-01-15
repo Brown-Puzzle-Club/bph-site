@@ -11,6 +11,7 @@ from puzzles.models import (
     PuzzleUnlock,
     MinorCaseActive,
     MinorCaseIncoming,
+    MinorCaseCompleted,
     AnswerSubmission,
     ExtraGuessGrant,
     PuzzleMessage,
@@ -83,6 +84,10 @@ class MinorCaseActiveAdmin(admin.ModelAdmin):
     list_display = ('team', 'minor_case_round', 'active_datetime')
     list_filter = ('minor_case_round', 'minor_case_round__major_case', 'team')
 
+class MinorCaseCompletedAdmin(admin.ModelAdmin):
+    list_display = ('team', 'minor_case_round', 'completed_datetime')
+    list_filter = ('minor_case_round', 'minor_case_round__major_case', 'team')
+
 class AnswerSubmissionAdmin(admin.ModelAdmin):
     list_display = ('team', 'puzzle', 'submitted_answer', 'submitted_datetime', 'is_correct', 'used_free_answer')
     list_filter = ('is_correct', 'used_free_answer', 'puzzle', 'puzzle__round', 'team')
@@ -118,6 +123,9 @@ admin.site.register(TeamMember, TeamMemberAdmin)
 admin.site.register(PuzzleUnlock, PuzzleUnlockAdmin)
 admin.site.register(MinorCaseIncoming, MinorCaseIncomingAdmin)
 admin.site.register(MinorCaseActive, MinorCaseActiveAdmin)
+
+admin.site.register(MinorCaseCompleted, MinorCaseCompletedAdmin)
+
 admin.site.register(AnswerSubmission, AnswerSubmissionAdmin)
 admin.site.register(ExtraGuessGrant, ExtraGuessGrantAdmin)
 admin.site.register(Erratum, ErratumAdmin)

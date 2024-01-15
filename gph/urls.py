@@ -107,6 +107,10 @@ urlpatterns = [
     path('social-deduction/submit',
          puzzlehandlers.soc_ded_confirm_submit,
          name='social_deduction_submit'),
+    
+    path('move_minor_case/<str:team_id>/<str:round_id>/',
+         puzzlehandlers.move_minor_case_submit,
+         name='move_minor_case_submit'),
 
     path('story', views.story, name='story'),
     path('victory', views.victory, name='victory'),

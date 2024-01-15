@@ -34,6 +34,12 @@ const contextSchema = z.object({
         major_case_name: z.string(),
         major_case_slug: z.string(),
       })),
+      minor_case_completed: z.record(z.object({
+        name: z.string(),
+        description: z.string(),
+        major_case_name: z.string(),
+        major_case_slug: z.string(),
+      })),
     })
     .optional(),
   unlocks: z.record(z.object({
@@ -70,6 +76,13 @@ const contextSchema = z.object({
 });
 
 type DjangoContext = z.infer<typeof contextSchema>;
+
+export type MinorCaseStatus = Record<string, {
+  name: string,
+  description: string,
+  major_case_name: string,
+  major_case_slug: string,
+}>;
 
 function mockContext() {
   const currentUrl = window.location.href;

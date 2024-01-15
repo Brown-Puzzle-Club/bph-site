@@ -598,6 +598,13 @@ class Team(models.Model):
             .select_related('minor_case_round')
         }
 
+    def db_minor_case_completed(self):
+        return {
+            completed.minor_case_round_id: completed
+            for completed in self.minorcasecompleted_set
+            .select_related('minor_case_round')
+        }
+
     def db_unlocks(self):
         return {
             unlock.puzzle_id: unlock
@@ -760,6 +767,23 @@ class MinorCaseActive(models.Model):
         unique_together = ('team', 'minor_case_round')
         verbose_name = _('minor case active')
         verbose_name_plural = _('minor cases active')
+    
+class MinorCaseCompleted(models.Model):
+    '''Represents a team completing a minor case.'''
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_('team'))
+    minor_case_round = models.ForeignKey(Round, on_delete=models.CASCADE, verbose_name=_('minor case round'))
+
+    completed_datetime = models.DateTimeField(verbose_name=_('Completed datetime'))
+
+    def __str__(self):
+        return '%s -> %s @ %s' % (
+            self.team, self.minor_case_round, self.completed_datetime
+        )
+
+    class Meta:
+        unique_together = ('team', 'minor_case_round')
+        verbose_name = _('minor case completed')
+        verbose_name_plural = _('minor cases completed')
 
 class AnswerSubmission(models.Model):
     '''Represents a team making a solve attempt on a puzzle (right or wrong).'''

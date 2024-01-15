@@ -96,3 +96,6 @@ soc_ded_confirm_submit = error_ratelimit(soc_ded_confirm.submit, '20/m', {'error
 
 from . import tic_tac_toe
 tic_tac_toe_submit = error_ratelimit(tic_tac_toe.submit, '20/m', {'error': 'Please limit your attempts to twenty per minute.'}, lambda response: response['correct'], json.dumps)
+
+from . import move_minor_case
+move_minor_case_submit = error_ratelimit(move_minor_case.submit, '20/m', {'error': 'Please limit your attempts to twenty per minute.'}, lambda response: response['correct'], json.dumps)
