@@ -1,12 +1,14 @@
-import { MinorCaseStatus, context } from "../context"
 import { useState } from 'react';
 import MinorCase from '../components/MinorCase';
 import MinorCaseModal from "../components/MinorCaseModal";
+import { MinorCaseStatus, context } from "../context";
+import { getCookie } from "../utils/api";
 
 console.log(context)
 if (context != null) {
   console.log(context.team?.minor_case_active)
 }
+
 
 function renderActiveCases(casesRecord: MinorCaseStatus | undefined, openModal: (caseName: string) => void) : JSX.Element[] {
   return casesRecord? Object.entries(casesRecord).map(([minorCase, values]) => (
@@ -27,6 +29,35 @@ function EventPage() {
   const [, setDoneCases] = useState<JSX.Element[]>([]);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [selectedCase, setSelectedCase] = useState<string>('');
+  const [output, setOutput] = useState<string>('');
+
+  const submit = async () => {
+
+    const csrftoken = getCookie('csrftoken');
+    
+    try {
+      const result = await fetch("/move_minor_case/admin/sd-mc-1/", {
+        method: 'POST',
+        body: JSON.stringify({
+          // ...
+        }),
+        headers: { "X-CSRFToken": csrftoken || '', 'Content-Type': 'application/json' },
+      });
+
+      if (!result.ok) { 
+        // HTTP response code was not 2xx. Maybe introspect more...
+        setOutput(`Error: ${result.status} ${result.statusText}`);
+      } else {
+        // console.log('hi')
+        const res = await result.json();
+        console.log(res)
+        setOutput(res['success']);
+      }
+    } catch (e) {
+      // This error handling will be very poor.
+      setOutput(`Error: ${e}`);
+    }
+  };
 
   const openModal = (caseName: string) => {
     setSelectedCase(caseName);
@@ -60,6 +91,8 @@ function EventPage() {
 
   return (
     <div className="flex flex-col min-h-screen">
+      <button onClick={submit}>Submit test API</button>
+      API OUTPUT: {output}
       {/* Top row */}
       <div className="bg-blue-200 p-4">
         {/* Top row content */}

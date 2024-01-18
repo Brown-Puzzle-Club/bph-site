@@ -3,6 +3,7 @@ import json
 from django.views.decorators.http import require_POST
 from puzzles.messaging import log_puzzle_info
 
+
 @require_POST
 def submit(request):
     "A crude example of an interactive puzzle handler."

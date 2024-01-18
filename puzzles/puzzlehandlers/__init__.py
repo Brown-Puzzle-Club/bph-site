@@ -59,9 +59,9 @@ def error_ratelimit(handler, rate, error, check_response=None, encode_response=N
     '''
     @require_POST
     @wraps(handler)
-    def rate_limiter(request):
+    def rate_limiter(request, *args, **kwargs):
         ## TODO: add actual rate limiting.
-        response = handler(request)
+        response = handler(request, **kwargs)
         if encode_response is not None:
             response = encode_response(response)
         return HttpResponse(response)
@@ -98,4 +98,5 @@ from . import tic_tac_toe
 tic_tac_toe_submit = error_ratelimit(tic_tac_toe.submit, '20/m', {'error': 'Please limit your attempts to twenty per minute.'}, lambda response: response['correct'], json.dumps)
 
 from . import move_minor_case
-move_minor_case_submit = error_ratelimit(move_minor_case.submit, '20/m', {'error': 'Please limit your attempts to twenty per minute.'}, lambda response: response['correct'], json.dumps)
+move_minor_case_submit = error_ratelimit(move_minor_case.move_minor_case, '20/m', {'error': 'Please limit your attempts to twenty per minute.'}, lambda response: response['correct'], json.dumps)
+# move_minor_case_submit = move_minor_case.move_minor_case

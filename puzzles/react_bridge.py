@@ -17,6 +17,7 @@ def process_team(context):
     
     team["minor_case_incoming"] = process_incoming_active(context.team.db_minor_case_incoming)
     team["minor_case_active"] = process_incoming_active(context.team.db_minor_case_active)
+    team["minor_case_completed"] = process_incoming_active(context.team.db_minor_case_completed)
 
     # ADD MORE FIELDS HERE IF NEEDED, SEE TEAM MODEL FOR REFERENCE
     # ... you would also need to add them to context.ts in the frontend

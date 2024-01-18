@@ -3,6 +3,7 @@ import { useDrag, useDrop } from 'react-dnd';
 import { BeatLoader } from 'react-spinners';
 import { InternalCharacter, Role } from '../../../utils/major_cases/social-deduction/constants';
 import CharacterRoleTooltip from './CharacterRoleTooltip';
+import { getCookie } from '../../../utils/api';
 
 export default function Verdict() {
   const [output, setOutput] = useState('');
@@ -73,22 +74,6 @@ export default function Verdict() {
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const getCookie = (name: string) => {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-      const cookies = document.cookie.split(';');
-      for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i].trim();
-        // Does this cookie string begin with the name we want?
-        if (cookie.substring(0, name.length + 1) === (name + '=')) {
-          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-          break;
-        }
-      }
-    }
-    return cookieValue;
   };
 
   const RoleDraggable = ({ role, assigned }: { role: Role, assigned?: boolean }) => {
