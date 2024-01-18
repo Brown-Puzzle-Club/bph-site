@@ -91,6 +91,7 @@ export const MOCK_CONTEXTS: Record<string, unknown> = {
           major_case_slug: "colored-thread",
         },
       },
+      minor_case_completed: {},
     },
     unlocks: {},
     rounds: {},
