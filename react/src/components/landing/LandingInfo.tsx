@@ -8,10 +8,12 @@ const LandingInfo: React.FC = () => {
     
 
     
-    <div className='info'>
-      {/* // ADD QUESTION MARK WITH RELATIVE STYLING HERE */}
-      
-      <div className="grid grid-cols-1 md:grid-cols-9 gap-4 p-5">
+    <div className='info pt-5'
+      style={{
+        mask: "linear-gradient(rgb(255, 255, 255) 70%, rgba(0, 0, 0, 0) 100%)",
+        WebkitMask: "linear-gradient(rgb(255, 255, 255) 70%, rgba(0, 0, 0, 0) 100%)",
+      }}>
+      <div className="grid grid-cols-1 md:grid-cols-9 gap-4 p-5 pb-10">
         <div className="what-box col-start-1 col-span-5 md:col-start-2 md:col-span-3 text-center dark bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md btn-gradient-1 relative">
           <div className="question-mark absolute rotate-[333deg]" style={{top: "-74px",left: "-67px",}}>
             <img src={question} alt="Question Mark" className="h-44 w-44" style={{filter: "invert(100%) sepia(0%) saturate(0%) hue-rotate(158deg) brightness(104%) contrast(102%)",}}/>

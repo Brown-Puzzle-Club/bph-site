@@ -49,21 +49,27 @@ const components: { title: string; href: string; description: string }[] = [
   },
 ]
  
-export default function Navbar() {
+export default function Navbar({navbarColor}: {navbarColor: string}) {
+      // style={{
+    //   position: "sticky",
+    //   top: 0,
+    //   left: 0,
+    //   width: "100%",
+    //   zIndex: 1000,
+    //   backgroundColor: "#050505ad",
+    //   backdropFilter: "blur(20px) saturate(160%) contrast(45%) brightness(140%)",
+    //   WebkitBackdropFilter: "blur(20px) saturate(160%) contrast(45%) brightness(140%)",
+    // }}>
   return (
-    <div className="navbar"
+    <div className={`navbar sticky top-0 z-40 w-full backdrop-blur-sm flex-none transition-colors duration-500 lg:z-50 lg:border-b lg:border-slate-900/10 dark:border-slate-50/[0.06] supports-backdrop-blur:bg-white/60 dark:bg-transparent`}
     style={{
-      position: "fixed",
-      top: 0,
-      left: 0,
-      width: "100%",
-      zIndex: 1000,
-      backgroundColor: "#050505ad",
-      backdropFilter: "blur(20px) saturate(160%) contrast(45%) brightness(140%)",
-      WebkitBackdropFilter: "blur(20px) saturate(160%) contrast(45%) brightness(140%)",
+      backgroundColor: navbarColor,
     }}>
       <NavigationMenu className="dark">
         <NavigationMenuList>
+          <NavigationMenuItem>
+            <NavigationMenuTrigger>Brown Puzzlehunt</NavigationMenuTrigger>
+          </NavigationMenuItem>
           <NavigationMenuItem>
             <NavigationMenuTrigger>Getting started</NavigationMenuTrigger>
             <NavigationMenuContent>
@@ -111,9 +117,6 @@ export default function Navbar() {
                 ))}
               </ul>
             </NavigationMenuContent>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
