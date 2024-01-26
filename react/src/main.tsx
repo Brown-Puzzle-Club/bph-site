@@ -3,6 +3,7 @@ import * as ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import "./index.css";
+import InfoPage from "./routes/InfoPage";
 import Landing from "./routes/Landing";
 import SocialDeduction from "./routes/major_cases/SocialDeduction";
 
@@ -14,6 +15,10 @@ const router = createBrowserRouter([
   {
     path: "/landing",
     element: <Landing />
+  },
+  {
+    path: "/info",
+    element: <InfoPage />
   }
   
 ]);

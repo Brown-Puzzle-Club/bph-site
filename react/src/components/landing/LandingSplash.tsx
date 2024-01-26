@@ -78,6 +78,10 @@ const LandingSplash: React.FC = () => {
               className="layer-3 art-bg-img absolute top-0 left-0 w-full z-30"
               src={layer3}
             />
+            {/* <img 
+              className="layer-4 art-bg-img absolute top-0 left-0 w-full z-30"
+              src={layer4}
+            /> */}
         </div>
       </div>
     </section>
