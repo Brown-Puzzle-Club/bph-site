@@ -5,10 +5,7 @@ import question from '@/assets/landing/question.svg';
 
 const LandingInfo: React.FC = () => {
   return (
-    
-
-    
-    <div className='info pt-5'
+    <div className='landinginfo pt-5'
       style={{
         mask: "linear-gradient(rgb(255, 255, 255) 70%, rgba(0, 0, 0, 0) 100%)",
         WebkitMask: "linear-gradient(rgb(255, 255, 255) 70%, rgba(0, 0, 0, 0) 100%)",

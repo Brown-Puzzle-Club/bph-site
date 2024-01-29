@@ -26,10 +26,10 @@ const LandingSplash: React.FC = () => {
         layer2Element.style.transform = `translateY(-${scrollY * 0.3}px)`;
       }
       if (layer3Element) {
-        layer3Element.style.transform = `translateY(-${scrollY * 0.6}px)`;
+        layer3Element.style.transform = `translateY(-${scrollY * 0.4}px)`;
       }
       if (layer4Element) {
-        layer4Element.style.transform = `translateY(-${scrollY * 0.6}px)`;
+        layer4Element.style.transform = `translateY(-${scrollY * 0.4}px)`;
       }
     };
 

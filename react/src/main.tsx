@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { PageWrapper } from "./components/pagewrapper";
+import { PageWrapper } from "./components/PageWrapper";
 import "./index.css";
 import InfoPage from "./routes/InfoPage";
 import Landing from "./routes/Landing";
