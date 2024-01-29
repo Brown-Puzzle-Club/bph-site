@@ -1,10 +1,34 @@
 import ProgressDocs from "@/components/ProgressDocs";
+import { FaCar } from "react-icons/fa";
+import { FaBus, FaLocationDot, FaTrain } from "react-icons/fa6";
 
 const smoothScroll = (element_id: string) => {
   const element = document.getElementById(element_id);
   if (element) {
     element.scrollIntoView({ behavior: 'smooth' });
   }
+}
+
+const LocationBox = ({location_name, location_addr, location_desc, image_src, justify_left} : {location_name: string, location_addr: string, location_desc: string, image_src: string, justify_left?: boolean}) => {
+  return (
+    <div className="location-box flex items-center flex-1">
+      {justify_left && 
+        <div className="map flex">
+          <img className="object-contain h-60 w-60" src={image_src}></img>
+        </div>
+      }
+      <div className={`text flex flex-col ${!justify_left && "text-end"}`}>
+        <h6 className="name text-2xl font-bold text-white">{location_name}</h6>
+        <div className="location flex items-center"><FaLocationDot /><span>{location_addr}</span></div>
+        <span className="description">{location_desc}</span>
+      </div>
+      {!justify_left && 
+        <div className="map">
+          <img className="object-contain h-60 w-60" src={image_src}></img>
+        </div>
+      }
+    </div>
+  )
 }
 
 export default function InfoPage() {
@@ -135,33 +159,25 @@ export default function InfoPage() {
         </div>
         <h4>Locations to Know</h4>
         <div>
-          <div className="location-box">
-            <div className="map">TODO</div>
-            <div className="name">Kickoff</div>
-            <div className="location">MacMillan Hall, Room 117</div>
-            <div className="description">Enter through the north side off Sciences Park, or through the Thayer Street entrance.</div>
-          </div>
-          <div className="location-box">
-            <div className="name">Brown Puzzle Club HQ</div>
-            <div className="location">Sayles Hall Room 306 </div>
-            <div className="description">Enter through the west side through the Main Green entrance.</div>
-            <div className="map">TODO</div>
+          <div className="locations flex items-center pt-5">
+            <LocationBox location_name="Kickoff" location_addr="MacMillan Hall Room 117" location_desc="Doors open at 10:30 AM EDT" image_src="https://www.brownpuzzlehunt.com/static/images/macmillan_squiggle.8117221443f2.png" justify_left={true}/>
+            <LocationBox location_name="Brown Puzzle Club HQ" location_addr="Sayles Hall Room 306" location_desc="Enter through the west side through the Main Green entrance." image_src="https://www.brownpuzzlehunt.com/static/images/macmillan_squiggle.8117221443f2.png"/>
           </div>
           <p>Some events and puzzles might use locations that require card swipe access, which is limited to current undergraduate or graduate students (or some faculty). Puzzles which require this will be kept to a minimum and, where applicable, clearly marked as such. If you know ahead of time that you'll want to participate in these puzzles but have no current students on your team, <a href="/contact">contact us</a> before the hunt and we'll find a way to get that sorted.</p>
         </div>
         <h4>Getting to Providence</h4>
-        <div>
-          <div className="transport-box">
-            <div className="title">Train</div>
-            <p>Brown University is a 10-15 minute walk from Providence Station, our nearest train station. The station is across the river from College Hill. If you're traveling from Boston, we recommend Amtrak Northeast Regional as the least expensive provider. Providence is also accessible via the MBTA Rapid Transit system, along the Providence/Stoughton line, starting at South Station.</p>
+        <div className="pt-2">
+          <div className="transport-box flex items-center">
+            <div className="title"><FaTrain className="w-20 h-20 py-2"/></div>
+            <span>Brown University is a 10-15 minute walk from Providence Station, our nearest train station. The station is across the river from College Hill. If you're traveling from Boston, we recommend Amtrak Northeast Regional as the least expensive provider. Providence is also accessible via the MBTA Rapid Transit system, along the Providence/Stoughton line, starting at South Station.</span>
           </div>
-          <div className="transport-box">
-            <div className="title">Bus</div>
-            <p>There are a number of bus companies which provide bus services from cities in the New England and New York area and beyond terminating to Providence, including but not limited to: FlixBus, Peter Pan Lines, and Greyhound. We recommend doing your own research if you plan to take the bus from your starting location to Providence.</p>
+          <div className="transport-box flex items-center">
+            <div className="title"><FaBus className="w-20 h-20 py-2"/></div>
+            <span>There are a number of bus companies which provide bus services from cities in the New England and New York area and beyond terminating to Providence, including but not limited to: FlixBus, Peter Pan Lines, and Greyhound. We recommend doing your own research if you plan to take the bus from your starting location to Providence.</span>
           </div>
-          <div className="transport-box">
-            <div className="title">Car</div>
-            <p>Providence lies at the intersection of Interstate 95 and Interstate 195. For non-Brown community members and visitors, parking is available at the Lot 68 Visitor Parking Garage, also known as the Power Street Parking Garage, located at 111 Power Street. The visitor entrance is located at the intersection of Power and Thayer Streets. Parking costs $2.00 per hour over the weekend. If you want overnight parking or require a permit for more than one day, you can <a href="/contact">contact us</a> and we'll try to help you out.</p>
+          <div className="transport-box flex items-center">
+            <div className="title"><FaCar className="w-20 h-20 py-2"/></div>
+            <span>Providence lies at the intersection of Interstate 95 and Interstate 195. For non-Brown community members and visitors, parking is available at the Lot 68 Visitor Parking Garage, also known as the Power Street Parking Garage, located at 111 Power Street. The visitor entrance is located at the intersection of Power and Thayer Streets. Parking costs $2.00 per hour over the weekend. If you want overnight parking or require a permit for more than one day, you can <a href="/contact">contact us</a> and we'll try to help you out.</span>
           </div>
         </div>
         <h4>Accommodation</h4>

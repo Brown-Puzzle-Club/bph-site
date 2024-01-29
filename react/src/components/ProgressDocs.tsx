@@ -12,7 +12,7 @@ export default function ProgressDocs({ children }: { children: ReactNode }) {
     if (docsElement) {
       const scrollTop = docsElement.scrollTop;
       const scrollHeight = docsElement.scrollHeight - docsElement.clientHeight;
-      const percentage = (scrollTop / scrollHeight) * 100;
+      const percentage = (scrollTop / scrollHeight) * 90;
       setScrollPercentage(percentage);
     }
   };
@@ -48,11 +48,7 @@ export default function ProgressDocs({ children }: { children: ReactNode }) {
   
   return (
     <div className="flex progress-docs h-[90vh]">
-      <div className="relative w-1/5 overflow-hidden border-r-2 border-slate-800 h-[90vh]">
-          <div
-            className="progress-bar absolute top-0 right-0 bg-indigo-500 w-1 rounded-full shadow-[0_0_2px_#fff,inset_0_0_2px_#fff,0_0_5px_#08f,0_0_15px_#08f,0_0_30px_#08f]"
-            style={{ height: `${scrollPercentage}%` }}
-          ></div>
+      <div className="relative w-1/5 overflow-hidden border-r-2 border-slate-800 h-[90vh] overflow-y-auto overscroll-contain">
           <div className="progress p-4">
             {Array.from(headings || []).map((heading) => (
             <div
@@ -71,6 +67,10 @@ export default function ProgressDocs({ children }: { children: ReactNode }) {
       <div className="w-4/5 overflow-y-auto px-10 py-5 overscroll-contain h-[90vh] no-scrollbar"
       ref={docsRef}
       onScroll={() => { handleScroll(); getCurrentHeadings();}}>
+        <div
+            className="progress-bar absolute top-[5vh] right-0 bg-[#80a3ff] w-1 rounded-md shadow-[0_0_2px_#ffffff73,inset_0_0_2px_#ffffff73,0_0_5px_#08f,0_0_15px_#08f,0_0_30px_#08f]"
+            style={{ height: `${scrollPercentage}%` }}
+          ></div>
         <div className="docs">
             {children}
         </div>
