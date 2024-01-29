@@ -1,65 +1,111 @@
 import ProgressDocs from "@/components/ProgressDocs";
 
+const smoothScroll = (element_id: string) => {
+  const element = document.getElementById(element_id);
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth' });
+  }
+}
 
 export default function InfoPage() {
   //bg-[#02031d]
   return (
     <div className="info bg-slate-900 text-white h-[90vh]"> 
       <ProgressDocs>
+        <h1>Important Info</h1>
         <h4>What is this?</h4>
-        <p>This is a puzzlehunt! Teams of people will compete to solve puzzles (think escape room, not jigsaw) using information both online and in real life. If you want to know more about what a puzzlehunt is, check out our FAQ section.</p>
-        <h1>Rules</h1>
+        <div>
+          <p>This is a puzzlehunt! Teams of people will compete to solve puzzles (think escape room, not jigsaw) using information both online and in real life. Brown Puzzlehunt 2024 is Brown Puzzle Club's second annual puzzlehunt, so if you would like an example of a complete event please check out last year's <a href='https://2023.brownpuzzlehunt.com/'>hunt archive</a>.</p>
+        </div>
         <h4>When and where is it?</h4>
-        <p>This puzzlehunt is taking place at Brown University, in Providence, Rhode Island.</p>
-        <p>Kickoff will start promptly at Saturday, April 13, 2024 at 11:00 PM EDT, in MacMillan Hall Room 117, with doors opening at 10:30am.</p>
-        <p>Puzzles will be released Saturday, April 13, 2024 at 12:00 PM EDT. HQ will close on Sunday, April 14, 2024 at 7:00 PM EDT, at which point hints will no longer be answered, the leaderboard will be frozen, and physical puzzles will no longer be available to be picked up.</p>
-        <p>There may be in-person puzzles, which require physical presence on campus; physical puzzles, which require collecting objects from HQ; and events, which are not essential to finish, but will be a fun time anyway.</p>
-        <p>Wrap-up will be held at 8:30pm in MacMillan Hall Room 117, with doors opening at 8:15pm. Wrapup and Kickoff will both be livestreamed.</p>
-        <h4>What is this?</h4>
+        <div>
+          <p>This puzzlehunt is taking place at <b>Brown University, in Providence, Rhode Island.</b></p>
+          <p>Kickoff will start promptly at <strong>Saturday, April 13, 2024 at 11:00 AM EDT</strong>, in <b>MacMillan Hall Room 117</b>, with doors opening at <b>10:30 AM</b>.</p>
+          <p>Puzzles will be released <strong>Saturday, April 13, 2024 at 12:00 PM EDT</strong>. HQ will close on <strong>Sunday, April 14, 2024 at 7:00 PM EDT</strong>, at which point hints will no longer be answered, the leaderboard will be frozen, and physical puzzles will no longer be available to be picked up.</p>
+          <p>There may be <b>in-person puzzles</b>, which require physical presence on campus; <b>physical puzzles</b>, which require collecting objects from HQ; and <b>events</b>, which are not essential to finish, but will be a fun time anyway.</p>
+          <p><b>Wrap-up</b> will be held at <b>8:30pm</b> in <b>MacMillan Hall Room 117</b>, with doors opening at <b>8:15pm</b>. Wrapup and Kickoff will both be livestreamed.</p>
+        </div> 
+        <h4>What's the goal?</h4>
+        <div>
+          <p>The official winner will be the first team to find Blueno hidden somewhere on campus.</p>
+          <p>Only teams which are on-campus during the final runaround will be able to find Blueno. Additionally, only teams with one or more current undergraduate/graduate Brown or RISD students on-campus are eligible to find Blueno.</p>
+          <p>If you know that you will be on-campus and think that you might be in the position to find Blueno first, we highly encourage you to include a Brown University or RISD undergraduate/graduate student on your team.</p>
+        </div>
+        <h4>Who can participate?</h4>
+        <div>
+          <p>Brown Puzzlehunt is open to anyone, anywhere in the world, including those not in the Brown/RISD community. We have taken steps to ensure that every puzzle is as accessible as possible to remote solvers. However, teams with current undergraduate or graduate students, or other members of the Brown/RISD community, may have some advantage in solving puzzles.</p>
+          <p><b>We recommend teams to be around 7 to 10 people</b>. The maximum team size is 12 people (but you can still have fun with teams of 5!). Students and those new to hunting are encouraged to build teams on the larger side, but there's no minimum team size.</p>
+        </div>
+        <h4>How do puzzles work?</h4>
+        <div>
+          <p>All puzzles will be visible on the website; this is where you will submit your answers and receive new puzzles. If something in real life is part of a puzzle, the website will direct you towards it first.</p>
+          <p>A few puzzles will be available at the start, and solving puzzles will lead to unlocking more puzzles.</p>
+          <p>Each answer is a string of letters A-Z. Lowercase letters will be changed into uppercase, and any other characters will be stripped before checking for correctness.</p>
+          <p>You have <b>20 total guesses</b> for each puzzle. Contact us if you run out of guesses, and we would be happy to grant more. Random guessing and brute-forcing are discouraged.</p>
+        </div>
+        <h4>How do hints work?</h4>
+        <div>
+          <p>Starting on <strong>Saturday, April 13, 2024</strong>, at 3pm, teams will gain one hint request every three hours, which they can use to ask for help on any puzzle.</p>
+          <p>If you are a beginner student team or a team with a strong on-site presence that is not in the running to win, we will also visit you frequently to check on your progress and help you along. <b className="bg-[#1d3650]">If you are struggling, do not hesitate to reach out</b> — the event is meant to be fun, and we want to ensure no hunter is left behind! If you want someone on HQ to come and visit you, you can email us at any time.</p>
+          <p>You can use a hint to get help on a puzzle. This can be something like a nudge in the right direction (i.e. you give us your progress on the puzzle and we’ll try to get you unstuck) or an answer to a question (e.g. “Which answers to these crossword clues are wrong?”).</p>
+          <p>You can only have <b>one open hint request</b> at a time. We're a small HQ; this will help us answer in a timely manner.</p>
+        </div>
+        <h4>Non Brown/RISD in-person participants</h4>
+        <div>
+          <p>We're excited to have you join us! You'll primarily need to consider how you're getting to and from campus and where you'll be solving puzzles. Please let us know that you're coming during registration so that we'll be able to accommodate you!</p>
+          <p>Anyone who is participating on-campus will need to fill out <a onClick={() => {alert("TODO: add new waiver")}}>this waiver form</a>. We'll collect these at kickoff.</p>
+          <p>For essential information, check out <a onClick={() => smoothScroll("on-campus")}>On-Campus</a> Information.</p>
+        </div>
+        <h4>What else?</h4>
+        <div>
+          <p>You may use any external sources for help, including other people, as long as they aren't helping other teams and aren't actively participating in the hunt.</p>
+          <p><b className="bg-[#1d3650]">Use of Google</b> (or your other search engine of choice) <b className="bg-[#1d3650]">is not only permitted, but essential</b>. You may also benefit from other online tools, such as:</p>
+          <ul className="pl-3">
+            <li>Online wordplay solvers, such as <a href="https://nutrimatic.org/">nutrimatic</a>, <a href="https://www.quinapalus.com/qat.html">qat</a>, or <a href="https://onelook.com/">OneLook</a></li>
+            <li>Logic puzzle solvers, such as <a href="https://www.noq.solutions/">noq</a></li>
+            <li>Reverse image searching tools, such as <a href="https://lens.google/">Google Lens</a> or <a href="https://tineye.com/">Tineye</a></li>
+          </ul>
+          <p>You may not publicly stream a solve of our hunt when the hunt is live.</p>
+          <p>It won't be necessary to look at the HTML source/JavaScript/CSS on any webpages for any puzzle. Infractions or abuse of these elements may be grounds for disqualification or removal from the hunt.</p>
+          <p>We reserve the right to disqualify any team for unsportsmanlike conduct.</p>
+          <p>We reserve the right to change any of these rules. If there's a big change, we'll announce it to all teams.</p>
+          <p>If you have any questions about these rules, or if you want to contact us for any reason, email <a href="mailto:puzzle@brown.edu">puzzle@brown.edu</a>. We will get back to you as soon as we can.</p>
+        </div>
         <h1>FAQs</h1>
+        <h4>What is a puzzlehunt? How do I solve these puzzles?</h4>
+        <div>
+          <p>If you've never heard of puzzlehunts before, here's a very brief summary: in a typical puzzle, you receive some information and have to extract an answer out of it, which is almost always an English word or phrase. Puzzles can come in many different forms; the only real commonality is that you usually receive no direct instructions, so it's up to you to figure out how to make sense of the information you're given. You can read a longer introduction to puzzlehunts <a href="https://blog.vero.site/post/puzzlehunts">here</a>.</p>
+          <p>If you are new to puzzles and are interested in seeing some examples, or if you're looking for some practice, we recommend looking at puzzles from other online hunts such as <a href="https://galacticpuzzlehunt.com/">Galactic Puzzle Hunt</a>, <a href="https://teammatehunt.com/">Teammate Hunt</a>, or <a href="https://puzzlepotluck.com/">Puzzle Potluck</a>.</p>
+        </div>
+        <h4>What is this?</h4>a
+        <h1 id="on-campus">On-Campus</h1>
         <h4>What is this?</h4>
         <h4>What is this?</h4>
-        <h1>On-Campus</h1>
         <h4>What is this?</h4>
         <h4>What is this?</h4>
-        <h4>What is this?</h4>
-        <h4>What is this?</h4>
-What's the goal?
-The official winner will be the first team to find Blueno hidden somewhere on campus.
-Only teams which are on-campus during the final runaround will be able to find Blueno. Additionally, only teams with one or more current undergraduate/graduate Brown or RISD students on-campus are eligible to find Blueno.
-If you know that you will be on-campus and think that you might be in the position to find Blueno first, we highly encourage you to include a Brown University or RISD undergraduate/graduate student on your team.
-Who can participate?
-Brown Puzzlehunt is open to anyone, anywhere in the world, including those not in the Brown/RISD community. We have taken steps to ensure that every puzzle is as accessible as possible to remote solvers. However, teams with current undergraduate or graduate students, or other members of the Brown/RISD community, may have some advantage in solving puzzles.
-We recommend teams to be around 7 to 10 people. The maximum team size is 12 people (but you can still have fun with teams of 5!). Students and those new to hunting are encouraged to build teams on the larger side, but there’s no minimum team size.
-How do puzzles work?
-All puzzles will be visible on the website; this is where you will submit your answers and receive new puzzles. If something in real life is part of a puzzle, the website will direct you towards it first.
-A few puzzles will be available at the start, and solving puzzles will lead to unlocking more puzzles.
-Each answer is a string of letters A–Z. Lowercase letters will be changed into uppercase, and any other characters will be stripped before checking for correctness.
-You have 20 total guesses for each puzzle. Contact us if you run out of guesses, and we would be happy to grant more. Random guessing and brute-forcing are discouraged.
-How do hints work?
-Starting on Saturday, April 13, 2024, at 3pm, teams will gain one hint request every three hours, which they can use to ask for help on any puzzle.
-If you are a beginner student team or a team with a strong on-site presence that is not in the running to win, we will also visit you frequently to check on your progress and help you along. If you are struggling, do not hesitate to reach out — the event is meant to be fun, and we want to ensure no hunter is left behind! If you want someone on HQ to come and visit you, you can email us at any time.
-You can use a hint to get help on a puzzle. This can be something like a nudge in the right direction (i.e. you give us your progress on the puzzle and we’ll try to get you unstuck) or an answer to a question (e.g. “Which answers to these crossword clues are wrong?”).
-You can only have one open hint request at a time. We're a small HQ; this will help us answer in a timely manner.
-I'm not a Brown/RISD community member but I want to participate on-campus. What do I need to consider?
-We're excited to have you join us! You'll primarily need to consider how you're getting to and from campus and where you'll be solving puzzles. Please let us know that you're coming during registration so that we'll be able to accommodate you!
-Anyone who is participating on-campus will need to fill out this waiver form. We'll collect these at kickoff.
-For essential information, check out On-Campus Information.
-What else?
-You may use any external sources for help, including other people, as long as they aren’t helping other teams and aren’t actively participating in the hunt.
-Use of Google (or your other search engine of choice) is not only permitted, but essential. You may also benefit from other online tools, such as:
-Online wordplay solvers, such as nutrimatic, qat, or OneLook
-Logic puzzle solvers, such as noq
-Reverse image searching tools, such as Google Reverse Image Search or Tineye
-You may not publicly stream a solve of our hunt when the hunt is live.
-It won’t be necessary to look at the HTML source/JavaScript/CSS on any webpages for any puzzle, but you’re welcome to look anyway. Infractions or abuse of these elements may be grounds for disqualification or removal from the hunt.
-We reserve the right to disqualify any team for unsportsmanlike conduct.
-We reserve the right to change any of these rules. If there’s a big change, we’ll announce it to all teams.
-If you have any questions about these rules, or if you want to contact us for any reason, email puzzle@brown.edu. We will get back to you as soon as we can.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 FAQs
-What is a puzzlehunt? How do I solve these puzzles?
-If you’ve never heard of puzzlehunts before, here’s a very brief summary: in a typical puzzle, you receive some information and have to extract an answer out of it, which is almost always an English word or phrase. Puzzles can come in many different forms; the only real commonality is that you usually receive no direct instructions, so it’s up to you to figure out how to make sense of the information you’re given. You can read a longer introduction to puzzlehunts here.
-If you are new to puzzles and are interested in seeing some examples, or if you’re looking for some practice, we recommend looking at puzzles from other online hunts such as Galactic Puzzle Hunt, Teammate Hunt, or Puzzle Potluck.
+
+
+
 Who's writing this hunt?
 We are Brown Puzzle Club, a group of undergraduate students at Brown/RISD who are passionate about puzzles! Our goals for this hunt are to put a unique and fun experience on puzzlehunters' calendars, and to introduce more people in the Brown/RISD community to the joys of solving puzzles.
 How hard will this hunt be? How long will it be?

@@ -26,7 +26,7 @@ export default function ProgressDocs({ children }: { children: ReactNode }) {
     headings.forEach((heading, i) => {
       const rect = heading.getBoundingClientRect();
       console.log(i, rect)
-      if (rect.x >= 0 && rect.y >= 0) {
+      if ((rect.x >= 0 && rect.y >= 0) && (rect.x <= window.innerWidth && rect.y <= window.innerHeight)) {
         currentHeadings.push(heading.innerHTML.toLowerCase());
       }
     });
@@ -57,7 +57,7 @@ export default function ProgressDocs({ children }: { children: ReactNode }) {
             {Array.from(headings || []).map((heading) => (
             <div
               key={heading.id}
-              className={`cursor-pointer p-2 transition-colors ${activeHeadings.includes(heading.innerHTML.toLowerCase()) && 'font-bold' || 'text-slate-400'}`}
+              className={`cursor-pointer p-2 transition-colors ${activeHeadings.includes(heading.innerHTML.toLowerCase()) && 'font-bold' || 'text-slate-400'} ${heading.tagName.substring(1) == '1' && 'underline font-semibold' || 'none'}`}
               style={{
                 paddingLeft: `${Math.floor(Number(heading.tagName.substring(1)) / 4)}em`,
               }}

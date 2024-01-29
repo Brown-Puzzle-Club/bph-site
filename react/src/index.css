@@ -123,8 +123,9 @@
   letter-spacing: -.02em;
   --tw-text-opacity: 1;
   color: rgb(148 163 184 / var(--tw-text-opacity)); 
-  padding-top: 2rem;
+  padding-top: 0.25rem;
   color: #9798ff;
+  
 }
 /* // color: #6581c2; */
 
@@ -150,11 +151,37 @@
   font-size: 1.5rem;
   line-height: 2rem;
   display: inline-block;
-  padding-bottom: 0.75rem;
+  padding-bottom: 0.25rem;
+  padding-top: 0.25rem;
 }
 
 .info p {
   color: #94a3b8;
   padding-top: 0.25rem;
-  padding-bottom: 0.1rem
+  padding-bottom: 1rem
+}
+
+.info p:last-of-type {
+  padding-bottom: 2.5rem;
+}
+
+.info a {
+  text-decoration-line: underline;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.info strong {
+  font-weight: 600;
+  text-decoration-line: underline;
+  text-decoration-style: dashed;
+  cursor: help;
+}
+
+.info li {
+  color: #94a3b8;
+  padding-top: 0.25rem;
+  padding-bottom: 1rem;
+  list-style-type: circle;
+  list-style-position: inside;
 }
