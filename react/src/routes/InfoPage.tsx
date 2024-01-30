@@ -9,22 +9,22 @@ const smoothScroll = (element_id: string) => {
   }
 }
 
-const LocationBox = ({location_name, location_addr, location_desc, image_src, justify_left} : {location_name: string, location_addr: string, location_desc: string, image_src: string, justify_left?: boolean}) => {
+const LocationBox = ({location_name, location_addr, location_desc, image_src, map_link, justify_left} : {location_name: string, location_addr: string, location_desc: string, image_src: string, map_link: string, justify_left?: boolean}) => {
   return (
-    <div className="location-box flex items-center flex-1">
+    <div className={`location-box flex items-center flex-1 ${justify_left ? 'justify-start' : 'justify-end'}`}>
       {justify_left && 
-        <div className="map flex">
-          <img className="object-contain h-60 w-60" src={image_src}></img>
+        <div className="map float-left">
+          <img className="object-contain h-40 w-40" src={image_src}></img>
         </div>
       }
-      <div className={`text flex flex-col ${!justify_left && "text-end"}`}>
-        <h6 className="name text-2xl font-bold text-white">{location_name}</h6>
-        <div className="location flex items-center"><FaLocationDot /><span>{location_addr}</span></div>
-        <span className="description">{location_desc}</span>
+      <div className={`text flex flex-col px-5 ${!justify_left && "text-right" || "text-left"}`}>
+        <h6 className="name text-xl md:text-3xl font-bold text-white tracking-wide">{location_name}</h6>
+        <a className="location" href={map_link}>{!justify_left && <FaLocationDot className="inline-block" />}{location_addr}{justify_left && <FaLocationDot className="inline-block" />}</a>
+        <div className="description text-[#94a3b8]">{location_desc}</div>
       </div>
       {!justify_left && 
-        <div className="map">
-          <img className="object-contain h-60 w-60" src={image_src}></img>
+        <div className="map float-right">
+          <img className="object-contain h-40 w-40" src={image_src}></img>
         </div>
       }
     </div>
@@ -159,9 +159,9 @@ export default function InfoPage() {
         </div>
         <h4>Locations to Know</h4>
         <div>
-          <div className="locations flex items-center pt-5">
-            <LocationBox location_name="Kickoff" location_addr="MacMillan Hall Room 117" location_desc="Doors open at 10:30 AM EDT" image_src="https://www.brownpuzzlehunt.com/static/images/macmillan_squiggle.8117221443f2.png" justify_left={true}/>
-            <LocationBox location_name="Brown Puzzle Club HQ" location_addr="Sayles Hall Room 306" location_desc="Enter through the west side through the Main Green entrance." image_src="https://www.brownpuzzlehunt.com/static/images/macmillan_squiggle.8117221443f2.png"/>
+          <div className="locations flex flex-col lg:flex-row items-center pt-5">
+            <LocationBox location_name="Kickoff" location_addr="MacMillan Hall Room 117" location_desc="Doors open at 10:30 AM EDT" image_src="https://www.brownpuzzlehunt.com/static/images/macmillan_squiggle.8117221443f2.png" map_link="https://maps.app.goo.gl/p7xAA65kqwhHXH147" justify_left={true}/>
+            <LocationBox location_name="Brown Puzzle Club HQ" location_addr="Sayles Hall Room 306" location_desc="Enter through the west side through the Main Green entrance." map_link="#" image_src="https://www.brownpuzzlehunt.com/static/images/macmillan_squiggle.8117221443f2.png"/>
           </div>
           <p>Some events and puzzles might use locations that require card swipe access, which is limited to current undergraduate or graduate students (or some faculty). Puzzles which require this will be kept to a minimum and, where applicable, clearly marked as such. If you know ahead of time that you'll want to participate in these puzzles but have no current students on your team, <a href="/contact">contact us</a> before the hunt and we'll find a way to get that sorted.</p>
         </div>
@@ -192,17 +192,19 @@ export default function InfoPage() {
         <h4>Events</h4>
         <div>
           <p>We're excited to say that there will be events which are on-campus! These events will provide one “free solve” to teams who complete it, which can be used to get the answer to a puzzle that they're stuck on. Anyone who is on-campus during the event is welcome to participate.</p>
-          <div className="event-box">
-            <div className="title">Event #1</div>
-            <div className="time">Saturday 3:00 PM EDT</div>
-          </div>
-          <div className="event-box">
-            <div className="title">Event #2</div>
-            <div className="time">Saturday 7:00 PM EDT</div>
-          </div>
-          <div className="event-box">
-            <div className="title">Event #3</div>
-            <div className="time">Sunday 12:00 PM EDT</div>
+          <div className="events flex flex-col md:flex-row p-5 space-y-5 md:space-y-0">
+            <div className="event-box bg-red items-center flex-auto lg:w-1/3 text-center">
+              <div className="title text-xl font-bold">Event #1</div>
+              <div className="time">Saturday 3:00 PM EDT</div>
+            </div>
+            <div className="event-box bg-red items-center flex-auto lg:w-1/3 text-center">
+              <div className="title text-xl font-bold">Event #2</div>
+              <div className="time">Saturday 7:00 PM EDT</div>
+            </div>
+            <div className="event-box bg-red items-center flex-auto lg:w-1/3 text-center">
+              <div className="title text-xl font-bold">Event #3</div>
+              <div className="time">Sunday 12:00 PM EDT</div>
+            </div>
           </div>
           <p>These timings may be subject to change.</p>
         </div>
