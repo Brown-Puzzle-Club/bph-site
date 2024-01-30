@@ -209,6 +209,7 @@ body {
 }
 
 .info .event-box {
+  color: #afc5ff;
   -webkit-animation: glow 4s ease-in-out infinite alternate;
   -moz-animation: glow 4s ease-in-out infinite alternate;
   animation: glow 4s ease-in-out infinite alternate;
