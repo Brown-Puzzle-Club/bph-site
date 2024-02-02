@@ -101,6 +101,10 @@
   }
 }
 
+body {
+  background-color: #05061c;
+}
+
 .navbar button {
   background: none;
   color: white;
@@ -115,6 +119,14 @@
   border-radius: 1rem;
 }
 
+.btn-gradient-bot {
+  border-bottom-width: 4px;
+  border-style: solid;
+  background-image: linear-gradient(to right, #a4b2c7, #566c9a) 1;
+  background-origin: border-box;
+  background-clip: border-box;
+}
+
 .info h1 {
   margin-top: 0.5rem;
   font-size: 1.125rem;
@@ -124,10 +136,27 @@
   --tw-text-opacity: 1;
   color: rgb(148 163 184 / var(--tw-text-opacity)); 
   padding-top: 0.25rem;
-  color: #9798ff;
-  
+  color: #afc5ff; /*#9798ff;*/
+  -webkit-animation: glow_subtle 4s ease-in-out infinite alternate;
+  -moz-animation: glow_subtle 4s ease-in-out infinite alternate;
+  animation: glow_subtle 4s ease-in-out infinite alternate;
 }
 /* // color: #6581c2; */
+
+@keyframes glow {
+  from {
+    text-shadow: 0 0 10px #221f1f55, 0 0 10px #0ea5fd2d, 0 0 15px #0ea5fd2d, 0 0 20px #0ea5fd2d, 0 0 25px #0ea5fd2d, 0 0 30px #0ea5fd2d, 0 0 35px #0ea5fd2d;
+  }
+  to {
+    text-shadow: 0 0 10px #0088ff78, 0 0 15px #0088ff78, 0 0 20px #0088ff78, 0 0 25px #0088ff78, 0 0 30px #0088ff78, 0 0 35px #0088ff78, 0 0 40px #0088ff78;
+  }
+}
+
+.contact a {
+  text-decoration-line: underline;
+  font-weight: 600;
+  cursor: pointer;
+}
 
 .info h2 {
   font-size: 2rem;
@@ -165,6 +194,13 @@
   padding-bottom: 2.5rem;
 }
 
+.info span {
+  color: #94a3b8;
+  padding-top: 0.25rem;
+  padding-bottom: 1rem;
+  padding-left: 2rem;
+}
+
 .info a {
   text-decoration-line: underline;
   font-weight: 600;
@@ -184,4 +220,39 @@
   padding-bottom: 1rem;
   list-style-type: circle;
   list-style-position: inside;
+}
+
+.info .event-box {
+  color: #afc5ff;
+  -webkit-animation: glow_subtle 4s ease-in-out infinite alternate;
+  -moz-animation: glow_subtle 4s ease-in-out infinite alternate;
+  animation: glow_subtle 4s ease-in-out infinite alternate;
+}
+
+.credits-content li b {
+  color: white;
+}
+
+.credits-content li {
+  color: #94a3b8;
+}
+
+.credits a {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+@keyframes glow_subtle {
+  from {
+    text-shadow: 0 0 8px #0ea5fd2d, 0 0 12px #0ea5fd2d;
+  }
+  to {
+    text-shadow: 0 0 8px #0088ff78, 0 0 12px #0088ff78;
+  }
+}
+
+.credits strong {
+  -webkit-animation: glow_subtle 4s ease-in-out infinite alternate;
+  -moz-animation: glow_subtle 4s ease-in-out infinite alternate;
+  animation: glow_subtle 4s ease-in-out infinite alternate;
 }
