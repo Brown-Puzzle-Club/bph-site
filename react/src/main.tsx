@@ -3,6 +3,7 @@ import * as React from "react";
 import * as ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { PageWrapper } from "./components/PageWrapper";
+import { AuthContextProvider } from './hooks/useAuth';
 import { DjangoContextProvider } from './hooks/useDjangoContext';
 import "./index.css";
 import Club from "./routes/Club";
@@ -54,8 +55,10 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <DjangoContextProvider>
-      <RouterProvider router={router} />
-    </DjangoContextProvider>
+    <AuthContextProvider>
+      <DjangoContextProvider>
+        <RouterProvider router={router} />
+      </DjangoContextProvider>
+    </AuthContextProvider>
   </React.StrictMode>
 );

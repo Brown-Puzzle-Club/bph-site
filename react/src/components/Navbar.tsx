@@ -13,6 +13,8 @@ import {
 import { cn } from "@/lib/utils";
 import Login from "./auth/Login";
 
+import { useAuth } from "@/hooks/useAuth";
+
 
 const components: { title: string; href: string; description: string }[] = [
   {
@@ -53,6 +55,8 @@ const components: { title: string; href: string; description: string }[] = [
 ]
  
 export default function Navbar({navbarColor}: {navbarColor: string}) {
+  const { loggedIn } = useAuth();
+
   return (
     <div className={`navbar sticky top-0 z-40 w-full backdrop-blur-sm flex transition-colors duration-500 lg:z-50 lg:border-b lg:border-slate-900/10 dark:border-slate-50/[0.06] supports-backdrop-blur:bg-white/60 dark:bg-transparent`}
     style={{
@@ -122,12 +126,14 @@ export default function Navbar({navbarColor}: {navbarColor: string}) {
             <NavigationMenuItem>
               REGISTER
             </NavigationMenuItem>
+            {!loggedIn &&
             <NavigationMenuItem>
               <NavigationMenuTrigger>LOGIN</NavigationMenuTrigger>
               <NavigationMenuContent>
                 <Login/>
               </NavigationMenuContent>
-            </NavigationMenuItem>
+            </NavigationMenuItem> || <div>LOGGED IN!</div>
+            }
           </NavigationMenuList>
         </NavigationMenuRight>
       </div>

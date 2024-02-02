@@ -1,26 +1,20 @@
-import axios from 'axios';
+import { useAuth } from '@/hooks/useAuth';
 import { useState } from 'react';
 import { BeatLoader } from 'react-spinners';
 
 export default function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  // const [error, setError] = useState('');
   const [formProgress, setFormProgress] = useState(false);
+
+  const { login } = useAuth();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormProgress(true);
-
-    try {
-      await axios.post('/api/login', {
-        username: username,
-        password: password,
-      });
-    } catch (error) {
-      const e = error as Error;
-      setError(e.message);
-    }
+    
+    await login(username, password);
 
     setFormProgress(false);
   };
@@ -28,7 +22,7 @@ export default function Login() {
   return (
     <form className="flex flex-col space-y-4 p-3" onSubmit={handleLogin}>
       <div className="flex flex-col">
-        <p className="text-red-500">{error}</p>
+        {/* <p className="text-red-500">{error}</p> */}
         <label htmlFor="username" className="text-sm font-medium text-muted-foreground mb-1">
           Username
         </label>
