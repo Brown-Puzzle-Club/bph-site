@@ -23,9 +23,9 @@ export default function ProgressDocs({ children }: { children: ReactNode }) {
 
     const currentHeadings: string[] = [];
 
-    headings.forEach((heading, i) => {
+    headings.forEach((heading) => {
       const rect = heading.getBoundingClientRect();
-      console.log(i, rect)
+      // console.log(i, rect)
       if ((rect.x >= 0 && rect.y >= 0) && (rect.x <= window.innerWidth*.95 && rect.y <= window.innerHeight*.95)) {
         currentHeadings.push(heading.innerHTML.toLowerCase());
       }

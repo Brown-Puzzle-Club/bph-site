@@ -2,6 +2,7 @@
 {% block content %}
   <script>
     var djangoContext = '{{ context|escapejs }}';
+    window.CSRF_TOKEN = "{{ csrf_token }}";
   </script>
   <script type="module" crossorigin src="/static/react/index.js"></script>
   <link rel="stylesheet" crossorigin href="/static/react/index.css">

@@ -9,7 +9,9 @@ router.register(r'users', views.UserViewSet, basename='user')
 router.register(r'my-team', views.TeamViewSet, basename='team')
 router.register(r'teams', views.BasicTeamViewSet, basename='team')
 
+
 urlpatterns = [
     path('', views.index, name='index'),
     path('', include(router.urls)),
+    path('login', views.login_view, name='login')
 ]

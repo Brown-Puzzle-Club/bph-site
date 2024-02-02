@@ -1,14 +1,21 @@
+import axios from 'axios';
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { PageWrapper } from "./components/PageWrapper";
+import { DjangoContextProvider } from './hooks/useDjangoContext';
 import "./index.css";
 import Club from "./routes/Club";
 import Contact from "./routes/Contact";
 import Credits from "./routes/Credits";
 import InfoPage from "./routes/InfoPage";
 import Landing from "./routes/Landing";
+import Leaderboard from './routes/Leaderboard';
 import SocialDeduction from "./routes/major_cases/SocialDeduction";
+import TeamPage from './routes/TeamPage';
+
+declare const CSRF_TOKEN: string;
+axios.defaults.headers.common['X-CSRFToken'] = CSRF_TOKEN;
 
 const router = createBrowserRouter([
   {
@@ -34,12 +41,21 @@ const router = createBrowserRouter([
   {
     path: "/contact",
     element: <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<Contact />} />
+  },
+  {
+    path: "/leaderboard",
+    element: <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<Leaderboard />} />
+  },
+  {
+    path: "/team-new",
+    element: <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<TeamPage />} />
   }
-  
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <DjangoContextProvider>
+      <RouterProvider router={router} />
+    </DjangoContextProvider>
   </React.StrictMode>
 );

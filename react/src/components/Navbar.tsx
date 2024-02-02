@@ -11,45 +11,8 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
+import Login from "./auth/Login";
 
-const LoginForm = () => {
-  return (
-    <form className="flex flex-col space-y-4 p-3">
-      <div className="flex flex-col">
-        <label htmlFor="username" className="text-sm font-medium text-muted-foreground mb-1">
-          Username
-        </label>
-        <input
-          type="text"
-          id="username"
-          name="username"
-          className="p-2 border rounded-md focus:outline-none focus:ring focus:border-primary"
-          placeholder="Enter your username"
-          required
-        />
-      </div>
-      <div className="flex flex-col">
-        <label htmlFor="password" className="text-sm font-medium text-muted-foreground mb-1">
-          Password
-        </label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          className="p-2 border rounded-md focus:outline-none focus:ring focus:border-primary"
-          placeholder="Enter your password"
-          required
-        />
-      </div>
-      <button
-        type="submit"
-        className="bg-primary text-white p-2 rounded-md hover:bg-primary-dark focus:outline-none focus:ring focus:border-primary-dark"
-      >
-        Login
-      </button>
-    </form>
-  )
-}
 
 const components: { title: string; href: string; description: string }[] = [
   {
@@ -162,7 +125,7 @@ export default function Navbar({navbarColor}: {navbarColor: string}) {
             <NavigationMenuItem>
               <NavigationMenuTrigger>LOGIN</NavigationMenuTrigger>
               <NavigationMenuContent>
-                <LoginForm/>
+                <Login/>
               </NavigationMenuContent>
             </NavigationMenuItem>
           </NavigationMenuList>
