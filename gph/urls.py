@@ -131,5 +131,8 @@ urlpatterns = [
     path('social-deduction', views.prerelease_locked_react, name='social-deduction'),
     path('landing', views.prerelease_locked_react, name='landing'),
     path('info', views.prerelease_locked_react, name='info'),
+    path('credits-new', views.prerelease_locked_react, name='credits-new'),
+    path('club-new', views.prerelease_locked_react, name='credits-new'),
+    path('contact', views.prerelease_locked_react, name='contact'),
 ]
   
