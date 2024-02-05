@@ -1,0 +1,268 @@
+{% extends "solution.html" %}
+
+{% block puzzle-author %}
+Thomas Gordon; idea by Zach Gottshall
+{% endblock %}
+
+{% block solution-body-md %}
+
+We are presented with a 6x8 grid of items with A-F names, and a list of 8 categories.
+
+After googling some names, we should be able to identify the categories without much problem.
+
+LEMURS<br>
+QUEENS<br>
+CITIES<br>
+APPLES<br>
+MOVIES<br>
+PONIES<br>
+NOVELS<br>
+SHARKS
+
+Dividing the grid into these categories will have a few ambiguities, which can be resolved by understanding that each column (A-F) has one element of each category, with one exception. The correctly matched elements are:
+
+<table>
+    <thead>
+    <tr>
+        <th></th>
+        <th>A</th>
+        <th>B</th>
+        <th>C</th>
+        <th>D</th>
+        <th>E</th>
+        <th>F</th>
+    </tr>
+</thead>
+<tbody>
+    <tr>
+        <td>LEMURS</td>
+        <td>ANOSY MOUSE</td>
+        <td>BLACK</td>
+        <td>COMMON BROWN</td>
+        <td>DARAINA SPORTIVE</td>
+        <td>EASTERN GREY</td>
+        <td>FAT-TAILED DWARF</td>
+    </tr>
+    <tr>
+        <td>QUEENS</td>
+        <td>MARIE ANTOINETTE</td>
+        <td>BOUDICA</td>
+        <td>CATHERINE THE GREAT</td>
+        <td>JOHN DEACON</td>
+        <td>ELIZABETH II</td>
+        <td>ELISABETH FARNESE</td>
+    </tr>
+    <tr>
+        <td>CITIES</td>
+        <td>ANDREWS, OREGON</td>
+        <td>BOSTON</td>
+        <td>CHICAGO</td>
+        <td>DENVER</td>
+        <td>EL PASO</td>
+        <td>FORTH WORTH, TEXAS</td>
+    </tr>
+    <tr>
+        <td>APPLES</td>
+        <td>ADAM'S PEARMAIN</td>
+        <td>BRAEBURN</td>
+        <td>CAP OF LIBERTY</td>
+        <td>D'ANJOU</td>
+        <td>EMPIRE</td>
+        <td>FAIR MAID OF DEVON</td>
+    </tr>
+    <tr>
+        <td>MOVIES</td>
+        <td>AVATAR</td>
+        <td>BACK TO THE FUTURE</td>
+        <td>COCO</td>
+        <td>DOCTOR WHO</td>
+        <td>ETERNAL SUNSHINE OF THE SPOTLESS MIND</td>
+        <td>FATAL ATTRACTION</td>
+    </tr>
+    <tr>
+        <td>PONIES</td>
+        <td>APPLEJACK</td>
+        <td>BRAEBURN</td>
+        <td>CHARCOAL</td>
+        <td>DERPY</td>
+        <td>EMERALD GREEN</td>
+        <td>FLUTTERSHY</td>
+    </tr>
+    <tr>
+        <td>NOVELS</td>
+        <td>AMERICAN GODS</td>
+        <td>BRAVE NEW WORLD</td>
+        <td>THE CALL OF THE WILD</td>
+        <td>THE DEVIL AND DANIEL WEBSTER</td>
+        <td>EMMA</td>
+        <td>FEAR AND LOATHING IN LAS VEGAS</td>
+    </tr>
+    <tr>
+        <td>SHARKS</td>
+        <td>ANGEL </td>
+        <td>BULL</td>
+        <td>COOKIE CUTTER</td>
+        <td>DALL'S PORPOISE</td>
+        <td>EPAULETTE</td>
+        <td>FINETOOTH</td>
+    </tr>
+</tbody>
+</table>
+
+Each category also has exactly one “mistake”: an item that's similar but not in the actual category.
+
+<table>
+    <tr>
+        <td>LEMURS</td>
+        <td>EASTERN GREY</td>
+        <td>Eastern Grey is a kind of squirrel, not lemur</td>
+    </tr>
+    <tr>
+        <td>QUEENS</td>
+        <td>JOHN DEACON</td>
+        <td>John Deacon is a bass guitarist for the British band Queen, not an actual regal queen</td>
+    </tr>
+    <tr>
+        <td>CITIES</td>
+        <td>ANDREWS, OREGON</td>
+        <td>Andrews, Oregon is a ghost town, not a city</td>
+    </tr>
+    <tr>
+        <td>APPLES</td>
+        <td>D'ANJOU</td>
+        <td>D'Anjou is a pear species, not an apple species</td>
+    </tr>
+    <tr>
+        <td>MOVIES</td>
+        <td>DOCTOR WHO</td>
+        <td>Doctor Who is primarily a TV show</td>
+    </tr>
+    <tr>
+        <td>PONIES</td>
+        <td>CASS OLE</td>
+        <td>Cass Ole is a real equine, not a pony from MLP</td>
+    </tr>
+    <tr>
+        <td>NOVELS</td>
+        <td>THE DEVIL AND DANIEL WEBSTER</td>
+        <td>The Devil and Daniel Webster is a short story</td>
+    </tr>
+    <tr>
+        <td>SHARKS</td>
+        <td>DALL'S PORPOISE</td>
+        <td>Dall's Porpoise is (you guessed it) a porpoise</td>
+    </tr>
+</table>
+
+We might now notice that each category is exactly 6 letters long. And there are 6 possible items (A-F) out of which one is a mistake. Using this, we can extract a letter!
+
+For example, MOVIES had the mistake as the 4th entry (Column D = Doctor Who) so we take the 4th letter of MOVIES.
+
+<table>
+    <thead>
+        <tr>
+            <th></th>
+            <th></th>
+            <th>A</th>
+            <th>B</th>
+            <th>C</th>
+            <th>D</th>
+            <th>E</th>
+            <th>F</th>
+        </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>LEMURS</td>
+        <td>EASTERN GREY</td>
+        <td>L</td>
+        <td>E</td>
+        <td>M</td>
+        <td>U</td>
+        <td><u><b>R</b></u></td>
+        <td>S</td>
+    </tr>
+    <tr>
+        <td>QUEENS</td>
+        <td>JOHN DEACON</td>
+        <td>Q</td>
+        <td>U</td>
+        <td>E</td>
+        <td><u><b>E</b></u></td>
+        <td>N</td>
+        <td>S</td>
+    </tr>
+    <tr>
+        <td>CITIES</td>
+        <td>ANDREWS, OREGON</td>
+        <td><u><b>C</b></u></td>
+        <td>I</td>
+        <td>T</td>
+        <td>I</td>
+        <td>E</td>
+        <td>S</td>
+    </tr>
+    <tr>
+        <td>APPLES</td>
+        <td>D'ANJOU</td>
+        <td>A</td>
+        <td>P</td>
+        <td>P</td>
+        <td><u><b>L</b></u></td>
+        <td>E</td>
+        <td>S</td>
+    </tr>
+    <tr>
+        <td>MOVIES</td>
+        <td>DOCTOR WHO</td>
+        <td>M</td>
+        <td>O</td>
+        <td>V</td>
+        <td><u><b>I</b></u></td>
+        <td>E</td>
+        <td>S</td>
+    </tr>
+    <tr>
+        <td>PONIES</td>
+        <td>CASS OLE</td>
+        <td>P</td>
+        <td>O</td>
+        <td><u><b>N</b></u></td>
+        <td>I</td>
+        <td>E</td>
+        <td>S</td>
+    </tr>
+    <tr>
+        <td>NOVELS</td>
+        <td>THE DEVIL AND DANIEL WEBSTER</td>
+        <td>N</td>
+        <td>O</td>
+        <td>V</td>
+        <td><u><b>E</b></u></td>
+        <td>L</td>
+        <td>S</td>
+    </tr>
+    <tr>
+        <td>SHARKS</td>
+        <td>DALL'S PORPOISE</td>
+        <td>S</td>
+        <td>H</td>
+        <td>A</td>
+        <td><u><b>R</b></u></td>
+        <td>K</td>
+        <td>S</td>
+    </tr>
+    </tbody>
+</table>
+
+From top to bottom, this spells out our answer, <span class="spoiler">RECLINER</span>.
+
+{% endblock %}
+
+{% block author-notes-html %}
+
+Zach was originally the one to pitch an idea for this puzzle to me (although utilizing a slightly different flavor). When he was ultimately unable to write it, I got his permission to construct it instead, and (with some iteration) it eventually turned into the puzzle you see today!<br><br>
+
+In hindsight, the extraction is far too hard for an opening round puzzle, and the flavortext should have been trimmed further: the "lazy" bit is me trying to be cute, and if there's one thing that a puzzle author should never do unless they're absolutely positively certain they know what they're doing, it's try to be cute. Especially in flavortext.
+
+{% endblock %}

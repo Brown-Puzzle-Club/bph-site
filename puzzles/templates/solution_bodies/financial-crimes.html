@@ -1,0 +1,91 @@
+{% extends "solution.html" %}
+
+{% block puzzle-author %}
+Alex DeFranco, Thomas Mowen
+{% endblock %}
+
+{% block solution-body-md %}
+
+The puzzle is a search for fraud suspects who owe money to the IRS. The solver is presented with an overwhelming amount of data in the form of a handful of spreadsheets. They also are given a short brief with some extra information and instructions, including the name of an associate of the original perpetrator.
+
+The first step is to find the accomplices of “Henry Bascome“ in the Suspects spreadsheet. He has four accomplices, each of which can be found by comparing demographic information found in the first few columns of the sheet.
+
+<ul>
+    <li>Accomplice 1: Melanie Bascombe, The Wife. She shares a last name and address with Henry, is a similar age to him, and has the same number of kids.</li>
+    <li>Accomplice 2: David Stewart, The Childhood Friend. They are the only two people from Oakland, CA in the same age range.</li>
+    <li>Accomplice 3: Bob Oakley, The Coworker. They have the same profession and live in the same town. (There are only two Meteorologists in the city.)</li>
+    <li>Accomplice 4: Adrian Turner, The Neighbor. They live on the same street with addresses differing by 2 (i.e. next door).</li>
+</ul>
+
+If the solver combines the information of these five people, they will realize that they must fill in a large number of gaps in six columns (Arrests, Pets, Favorite Drinks, Favorite Movies, Favorite Foods, and Favorite Sports). Combining these unknowns with the information given in the briefing (including the knowledge that no two of the accomplices have been arrested the same number of times), the solver will realize they are solving an <a href="https://en.wikipedia.org/wiki/Zebra_Puzzle">Zebra puzzle</a>.
+
+<table>
+    <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Drink</th>
+            <th>Eats</th>
+            <th>Sport</th>
+            <th>Arrests</th>
+            <th>Pet</th>
+            <th>Movies</th>
+        </tr>
+    </thead>
+    <tr>
+        <td>Melanie</td>
+        <td>Bascombe</td>
+        <td>Tea</td>
+        <td>Quesadillas</td>
+        <td>Track</td>
+        <td>1</td>
+        <td>Ostrich</td>
+        <td>Dr Strangelove</td>
+    </tr>
+    <tr>
+        <td>Henry</td>
+        <td>Bascombe</td>
+        <td>Prime</td>
+        <td>Chopped Cheese</td>
+        <td>Cross Country</td>
+        <td>3</td>
+        <td>Camel</td>
+        <td>Casablanca</td>
+    </tr>
+    <tr>
+        <td>David</td>
+        <td>Stewart</td>
+        <td>Absynth</td>
+        <td>Grilled Cheeze</td>
+        <td>Archery</td>
+        <td>2</td>
+        <td>Turtle</td>
+        <td>James Bond</td>
+    </tr>
+    <tr>
+        <td>Adrian</td>
+        <td>Turner</td>
+        <td>Coke</td>
+        <td>Salad</td>
+        <td>Lacrosse</td>
+        <td>4</td>
+        <td>Horse</td>
+        <td>Terminator</td>
+    </tr>
+    <tr>
+        <td>Bob</td>
+        <td>Oakley</td>
+        <td>Seltzer Water</td>
+        <td>Jelly Beans</td>
+        <td>Handball</td>
+        <td>5</td>
+        <td>Cat</td>
+        <td>2001: A Space Odyssey</td>
+    </tr>
+</table>
+
+Since we know that the leader owns the horse, we can therefore determine that Adrian Turner is the leader. 
+
+Upon solving that puzzle, they will also know what Adrian Turner (the suspect in question) has bought. Using the other documents provided, the solver can calculate how much Turner has spent in the past calendar year (remember that we need annual expenditure here, not monthyl!). This comes out to $1693116 in total. This total spending number can then be searched for in the “Filing” document to get the associated filing number, 5557182. Searching <a href="https://icis.corp.delaware.gov/ecorp/entitysearch/namesearch.aspx">Delaware's state business filing database</a> for this filing number tells us the name of this company and our answer, <span class="spoiler">MYSTERY INC</span>.
+
+{% endblock %}

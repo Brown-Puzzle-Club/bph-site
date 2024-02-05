@@ -1,0 +1,160 @@
+{% extends "puzzle.html" %}
+{% load static %}
+{% block puzzle-body-md %}
+
+<style>
+    html {
+      --page-bg-rgb: 158, 140, 163;
+      --accent-rgb: 61, 51, 65; /*0, 85, 170;*/
+      
+      --neutral-color: rgb(134, 114, 139);
+      --accent-hover-color: #3d3341;
+
+      --btn-bg-color: #3d344345;
+    
+      --btn3-bg-color: #97998b;
+      --btn3-hover-color: #3d3341;
+    
+      --tray-text-color: white;
+      --tray-text-light-color: #9e92a6;
+      --tray-bg-color: #4d4652;
+      --tray-hover-color: #86728b;
+
+      --heading-text-color: #3d3341;
+      --link-hover-color: #3f0750;
+    }
+    .instructions {
+        font-family: Georgia, "Times New Roman", Times, serif;
+    }
+    .title {
+        text-align: center;
+        display: block; 
+        margin-left: auto; 
+        margin-right: auto;
+        font-weight: bold;
+        font-family: "Fantasy";
+        font-size: 3rem;
+    }
+    .title-table {
+      text-align: center;
+      display: block; 
+      margin-left: auto; 
+      margin-right: auto;
+      font-weight: bold;
+  }
+    img {
+        display: block; 
+        margin-left: auto; 
+        margin-right: auto;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    .dark {
+        background-color: black;
+    }
+    .puzzle-main {
+      border-radius: 10px;
+      border: #4d4652 solid 5px;
+    }
+    .notice {
+        width: 100%;
+        text-align: center;
+        /*padding: 10px;*/
+        border-style: dashed;
+        border-width: 3px;
+        border-color: black;
+        margin-bottom: 20px;
+    }
+</style>
+
+<div class="notice">
+    This is a metapuzzle. It will use the answers to all of the puzzles in this round, as well as the information on this page.
+</div>
+
+<div class="notice">
+    When you solve this puzzle, you should get contacted by HQ for an interaction. If you have already solved this puzzle and haven't gotten an interaction, email us. Going forward, once you solve the meta, you should email us with the subject line "(Title of Team) - Bring Back Blueno".
+</div>
+
+<div class="instructions">
+<span class="title"><u>INSTRUCTIONS FOR RESURRECTION:</u></span>
+<br>
+<ol>
+    <li>Draw a suitable shape in chalk. (See the diagram below.)</li>
+    <li>Place your anchoring pieces at the points of the shape.</li>
+        <ol>
+            <li>The MUSICAL anchor should go in the top-left</li>
+            <li>The SEPARATION anchor should go in the top-right</li>
+            <li>The THOUGHT anchor should go on the right</li>
+            <li>The BATTLE anchor should go on the bottom</li>
+            <li>The SEAT anchor should go on the left</li>
+        </ol>
+    <li>Draw the suitable connections of power between your anchors. You will only need five. Don't worry about filling the outside of the shape.</li>
+    <li>Count dramatically, and very, very carefully. Consider only the shape and official title of the anchor. (Visiting the anchors may help.)</li>
+    <li>Read around the circle, clockwise, to receive your final incantation.</li>
+</ol>
+
+<span class="title"><u>APPENDIX 1: DIAGRAM</u></span>
+<br>
+<img src="{% static 'puzzle_resources/bring-back-blueno/diagram.png' %}">
+
+<span class="title"><u>APPENDIX 2: CONNECTIONS OF POWER</u></span>
+<br>
+<span class="title-table">Number of...</span>
+<table>
+    <tr>
+        <td></td>
+        <td>MUSICAL</td>
+        <td>SEPARATION</td>
+        <td>THOUGHT</td>
+        <td>BATTLE</td>
+        <td>SEAT</td>
+    </tr>
+    <tr>
+        <td>SEAT</td>
+        <td>letters</td>
+        <td>Arabic numerals</td>
+        <td>legs*</td>
+        <td>descenders</td>
+        <td class="dark"></td>
+    </tr>
+    <tr>
+        <td>BATTLE</td>
+        <td>ascenders</td>
+        <td>holes** on the back side***</td>
+        <td>animals</td>
+        <td class="dark"></td>
+        <td class="dark"></td>
+    </tr>
+    <tr>
+        <td>THOUGHT</td>
+        <td>people</td>
+        <td>arms</td>
+        <td class="dark"></td>
+        <td class="dark"></td>
+        <td class="dark"></td>
+    </tr>
+    <tr>
+        <td>SEPARATION</td>
+        <td>holes** on the front side***</td>
+        <td class="dark"></td>
+        <td class="dark"></td>
+        <td class="dark"></td>
+        <td class="dark"></td>
+    </tr>
+    <tr>
+        <td>MUSICAL</td>
+        <td class="dark"></td>
+        <td class="dark"></td>
+        <td class="dark"></td>
+        <td class="dark"></td>
+        <td class="dark"></td>
+    </tr>
+</table>
+
+*This includes any connection between the anchor and the ground.<br>
+**Holes means topological holes which you can poke your finger through. Photos might lie to you.<br>
+***The 'front' is the side with the plaque on it. (It may have the same number of holes as the back!)
+
+</div>
+
+{% endblock %}

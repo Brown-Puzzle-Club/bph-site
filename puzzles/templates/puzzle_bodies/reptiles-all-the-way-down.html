@@ -1,0 +1,355 @@
+{% extends "puzzle.html" %}
+{% load static %}
+{% block puzzle-body-md %}
+
+<style>
+    img {
+        display: block; 
+        margin-left: auto; 
+        margin-right: auto;
+        width: 100%;
+    }
+    td {
+        width: 5px;
+        font-size: 12px;
+        border: 1px solid black;
+    }
+    table {
+        table-layout: fixed;
+        margin: 0 auto;
+        border: 1px solid black;
+        width: 800px;
+        left: 50%;
+    }
+    .notice {
+        width: 100%;
+        text-align: center;
+        padding: 10px;
+        border-style: dashed;
+        border-width: 3px;
+        border-color: black;
+    }
+
+    table td {
+      text-align: center; /* Center align the text in the cell */
+      vertical-align: middle; /* Vertically center the text in the cell */
+      padding: 10px; /* Add some padding to the cell */
+    }
+
+    input[type="text"] {
+      width: 32%;
+      margin: 0 2px;
+    }
+
+    input[type="submit"] {
+      margin-top: 10px;
+    }
+  
+    
+</style>
+
+<script type="text/javascript">
+  // This demo code uses jQuery and modern JavaScript features flagrantly.
+  // You should evaluate your own needs.
+  document.addEventListener('DOMContentLoaded', () => {
+      async function submit() {
+          $('#output').empty()
+          $('#output').css('color', '#000000');
+  
+          $('#n1').prop("disabled", true);
+          $('#n2').prop("disabled", true);
+          $('#n3').prop("disabled", true);
+          $('#submit').prop("disabled", true);
+  
+          let csrftoken = getCookie('csrftoken');
+          try {
+              let result = await fetch("/puzzle/reptiles/submit", {
+                  method: 'POST',
+                  body: JSON.stringify({
+                      nums: [$('#n1').val(),$('#n2').val(),$('#n3').val()]
+                  }),
+                  headers: { "X-CSRFToken": csrftoken },
+              });
+              if (!result.ok) {
+                  // HTTP response code was not 2xx. Maybe introspect more...
+                  $('#output').text(`Error: ${result.status} ${result.statusText}`);
+              } else {
+                  let res = await result.json();
+                  if (res.error) {
+                      $('#output').text(`Error: ${res.error}`);
+                      $('#output').css('color', '#ae7575');
+                  } else {
+                    if (Object.keys(res.result).length != 3) {
+                      let e = "Unhandled count error. Please contact puzzle@brown.edu."
+                      $('#output').text(`Error: ${e}`);
+                    }
+
+                    $('#output').append(`<table id="table"></table>`);
+                    $('#table').append(`<tr id="tr-0"></tr>`);
+                    let i = 0;
+                    for (const [n,resultText] of Object.entries(res.result)) {
+                      $('#tr-0').append(`<td id="td-0-${i}"></td>`);
+                      let result = `<p id="clue-text">${resultText}<span>`;
+                      if (resultText.endsWith('jpg')) { // if image
+                        let path = `/static/puzzle_resources/reptiles-all-the-way-down/${resultText}`
+                        // console.log(path)
+                        result = `<img id="img-${n}" src="${path}">`;
+                      }
+                      $(`#td-0-${i}`).append(`<p id="clue-num"><b>${n}</b></span>`);
+                      $(`#td-0-${i}`).append(result);
+                      i++;
+                    }
+                    
+                      
+                  }
+              }
+          } catch (e) {
+              // This error handling will be very poor.
+              $('#output').text(`Error: ${e}`);
+              $('#output').css('color', '#ae7575');
+          }
+          // calls you might make: .val(""), .select(), .focus()
+          $('#n1').prop("disabled", false);
+          $('#n2').prop("disabled", false);
+          $('#n3').prop("disabled", false);
+          $('#submit').prop("disabled", false);
+      }
+  
+      // https://docs.djangoproject.com/en/dev/ref/csrf/#ajax
+      function getCookie(name) {
+          var cookieValue = null;
+          if (document.cookie && document.cookie !== '') {
+              var cookies = document.cookie.split(';');
+              for (var i = 0; i < cookies.length; i++) {
+                  var cookie = cookies[i].trim();
+                  // Does this cookie string begin with the name we want?
+                  if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                      cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                      break;
+                  }
+              }
+          }
+          return cookieValue;
+      }
+  
+      $('#reptiles-form').on('submit', submit);
+  });
+</script>
+
+Put the heads in line, but don't get cousins mixed up!
+{: .flavor}
+
+<img src="{% static 'puzzle_resources/reptiles-all-the-way-down/blankboard2.jpg' %}">
+
+You're playing snakes and ladders... but all the snakes have escaped! Thankfully, you remember that:
+<ul>
+    <li>each snake took up three adjacent squares - two even, one odd</li>
+    <li>no two snakes overlapped</li>
+    <li>each square they visited was smaller in number than the last, with their heads on the largest square</li>
+</ul>
+
+<form id="reptiles-form" autocomplete="off" action="javascript:void(0);">
+    {# Adding the csrf_token tag is sort of a hack, because we don't care about having an <input> tag with the token; we just care about having the cookie. #}
+    {% csrf_token %}
+    <input type="text" name="num1" id="n1" placeholder="1">
+    <input type="text" name="num2" id="n2" placeholder="2">
+    <input type="text" name="num3" id="n3" placeholder="3">
+    <input type="submit" value="Make Snake!">
+</form>
+<div id="output"><i>Type a number in the field above and submit to make a snake.</i></div>
+<br>
+Start on space 1.<br>
+Roll a 4 and move to space 17.<br>
+Roll a 4 and move to space 2. <br>
+Roll a 2 and move to space 4. <br>
+Roll a 5 and move to space 9. <br>
+Roll a 3 and move to space 8. <br>
+Roll a 2 and move to space 29. <br>
+Roll a 3 and move to space 29 (again).<br> 
+Roll a 4 and move to space 53.<br>
+Roll a 1 and move to space 34.<br>
+Roll a 2 and move to space 16. <br>
+Roll a 3 and move to space 39. <br>
+Roll a 6 and move to space 45.<br>
+Roll a 6 and move to space 51. <br>
+Roll a 5 and move to space 44. <br>
+Roll a 6 and move to space 50. <br>
+Roll a 5 and move to space 55. <br>
+Roll a 4 and move to space 38. <br>
+Roll a 2 and move to space 42. <br>
+Roll a 6 and move to space 48. <br>
+Roll a 5 and move to space 53. <br>
+Roll a 4 and move to space 57. <br>
+Roll a 3 and move to space 42. <br>
+Roll a 6 and move to space 48. <br>
+Roll a 5 and move to space 53. <br>
+Roll a 4 and move to space 57. <br>
+Roll a 6 and move to space 63. <br>
+Roll a 1 and move to space 43. <br>
+Roll a 6 and move to space 49. <br>
+Roll a 6 and move to space 55. <br>
+Roll a 6 and move to space 61. <br>
+Roll a 5 and move to space 66. <br>
+Roll a 2 and move to space 52. <br>
+Roll a 6 and move to space 78. <br>
+Roll a 5 and move to space 83. <br>
+Roll a 3 and move to space 66. <br>
+Roll a 1 and move to space 73. <br>
+Roll a 1 and move to space 94. <br>
+Roll a 4 and move to space 82. <br>
+Roll a 5 and move to space 87. <br>
+Roll a 3 and move to space 69. <br>
+Roll a 1 and move to space 72. <br>
+Roll a 6 and move to space 78. <br>
+Roll a 2 and move to space 82. <br>
+Roll a 3 and move to space 85. <br>
+Roll a 6 and move to space 91. <br>
+Roll a 2 and move to space 94.<br>
+Roll a 6 and move to space 100. You win!<br>
+In celebration of your win, you think about the most famous members of this species.
+
+{% endblock %}
+
+
+<!-- <table>
+    <tr>
+        <td style="border: 1px solid white; border-right: 1px solid black;"></td>
+        <td>Where are we from?</td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/99.jpg' %}"></td>
+        <td>My name indicates that I was an unexpected find</td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/97.jpg' %}"></td>
+        <td>My diet is entirely made of fish eggs</td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/95.jpg' %}"></td>
+        <td>Spiny tubercules cover every part of my body</td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/93.jpg' %}"></td>
+        <td>I am often found on cashew and cacao plantations</td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/91.jpg' %}"></td>
+        <td style="border: 1px solid white;"></td>
+    </tr>
+    <tr>
+        <td style="border: 1px solid white; border-right: 1px solid black;"></td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/81.jpg' %}"></td>
+        <td>There are less than five thousand of me left. </td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/83.jpg' %}"></td>
+        <td>I mostly eat other snakes, even from my own species</td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/85.jpg' %}"></td>
+        <td>I glide from tree to tree</td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/87.jpg' %}"></td>
+        <td>I am the only lizard that spends most of my time in the ocean</td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/89.jpg' %}"></td>
+        <td>I am the world's smallest lizard. </td>
+        <td style="border: 1px solid white;"></td>
+    </tr>
+    <tr>
+        <td style="border: 1px solid white; border-right: 1px solid black;"></td>
+        <td>I am the most popular of my family in the pet trade</td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/79.jpg' %}"></td>
+        <td>I am the most commonly exported lizard from southeast Asia</td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/77.jpg' %}"></td>
+        <td>My only natural predator is the saltwater crocodile</td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/75.jpg' %}"></td>
+        <td>I eat algae</td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/73.jpg' %}"></td>
+        <td>I live in leaf litter</td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/71.jpg' %}"></td>
+        <td style="border: 1px solid white;"></td>
+    </tr>
+    <tr>
+        <td style="border: 1px solid white; border-right: 1px solid black;"></td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/61.jpg' %}"></td>
+        <td>I am the snake that Cleopatra committed suicide with</td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/63.jpg' %}"></td>
+        <td> I am not named after Orville and Wilbur</td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/65.jpg' %}"></td>
+        <td>I am a prominent character in the novel Karvalo</td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/67.jpg' %}"></td>
+        <td>I am not a vampire</td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/69.jpg' %}"></td>
+        <td>My name means savior</td>
+        <td style="border: 1px solid white;"></td>
+    </tr>
+    <tr>
+        <td style="border: 1px solid white; border-right: 1px solid black;"></td>
+        <td>I am a true cobra</td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/59.jpg' %}"></td>
+        <td>I am known only from my original description</td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/57.jpg' %}"></td>
+        <td>I have the largest length to width ratio of any snake</td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/55.jpg' %}"></td>
+        <td>I am smaller than my salty cousin</td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/53.jpg' %}"></td>
+        <td>I am not a common green forest lizard</td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/51.jpg' %}"></td>
+        <td style="border: 1px solid white;"></td>
+    </tr>
+    <tr>
+        <td style="border: 1px solid white; border-right: 1px solid black;"></td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/41.jpg' %}"></td>
+        <td>I am named after a major tribe of the Beja people</td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/43.jpg' %}"></td>
+        <td>I am common on volcanic islands, but not on the nearby coral islands</td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/45.png' %}"></td>
+        <td>I live in the dirt, but I'm not a worm</td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/47.jpg' %}"></td>
+        <td>Marco Polo was the first European to write about me</td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/49.jpg' %}"></td>
+        <td>I have a bony plate on my upper eyelid</td>
+        <td style="border: 1px solid white;"></td>
+    </tr>
+    <tr>
+        <td style="border: 1px solid white; border-right: 1px solid black;"></td>
+        <td> I was first described in 2020</td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/39.jpg' %}"></td>
+        <td>My holotype is at the Field Museum</td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/37.jpg' %}"></td>
+        <td>I have a big head</td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/35.jpg' %}"></td>
+        <td>I am often infected by the flatworm <i>Griphobilharzia amoena</i></td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/33.jpg' %}"></td>
+        <td>My local name is zandoli</td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/31.jpg' %}"></td>
+        <td style="border: 1px solid white;"></td>
+    </tr>
+    <tr>
+        <td style="border: 1px solid white; border-right: 1px solid black;"></td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/21.jpg' %}"></td>
+        <td>I am rumored to have toxic breath</td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/23.jpg' %}"></td>
+        <td>My venom is used to treat type II diabetes</td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/25.jpg' %}"></td>
+        <td>I killed Karl Schmidt</td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/27.jpg' %}"></td>
+        <td>I hiss with my epiglottis</td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/29.jpg' %}"></td>
+        <td>I am a classic example of adaptive radiation</td>
+        <td style="border: 1px solid white;"></td>
+    </tr>
+    <tr>
+        <td style="border: 1px solid white; border-right: 1px solid black;"></td>
+        <td>I am known for my small eyes</td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/19.jpg' %}"></td>
+        <td>I am the only living rhynchocephalian</td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/17.jpg' %}"></td>
+        <td>I only live on one island</td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/15.jpg' %}"></td>
+        <td>I glue my eggs under loose bark</td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/13.jpg' %}"></td>
+        <td>I am often confused with the more common Caucasus viper</td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/11.jpg' %}"></td>
+        <td style="border: 1px solid white;"></td>
+    </tr>
+    <tr>
+        <td style="border: 1px solid white; border-right: 1px solid black;"></td>
+        <td><a src="https://reptile-database.reptarium.cz/"></a>https://reptile-database.reptarium.cz/</td>
+        <td>My first venemous bite was recorded in 2009. </td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/3.jpg' %}"></td>
+        <td>I have been known to eat subadult tapirs</td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/5.jpg' %}"></td>
+        <td>I am the longest-lived lizard, up to 54 years old</td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/7.jpg' %}"></td>
+        <td> There are less than 250 individuals of my species left</td>
+        <td><img src="{% static 'puzzle_resources/reptiles-all-the-way-down/9.jpg' %}"></td>
+        <td>When threatened, I emit a foul musk from my cloaca</td>
+        <td style="border: 1px solid white;"></td>
+    </tr>
+</table> -->

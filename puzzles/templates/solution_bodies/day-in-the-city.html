@@ -1,0 +1,96 @@
+{% extends "solution.html" %}
+{% load static %}
+
+{% block puzzle-author %}
+Lorenzo Mahoney
+{% endblock %}
+
+{% block solution-body-md %}
+
+Here are some observations to get you started:
+<ul>
+    <li>The streets demarcate Manhattan in an interesting way (why some streets and not others?)</li>
+    <li>The fun facts seem literally inane and suggest a connection between sights and something related to physical properties</li>
+</ul>
+
+In fact, these 'fun facts' all refer to properties of specific chemical elements!
+
+<table>
+    <tr>
+        <td><b>Location</b></td>
+        <td><b>Fact</b></td>
+        <td><b>Element</b></td>
+    </tr>
+    <tr>
+        <td>Rockefeller Center</td>
+        <td>Most corrosion-resistant material</td>
+        <td>Iridium</td>
+    </tr>
+    <tr>
+        <td>Chelsea Market</td>
+        <td>Heliocentrism</td>
+        <td>Copernicum</td>
+    </tr>
+    <tr>
+        <td>Jackie O. Reservoir</td>
+        <td>Bluish tint, produced in the DR Congo</td>
+        <td>Tantalum</td>
+    </tr>
+    <tr>
+        <td>Monarch Butterfly Bush</td>
+        <td>420 degree Celsius burning/melting point</td>
+        <td>Zinc</td>
+    </tr>
+    <tr>
+        <td>Katz&#39;s Delicatessen</td>
+        <td>Final receptor in electron transport chain</td>
+        <td>Oxygen</td>
+    </tr>
+</table>
+
+Knowing that locations correlate to elements, the map can be re-understood as the periodic table (when tilted 90 degrees). With this, each rectangle/enclosed space in the map becomes an element on the Manhattan Periodic Table. There are streets highlighted on the map that extend past enclosed portions, but two/three-sided regions that are not enclosed are not included as representing elements.
+
+<img src="{% static 'puzzle_resources/day-in-the-city/tablesol.png' %}">
+
+Mapping the locations from the “Things to do section” generates the following elements:
+
+<img src="{% static 'puzzle_resources/day-in-the-city/marktablesol.png' %}">
+
+<table>
+    <tr>
+        <td><b>Location</b></td>
+        <td><b>Element</b></td>
+    </tr>
+    <tr>
+        <td>Nuyorican Poets Cafe</td>
+        <td>Nitrogen</td>
+    </tr>
+    <tr>
+        <td>New York Marble Cemetery</td>
+        <td>Arsenic</td>
+    </tr>
+    <tr>
+        <td>Thai Diner</td>
+        <td>Iodine</td>
+    </tr>
+    <tr>
+        <td>Joan of Arc Monument</td>
+        <td>Dubnium</td>
+    </tr>
+    <tr>
+        <td>Tompkins Square Park</td>
+        <td>Carbon</td>
+    </tr>
+    <tr>
+        <td>Malcolm Shabazz Harlem Market</td>
+        <td>Lanthanum</td>
+    </tr>
+</table>
+
+The elements from the locations serve as the letters involved in the final answer: simply ordering them as they originally were results in N - As - I - Db - C - La.
+
+To obtain the answer, the resulting elements are ordered according to the subway line associated with each stop, provided in the “things to do section”. The subway lines do not correspond to the location of each spot (i.e. the 7 train does not service anywhere near the Nuyorican Poets Cafe), so teams could get hung up connecting them without any results. The correct ordering is drawn from using the ROYBGIV color sequence to reorder the location’s elements: Db (Red 1) - As (Orange D) - I (Yellow N) - C (Green 4) - La (Blue A) - N (Purple 7).
+
+This results in DBASICLAN, which when read cyclically gives the apt answer <span class="spoiler">BASIC LAND</span>.
+
+{% endblock %}

@@ -1,0 +1,283 @@
+{% extends "puzzle.html" %}
+{% load static %}
+{% block puzzle-body-md %}
+
+<script type="text/javascript">
+  // This demo code uses jQuery and modern JavaScript features flagrantly.
+  // You should evaluate your own needs.
+  document.addEventListener('DOMContentLoaded', () => {
+    async function submit() {
+        $('#output').empty()
+        $('#final').empty()
+        $('#output').css('color', '#000000');
+  
+        $('#guess').prop("disabled", true);
+        $('#submit').prop("disabled", true);
+  
+        let csrftoken = getCookie('csrftoken');
+        try {
+            let result = await fetch("/puzzle/tic-tac-toe/submit", {
+                method: 'POST',
+                body: JSON.stringify({
+                    guesses: collectGuesses(),
+                }),
+                headers: { "X-CSRFToken": csrftoken },
+            });
+            if (!result.ok) {
+                // HTTP response code was not 2xx. Maybe introspect more...
+                $('#output').text(`Error: ${result.status} ${result.statusText}`);
+            } else {
+                let res = await result.json();
+                if (res.error) {
+                    $('#output').text(`Error: ${res.error}`);
+                    $('#output').css('color', '#ae7575');
+                } else {
+                    if (res.correct) {
+                      $('#output').text(`Amazing work! You passed 😎`);
+                      $('#output').css('color', '#4d9d6d');
+                      $('#output').css('font-weight', 'bold');
+                      // add the final exam:
+                      $('#final').append(res.final_block);
+                    } else {
+                      $('#output').text(`You failed the midterm 😔`);
+                      $('#output').css('color', '#ae7575');
+                    }
+                }
+            }
+        } catch (e) {
+            // This error handling will be very poor.
+            $('#output').text(`Error: ${e}`);
+            $('#output').css('color', '#ae7575');
+        }
+        // calls you might make: .val(""), .select(), .focus()
+        $('#guess').prop("disabled", false);
+        $('#submit').prop("disabled", false);
+    }
+  
+    // https://docs.djangoproject.com/en/dev/ref/csrf/#ajax
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    const NUM_MIDTERM = 16;
+    function collectGuesses() {
+      let guesses = [];
+      for (let i = 0; i < NUM_MIDTERM; i++) {
+        let guess = $(`#board${i+1} option:selected`).text();
+        guesses.push(guess)
+      }
+      //console.log(guesses);
+      return guesses
+    }
+  
+    $('#tic-tac-toe-form').on('submit', submit);
+
+    for (let i = 0; i < NUM_MIDTERM; i++) {
+      $(`#board${i+1}`).on('change', function() {
+        // Save value in localstorage
+        localStorage.setItem(`board${i+1}`, $(this).val());
+      });
+    }
+
+    $(document).ready(function() {
+      // console.log('ran!');
+      for (let i = 0; i < NUM_MIDTERM; i++) {
+        if ($(`#board${i+1}`)) {
+          let prev_guess = localStorage.getItem(`board${i+1}`);
+          prev_guess = prev_guess ? prev_guess : 'X';
+          // console.log(prev_guess)
+          $(`#board${i+1}`).val(prev_guess);
+       }
+      }
+  });
+  });
+</script>
+
+<style>
+    .large {
+        width: 75%;
+    }
+    img {
+        display: block; 
+        margin-left: 10%;
+        margin-right: 10%;
+        width: 100px;
+    }
+    select {
+      margin-bottom: 0px;
+    }
+
+    .midterm-list, .final-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-gap: 20px;
+      counter-reset: counterName;
+    }
+
+    .midterm-list li, .final-list li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      counter-increment: counterName;
+    }
+    .midterm-list li:before, .final-list li:before {
+      content:counter(counterName)".";
+    }
+
+    .submit-midterm {
+      width: 30%;
+      margin: 0 35%;
+    }
+
+    #output {
+      text-align: center;
+    }
+
+
+</style>
+
+I know that none of you are actually going to buy the textbook, so I decided to save you some time by finding a <a href="https://drive.google.com/file/d/1_eIDhAWkBRytkCfgGpjMxmn6bkQkBVYq/view?usp=sharing">pirated copy</a> for you.
+{: .flavor}
+
+<h4 style="border-bottom: 0; font-weight: bold">Midterm</h4>
+The University says we're not failing enough students, so the passing threshold is 80%. Good luck!
+
+<form id="tic-tac-toe-form" autocomplete="off" action="javascript:void(0);">
+  {# Adding the csrf_token tag is sort of a hack, because we don't care about having an <input> tag with the token; we just care about having the cookie. #}
+  {% csrf_token %}
+<ol class="midterm-list">
+    <li>
+      <img src="{% static 'puzzle_resources/tic-tac-toe/board1.png' %}">
+      <select class="board-guess" id="board1">
+        <option value="X">X</option>
+        <option value="O">O</option>
+      </select>
+    </li>
+    <li>
+      <img src="{% static 'puzzle_resources/tic-tac-toe/board2.png' %}">
+      <select class="board-guess" id="board2">
+        <option value="X">X</option>
+        <option value="O">O</option>
+      </select>
+    </li>
+    <li>
+      <img src="{% static 'puzzle_resources/tic-tac-toe/board3.png' %}">
+      <select class="board-guess" id="board3">
+        <option value="X">X</option>
+        <option value="O">O</option>
+      </select>
+    </li>
+    <li>
+      <img src="{% static 'puzzle_resources/tic-tac-toe/board4.png' %}">
+      <select class="board-guess" id="board4">
+        <option value="X">X</option>
+        <option value="O">O</option>
+      </select>
+    </li>
+    <li>
+      <img src="{% static 'puzzle_resources/tic-tac-toe/board5.png' %}">
+      <select class="board-guess" id="board5">
+        <option value="X">X</option>
+        <option value="O">O</option>
+      </select>
+    </li>
+    <li>
+      <img src="{% static 'puzzle_resources/tic-tac-toe/board6.png' %}">
+      <select class="board-guess" id="board6">
+        <option value="X">X</option>
+        <option value="O">O</option>
+      </select>
+    </li>
+    <li>
+      <img src="{% static 'puzzle_resources/tic-tac-toe/board7.png' %}">
+      <select class="board-guess" id="board7">
+        <option value="X">X</option>
+        <option value="O">O</option>
+      </select>
+    </li>
+    <li>
+      <img src="{% static 'puzzle_resources/tic-tac-toe/board8.png' %}">
+      <select class="board-guess" id="board8">
+        <option value="X">X</option>
+        <option value="O">O</option>
+      </select>
+    </li>
+    <li>
+      <img src="{% static 'puzzle_resources/tic-tac-toe/board9.png' %}">
+      <select class="board-guess" id="board9">
+        <option value="X">X</option>
+        <option value="O">O</option>
+      </select>
+    </li>
+    <li>
+      <img src="{% static 'puzzle_resources/tic-tac-toe/board10.png' %}">
+      <select class="board-guess" id="board10">
+        <option value="X">X</option>
+        <option value="O">O</option>
+      </select>
+    </li>
+    <li>
+      <img src="{% static 'puzzle_resources/tic-tac-toe/board11.png' %}">
+      <select class="board-guess" id="board11">
+        <option value="X">X</option>
+        <option value="O">O</option>
+      </select>
+    </li>
+    <li>
+      <img src="{% static 'puzzle_resources/tic-tac-toe/board12.png' %}">
+      <select class="board-guess" id="board12">
+        <option value="X">X</option>
+        <option value="O">O</option>
+      </select>
+    </li>
+    <li>
+      <img src="{% static 'puzzle_resources/tic-tac-toe/board13.png' %}">
+      <select class="board-guess" id="board13">
+        <option value="X">X</option>
+        <option value="O">O</option>
+      </select>
+    </li>
+    <li>
+      <img src="{% static 'puzzle_resources/tic-tac-toe/board14.png' %}">
+      <select class="board-guess" id="board14">
+        <option value="X">X</option>
+        <option value="O">O</option>
+      </select>
+    </li>
+    <li>
+      <img src="{% static 'puzzle_resources/tic-tac-toe/board15.png' %}">
+      <select class="board-guess" id="board15">
+        <option value="X">X</option>
+        <option value="O">O</option>  
+      </select>
+    </li>
+    <li>
+      <img src="{% static 'puzzle_resources/tic-tac-toe/board16.png' %}">
+      <select class="board-guess" id="board16">
+        <option value="X">X</option>
+        <option value="O">O</option>
+      </select>
+    </li>
+</ol>
+<input class="submit-midterm" type="submit" value="Submit Midterm">
+</form>
+
+<div id="output"><i></i></div>
+
+<div id="final">
+</div>
+
+
+{% endblock %}

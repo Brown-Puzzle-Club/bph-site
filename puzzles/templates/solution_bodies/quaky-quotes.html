@@ -1,0 +1,199 @@
+{% extends "solution.html" %}
+
+{% block puzzle-author %}
+Ian Rider
+{% endblock %}
+
+{% block solution-body-md %}
+
+Each movie quote is said by a character that either drinks or orders a drink earlier in that same scene. Identifying these drinks is the first crucial step. Every quote can be found fairly quickly by googling it in quotes. Scripts also generally specify the exact drink even if it's not clear in the movie.
+
+<table>
+    <tr>
+        <th>Drink</th>
+        <th>Movie</th>
+        <th>Quote</th>
+    </tr>
+    <tr>
+        <td>White Russian</td>
+        <td>Big Lebowski</td>
+        <td>So if you could just write me my check for ten percent of a half a million... five grand... I&#39;ll go out and mingle. (3)</td>
+    </tr>
+    <tr>
+        <td>Mint Julep</td>
+        <td>Goldfinger</td>
+        <td>You plan to break into the world&#39;s largest bank but not to steal anything. (4)</td>
+    </tr>
+    <tr>
+        <td>Old Fashioned</td>
+        <td>Crazy Stupid Love</td>
+        <td>It&#39;s not my favorite. Thank you. (4)</td>
+    </tr>
+    <tr>
+        <td>Jack and Soda</td>
+        <td>Kiss Kiss Bang Bang</td>
+        <td>I heard. It was neck and neck, and then she skipped lunch. (2)</td>
+    </tr>
+    <tr>
+        <td>Cosmo</td>
+        <td>Sex and the City</td>
+        <td>Honey, that line&#39;s older than you are. (4)</td>
+    </tr>
+    <tr>
+        <td>Orange Whip</td>
+        <td>The Blacklist</td>
+        <td>You were right! Who would&#39;ve thought the Daily Double would be a smart bet? (4)</td>
+    </tr>
+    <tr>
+        <td>French 75</td>
+        <td>Casablanca</td>
+        <td>Put up a whole row of them sacha... starting here and ending here (4)</td>
+    </tr>
+    <tr>
+        <td>Milk</td>
+        <td>Inglorious Basterds</td>
+        <td>Because I&#39;m aware what tremendous feats human beings are capable of once they abandon dignity. (1)</td>
+    </tr>
+    <tr>
+        <td>Coffee</td>
+        <td>Pulp Fiction</td>
+        <td>I love you honeybunny (1)</td>
+    </tr>
+</table>
+
+The numbers indicate number of ingredients per drink. Puzzlers should find the correct set of ingredients that go into each drink. There's some ambiguity about ingredient names, but because we care about their identity/function in a cocktail rather than their name, it shouldn't present a problem. Correct ingredients are as follows:
+
+<table>
+    <tr>
+        <th>White Russian</th>
+        <th>Mint Julep</th>
+        <th>Old Fashioned</th>
+        <th>Jack and Soda</th>
+        <th>Cosmopolitan</th>
+        <th>Orange Whip</th>
+        <th>French 75</th>
+        <th>Milk</th>
+        <th>Coffee</th>
+    </tr>
+    <tr>
+        <td>Vodka</td>
+        <td>Whiskey</td>
+        <td>Whiskey</td>
+        <td>Whiskey</td>
+        <td>Vodka (citron)</td>
+        <td>Orange Juice</td>
+        <td>Champagne</td>
+        <td>Milk</td>
+        <td>Coffee</td>
+    </tr>
+    <tr>
+        <td>Kahlua</td>
+        <td>Mint </td>
+        <td>Bitters</td>
+        <td>Soda water</td>
+        <td>Cranberry Juice</td>
+        <td>Vodka</td>
+        <td>Gin</td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Cream</td>
+        <td>Powdered Sugar</td>
+        <td>Sugar</td>
+        <td></td>
+        <td>Lime Juice</td>
+        <td>Rum</td>
+        <td>Lemon Juice</td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>Water</td>
+        <td>Water</td>
+        <td></td>
+        <td>Triple Sec</td>
+        <td>Cream</td>
+        <td>Simple</td>
+    </tr>
+</table>
+
+The ingredients are then all rearranged into a new set of drinks, which are found below. This is the logic step of the puzzle. Letters indicate the source of each ingredient (for example, the "C quote" drink ingredients go into the "C spaces"). The number of blanks in the cocktail name should serve as confirmation that they've found the right output drink.  Many of these drinks are quite well known (some are not). The easiest ones to start with are the single-ingredient drinks.
+
+<table>
+    <tr>
+        <th>Vodka Citron</th>
+        <th>Whiskey Sour</th>
+        <th>Jackcafe</th>
+        <th>Cape Cod</th>
+        <th>Irish Coffee</th>
+        <th>Creamsicle</th>
+        <th>Mimosa</th>
+        <th>Mojito</th>
+        <th>Water</th>
+        <th>Pink Gin</th>
+    </tr>
+    <tr>
+        <td>Vodka Citron</td>
+        <td>Whiskey</td>
+        <td>Kahlua</td>
+        <td>Vodka</td>
+        <td>Cream</td>
+        <td>Vodka</td>
+        <td>Orange Juice</td>
+        <td>Rum</td>
+        <td>Water</td>
+        <td>Gin</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>Lemon Juice</td>
+        <td>Whiskey</td>
+        <td>Cranberry Juice</td>
+        <td>Whiskey</td>
+        <td>Triple Sec</td>
+        <td>Champagne</td>
+        <td>Lime Juice</td>
+        <td></td>
+        <td>Water</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>Simple</td>
+        <td></td>
+        <td></td>
+        <td>Sugar</td>
+        <td>Milk</td>
+        <td></td>
+        <td>Mint</td>
+        <td></td>
+        <td>Bitters</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>Coffee</td>
+        <td>Cream</td>
+        <td></td>
+        <td>Soda Water</td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>Sugar</td>
+    </tr>
+</table>
+
+Then indexing into the drink names as given gives us our answer, <span class="spoiler">NEAPOLITAN</span>.
+
+{% endblock %}

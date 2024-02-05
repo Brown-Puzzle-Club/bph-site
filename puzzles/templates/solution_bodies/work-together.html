@@ -1,0 +1,220 @@
+{% extends "solution.html" %}
+{% load static %}
+
+{% block puzzle-author %}
+Thomas Gordon; with art by Orion Bloomfield and Camille Leung
+{% endblock %}
+
+{% block solution-body-md %}
+
+Using the examples given, we can find out the respective values for each property for all 16 words. They are given in the below table.
+
+<table>
+    <tr>
+        <td><b>#</b></td>
+        <td><b>Word</b></td>
+        <td><b>Scrabble</b></td>
+        <td><b>Repeats</b></td>
+        <td></td>
+        <td><b>Roman #</b></td>
+        <td><b>Vowels</b></td>
+        <td><b>Consonants</b></td>
+        <td><b>Length</b></td>
+    </tr>
+    <tr>
+        <td>1</td>
+        <td>BROWN</td>
+        <td>10</td>
+        <td>1</td>
+        <td></td>
+        <td>0</td>
+        <td>1</td>
+        <td>4</td>
+        <td>5</td>
+    </tr>
+    <tr>
+        <td>2</td>
+        <td>TONIC</td>
+        <td>7</td>
+        <td>1</td>
+        <td>C</td>
+        <td>100</td>
+        <td>2</td>
+        <td>3</td>
+        <td>5</td>
+    </tr>
+    <tr>
+        <td>3</td>
+        <td>OPERA</td>
+        <td>7</td>
+        <td>1</td>
+        <td></td>
+        <td>0</td>
+        <td>3</td>
+        <td>2</td>
+        <td>5</td>
+    </tr>
+    <tr>
+        <td>4</td>
+        <td>GUITARS</td>
+        <td>8</td>
+        <td>1</td>
+        <td>I</td>
+        <td>1</td>
+        <td>3</td>
+        <td>4</td>
+        <td>7</td>
+    </tr>
+    <tr>
+        <td>5</td>
+        <td>SIGNAL</td>
+        <td>7</td>
+        <td>1</td>
+        <td>L</td>
+        <td>50</td>
+        <td>2</td>
+        <td>4</td>
+        <td>6</td>
+    </tr>
+    <tr>
+        <td>6</td>
+        <td>START</td>
+        <td>5</td>
+        <td>2</td>
+        <td></td>
+        <td>0</td>
+        <td>1</td>
+        <td>4</td>
+        <td>5</td>
+    </tr>
+    <tr>
+        <td>7</td>
+        <td>FIFTH</td>
+        <td>14</td>
+        <td>2</td>
+        <td>I</td>
+        <td>1</td>
+        <td>1</td>
+        <td>4</td>
+        <td>5</td>
+    </tr>
+    <tr>
+        <td>8</td>
+        <td>RATTLE</td>
+        <td>6</td>
+        <td>2</td>
+        <td>L</td>
+        <td>50</td>
+        <td>2</td>
+        <td>4</td>
+        <td>6</td>
+    </tr>
+    <tr>
+        <td>9</td>
+        <td>RETREAT</td>
+        <td>7</td>
+        <td>2</td>
+        <td></td>
+        <td>0</td>
+        <td>3</td>
+        <td>4</td>
+        <td>7</td>
+    </tr>
+    <tr>
+        <td>10</td>
+        <td>POINT</td>
+        <td>7</td>
+        <td>1</td>
+        <td>I</td>
+        <td>1</td>
+        <td>2</td>
+        <td>3</td>
+        <td>5</td>
+    </tr>
+    <tr>
+        <td>11</td>
+        <td>LETTERS</td>
+        <td>7</td>
+        <td>2</td>
+        <td>L</td>
+        <td>50</td>
+        <td>2</td>
+        <td>5</td>
+        <td>7</td>
+    </tr>
+    <tr>
+        <td>12</td>
+        <td>TRIAL</td>
+        <td>5</td>
+        <td>1</td>
+        <td>L</td>
+        <td>50</td>
+        <td>2</td>
+        <td>3</td>
+        <td>5</td>
+    </tr>
+    <tr>
+        <td>13</td>
+        <td>TRADES</td>
+        <td>7</td>
+        <td>1</td>
+        <td>D</td>
+        <td>500</td>
+        <td>2</td>
+        <td>4</td>
+        <td>6</td>
+    </tr>
+    <tr>
+        <td>14</td>
+        <td>STRIVE</td>
+        <td>9</td>
+        <td>1</td>
+        <td>V</td>
+        <td>5</td>
+        <td>2</td>
+        <td>4</td>
+        <td>6</td>
+    </tr>
+    <tr>
+        <td>15</td>
+        <td>PASSES</td>
+        <td>8</td>
+        <td>3</td>
+        <td></td>
+        <td>0</td>
+        <td>2</td>
+        <td>4</td>
+        <td>6</td>
+    </tr>
+    <tr>
+        <td>16</td>
+        <td>SKILL</td>
+        <td>9</td>
+        <td>2</td>
+        <td>L</td>
+        <td>50</td>
+        <td>1</td>
+        <td>4</td>
+        <td>5</td>
+    </tr>
+</table>
+
+Now we can apply these rules to every match up and find our bracket winners.
+
+<img src="{% static 'puzzle_resources/work-together/bracketsol.png' %}">
+
+Now, as the image indicates, we just need to take our two winners, FIFTH and LETTERS. This clues that we should look at the fifth letters of all the words, in the original image order (1-16), gives us the cluephrase NCAA ATHLETE LEVEL. The NCAA (which runs March Madness, among other things) is is divided into separate divisions for athletes, giving us our answer, <span class="spoiler">DIVISION</span>.
+
+<img style="width: 30%" src="{% static 'puzzle_resources/work-together/lettersol.png' %}">
+
+{% endblock %}
+
+{% block author-notes-html %}
+
+It was very strange writing a puzzle about an US-centric phenomenon as someone who knows very little about US culture, and has indeed in the past spoken out against unabashedly US-centered puzzles in non-university hunts. However, the theming was cute and it worked thematically here, so (combined with some wonderful art) I think this puzzle came off rather well. I'm excited to continue experimenting with delivering puzzles during kickoff for on-site teams.<br><br>
+
+Coincidentally, the weekend after Brown Puzzlehunt ran, CMU also had a puzzle which was delivered during kickoff, which was very cool.<br><br>
+
+<i>Also completely coincidentally,</i> this puzzle uses the cluephrase FIFTH LETTERS, which two other hunts which happened nary a few weeks following used as cluephrases as well. As such, this puzzle therefore incurs royalties from three different sources, which are currently helping to pay my mortgage.
+
+{% endblock %}

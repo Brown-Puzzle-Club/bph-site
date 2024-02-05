@@ -1,0 +1,9 @@
+{% block content %}
+  <script>
+    var djangoContext = '{{ context|escapejs }}';
+  </script>
+  <script type="module" crossorigin src="/static/react/index.js"></script>
+  <link rel="stylesheet" crossorigin href="/static/react/index.css">
+  <div id="root"></div>  <!-- This is where your React app will be mounted -->
+  {% load static %}
+{% endblock %} 

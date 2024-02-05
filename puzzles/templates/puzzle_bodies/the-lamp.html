@@ -1,0 +1,47 @@
+{% extends "puzzle.html" %}
+{% load static %}
+{% block puzzle-body-md %}
+
+<style>
+    img {
+        width: 16%;
+    }
+    .center {
+        text-align: center;
+    }
+    .smallerimg {
+        margin: 2%;
+        width: 12%;
+    }
+</style>
+
+The Lamp splits light rays into their component parts.<br><br>How can you stop Blueno's light?
+{: .flavor}
+
+<a href="https://docs.google.com/spreadsheets/d/1wH9_LAA2EtfD3EikwF_bqmoba8Uy8mZ0pDn52iXkWjw/edit?usp=sharing">Link to spreadsheet version of this puzzle.</a>
+<div class="center">
+    <img src="{% static 'puzzle_resources/the-lamp/pipe1.png' %}">
+    <img src="{% static 'puzzle_resources/the-lamp/pipe2.png' %}">
+    <img src="{% static 'puzzle_resources/the-lamp/pipe3.png' %}">
+    <img src="{% static 'puzzle_resources/the-lamp/pipe4.png' %}">
+    <img src="{% static 'puzzle_resources/the-lamp/pipe5.png' %}">
+    <img src="{% static 'puzzle_resources/the-lamp/pipe6.png' %}">
+</div>
+<br><br>
+<div class="center">
+    <img class="smallerimg" src="{% static 'puzzle_resources/the-lamp/pipe7.png' %}">
+    <img class="smallerimg" src="{% static 'puzzle_resources/the-lamp/pipe8.png' %}">
+    <img class="smallerimg" src="{% static 'puzzle_resources/the-lamp/pipe9.png' %}">
+    <img class="smallerimg" src="{% static 'puzzle_resources/the-lamp/pipe10.png' %}">
+    <img class="smallerimg" src="{% static 'puzzle_resources/the-lamp/pipe11.png' %}">
+</div>
+<br><br>
+<div class="center">
+    <img src="{% static 'puzzle_resources/the-lamp/pipe12.png' %}">
+    <img src="{% static 'puzzle_resources/the-lamp/pipe13.png' %}">
+    <img src="{% static 'puzzle_resources/the-lamp/pipe14.png' %}">
+    <img src="{% static 'puzzle_resources/the-lamp/pipe15.png' %}">
+    <img src="{% static 'puzzle_resources/the-lamp/pipe16.png' %}">
+</div>
+
+{% endblock %}

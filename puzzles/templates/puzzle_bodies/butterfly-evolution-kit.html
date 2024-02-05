@@ -1,0 +1,38 @@
+{% extends "puzzle.html" %}
+{% block puzzle-body-md %}
+{% load puzzle_tags %}
+
+<style>
+    .notice {
+        width: 100%;
+        text-align: center;
+        padding: 10px;
+        border-style: dashed;
+        border-width: 3px;
+        border-color: black;
+    }
+</style>
+
+<div class="notice">
+    Notice for off-site solvers: this is a physical puzzle that requires collecting an object from HQ, but is fully remote-solvable using just the information on this page.
+</div>
+<br>
+If you are in-person, please Contact HQ when you're ready to learn about butterflies. HQ is closed, but we are still able to distribute this puzzle! Please feel free to reach out to us!<br>
+Email bluenoresurrectionsociety@gmail.com with a subject line of "(Your Team Name Here) - Butterflies" to organize picking up the physical puzzle. We'll respond to you as soon as we can.
+{: .flavor}
+
+
+{% with HOURS_DELAY=1 %}
+  {% if request.context.hours_since_unlock >= HOURS_DELAY or not request.context.in_person  %}
+  In Butterfly Evolution Kit, teams receive a manilla envelope containing sixteen butterflies and one double-sided sheet of paper. The contents of the paper is linked below.<br><br>
+  <a href="https://drive.google.com/file/d/1kAt3CkFxov2HlaU5gIyV8C3bRphxfHFJ/view?usp=sharing">Link to paper contents.</a>
+  {% else %}
+    {% with new_date=request.context.puzzle_unlock_time|add_hours:HOURS_DELAY %}
+    The online-accessible version of this puzzle will unlock at {{ new_date }}
+    {% endwith %}
+  {% endif %}
+{% endwith %}
+
+
+
+{% endblock %}

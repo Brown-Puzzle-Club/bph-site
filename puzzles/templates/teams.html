@@ -1,0 +1,216 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load puzzle_tags %}
+
+{% block content %}
+
+<style>
+  
+  th, td {
+    overflow: hidden;
+    max-width: 200px;
+  }
+
+  @media screen and (max-width: 960px) {
+    th, td {
+      padding: 0;
+      text-align: center;
+    }
+  }
+
+  .accordion {
+    background-color: #eee;
+    color: #444;
+    cursor: pointer;
+    width: 100%;
+    border: none;
+    outline: none;
+    font-size: 15px;
+    transition: 0.4s;
+  }
+
+  .active, .accordion:hover {
+    background-color: #ccc;
+  }
+
+  .table-div {
+    padding: 0 18px;
+    background-color: white;
+    display: none;
+    overflow: hidden;
+  }
+
+  .solved-runaround {
+    color:#4a3e5d;
+    font-family: "Fantasy";
+    text-shadow: 1px 1px 4px #c0b6d6;
+    font-size: 2.5rem;
+    letter-spacing: 1px;
+  }
+
+  .solved-runaround:hover {
+    color: #834c7e;
+  }
+
+  .solved-metas {
+    color:#1479a2;
+    font-family: "Fantasy";
+    text-shadow: 1px 1px 4px #a1aecc;
+    font-size: 2.5rem;
+    letter-spacing: 1px;
+  }
+
+</style>
+
+<h1>{% translate "Team Scoreboard" %}</h1>
+
+<main>
+
+  <button class="accordion">In-Person</button>
+  <div class="table-div">
+    <table class="list-table-in-person">
+      <col style="width: 10%">
+      {% if hunt_has_started %}
+          <col style="width: 60%">
+          <col style="width: 10%">
+          <col style="width: 10%">
+          <col style="width: 30%">
+      {% else %}
+          <col style="width: 90%">
+      {% endif %}
+      <tbody>
+          <tr>
+              <th>{% translate "Rank" %}</th>
+              <th>{% translate "Team" %}</th>
+              {% if is_admin or hunt_is_over %}
+                  <th>{% translate "Meta Solves" %}</th>
+                  <th>{% translate "Total Solves" %}</th>
+                  <th>{% translate "Runaround Finish time" %} ({{ start_time|date:"T" }})</th>
+              {% endif %}
+          </tr>
+          {% for team in teams_in_person %}
+          <tr {% if team.id == current_team.id %}class="current-team"{% endif %}>
+              <td>
+                {% with NUM_WINNERS=2 %}
+                {% if forloop.counter <= NUM_WINNERS %}
+                🏆
+                {% else %}
+                {{ forloop.counter }}
+                {% endif %}
+                {% endwith %}
+              </td>
+              <td>
+                  <a 
+                  {% if team.runaround_solve_time is not None %}class="solved-runaround"
+                  {% elif team.meta_solve_count == num_metas %}class="solved-metas"{% endif %}
+                  href="{% url 'team' team.team_name %}">{{ team.team_name }}</a>
+                  {% if is_superuser or is_admin %}
+                      (<a 
+                      {% if team.runaround_solve_time is not None %}class="solved-runaround"
+                      {% elif team.meta_solve_count == num_metas %}class="solved-metas"{% endif %}
+                      href="{% url 'impersonate-start' team.user_id %}">{% translate "impersonate" %}</a>)
+                  {% endif %}
+              </td>
+              {% if is_admin or hunt_is_over %}
+                  <td>{{ team.meta_solve_count }}</td>
+                  <td>{{ team.total_solves }}</td>
+                  <td>{% format_time team.runaround_solve_time %}</td>
+              {% endif %}
+          </tr>
+          {% endfor %}
+      </tbody>
+  </table>
+  </div>
+
+  <button class="accordion">All Teams</button>
+  <div class="table-div">
+    <table class="list-table-total">
+        <col style="width: 10%">
+        {% if hunt_has_started %}
+            <col style="width: 25%">
+            <col style="width: 10%">
+            <col style="width: 10%">
+            <col style="width: 10%">
+            <col style="width: 15%">
+            <col style="width: 10%">
+        {% else %}
+            <col style="width: 90%">
+        {% endif %}
+        <tbody>
+            <tr>
+                <th>{% translate "Rank" %}</th>
+                <th>{% translate "Team" %}</th>
+                <th>{% translate "In-Person" %}</th>
+                {% if is_admin or hunt_is_over %}
+                    <th>{% translate "Meta Solves" %}</th>
+                    <th>{% translate "Solves" %}</th>
+                    <th>{% translate "Finish time" %} ({{ start_time|date:"T" }})</th>
+                    <th>{% translate "Runaround Finish Time" %} ({{ start_time|date:"T" }})</th>
+                {% endif %}
+            </tr>
+            {% for team in teams %}
+            <tr {% if team.id == current_team.id %}class="current-team"{% endif %}>
+                <td>
+                  {% with NUM_WINNERS=2 ONLINE_WINNER=9 %}
+                  {% if forloop.counter <= NUM_WINNERS %}
+                  🏆
+                  {% elif forloop.counter == ONLINE_WINNER %}
+                  🖥️🥇
+                  {% elif forloop.counter == ONLINE_WINNER|add:"1" %}
+                  🖥️🥈
+                  {% elif forloop.counter == ONLINE_WINNER|add:"2" %}
+                  🖥️🥉
+                  {% else %}
+                  {{ forloop.counter}}
+                  {% endif %}
+                  {% endwith %}
+                </td>
+                <td>
+                    
+                    <a 
+                    {% if team.runaround_solve_time is not None %}class="solved-runaround"
+                    {% elif team.meta_solve_count == num_metas %}class="solved-metas"{% endif %}
+                    href="{% url 'team' team.team_name %}">{{ team.team_name }}</a>
+                    
+                    
+                    {% if is_superuser or is_admin %}
+                        (<a 
+                        {% if team.runaround_solve_time is not None %}class="solved-runaround"
+                        {% elif team.meta_solve_count == num_metas %}class="solved-metas"{% endif %}
+                        href="{% url 'impersonate-start' team.user_id %}">{% translate "impersonate" %}</a>)
+                    {% endif %}
+                </td>
+                <td>{% if team.in_person %}🐻{% endif %}</td>
+                {% if is_admin or hunt_is_over %}
+                    <td>{%if team.meta_solve_count > 0 %}{{ team.meta_solve_count }}{% endif %}</td>
+                    <td>{{ team.total_solves }}</td>
+                    <td>{% format_time team.all_metas_solve_time %}</td>
+                    <td>{% format_time team.runaround_solve_time %}</td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+</main>
+
+<script>
+	var accordions = $(".accordion");
+
+
+	for (var i = 0; i < accordions.length; i++) {
+	    accordions[i].addEventListener("click", function() {
+	    this.classList.toggle("active");
+      console.log("PRINT")
+	    var panel = this.nextElementSibling;
+
+	    if (panel.style.display === "block") {
+	      panel.style.display = "none";
+	    } else {
+	      panel.style.display = "block";
+	    }
+	  });
+	}
+</script>
+
+{% endblock %}

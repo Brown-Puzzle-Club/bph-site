@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load puzzle_tags %}
+
+{% block page-title %}
+<title>{{ round.round.name }}</title>
+{% endblock %}
+
+{% block top-left-actions %}
+<a href="{% url 'puzzles' %}" class="btn">{% translate "All puzzles" %}</a>
+{% endblock %}
+
+{% block content %}
+
+{% block round-title-override %}
+{% endblock %}
+
+
+{% block round-body %}
+<p style="text-align: center">{% translate "Imagine some cool art goes here." %}</p>
+<br><br>
+{% endblock %}
+
+{% if round.round.slug != "events" and round.round.slug != "final" %}
+
+<div class="puzzles-list">
+  <h1>{{ round.round.name }}</h1>
+  {% include 'puzzles_list.html' with round=round %}
+</div>
+{% endif %}
+
+
+{% endblock %}

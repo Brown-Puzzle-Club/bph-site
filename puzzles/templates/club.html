@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load puzzle_tags %}
+{% load static %}
+
+{% block content %}
+
+
+
+
+<style>
+
+  h4 {
+    font-weight: bold;
+  }
+
+  .no-break {
+    margin: auto;
+    width: 50%;
+    border: 3px solid #b4d8ea;
+    padding: 10px;
+  }
+
+  .initial-blurb {
+    text-align: center;
+  }
+
+  img {
+    width: 100%;
+  }
+  a.button {
+    -webkit-appearance: button;
+    -moz-appearance: button;
+    appearance: button;
+
+    text-decoration: none;
+    color: initial;
+
+    transition-duration: 0s;
+
+    font-size: 20px;
+    line-height: 32px;
+  }
+  
+  .top-logo {
+    margin: 0 auto;
+    max-width: 20%;
+    padding-top: 10px;
+    transition-duration: 1s;
+  }
+
+  a i {
+    color:#8cadbb
+  }
+
+  a.button:hover i {
+    color:white;
+    cursor: pointer;
+  }
+
+  a.button:hover {
+    background-color: #4c5f66;
+    color: white;
+  }
+
+  #bpc-logo {
+    -webkit-transition: all .3s ease-in-out;
+    -moz-transition: all .3s ease-in-out;
+    transition: all .3s ease-in-out;
+  }
+
+  .bpc-logo-hovered {
+    content: url('/static/images/logo.png');
+  }
+
+  #bpc-logo:not(.bpc-logo-hovered) {
+    content: url('/static/images/logo_light.png');
+  }
+
+
+  
+
+</style>
+
+<div class="top-logo">
+  <img id="bpc-logo">
+</div>
+
+
+<h1>{% translate "Brown Puzzle Club" %}</h1>
+
+<main>
+
+    <div class="initial-blurb">
+      <p>If you are a Brown Student that enjoyed our hunt, we highly recommend you get involved with our club!</p>
+      <a href="https://listserv.brown.edu/cgi-bin/wa?SUBED1=PUZZLE&A=1" class="button">
+        <i class="fa fa-envelope"></i> 
+        Join the listserv! (Brown Students)
+        <i class="fa fa-envelope"></i> 
+      </a>
+    </div>
+
+    <div>
+      <div class="no-break">
+        <h4>{% translate "What do we do?" %}</h4>
+        <p>We meet for an hour and a half every week, eating snacks and group-solving puzzles from recent hunts.</p>
+        <p>On top of our regular meeting, we:</p>
+        <ul>
+          <li>Go on semesterly free trips to the local escape room</li>
+          <li>Gather participation for the MIT Mystery Hunt and other puzzlehunts</li>
+          <li>Generate puzzle content for other student organizations, such as student newspapers</li>
+          <li>Develop and host our annual Brown Puzzlehunt</li>
+        </ul>
+        <p>We always have room for new members, whether you are interested in puzzle solving, puzzlehunt writing/planning, or just wish to tag along on our events!</p>
+      </div>
+
+      <div class="no-break"> 
+          <h4>{% translate "When/Where do we meet?" %}</h4>
+          <p><i>Subject to change for future semesters,</i> but we currently meet weekly on <b>Mondays from 5:30-6:30PM EDT in Page Robinson 403</b></p>
+      </div>
+    </div>
+</main>
+
+<script>
+  const buttons = document.querySelectorAll('.button');
+  const bpcLogo = document.querySelector('#bpc-logo');
+
+  buttons.forEach(button => {
+    button.addEventListener('mouseenter', () => {
+      bpcLogo.classList.add('bpc-logo-hovered');
+    });
+    button.addEventListener('mouseleave', () => {
+      bpcLogo.classList.remove('bpc-logo-hovered');
+    });
+  });
+  
+
+  
+</script>
+
+{% endblock %}

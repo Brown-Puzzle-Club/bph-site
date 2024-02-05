@@ -1,0 +1,78 @@
+{% extends "puzzle.html" %}
+{% load static %}
+{% block puzzle-body-md %}
+
+<style>
+    .handout {
+        text-align: center;
+    }
+    img {
+        width: 100%;
+    }
+    .notice {
+        width: 100%;
+        text-align: center;
+        padding: 10px;
+        border-style: dashed;
+        border-width: 3px;
+        border-color: black;
+    }
+</style>
+
+<div class="notice">
+    Notice for off-site solvers: this puzzle has physical components, but is fully remote-solvable using just the information on this page.
+</div>
+<br>
+Once you've solved the puzzle you were given at kickoff, submit the answer here.
+{: .flavor}
+
+At kickoff, teams were told the title of the puzzle, and given one jigsaw piece each. Teams needed to work together to assemble these pieces into the image below:
+
+<div class="image" markdown="1">
+![]({% static 'puzzle_resources/work-together/april-madness.png' %})
+</div>
+
+Additionally, the first 7 teams which arrived were given pieces of paper with the following pieces of information on them:
+
+<div class="handout">
+<b>Slip 1</b><br>
+The team whose name comes first alphabetically gets a point.<br><br>
+
+<b>Slip 2</b><br>
+The team whose name has a higher scrabble score gets a point. If the two teams have the same scrabble scores, neither of them receive points.<br><br>
+
+Example: LLAMA has a scrabble score of 7.<br><br>
+
+<b>Slip 3</b><br>
+The team whose name has a letter repeated the most times gets a point.<br><br>
+
+Pick whichever letter appears most in the word (or any one of them, if there's a tie) and count the number of times that letter appears. If the two teams have the same values, neither of them receive points.<br><br>
+
+Example: LLAMA has a value of 2.<br><br>
+
+<b>Slip 4</b><br>
+
+The team whose name has a substring of Roman numerals with the greatest value gets a point. The substring must be a valid Roman numeral. If the two teams have the same values, neither of them receive points.<br><br>
+
+Examples: ILL has a value of 50.<br>
+LINK has a value of 51.<br><br>
+
+<b>Slip 5</b><br>
+
+The team whose name has the most vowels gets a point. If the two teams have the same values, neither of them receive points.<br><br>
+
+Example: LLAMA has a value of 2.<br><br>
+
+<b>Slip 6</b><br>
+
+The team whose name has the most consonants gets a point. If the two teams have the same values, neither of them receive points.<br><br>
+
+Example: LLAMA has a value of 3.<br><br>
+
+<b>Slip 7</b><br>
+
+The team whose name is the shortest gets a point. If the two teams have names of the same length, neither of them receive points.<br><br>
+
+</div>
+
+{% endblock %}

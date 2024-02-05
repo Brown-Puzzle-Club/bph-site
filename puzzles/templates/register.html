@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+
+<style>
+.row {
+    margin-bottom: 1em;
+}
+
+.form-desc .asterisk-field {
+  color: var(--accent-hover-color);
+}
+</style>
+
+<h2>{% translate "Register a new team" %}</h2>
+
+{% if team %}
+<h4>{% blocktranslate with team_name=team.team_name %}You&rsquo;re already logged in as {{team_name}}!{% endblocktranslate %}</h4>
+{% endif %}
+
+<form id="register" method="post">
+    {% csrf_token %}
+
+    {{ form.non_field_errors }}
+
+    <div class="form-section">
+    {% for field in form %}
+        <div class="form-row">
+            <div class="form-desc">
+                {{ field.label_tag }}
+                {% if field.field.required %}
+                  <span class="asterisk-field">*</span>
+              {% endif %}
+            </div>
+            {{ field }}
+            {{ field.errors }}
+            <div class="form-desc">
+                {{ field.help_text|safe }}
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+
+    <div class="form-section">
+    <h4>{% translate "Team members" %}</h4>
+
+    <p>{% translate "You will also be able to add and remove team members at any later time on your team&rsquo;s profile page." %}<br>
+        {% translate "You'll need to provide an email address for at least one of your team members." %}</p>
+
+    {{ team_members_formset.management_form }}
+    {{ team_members_formset.non_form_errors }}
+    {% for team_member_form in team_members_formset %}
+        <div class="team-members-formset form-row">
+            {% for field in team_member_form %}
+            <div class="form-desc">
+                {{ field.label_tag }}
+                {% if field.field.required %}
+                  <span class="asterisk-field">*</span>
+              {% endif %}
+            </div>
+            {{ field }}
+            {{ field.errors }}
+            {% endfor %}
+        </div>
+    {% endfor %}
+    </div>
+
+    <div class="form-section">
+    <h4>{% translate "Logistics and Prize Eligibility" %}</h4>
+
+    <p>{% translate "To be prize eligible at least one member of your team must be a current Brown University or RISD student. Also, please let us know if you are intending to participate in person, and if you are interested in having a classroom reserved for your team." %}<br></p>
+    <p>Anyone who is attending on-campus will need to fill out <a href="https://www.brown.edu/campus-life/events/student-activities/sites/brown.edu.campus-life.events.student-activities/files/uploads/Student%20Organization%20Release%20%2803262021%29%20%5BSECURE%5D.pdf">this waiver form</a>. We'll collect these at kickoff.</p>
+
+    {{ logistics_form.non_field_errors }}
+    {% for log_field in logistics_form %}
+        <div class="form-row">
+            <div class="form-desc">
+                {{ log_field.label_tag }}
+                {% if log_field.field.required %}
+                  <span class="asterisk-field">*</span>
+                {% endif %}
+            </div>
+            {{ log_field }}
+            {{ log_field.errors }}
+            <div class="form-desc">
+                {{ log_field.help_text|safe }}
+            </div>
+        </div>
+    {% endfor %}
+
+    </div>
+
+    <div class="form-section">
+      <h4>{% translate "Team Merging and Lone Solvers" %}</h4>
+      <p><b>Our hunt is best experienced in groups of 5-8.</b> You do not need to match this team size exactly, but we highly recommend getting as close to this number as you can, especially if you are new to this event.</p>
+      <p>To assist with this, we are allowing teams the ability to merge with others. If you are interested in either joining up with a larger team, or hosting smaller teams / lone solvers on your team, please specify down below.</p>
+
+      {{ merge_form.non_field_errors }}
+      {% for merge_field in merge_form %}
+          <div class="form-row">
+            <div class="form-desc">
+                {{ merge_field.label_tag }}
+                {% if merge_field.field.required %}
+                  <span class="asterisk-field">*</span>
+                {% endif %}
+            </div>
+            {{ merge_field }}
+            {{ merge_field.errors }}
+            <div class="form-desc">
+                {{ merge_field.help_text|safe }}
+            </div>
+          </div>
+      {% endfor %}
+
+    </div>
+
+    <div class="form-section">
+    {% if recaptcha_sitekey %}
+        <script src="https://www.google.com/recaptcha/api.js"></script>
+        <script>
+        function recaptchaSubmit() {
+            var form = document.getElementById('register');
+            if (form.requestSubmit) {
+                form.requestSubmit();
+            } else if (form.reportValidity) {
+                if (form.reportValidity())
+                    form.submit();
+            } else if (form.checkValidity) {
+                if (form.checkValidity())
+                    form.submit();
+            } else {
+                form.submit();
+            }
+        }
+        </script>
+        <button class="btn g-recaptcha"
+                data-sitekey="{{ recaptcha_sitekey }}"
+                data-callback="recaptchaSubmit"
+                data-action="register">{% translate "Submit" %}</button>
+    {% else %}
+        <button class="btn" type="submit">{% translate "Submit" %}</button>
+    {% endif %}
+    </div>
+</form>
+
+<script>
+$('.team-members-formset').formset({
+    prefix: '{{ team_members_formset.prefix }}',
+    addText: '{% translate "Add another team member" %}',
+    deleteText: '\u2716',
+    addCssClass: 'formset-add-link',
+});
+$('.formset-add-link').click(function() {
+    $('.errorlist').remove();
+});
+</script>
+
+{% endblock %}

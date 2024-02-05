@@ -1,0 +1,176 @@
+{% extends "round.html" %} {% load static %} {% block round-body %}
+
+<style>
+  
+  html {
+    --page-bg-rgb: 254, 224, 224;
+    --heading-text-color: #746161;
+    --link-text-color: 
+  }
+
+  .round-puzzles {
+    position: relative;
+  }
+
+  .map {
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    aspect-ratio: 4/3;
+    max-width: 2061px;
+    width: 100%;
+  }
+
+  .round-puzzles .puzzle {
+    position: absolute;
+  }
+
+  .round-puzzles .puzzle img {
+    width: 100%;
+    -webkit-filter: drop-shadow(5px 5px 5px #777);
+    filter: drop-shadow(5px 5px 5px #777);
+  }
+
+  .round-puzzles .puzzle:nth-of-type(6) img {
+    -webkit-filter: unset;
+    filter: unset;
+  }
+
+  .round-puzzles .puzzle img:hover {
+    -webkit-filter: drop-shadow(5px 5px 5px #444);
+    filter: drop-shadow(5px 5px 5px #444);
+    cursor: pointer;
+  }
+
+  .round-puzzles .puzzle:nth-of-type(6) img:hover {
+    -webkit-filter: unset;
+    filter: unset;
+    content: url("/static/images/rounds/brs/meta_2.png");
+    cursor: pointer;
+  }
+
+  .round-puzzles .paper-bg img,
+  .round-puzzles .blueno-bg img {
+    width: 100%;
+  }
+
+  .paper-bg {
+    position: absolute;
+    z-index: -1;
+  }
+  .blueno-bg {
+    position: absolute;
+    z-index: 10;
+    width: 66%;
+    left: 22%;
+    top: 13%;
+  }
+
+  .round-puzzles .puzzle:nth-of-type(1) {
+    left: 15%;
+    top: 8%;
+    width: 15%;
+    z-index: 100;
+  }
+  .round-puzzles .puzzle:nth-of-type(2) {
+    left: 15%;
+    top: 55%;
+    width: 15%;
+    z-index: 100;
+  }
+  .round-puzzles .puzzle:nth-of-type(3) {
+    left: 43%;
+    top: 75%;
+    width: 15%;
+    z-index: 100;
+  }
+  .round-puzzles .puzzle:nth-of-type(4) {
+    left: 77%;
+    top: 48%;
+    width: 15%;
+    z-index: 100;
+  }
+  .round-puzzles .puzzle:nth-of-type(5) {
+    left: 80%;
+    top: 8%;
+    width: 15%;
+    z-index: 100;
+  }
+  .round-puzzles .puzzle:nth-of-type(6) {
+    left: 45%;
+    top: 40%;
+    width: 17%;
+    z-index: 101;
+  }
+
+  .round-puzzles .puzzle:nth-of-type(1) img {
+    content: url("/static/images/rounds/brs/puzzle_1.png");
+  }
+  .round-puzzles .puzzle:nth-of-type(2) img {
+    content: url("/static/images/rounds/brs/puzzle_2.png");
+  }
+  .round-puzzles .puzzle:nth-of-type(3) img {
+    content: url("/static/images/rounds/brs/puzzle_3.png");
+  }
+  .round-puzzles .puzzle:nth-of-type(4) img {
+    content: url("/static/images/rounds/brs/puzzle_4.png");
+  }
+  .round-puzzles .puzzle:nth-of-type(5) img {
+    content: url("/static/images/rounds/brs/puzzle_5.png");
+  }
+  .round-puzzles .puzzle:nth-of-type(6) img {
+    content: url("/static/images/rounds/brs/meta_1.png");
+  }
+
+  .puzzles-list {
+    background-color: #e8bbc5;
+  }
+
+  .puzzles-list li {
+    padding: 10px;
+    border-bottom: 1px solid #fff;
+  }
+
+  .puzzles-new {
+    background-color: #b3708c;
+  }
+
+  .puzzles-new:hover, a:hover .puzzles-new  {
+    background-color: #2f25e0;
+  }
+
+  a:hover, a:focus {
+    color: #2f25e0;
+  }
+
+  .puzzles-answer > :first-child {
+    border-bottom: 2px dashed #687378;
+  }
+
+</style>
+
+<section class="round-puzzles">
+  <div class="map">
+    {% for data in round.puzzles %}
+    <div class="puzzle">
+      <a href="{% url 'puzzle' data.puzzle.slug %}">
+        <img class="{{ data.puzzle.slug }}" />
+      </a>
+    </div>
+    {% endfor %}
+    <div class="paper-bg">
+      <img
+        class="paper-bg-img"
+        src="{% static 'images/rounds/brs/background.png' %}"
+      />
+    </div>
+    <div class="blueno-bg">
+      <img
+        class="blueno-bg-img"
+        src="{% static 'images/rounds/brs/blueno_2.png' %}"
+      />
+    </div>
+  </div>
+</section>
+
+{% endblock %}

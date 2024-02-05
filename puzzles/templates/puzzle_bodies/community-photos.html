@@ -1,0 +1,31 @@
+{% extends "puzzle.html" %}
+{% load static %}
+{% block puzzle-body-md %}
+
+<style>
+    img {
+        display: block; 
+        margin-left: auto; 
+        margin-right: auto;
+        height: 400px;
+    }
+</style>
+
+One of each of these people is an old friend.
+{: .flavor}
+
+<img src="{% static 'puzzle_resources/community-photos/1.jpg' %}"><br>
+<img src="{% static 'puzzle_resources/community-photos/2.jpg' %}"><br>
+<img src="{% static 'puzzle_resources/community-photos/3.jpg' %}"><br>
+<img src="{% static 'puzzle_resources/community-photos/4.jpg' %}"><br>
+<img src="{% static 'puzzle_resources/community-photos/5.jpg' %}"><br>
+<img src="{% static 'puzzle_resources/community-photos/6.jpg' %}"><br>
+<img src="{% static 'puzzle_resources/community-photos/7.jpg' %}"><br>
+<img src="{% static 'puzzle_resources/community-photos/8.jpg' %}"><br>
+<img src="{% static 'puzzle_resources/community-photos/9.jpg' %}"><br>
+<img src="{% static 'puzzle_resources/community-photos/10.jpg' %}"><br>
+<img src="{% static 'puzzle_resources/community-photos/11.jpg' %}"><br>
+<img src="{% static 'puzzle_resources/community-photos/12.jpg' %}"><br>
+<img src="{% static 'puzzle_resources/community-photos/13.jpg' %}">
+
+{% endblock %}

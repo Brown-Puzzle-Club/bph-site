@@ -1,0 +1,178 @@
+{% extends "round.html" %} {% load static %} {% block round-body %}
+<link rel="stylesheet" href="/static/css/rounds/themes/cthulu-purple.css" />
+<style>
+  
+  html {
+    --page-bg-rgb: 199, 177, 177;
+    --heading-text-color: #5e5b62;
+  }
+
+  h1 {
+    font-family: monospace;
+  }
+
+  .round-puzzles {
+    position: relative;
+  }
+
+  .map {
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    aspect-ratio: 4/3;
+    max-width: 2061px;
+    width: 120%;
+  }
+
+  .round-puzzles .puzzle {
+    position: absolute;
+  }
+
+  .round-puzzles .puzzle img:hover {
+    /* TODO: change cursor on hover*/
+
+  }
+
+  .round-puzzles .puzzle img,
+  .round-puzzles .computer-bg img,
+  .round-puzzles .blueno-bg img {
+    width: 100%;
+  }
+
+  .computer-bg {
+    position: absolute;
+    z-index: -1;
+  }
+  .blueno-bg {
+    position: absolute;
+    z-index: 10;
+    width: 20%;
+    left: 68%;
+    top: 47%;
+  }
+
+  .round-puzzles .puzzle:nth-of-type(1) {
+    left: 9.5%;
+    top: 14%;
+    width: 11%;
+    z-index: 100;
+  }
+  .round-puzzles .puzzle:nth-of-type(2) {
+    left: 10%;
+    top: 28%;
+    width: 10%;
+    z-index: 100;
+  }
+  .round-puzzles .puzzle:nth-of-type(3) {
+    left: 10%;
+    top: 43%;
+    width: 10%;
+    z-index: 100;
+  }
+  .round-puzzles .puzzle:nth-of-type(4) {
+    left: 21%;
+    top: 13.5%;
+    width: 9%;
+    z-index: 100;
+  }
+  .round-puzzles .puzzle:nth-of-type(5) {
+    left: 21.5%;
+    top: 28%;
+    width: 8%;
+    z-index: 100;
+  }
+  .round-puzzles .puzzle:nth-of-type(6) {
+    left: 17.2%;
+    top: 66%;
+    width: 15%;
+    z-index: 100;
+  }
+  
+  .round-puzzles .puzzle:nth-of-type(1) img {
+    content: url("/static/images/rounds/dear-blueno/word processor icon (1).png");
+  }
+  .round-puzzles .puzzle:nth-of-type(2) img {
+    content: url("/static/images/rounds/dear-blueno/tic tac toe icon (1).png");
+  }
+  .round-puzzles .puzzle:nth-of-type(3) img {
+    content: url("/static/images/rounds/dear-blueno/musical cryptogram icon (1).png");
+  }
+  .round-puzzles .puzzle:nth-of-type(4) img {
+    content: url("/static/images/rounds/dear-blueno/space piracy icon (1).png");
+  }
+  .round-puzzles .puzzle:nth-of-type(5) img {
+    content: url("/static/images/rounds/dear-blueno/tetris icon (1).png");
+  }
+  .round-puzzles .puzzle:nth-of-type(6) img {
+    content: url("/static/images/rounds/dear-blueno/meta button.png");
+  }
+  .round-puzzles .puzzle:nth-of-type(6) img:hover {
+    content: url("/static/images/rounds/dear-blueno/hover meta button.png");
+  }
+
+  
+  
+  .puzzle img:hover {
+    cursor: url("/static/images/rounds/dear-blueno/mp2-small.png"),auto;
+  }
+
+  .computer-bg-img:hover {
+    cursor: url("/static/images/rounds/dear-blueno/mp-small.png"),auto;
+  }
+  .blueno-bg-img:hover {
+    cursor: url("/static/images/rounds/dear-blueno/mp-small.png"),auto;
+  }
+
+
+  .puzzles-list {
+    background-color: #fff8ea8f;
+  }
+
+  .puzzles-list li {
+    padding: 10px;
+    border-bottom: 1px solid #fff;
+  }
+
+  .puzzles-new {
+    background-color: #746b7e;
+  }
+
+  .puzzles-new:hover, a:hover .puzzles-new  {
+    background-color: #49629a;
+  }
+
+  a:hover, a:focus {
+    color: #49629a;
+  }
+
+  .puzzles-answer > :first-child {
+    border-bottom: 2px dashed #687378;
+  }
+
+</style>
+
+<section class="round-puzzles">
+  <div class="map">
+    {% for data in round.puzzles %}
+    <div class="puzzle">
+      <a href="{% url 'puzzle' data.puzzle.slug %}">
+        <img class="{{ data.puzzle.slug }}" />
+      </a>
+    </div>
+    {% endfor %}
+    <div class="computer-bg">
+      <img
+        class="computer-bg-img"
+        src="{% static 'images/rounds/dear-blueno/computerr.png' %}"
+      />
+    </div>
+    <div class="blueno-bg">
+      <img
+        class="blueno-bg-img"
+        src="{% static 'images/rounds/dear-blueno/trash blueno.png' %}"
+      />
+    </div>
+  </div>
+</section>
+
+{% endblock %}

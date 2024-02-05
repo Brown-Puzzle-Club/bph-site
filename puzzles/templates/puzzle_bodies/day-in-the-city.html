@@ -1,0 +1,97 @@
+{% extends "puzzle.html" %}
+{% load static %}
+{% block puzzle-body-md %}
+
+<style>
+    img {
+        width: 100px;
+    }
+    .puzzle-pdf {
+      width: 100%;
+      margin: 0 auto;
+      display: block;
+    }
+</style>
+
+<script>
+  var firstH1 = $('h1:first');
+
+  firstH1.remove();
+</script>
+
+<embed src="/static/puzzle_resources/day-in-the-city/day in the city.pdf#toolbar=0&navpanes=0&scrollbar=0"
+  class="puzzle-pdf" width="500" height="699"
+/>
+
+<!-- <table>
+    <tr>
+        <td colspan="2"><b>Things To Do:</b></td>
+    </tr>
+    <tr>
+        <td>See slam poetry at the Nuyorican Poets Cafe</td>
+        <td><img src="{% static 'puzzle_resources/day-in-the-city/7-digit.svg' %}"></td>
+    </tr>
+    <tr>
+        <td>Pay respects at the New York Marble Cemetery</td>
+        <td><img src="{% static 'puzzle_resources/day-in-the-city/d-letter.svg' %}"></td>
+    </tr>
+    <tr>
+        <td>Enjoy a meal at Thai Diner</td>
+        <td><img src="{% static 'puzzle_resources/day-in-the-city/n-letter.svg' %}"></td>
+    </tr>
+    <tr>
+        <td>Unleash your inner child at the Hippo Playground</td>
+        <td><img src="{% static 'puzzle_resources/day-in-the-city/1-digit.svg' %}"></td>
+    </tr>
+    <tr>
+        <td>People-watch at Tompkins Square Park </td>
+        <td><img src="{% static 'puzzle_resources/day-in-the-city/4-digit.svg' %}"></td>
+    </tr>
+    <tr>
+        <td>Pick up some souvenirs at the Malcolm Shabazz Harlem Market </td>
+        <td><img src="{% static 'puzzle_resources/day-in-the-city/a-letter.svg' %}"></td>
+    </tr>
+</table>
+
+<span style="text-align: center;"><b>Fun Facts About NYC:</b></span><br>
+The Rockefeller Center is made from the most corrosion-resistant material.<br>
+Chelsea Market gets its namesake from the man who first proposed the sun as the center of the universe.<br>
+The Jackie O. Reservoir has a bluish tint and is produced mainly in the DR Congo.<br>
+Peter Cooper Village burns at 420 degrees Celsius.<br>
+Katz's Delicatessen serves as the final receptor in the electron transport chain.<br>
+
+<div style="text-align: center;">
+    <b>Important E-W Streets:</b><br>
+    135th St<br>
+    125th St<br>
+    116th St<br>
+    110th St<br>
+    97th St<br>
+    81st St -> 79th St<br>
+    66th St -> 65th St<br>
+    59th St<br>
+    50th St<br>
+    42nd St<br>
+    34th St<br>
+    23rd St<br>
+    14th St<br>
+    10th St<br>
+    Leroy Av -> 4th St<br>
+    Houston St<br>
+    Spring St -> Delancey St -> Williamsburg Bridge<br>
+    Canal St -> E Broadway -> Grand St<br>
+    Chambers St -> Brooklyn Bridge Promenade -> South Street-> FDR Drive<br>
+</div>
+
+<div style="text-align: center;">
+    <b>Important N-S Streets:</b><br>
+    12th Ave -> Riverside Blvd -> Riverside Drive<br>
+    8th Ave -> Central Park West -> Frederick Douglass Blvd<br>
+    W Broadway -> 5th Ave<br>
+    St. James Place -> Bowery -> 3rd Ave<br>
+    Manhattan Bridge -> Chrystie St -> 2nd Ave<br>
+    Pike St -> Allen St -> 1st Ave <br>
+    Montgomery St. -> Pitt St. -> Avenue C<br>
+</div> -->
+
+{% endblock %}

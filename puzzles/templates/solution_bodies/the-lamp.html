@@ -1,0 +1,268 @@
+{% extends "solution.html" %}
+
+{% block puzzle-author %}
+Thomas Gordon
+{% endblock %}
+
+{% block solution-body-md %}
+
+As clued by the flavortext and the general theme of the puzzle, each of the answers can be "broken down" semantically into component parts, each associated with a color.
+
+<table>
+    <tr>
+        <td>BASIC LAND</td>
+        <td>Plains (White)</td>
+        <td>Island (Blue)</td>
+        <td>Swamp (Black)</td>
+        <td>Mountain (Red)</td>
+        <td>Forest (Green)</td>
+    </tr>
+    <tr>
+        <td>TEENAGE MUTANT NINJA TURTLES</td>
+        <td>Leonardo (Blue)</td>
+        <td>Michelangelo (Red)</td>
+        <td>Donatello (Purple)</td>
+        <td>Raphael (Orange)</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>ADVENTURE TIME</td>
+        <td>Jake the Dog (Yellow)</td>
+        <td>Finn the Human (Blue)</td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>PLAYSTATION</td>
+        <td>Triangle (Green)</td>
+        <td>Circle (Red)</td>
+        <td>Cross (Blue)</td>
+        <td>Square (Pink)</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>MYSTERY INC</td>
+        <td>Scooby Doo (Brown)</td>
+        <td>Fred Jones (White)</td>
+        <td>Velma Dinkley (Orange)</td>
+        <td>Daphne Blake (Purple)</td>
+        <td>Shaggy (Norville) Rogers (Green)</td>
+    </tr>
+    <tr>
+        <td>NEAPOLITAN</td>
+        <td>Chocolate (Brown)</td>
+        <td>Vanilla (White)</td>
+        <td>Strawberry (Pink)</td>
+    </tr>
+</table>
+
+Each "box" contains one single kind of color. Boxes 6-10 also are fed by other boxes, because they are secondary/tertiary colors (and can be formed by combining other colors together).
+
+<table>
+    <tr>
+        <th>Box</th>
+        <th>Color</th>
+    </tr>
+    <tr>
+        <td>1</td>
+        <td>White</td>
+    </tr>
+    <tr>
+        <td>2</td>
+        <td>Red</td>
+    </tr>
+    <tr>
+        <td>3</td>
+        <td>Yellow</td>
+    </tr>
+    <tr>
+        <td>4</td>
+        <td>Blue</td>
+    </tr>
+    <tr>
+        <td>5</td>
+        <td>Black</td>
+    </tr>
+    <tr>
+        <td>6</td>
+        <td>Pink</td>
+    </tr>
+    <tr>
+        <td>7</td>
+        <td>Orange</td>
+    </tr>
+    <tr>
+        <td>8</td>
+        <td>Green</td>
+    </tr>
+    <tr>
+        <td>9</td>
+        <td>Purple</td>
+    </tr>
+    <tr>
+        <td>10</td>
+        <td>Brown</td>
+    </tr>
+</table>
+
+This information can be used to uniquely place the "components" of each answer in each pipe:
+
+<table>
+    <tr>
+        <th>Box</th>
+        <th>Outputs (Left to Right)</th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+    </tr>
+    <tr>
+        <td>ADVENTURE TIME</td>
+        <td>JAKE (A)</td>
+        <td>FINN (I)</td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>BASIC LAND</td>
+        <td>PLAINS (P)</td>
+        <td>MOUNTAIN</td>
+        <td>ISLAND (S)</td>
+        <td>SWAMP</td>
+        <td>FOREST (S)</td>
+    </tr>
+    <tr>
+        <td>MYSTERY INC</td>
+        <td>FRED JONES (E)</td>
+        <td>VELMA DINKLEY</td>
+        <td>SHAGGY ROGERS</td>
+        <td>DAPHNE BLAKE (H)</td>
+        <td>SCOOBY DOO (C)</td>
+    </tr>
+    <tr>
+        <td>PLAYSTATION</td>
+        <td>CIRCLE (C)</td>
+        <td>X</td>
+        <td>SQUARE (S)</td>
+        <td>TRIANGLE</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>NEAPOLITAN</td>
+        <td>VANILLA (I)</td>
+        <td>STRAWBERRY (W)</td>
+        <td>CHOCOLATE</td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>TEENAGE MUTANT NINJA TURTLES</td>
+        <td>RAPHAEL (L)</td>
+        <td>LEONARDO (E)</td>
+        <td>MICHELANGELO (L)</td>
+        <td>DONATELLO</td>
+    </tr>
+</table>
+
+(You may also realize that the mystery boxes are ordered alphabetically from left to right!)
+
+And then, sorting the letters:
+
+<table>
+    <tr>
+        <td>1</td>
+        <td>E</td>
+        <td>3</td>
+        <td>FRED</td>
+    </tr>
+    <tr>
+        <td>2</td>
+        <td>C</td>
+        <td>4</td>
+        <td>CIRCLE</td>
+    </tr>
+    <tr>
+        <td>3</td>
+        <td>L</td>
+        <td>7</td>
+        <td>RAPHAEL</td>
+    </tr>
+    <tr>
+        <td>4</td>
+        <td>I</td>
+        <td>2</td>
+        <td>FINN THE HUMAN</td>
+    </tr>
+    <tr>
+        <td>5</td>
+        <td>P</td>
+        <td>1</td>
+        <td>PLAINS</td>
+    </tr>
+    <tr>
+        <td>6</td>
+        <td>S</td>
+        <td>1</td>
+        <td>SQUARE</td>
+    </tr>
+    <tr>
+        <td>7</td>
+        <td>E</td>
+        <td>2</td>
+        <td>LEONARDO</td>
+    </tr>
+    <tr>
+        <td>8</td>
+        <td>H</td>
+        <td>4</td>
+        <td>DAPHNE</td>
+    </tr>
+    <tr>
+        <td>9</td>
+        <td>I</td>
+        <td>4</td>
+        <td>VANILLA</td>
+    </tr>
+    <tr>
+        <td>10</td>
+        <td>S</td>
+        <td>5</td>
+        <td>FOREST</td>
+    </tr>
+    <tr>
+        <td>11</td>
+        <td>C</td>
+        <td>2</td>
+        <td>SCOOBY-DOO</td>
+    </tr>
+    <tr>
+        <td>12</td>
+        <td>L</td>
+        <td>6</td>
+        <td>MICHELANGELO</td>
+    </tr>
+    <tr>
+        <td>13</td>
+        <td>A</td>
+        <td>2</td>
+        <td>JAKE THE DOG</td>
+    </tr>
+    <tr>
+        <td>14</td>
+        <td>W</td>
+        <td>5</td>
+        <td>STRAWBERRY</td>
+    </tr>
+    <tr>
+        <td>15</td>
+        <td>S</td>
+        <td>2</td>
+        <td>ISLAND</td>
+    </tr>
+</table>
+
+Which gives us the solution to our problem; to <span class="spoiler">ECLIPSE HIS CLAWS</span>.
+
+{% endblock %}
