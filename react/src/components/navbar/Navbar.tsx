@@ -11,9 +11,11 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
-import Login from "./auth/Login";
+import LoginNavbar from "./LoginNavbar";
 
 import { useAuth } from "@/hooks/useAuth";
+import { BeatLoader } from "react-spinners";
+import TeamNavbar from "./TeamNavbar";
 
 
 const components: { title: string; href: string; description: string }[] = [
@@ -53,17 +55,37 @@ const components: { title: string; href: string; description: string }[] = [
       "A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.",
   },
 ]
- 
-export default function Navbar({navbarColor}: {navbarColor: string}) {
-  const { loggedIn } = useAuth();
 
+const ListItem = React.forwardRef<
+  React.ElementRef<"a">,
+  React.ComponentPropsWithoutRef<"a">
+>(({ className, title, children, ...props }, ref) => {
   return (
-    <div className={`navbar sticky top-0 z-40 w-full backdrop-blur-sm flex transition-colors duration-500 lg:z-50 lg:border-b lg:border-slate-900/10 dark:border-slate-50/[0.06] supports-backdrop-blur:bg-white/60 dark:bg-transparent`}
-    style={{
-      backgroundColor: navbarColor,
-    }}>
-      <div className="left flex justify-start w-1/3">
-        <NavigationMenu className="dark">
+    <li>
+      <NavigationMenuLink asChild>
+        <a
+          ref={ref}
+          className={cn(
+            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+            className
+          )}
+          {...props}
+        >
+          <div className="text-sm font-medium leading-none">{title}</div>
+          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+            {children}
+          </p>
+        </a>
+      </NavigationMenuLink>
+    </li>
+  )
+})
+ListItem.displayName = "ListItem"
+
+const NavbarLeft = () => {
+  return (
+    <div className="left flex justify-start w-1/3">
+        <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
               <NavigationMenuTrigger>Brown Puzzlehunt</NavigationMenuTrigger>
@@ -119,50 +141,37 @@ export default function Navbar({navbarColor}: {navbarColor: string}) {
           </NavigationMenuList>
         </NavigationMenu>
       </div>
-      <div className="middle flex justify-center text-white w-1/3"></div>
-      <div className="right flex justify-end text-white w-1/3">
-        <NavigationMenuRight className="dark">
-          <NavigationMenuList>
-            <NavigationMenuItem>
-              REGISTER
-            </NavigationMenuItem>
-            {!loggedIn &&
-            <NavigationMenuItem>
-              <NavigationMenuTrigger>LOGIN</NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <Login/>
-              </NavigationMenuContent>
-            </NavigationMenuItem> || <div>LOGGED IN!</div>
-            }
-          </NavigationMenuList>
+  )
+}
+
+const NavbarMiddle = () => {
+  return (
+    <div className="middle flex justify-center text-white w-1/3"></div>
+  )
+}
+
+const NavbarRight = () => {
+  const { loggedIn, checkingLoginStatus } = useAuth();
+  return (
+    <div className="right flex justify-end w-1/3">
+      <NavigationMenu>
+        <NavigationMenuRight>
+          {checkingLoginStatus && <BeatLoader className="justify-center content-center pr-2" color={'#fff'} size={12} /> || (loggedIn && <TeamNavbar/> || <LoginNavbar/>)}
         </NavigationMenuRight>
-      </div>
+      </NavigationMenu>
     </div>
   )
 }
  
-const ListItem = React.forwardRef<
-  React.ElementRef<"a">,
-  React.ComponentPropsWithoutRef<"a">
->(({ className, title, children, ...props }, ref) => {
+export default function Navbar({navbarColor}: {navbarColor: string}) {
   return (
-    <li>
-      <NavigationMenuLink asChild>
-        <a
-          ref={ref}
-          className={cn(
-            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-            className
-          )}
-          {...props}
-        >
-          <div className="text-sm font-medium leading-none">{title}</div>
-          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-            {children}
-          </p>
-        </a>
-      </NavigationMenuLink>
-    </li>
+    <div className={`navbar dark sticky top-0 z-40 w-full backdrop-blur-sm flex transition-colors duration-500 lg:z-50 lg:border-b lg:border-slate-900/10 dark:border-slate-50/[0.06] supports-backdrop-blur:bg-white/60 dark:bg-transparent`}
+    style={{
+      backgroundColor: navbarColor,
+    }}>
+      <NavbarLeft/>
+      <NavbarMiddle/>
+      <NavbarRight/>
+    </div>
   )
-})
-ListItem.displayName = "ListItem"
+}

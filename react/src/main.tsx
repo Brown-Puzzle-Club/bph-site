@@ -55,10 +55,10 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <AuthContextProvider>
-      <DjangoContextProvider>
+    <DjangoContextProvider>
+      <AuthContextProvider>
         <RouterProvider router={router} />
-      </DjangoContextProvider>
-    </AuthContextProvider>
+      </AuthContextProvider>
+    </DjangoContextProvider>
   </React.StrictMode>
 );

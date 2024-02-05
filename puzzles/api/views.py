@@ -48,6 +48,6 @@ def login_view(request: Request) -> Response:
     user = authenticate(request, username=username, password=password)
     if user is not None:
         login(request._request, user)
-        return Response({'status': 'success'})    
+        return Response(UserSerializer(user).data)
     else:
         return Response({'status': 'failure'}, status=401)

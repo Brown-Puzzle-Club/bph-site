@@ -1,5 +1,18 @@
 import { z } from "zod";
 
+const UserSchema = z.object({
+  id: z.number(),
+  username: z.string(),
+  email: z.string(),
+  first_name: z.string(),
+  last_name: z.string(),
+  is_staff: z.boolean(),
+  is_active: z.boolean(),
+  is_superuser: z.boolean(),
+  date_joined: z.string(),
+});
+type User = z.infer<typeof UserSchema>;
+
 const UserTeamSchema = z.object({
   id: z.number(),
   team_name: z.string(),
@@ -34,5 +47,5 @@ type Team = z.infer<typeof TeamSchema>;
 
 
 
-export type { Team, UserTeam };
+export type { Team, User, UserTeam };
 

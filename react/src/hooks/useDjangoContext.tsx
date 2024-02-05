@@ -1,14 +1,18 @@
-import { Team, UserTeam } from "@/utils/django_types";
+import { Team, User, UserTeam } from "@/utils/django_types";
 import axios from "axios";
 import { createContext, useCallback, useContext } from "react";
 
 
 type DjangoContextType = {
+  FetchUser: () => Promise<User>;
   FetchTeam: () => Promise<UserTeam>;
   FetchTeams : () => Promise<Team[]>;
 }
 
 const DjangoContext = createContext<DjangoContextType>({
+  FetchUser: async () => {
+    return {} as User;
+  },
   FetchTeam: async () => {
     return {} as UserTeam;
   },
@@ -18,6 +22,12 @@ const DjangoContext = createContext<DjangoContextType>({
 });
 
 export const DjangoContextProvider = ({ children }: { children: React.ReactNode }) => {
+
+  const FetchUser = useCallback(async () => {
+    const response = axios.get('/api/users');
+    return (await response).data[0] as User;
+  },[]);
+
   const FetchTeam = useCallback(async () => {
     const response = axios.get('/api/my-team');
     return (await response).data[0] as UserTeam;
@@ -30,7 +40,7 @@ export const DjangoContextProvider = ({ children }: { children: React.ReactNode 
   },[]);
 
   return (
-    <DjangoContext.Provider value={{ FetchTeam, FetchTeams }}>
+    <DjangoContext.Provider value={{ FetchUser, FetchTeam, FetchTeams }}>
       {children}
     </DjangoContext.Provider>
   );
