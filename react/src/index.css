@@ -256,3 +256,13 @@ body {
   -moz-animation: glow_subtle 4s ease-in-out infinite alternate;
   animation: glow_subtle 4s ease-in-out infinite alternate;
 }
+
+@keyframes shakeImg {
+  30% { transform: rotate(20deg); }
+  70% { transform: rotate(-25deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.shake-animation {
+  animation: shakeImg 1s ease-in-out; /* Adjust the duration and easing as needed */
+}

@@ -6,6 +6,7 @@ import { PageWrapper } from "./components/PageWrapper";
 import { AuthContextProvider } from './hooks/useAuth';
 import { DjangoContextProvider } from './hooks/useDjangoContext';
 import "./index.css";
+import Archive from './routes/Archive';
 import Club from "./routes/Club";
 import Contact from "./routes/Contact";
 import Credits from "./routes/Credits";
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
   {
     path: "/my-team",
     element: <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<TeamPage />} />
+  },
+  {
+    path: '/archive',
+    element: <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<Archive/>} />
   }
 ]);
 

@@ -45,10 +45,10 @@ urlpatterns = [
 
     path('', views.index, name='index'),
 
-    path('rules', views.rules, name='rules'),
-    path('on-campus', views.on_campus, name='on_campus'),
-    path('contact-hq', views.contact_hq, name='contact-hq'),
-    path('archive', views.archive, name='archive'),
+    # path('rules', views.rules, name='rules'),
+    # path('on-campus', views.on_campus, name='on_campus'),
+    # path('contact-hq', views.contact_hq, name='contact-hq'),
+    # path('archive', views.archive, name='archive'),
     path('register', views.register, name='register'),
     # path('club', views.club, name='club'),
     # path('credits', views.credits, name='credits'),
@@ -143,6 +143,7 @@ urlpatterns = [
     path('club', views.react_base, name='credits'),
     path('contact', views.react_base, name='contact'),
     path('leaderboard', views.react_base, name='leaderboard'),
+    path('archive', views.react_base, name='archive'),
     
     path('my-team', views.team_locked_react, name='my-team'),
 
