@@ -19,6 +19,9 @@ import Countdown from "react-countdown";
 import { BeatLoader } from "react-spinners";
 import TeamNavbar from "./TeamNavbar";
 
+import bluenoir_logo from "@/assets/navbar_logo.png";
+import { useState } from "react";
+
 
 const components: { title: string; href: string; description: string }[] = [
   {
@@ -46,7 +49,7 @@ const components: { title: string; href: string; description: string }[] = [
   },
 ]
 
-const ListItem = React.forwardRef<
+export const ListItem = React.forwardRef<
   React.ElementRef<"a">,
   React.ComponentPropsWithoutRef<"a">
 >(({ className, title, children, ...props }, ref) => {
@@ -103,6 +106,29 @@ const hunt_start_timer = ({ days, hours, minutes, seconds, completed }: { days: 
   }
 };
 
+const HuntLogo = () => {
+  const [hover, setHover] = useState(false);
+
+  return (
+    <a href="/" className="text-white font-bold pl-3 pr-4 md:pr-1 whitespace-nowrap justify-center"
+      onMouseEnter={() => {setHover(true)}}
+      onMouseLeave={() => {setHover(false)}}
+    >
+      <img
+        src={bluenoir_logo}
+        alt="Brown Puzzlehunt 2024 Logo"
+        className="h-6 w-5 inline mr-1"
+        style={{
+          transition: "200ms ease",
+          transform: hover ? "rotate(20deg)" : "none"
+        }}
+      />
+      <span>Brown Puzzlehunt</span>
+    </a>
+  )
+
+}
+
 const NavbarLeft = () => {
 
   return (
@@ -110,7 +136,7 @@ const NavbarLeft = () => {
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
-              <a href="/" className="text-white font-bold pl-2 whitespace-nowrap">Brown Puzzlehunt</a>
+              <HuntLogo/>
             </NavigationMenuItem>
             <NavigationMenuItem>
               <NavigationMenuTrigger>The Hunt</NavigationMenuTrigger>

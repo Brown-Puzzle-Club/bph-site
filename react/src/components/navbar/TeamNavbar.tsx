@@ -1,6 +1,7 @@
 
 import { useAuth } from '../../hooks/useAuth';
 import { NavigationMenuContent, NavigationMenuItem, NavigationMenuTrigger } from '../ui/navigation-menu';
+import { ListItem } from './Navbar';
 
 export default function TeamNavbar () {
 
@@ -8,15 +9,13 @@ export default function TeamNavbar () {
 
   return (
     <NavigationMenuItem>
-      <NavigationMenuTrigger><div className='truncate max-w-48'>{user?.username}</div></NavigationMenuTrigger>
+      <NavigationMenuTrigger><div className='truncate max-w-10 md:max-w-48'>{user?.username}</div></NavigationMenuTrigger>
       <NavigationMenuContent>
-        <button
-          type="submit"
-          className="bg-primary text-white p-2 rounded-md hover:bg-primary-dark focus:outline-none focus:ring focus:border-primary-dark"
-          onClick={() => { logout() }}
-        >
-          Logout
-        </button>
+        <ul className="grid w-[150px] gap-3 p-4 md:grid-cols-1">
+          <ListItem href={"my-team"} title={"Team Info"} />
+          <ListItem className='bg-gradient-to-b from-muted/50 to-muted' onClick={() => { logout() }} title={"Logout"} />
+        </ul>
+        
       </NavigationMenuContent>
     </NavigationMenuItem>
   )
