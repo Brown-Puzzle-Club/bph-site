@@ -50,8 +50,8 @@ urlpatterns = [
     path('contact-hq', views.contact_hq, name='contact-hq'),
     path('archive', views.archive, name='archive'),
     path('register', views.register, name='register'),
-    path('club', views.club, name='club'),
-    path('credits', views.credits, name='credits'),
+    # path('club', views.club, name='club'),
+    # path('credits', views.credits, name='credits'),
 
 
     path('login',
@@ -134,14 +134,14 @@ urlpatterns = [
     path('jsi18n/', cache_page(86400, key_prefix='js18n-V1')
          (JavaScriptCatalog.as_view()), name='javascript-catalog'),
 
-    path('react', views.prerelease_locked_react, name='react'),
+    # path('react', views.prerelease_locked_react, name='react'),
     path('social-deduction', views.prerelease_locked_react, name='social-deduction'),
     path('landing', views.prerelease_locked_react, name='landing'),
     path('info', views.react_base, name='info'),
     
-    path('credits-new', views.prerelease_locked_react, name='credits-new'),
-    path('club-new', views.prerelease_locked_react, name='credits-new'),
-    path('contact', views.prerelease_locked_react, name='contact'),
+    path('credits', views.react_base, name='credits'),
+    path('club', views.react_base, name='credits'),
+    path('contact', views.react_base, name='contact'),
     path('leaderboard', views.react_base, name='leaderboard'),
     path('team-new', views.react_base, name='team-new'),
 

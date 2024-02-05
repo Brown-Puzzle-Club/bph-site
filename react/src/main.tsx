@@ -32,11 +32,11 @@ const router = createBrowserRouter([
     element: <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<InfoPage />} />
   },
   {
-    path: "/credits-new",
+    path: "/credits",
     element: <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<Credits />} />
   },
   {
-    path: "/club-new",
+    path: "/club",
     element: <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<Club />} />
   },
   {
