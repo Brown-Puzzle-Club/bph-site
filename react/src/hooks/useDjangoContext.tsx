@@ -24,7 +24,7 @@ const DjangoContext = createContext<DjangoContextType>({
 export const DjangoContextProvider = ({ children }: { children: React.ReactNode }) => {
 
   const FetchUser = useCallback(async () => {
-    const response = axios.get('/api/users');
+    const response = axios.get('/api/user');
     return (await response).data[0] as User;
   },[]);
 

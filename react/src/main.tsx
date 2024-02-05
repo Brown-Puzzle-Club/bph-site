@@ -48,7 +48,7 @@ const router = createBrowserRouter([
     element: <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<Leaderboard />} />
   },
   {
-    path: "/team-new",
+    path: "/my-team",
     element: <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<TeamPage />} />
   }
 ]);

@@ -1,15 +1,12 @@
 from rest_framework import permissions, viewsets, mixins
 from .serializers import *
 
-from django.shortcuts import redirect
-from django.http import HttpResponse, HttpRequest
 from rest_framework.response import Response
-from rest_framework.request import Request, Empty
+from rest_framework.request import Request
 from rest_framework.decorators import api_view
 
-from django.contrib.auth import login
-from django.http import JsonResponse
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login, logout
+
 
 @api_view(['GET'])
 def index(request: Request) -> Response:
@@ -51,3 +48,10 @@ def login_view(request: Request) -> Response:
         return Response(UserSerializer(user).data)
     else:
         return Response({'status': 'failure'}, status=401)
+    
+
+@api_view(['POST'])
+def logout_view(request: Request) -> Response:
+    logout(request._request)
+    
+    return Response({'status': 'success'})

@@ -83,6 +83,12 @@ def react_base(request):
     })
 
 @require_GET
+def team_locked_react(request):
+    if not request.context.team:
+        raise Http404 # TODO: make redirecting work better.
+    return react_base(request)
+
+@require_GET
 def prerelease_locked_react(request):
     if not request.context.team or not request.context.team.is_prerelease_testsolver:
         raise Http404

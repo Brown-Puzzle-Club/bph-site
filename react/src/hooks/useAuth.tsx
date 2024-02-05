@@ -1,6 +1,6 @@
 import { User } from "@/utils/django_types";
 import axios from "axios";
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
 import { createContext, useContext, useEffect, useState } from "react";
 
 type AuthContextType = {
@@ -8,7 +8,7 @@ type AuthContextType = {
   checkingLoginStatus: boolean;
   user?: User;
   login: (username: string, password: string) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -16,7 +16,7 @@ const AuthContext = createContext<AuthContextType>({
   checkingLoginStatus: true,
   user: undefined,
   login: async () => {},
-  logout: () => {},
+  logout: async () => {},
 });
 
 // is it bad to make the context async?
@@ -26,13 +26,11 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
   const [user, setUser] = useState(undefined as User | undefined);
 
   const CheckAlreadyLoggedIn = async () => {
-    // for some reason cannot use DjangoContext in here without error.
     setCheckingLoginStatus(true);
     let out = undefined
     try {
-      const response = axios.get('/api/users');
-      
-      out =(await response).data[0] as User;
+      const response = axios.get('/api/user');
+      out = (await response).data[0] as User;
     } catch (error) {
       const e = error as Error;
       console.error(e.message);
@@ -42,14 +40,17 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
   } 
 
   useEffect(() => {
-    // TODO: check if cookie exists before doing this query.
-    CheckAlreadyLoggedIn().then((user) => {
-      console.log(user)
-      if (user) {
-        setUser(user);
-        setLoggedIn(true);
-      }
-    });
+    setCheckingLoginStatus(false);
+    const session = Cookies.get('sessionid');
+    if (session) {
+      CheckAlreadyLoggedIn().then((user) => {
+        console.log(user)
+        if (user) {
+          setUser(user);
+          setLoggedIn(true);
+        }
+      });
+    }
   },[]);
 
   const login = async (username: string, password: string) => {
@@ -63,6 +64,7 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
         const cur_user = response.data as User
         setUser(cur_user)
         setLoggedIn(true);
+        window.location.reload()  ;
       });
     } catch (error) {
       const e = error as Error;
@@ -71,11 +73,12 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
     }
   }
 
-  const logout = () => {
+  const logout = async () => {
     console.log('Logging out');
-    // doesnt work.. TODO: find workaround / fix
-    Cookies.remove('sessionid');
+    await axios.post('/api/logout');
+    setUser(undefined);
     setLoggedIn(false);
+    window.location.assign("/");
   }
 
   return (

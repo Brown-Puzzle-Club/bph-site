@@ -268,6 +268,8 @@ REST_FRAMEWORK = {
     ],
 }
 
+SESSION_COOKIE_HTTPONLY = False
+
 # Google Analytics
 GA_CODE = ''
 

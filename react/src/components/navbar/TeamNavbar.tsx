@@ -8,7 +8,7 @@ export default function TeamNavbar () {
 
   return (
     <NavigationMenuItem>
-      <NavigationMenuTrigger>{user?.username}</NavigationMenuTrigger>
+      <NavigationMenuTrigger><div className='truncate max-w-48'>{user?.username}</div></NavigationMenuTrigger>
       <NavigationMenuContent>
         <button
           type="submit"

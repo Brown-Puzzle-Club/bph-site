@@ -136,14 +136,15 @@ urlpatterns = [
 
     # path('react', views.prerelease_locked_react, name='react'),
     path('social-deduction', views.prerelease_locked_react, name='social-deduction'),
-    path('landing', views.prerelease_locked_react, name='landing'),
+    path('landing', views.react_base, name='landing'),
     path('info', views.react_base, name='info'),
     
     path('credits', views.react_base, name='credits'),
     path('club', views.react_base, name='credits'),
     path('contact', views.react_base, name='contact'),
     path('leaderboard', views.react_base, name='leaderboard'),
-    path('team-new', views.react_base, name='team-new'),
+    
+    path('my-team', views.team_locked_react, name='my-team'),
 
     path('api/', include('puzzles.api.urls')),
 ]
