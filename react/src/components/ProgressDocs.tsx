@@ -33,13 +33,24 @@ export default function ProgressDocs({ children }: { children: ReactNode }) {
 
     setActiveHeadings(currentHeadings);
   };
-  
+
+  const scrollToAnchor = () => {
+    const hash = window.location.hash;  
+    if (hash) {
+      const element = document.getElementById(hash.substring(1));
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }
+
   const handleLeftDivClick = (heading: Element) => {
     heading.scrollIntoView({ behavior: 'smooth' });
   };
 
   useEffect(() => {
     getCurrentHeadings()
+    scrollToAnchor();
     window.addEventListener('scroll', getCurrentHeadings);
     return () => {
       window.removeEventListener('scroll', getCurrentHeadings);

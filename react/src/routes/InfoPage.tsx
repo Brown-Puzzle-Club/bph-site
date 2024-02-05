@@ -36,7 +36,7 @@ export default function InfoPage() {
   return (
     <div className="info bg-slate-900 text-white h-[90vh]"> 
       <ProgressDocs>
-        <h1>Important Info</h1>
+        <h1 id="important-info">Important Info</h1>
         <h4>What is this?</h4>
         <div>
           <p>This is a puzzlehunt! Teams of people will compete to solve puzzles (think escape room, not jigsaw) using information both online and in real life. Brown Puzzlehunt 2024 is Brown Puzzle Club's second annual puzzlehunt, so if you would like an example of a complete event please check out last year's <a href='https://2023.brownpuzzlehunt.com/'>hunt archive</a>.</p>
@@ -49,7 +49,7 @@ export default function InfoPage() {
           <p>There may be <b>in-person puzzles</b>, which require physical presence on campus; <b>physical puzzles</b>, which require collecting objects from HQ; and <b>events</b>, which are not essential to finish, but will be a fun time anyway.</p>
           <p><b>Wrap-up</b> will be held at <b>8:30pm</b> in <b>MacMillan Hall Room 117</b>, with doors opening at <b>8:15pm</b>. Wrapup and Kickoff will both be livestreamed.</p>
         </div> 
-        <h4>What's the goal?</h4>
+        <h4 id="rules-start">What's the goal?</h4>
         <div>
           <p>The official winner will be the first team to find Blueno hidden somewhere on campus.</p>
           <p>Only teams which are on-campus during the final runaround will be able to find Blueno. Additionally, only teams with one or more current undergraduate/graduate Brown or RISD students on-campus are eligible to find Blueno.</p>
@@ -95,8 +95,8 @@ export default function InfoPage() {
           <p>We reserve the right to change any of these rules. If there's a big change, we'll announce it to all teams.</p>
           <p>If you have any questions about these rules, or if you want to contact us for any reason, email <a href="mailto:puzzle@brown.edu">puzzle@brown.edu</a>. We will get back to you as soon as we can.</p>
         </div>
-        <h1>FAQs</h1>
-        <h4>What is a puzzlehunt? How do I solve these puzzles?</h4>
+        <h1 id="FAQ">FAQs</h1>
+        <h4 >What is a puzzlehunt? How do I solve these puzzles?</h4>
         <div>
           <p>If you've never heard of puzzlehunts before, here's a very brief summary: in a typical puzzle, you receive some information and have to extract an answer out of it, which is almost always an English word or phrase. Puzzles can come in many different forms; the only real commonality is that you usually receive no direct instructions, so it's up to you to figure out how to make sense of the information you're given. You can read a longer introduction to puzzlehunts <a href="https://blog.vero.site/post/puzzlehunts">here</a>.</p>
           <p>If you are new to puzzles and are interested in seeing some examples, or if you're looking for some practice, we recommend looking at puzzles from other online hunts such as <a href="https://galacticpuzzlehunt.com/">Galactic Puzzle Hunt</a>, <a href="https://teammatehunt.com/">Teammate Hunt</a>, or <a href="https://puzzlepotluck.com/">Puzzle Potluck</a>.</p>
@@ -114,7 +114,7 @@ export default function InfoPage() {
         <div>
           <p>Brown Puzzlehunt is a hunt written by current Brown and RISD students, and we hope that we are able to share some of the unique history, culture, and student zeitgeist with the puzzle community! We're also excited to explore the unique possibility space of in-person puzzles.</p>
         </div>
-        <h4>I'm stuck on a puzzle. What should I do?</h4>
+        <h4 id="stuck">I'm stuck on a puzzle. What should I do?</h4>
         <div>
           <p>Here are some general puzzle tips that might be useful:</p>
           <ul>

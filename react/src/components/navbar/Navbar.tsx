@@ -13,46 +13,36 @@ import {
 import { cn } from "@/lib/utils";
 import LoginNavbar from "./LoginNavbar";
 
+import { context } from "@/context";
 import { useAuth } from "@/hooks/useAuth";
+import Countdown from "react-countdown";
 import { BeatLoader } from "react-spinners";
 import TeamNavbar from "./TeamNavbar";
 
 
 const components: { title: string; href: string; description: string }[] = [
   {
-    title: "Alert Dialog",
-    href: "/docs/primitives/alert-dialog",
+    title: "Event Details",
+    href: "/info#important-info",
     description:
-      "A modal dialog that interrupts the user with important content and expects a response.",
+      "Information on when, where, and how to participate in the event.",
   },
   {
-    title: "Hover Card",
-    href: "/docs/primitives/hover-card",
+    title: "In-person Participation",
+    href: "/info#on-campus",
     description:
-      "For sighted users to preview content available behind a link.",
+      "All are welcome to participate in-person! Find out more here.",
   },
   {
-    title: "Progress",
-    href: "/docs/primitives/progress",
-    description:
-      "Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.",
+    title: "What is a Puzzlehunt?",
+    href: "/info#FAQ",
+    description: "Details on our event structure with examples and helpful links.",
   },
   {
-    title: "Scroll-area",
-    href: "/docs/primitives/scroll-area",
-    description: "Visually or semantically separates content.",
-  },
-  {
-    title: "Tabs",
-    href: "/docs/primitives/tabs",
+    title: "I'm Stuck! What do I do?",
+    href: "/info#stuck",
     description:
-      "A set of layered sections of content—known as tab panels—that are displayed one at a time.",
-  },
-  {
-    title: "Tooltip",
-    href: "/docs/primitives/tooltip",
-    description:
-      "A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.",
+      "Resources and tips for when you're lost.",
   },
 ]
 
@@ -80,50 +70,77 @@ const ListItem = React.forwardRef<
     </li>
   )
 })
-ListItem.displayName = "ListItem"
+
+const IconItem = React.forwardRef<
+  React.ElementRef<"a">,
+  React.ComponentPropsWithoutRef<"a">
+>(({ className, title, ...props }, ref) => {
+  return (
+    <li>
+      {/* TODO: make icon float on left side */}
+      <NavigationMenuLink asChild>
+        <a
+          ref={ref}
+          className={cn(
+            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+            className
+          )}
+          {...props}
+        >
+          <div className="text-sm font-medium leading-none">{title}</div>
+        </a>
+      </NavigationMenuLink>
+    </li>
+  )
+})
+
+
+const hunt_start_timer = ({ days, hours, minutes, seconds, completed }: { days: number; hours: number; minutes: number; seconds: number; completed: boolean }) => {
+  if (completed) {
+    return <span>Click to enter the site!!</span>;
+  } else {
+    return <span>{days}d {hours}h {minutes}m {seconds}s</span>;
+  }
+};
 
 const NavbarLeft = () => {
+
   return (
     <div className="left flex justify-start w-1/3">
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
-              <NavigationMenuTrigger>Brown Puzzlehunt</NavigationMenuTrigger>
+              <a href="/" className="text-white font-bold pl-2 whitespace-nowrap">Brown Puzzlehunt</a>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <NavigationMenuTrigger>Getting started</NavigationMenuTrigger>
+              <NavigationMenuTrigger>The Hunt</NavigationMenuTrigger>
               <NavigationMenuContent>
                 <ul className="grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
-                  <li className="row-span-3">
+                  <li className="row-span-4">
                     <NavigationMenuLink asChild>
                       <a
                         className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
                         href="/"
                       >
-                        <div className="mb-2 mt-4 text-lg font-medium">
-                          shadcn/ui
+                        <div className="mb-2 mt-4 text-xl font-bold">
+                          The Hunt
                         </div>
                         <p className="text-sm leading-tight text-muted-foreground">
-                          Beautifully designed components built with Radix UI and
-                          Tailwind CSS.
+                          {context?.hunt_has_started ? "The hunt has started! Good luck!" : <Countdown date={context?.start_time} renderer={hunt_start_timer} />}
                         </p>
                       </a>
                     </NavigationMenuLink>
                   </li>
-                  <ListItem href="/docs" title="Introduction">
-                    Re-usable components built using Radix UI and Tailwind CSS.
-                  </ListItem>
-                  <ListItem href="/docs/installation" title="Installation">
-                    How to install dependencies and structure your app.
-                  </ListItem>
-                  <ListItem href="/docs/primitives/typography" title="Typography">
-                    Styles for headings, paragraphs, lists...etc
-                  </ListItem>
+                  <IconItem href="/leaderboard" title="Leaderboard" />
+                  <IconItem href="/contact" title="Contact HQ" />
+                  <IconItem href="/credits" title="Hunt Credits" />
+                  <IconItem href="/archive" title="Past Hunts" />
+                  {/* <IconItem href="/club" title="Club Info" /> */}
                 </ul>
               </NavigationMenuContent>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <NavigationMenuTrigger>Components</NavigationMenuTrigger>
+              <NavigationMenuTrigger>Info</NavigationMenuTrigger>
               <NavigationMenuContent>
                 <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
                   {components.map((component) => (
@@ -154,11 +171,11 @@ const NavbarRight = () => {
   const { loggedIn, checkingLoginStatus } = useAuth();
   return (
     <div className="right flex justify-end w-1/3">
-      <NavigationMenu>
-        <NavigationMenuRight>
+      <NavigationMenuRight>
+        <NavigationMenuList>
           {checkingLoginStatus && <BeatLoader className="justify-center content-center pr-2" color={'#fff'} size={12} /> || (loggedIn && <TeamNavbar/> || <LoginNavbar/>)}
-        </NavigationMenuRight>
-      </NavigationMenu>
+        </NavigationMenuList>
+      </NavigationMenuRight>
     </div>
   )
 }
