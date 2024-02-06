@@ -59,7 +59,23 @@ export default function ProgressDocs({ children }: { children: ReactNode }) {
   
   return (
     <div className="flex progress-docs h-[90vh]">
-      <div className="relative w-1/5 overflow-hidden border-r-2 border-slate-800 h-[90vh] overflow-y-auto overscroll-contain">
+      <div className="navbar relative w-1/5 overflow-hidden border-r-4 border-slate-800 h-[90vh] overflow-y-auto overscroll-contain">
+          <style>
+          {`
+            .navbar::-webkit-scrollbar {
+              width: 8px;
+            }
+
+            .navbar::-webkit-scrollbar-thumb {
+              background-color: rgba(255, 255, 255, 0.5);
+              border-radius: 4px;
+            }
+
+            .navbar::-webkit-scrollbar-thumb:hover {
+              background-color: rgba(255, 255, 255, 0.7);
+            }
+          `}
+          </style>
           <div className="progress p-4">
             {Array.from(headings || []).map((heading) => (
             <div

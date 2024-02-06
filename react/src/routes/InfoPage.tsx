@@ -30,6 +30,7 @@ const LocationBox = ({
         justify_left ? "justify-start" : "justify-end"
       }`}
     >
+      
       {justify_left && (
         <div className="map float-left">
           <img className="object-contain h-40 w-40" src={image_src}></img>

@@ -48,8 +48,8 @@ export default function Leaderboard () {
           <button onClick={() => setTab(LeaderboardTab.REMOTE)} className={`select-none rounded-md transition-colors p-3 ${curTab === LeaderboardTab.IN_PERSON ? 'hover:bg-slate-300 hover:text-accent-foreground' : ''} ${curTab === LeaderboardTab.REMOTE ? 'bg-white text-accent-foreground' : ''}`}>Remote</button>
       </div>
       <p className="text-center">TEST: cur tab = {curTab}</p>
-      <div className="contact-content text-center dark bg-gradient-to-b from-muted/50 to-muted/80 pr-6 pb-2 pl-6 no-underline outline-none focus:shadow-md btn-gradient-1 relative mx-[5%] md:mx-[20%] h-full max-h-[70%] overflow-y-auto">
-        
+      <div className="text-center dark bg-gradient-to-b from-muted/50 to-muted/80 pb-2 pt-2 no-underline outline-none focus:shadow-md btn-gradient-1 relative mx-[5%] md:mx-[20%]">
+        <div className="contact-content pl-6 pr-6 h-full max-h-[70%] overflow-y-auto">
         <style>
           {`
             .contact-content::-webkit-scrollbar {
@@ -67,12 +67,12 @@ export default function Leaderboard () {
           `}
         </style>
 
-
       {teams.length > 0 ? collectTeams(teams, curTab).map((team, index, array) => (
           <div key={team.id} className={`contact-box ${index !== array.length - 1 ? 'btn-gradient-bot' : ''} pt-5 pb-5`}>
             {team.team_name}
           </div>
         )) : <BeatLoader className="justify-center content-center pr-2" color={'#fff'} size={12} /> }
+      </div>
       </div>
     </div>
   )
