@@ -14,11 +14,15 @@ import InfoPage from "./routes/InfoPage";
 import Landing from "./routes/Landing";
 import Leaderboard from './routes/Leaderboard';
 import SocialDeduction from "./routes/major_cases/SocialDeduction";
-import Register from './routes/Register';
+import RegisterForm from './routes/Register';
 import TeamPage from './routes/TeamPage';
 
 declare const CSRF_TOKEN: string;
-axios.defaults.headers.common['X-CSRFToken'] = CSRF_TOKEN;
+try {
+  axios.defaults.headers.common['X-CSRFToken'] = CSRF_TOKEN;
+} catch (e) {
+  console.error("Error setting CSRF token in axios headers");
+}
 
 const router = createBrowserRouter([
   {
@@ -59,7 +63,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/register-new",
-    element: <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<Register />} />
+    element: <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<RegisterForm />} />
   }
 ]);
 

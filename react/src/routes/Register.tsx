@@ -1,147 +1,282 @@
-import { useState } from 'react';
+import { Button } from "@/components/ui/button";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+import { toast } from "@/components/ui/use-toast";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import validator from "validator";
+import { z } from "zod";
 
-export default function Register() {
-  const [teamUsername, setTeamUsername] = useState('');
-  const [teamName, setTeamName] = useState('');
-  const [teamPassword, setTeamPassword] = useState('');
-  const [retypePassword, setRetypePassword] = useState('');
-  const [members, setMembers] = useState([{ name: '', email: '' }]);
-  const [inPerson, setInPerson] = useState(false);
-  const [numCommunityMembers, setNumCommunityMembers] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [needRoomSpace, setNeedRoomSpace] = useState('');
-  const [whereToFind, setWhereToFind] = useState('');
 
-  const addMember = () => {
-    setMembers([...members, { name: '', email: '' }]);
+const formSchema = z.object({
+  teamUsername: z.string().min(2, {
+    message: "Team username must be at least 2 characters.",
+  }),
+  teamName: z.string().min(1, {
+    message: "Team name is required.",
+  }),
+  teamPassword: z.string().min(6, {
+    message: "Team password must be at least 6 characters.",
+  }),
+  retypePassword: z.string(),
+  members: z.array(
+    z.object({
+      name: z.string().min(1, {
+        message: "Member name is required.",
+      }),
+      email: z.string().email({
+        message: "Invalid email address.",
+      }),
+    })
+  ),
+  inPerson: z.boolean(),
+  numCommunityMembers: z.number().optional(),
+  phoneNumber: z.string().optional(),
+  needRoomSpace: z.boolean().optional(),
+  whereToFind: z.string().optional(),
+  colorChoice: z.string().optional(),
+  emojiChoice: z.string().optional(),
+}).refine(data => {
+  return data.teamPassword === data.retypePassword;
+}, {
+  message: "Passwords do not match.",
+  path: ["retypePassword"],
+}).refine(data => {
+  if (data.inPerson) {
+    return (data.phoneNumber ?? "") !== "" && validator.isMobilePhone(data.phoneNumber ?? "", "en-US");
+  }
+  return true;
+}, {
+  message: "Valid US phone number required.",
+  path: ["phoneNumber"],
+}).refine(data => {
+  if (data.inPerson && data.needRoomSpace === false) {
+    return data.whereToFind !== "";
+  }
+  return true;
+}, {
+  message: "Required for in person teams that don't need a room reserved.",
+  path: ["whereToFind"],
+});
+
+export default function RegisterForm() {
+  const [memberCount, setMemberCount] = useState(1);
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      teamUsername: "",
+      teamName: "",
+      teamPassword: "",
+      retypePassword: "",
+      members: [{ name: "", email: "" }],
+      inPerson: false,
+      numCommunityMembers: 0,
+      phoneNumber: "",
+      needRoomSpace: false,
+      whereToFind: "",
+    },
+  });
+
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    console.log(values);
+    // Send data to API endpoint
+    toast({
+      title: "Form submitted successfully",
+      duration: 5000,
+    });
   };
 
-  const removeMember = (index: number) => {
-    const newMembers = [...members];
-    newMembers.splice(index, 1);
-    setMembers(newMembers);
-  };
-
-  const handleSubmit = (e: { preventDefault: () => void; }) => {
-    e.preventDefault();
-    // Handle form submission to /api/register
-    const formData = {
-      teamUsername,
-      teamName,
-      teamPassword,
-      members,
-      inPerson,
-      numCommunityMembers,
-      phoneNumber,
-      needRoomSpace,
-      whereToFind
-    };
-    console.log(formData);
-    // Submit formData to your API endpoint
-  };
+  const [MEMBER_COUNT_MIN, MEMBER_COUNT_MAX] = [1, 12];
+  const addMemberCount = () => {
+    setMemberCount((count) => Math.min(count + 1, MEMBER_COUNT_MAX));
+  }
+  const subtractMemberCount = () => {
+    setMemberCount((count) => Math.max(count - 1, MEMBER_COUNT_MIN));
+    // Clear additional member fields
+    const clearedMembers = form.getValues("members").slice(0, memberCount - 1);
+    form.setValue("members", clearedMembers);
+  }
 
   return (
-    <div className="register bg-slate-900 text-white h-[90vh] overscroll-contain overflow-hidden overflow-y-auto">
-      <h1 className="text-4xl font-bold text-center py-5">Register</h1>
-      <form onSubmit={handleSubmit} className="register-content text-center dark bg-gradient-to-b from-muted/50 to-muted/80 p-6 no-underline outline-none focus:shadow-md btn-gradient-1 relative mx-[5%] md:mx-[20%]">
-        <div className="register-box btn-gradient-bot pb-5">
-          {/* Team Info Section */}
-          <div className="mb-6">
-            <h2 className="text-xl font-bold mb-3">Team Information</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="teamUsername" className="block mb-1">Team Username *</label>
-                <input type="text" id="teamUsername" className="input-field" value={teamUsername} onChange={(e) => setTeamUsername(e.target.value)} required />
-                <p className="text-sm text-left">This is the private username your team will use when logging in. It should be short and not contain special characters.</p>
-              </div>
-              <div>
-                <label htmlFor="teamName" className="block mb-1">Team Name *</label>
-                <input type="text" id="teamName" className="input-field" value={teamName} onChange={(e) => setTeamName(e.target.value)} required />
-                <p className="text-sm text-left">This is how your team name will appear on the public leaderboard.</p>
-              </div>
-              <div>
-                <label htmlFor="teamPassword" className="block mb-1">Team Password *</label>
-                <input type="password" id="teamPassword" className="input-field" value={teamPassword} onChange={(e) => setTeamPassword(e.target.value)} required />
-                <p className="text-sm text-left">You’ll probably share this with your team.</p>
-              </div>
-              <div>
-                <label htmlFor="retypePassword" className="block mb-1">Retype Password *</label>
-                <input type="password" id="retypePassword" className="input-field" value={retypePassword} onChange={(e) => setRetypePassword(e.target.value)} required />
-                <p className="text-sm text-left">Validation: matches 'Team password'</p>
-              </div>
-            </div>
-          </div>
-          {/* Team Members Section */}
-          <div className="mb-6">
-            <h2 className="text-xl font-bold mb-3">Team Members</h2>
-            {members.map((member, index) => (
-              <div key={index} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label htmlFor={`memberName${index}`} className="block mb-1">Member Name *</label>
-                  <input type="text" id={`memberName${index}`} className="input-field" value={member.name} onChange={(e) => {
-                    const newMembers = [...members];
-                    newMembers[index].name = e.target.value;
-                    setMembers(newMembers);
-                  }} required />
-                </div>
-                <div>
-                  <label htmlFor={`memberEmail${index}`} className="block mb-1">Member Email *</label>
-                  <input type="email" id={`memberEmail${index}`} className="input-field" value={member.email} onChange={(e) => {
-                    const newMembers = [...members];
-                    newMembers[index].email = e.target.value;
-                    setMembers(newMembers);
-                  }} required />
-                  <p className="text-sm text-left">Validation: email address</p>
-                </div>
-                {index > 0 && (
-                  <button type="button" onClick={() => removeMember(index)} className="text-red-500 font-bold mt-2">Remove</button>
-                )}
-              </div>
-            ))}
-            <button type="button" onClick={addMember} className="btn-gradient-bot mt-3">Add Member</button>
-          </div>
-          {/* On Campus Participation Section */}
-          <div>
-            <h2 className="text-xl font-bold mb-3">On Campus Participation</h2>
-            <div className="mb-4">
-              <label className="block mb-2">
-                <input type="checkbox" className="mr-2" checked={inPerson} onChange={(e) => setInPerson(e.target.checked)} />
-                In Person
-              </label>
-              {inPerson && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label htmlFor="numCommunityMembers" className="block mb-1">How many Brown/RISD community members on your team? *</label>
-                    <input type="number" id="numCommunityMembers" className="input-field" value={numCommunityMembers} onChange={(e) => setNumCommunityMembers(e.target.value)} required />
-                  </div>
-                  <div>
-                    <label htmlFor="phoneNumber" className="block mb-1">Best phone number to contact *</label>
-                    <input type="tel" id="phoneNumber" className="input-field" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} required />
-                    <p className="text-sm text-left">Validation: valid phone number</p>
-                  </div>
-                  <div>
-                    <label className="block mb-1">Do you need us to provide room space for you on campus? *</label>
-                    <div className="flex items-center">
-                      <input type="radio" id="roomSpaceYes" name="needRoomSpace" className="mr-2" value="yes" checked={needRoomSpace === 'yes'} onChange={() => setNeedRoomSpace('yes')} required />
-                      <label htmlFor="roomSpaceYes" className="mr-4">Yes</label>
-                      <input type="radio" id="roomSpaceNo" name="needRoomSpace" className="mr-2" value="no" checked={needRoomSpace === 'no'} onChange={() => setNeedRoomSpace('no')} required />
-                      <label htmlFor="roomSpaceNo">No</label>
+    <div className="mx-[20%] lg:mx-[30%]">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 text-white dark">
+          <h1 className="text-center font-bold text-3xl pt-4">Registration</h1>
+          <section className="user-info border-b-4 border-slate-800 space-y-4 pb-8">
+            <FormField control={form.control} name="teamUsername" render={({ field }) => (
+              <FormItem>
+                <FormLabel>Team Username</FormLabel>
+                <FormControl>
+                  <Input type="text" placeholder="Enter team username" {...field} />
+                </FormControl>
+                <FormDescription>
+                  This is the private username your team will use when logging in. It should be short and not contain special characters.
+                </FormDescription>
+                <FormMessage className="text-right"/>
+              </FormItem>
+            )} />
+            <FormField control={form.control} name="teamName" render={({ field }) => (
+              <FormItem>
+                <FormLabel>Team Name</FormLabel>
+                <FormControl>
+                  <Input type="text" placeholder="Enter team name" {...field} />
+                </FormControl>
+                <FormDescription>
+                  This is how your team name will appear on the public leaderboard.
+                </FormDescription>
+                <FormMessage className="text-right"/>
+              </FormItem>
+            )} />
+            <FormField control={form.control} name="teamPassword" render={({ field }) => (
+              <FormItem>
+                <FormLabel>Team Password</FormLabel>
+                <FormControl>
+                  <Input type="password" placeholder="Enter team password" {...field} />
+                </FormControl>
+                <FormDescription>
+                  You'll probably share this with your team.
+                </FormDescription>
+                <FormMessage className="text-right"/>
+              </FormItem>
+            )} />
+            <FormField control={form.control} name="retypePassword" render={({ field }) => (
+              <FormItem>
+                <FormLabel>Retype Password</FormLabel>
+                <FormControl>
+                  <Input type="password" placeholder="Retype team password" {...field} />
+                </FormControl>
+                <FormMessage className="text-right"/>
+              </FormItem>
+            )} />
+          </section>
+          {/* Members Section */}
+          <section className="team-members border-b-4 border-slate-800 space-y-4 pb-8">
+            <h1 className="text-center font-bold text-xl">Team Members</h1>
+            <h4 className="text-center text-slate-400 text-sm"><b>We recommend teams to be around 7 to 10 people</b>. The maximum team size is 12 people, but there's no minimum team size—you can still have fun with a team of 2!</h4>
+            <FormField control={form.control} name="members" render={() => (
+              <FormItem>
+                <div className="space-y-4">
+                    {[...Array(memberCount)].map((_, index) => (
+                    <div key={index} className="space-y-4">
+                      <FormField control={form.control} name={`members.${index}.name`} render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Member {index+1} Name</FormLabel>
+                          <FormControl>
+                            <Input type="text" placeholder="Enter member name" {...field} />
+                          </FormControl>
+                          <FormMessage className="text-right"/>
+                        </FormItem>
+                      )} />
+                      <FormField control={form.control} name={`members.${index}.email`} render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Member {index+1} Email</FormLabel>
+                          <FormControl>
+                            <Input type="email" placeholder="Enter member email" {...field} />
+                          </FormControl>
+                          <FormMessage className="text-right"/>
+                        </FormItem>
+                      )} />
                     </div>
+                  ))}
+                  {memberCount < MEMBER_COUNT_MAX ? <Button className="bg-transparent font-bold text-white hover:text-black" type="button" onClick={() => addMemberCount()}>+</Button> : null}
+                  {memberCount > MEMBER_COUNT_MIN ? <Button className="bg-transparent font-bold text-white hover:text-black" type="button" onClick={() => subtractMemberCount()}>-</Button> : null}
+                </div>
+              </FormItem>
+            )} />
+        </section>
+        {/* On Campus Participation Section */}
+        <section className="on-campus space-y-4">
+          <h1 className="text-center font-bold text-xl">On Campus</h1>
+          <FormField control={form.control} name="inPerson" render={({ field }) => (
+            <div>
+              <div className="pb-5">
+                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                  <div className="space-y-0.5">
+                    <FormLabel>In Person Participation</FormLabel>
+                    <FormDescription>
+                      Are you planning on participating in the hunt on Brown University Campus?
+                    </FormDescription>
                   </div>
-                  {needRoomSpace === 'no' && (
-                    <div>
-                      <label htmlFor="whereToFind" className="block mb-1">Where can we best find you while you're solving puzzles? *</label>
-                      <input type="text" id="whereToFind" className="input-field" value={whereToFind} onChange={(e) => setWhereToFind(e.target.value)} required />
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              </div>
+              {/* IN_PERSON ONLY FIELDS */}
+              {field.value && (
+                <div className="in-person-fields border-l-4 border-slate-800 space-y-6 pl-10 ml-5">
+                <FormField control={form.control} name="numCommunityMembers" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Number of Brown Community Team Members</FormLabel>
+                    <FormControl>
+                      <Input type="number" min={0} max={MEMBER_COUNT_MAX} {...field} onChange={event => field.onChange(+event.target.value)}/>
+                    </FormControl>
+                    <FormDescription>
+                      (Undergraduates, Graduates, Faculty, or Alumni)
+                    </FormDescription>
+                    <FormMessage className="text-right"/>
+                  </FormItem>
+                )} />
+                <FormField control={form.control} name="phoneNumber" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Best Phone Number to Contact</FormLabel>
+                    <FormControl>
+                      <Input type="tel" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      Required for all on-site teams. This will be our primary communication method with you.
+                    </FormDescription>
+                    <FormMessage className="text-right"/>
+                  </FormItem>
+                )} />
+                <FormField control={form.control} name="needRoomSpace" render={({ field }) => (
+                  <div>
+                    <div className="pb-5">
+                      <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                        <div className="space-y-0.5">
+                          <FormLabel>Room Space Needed</FormLabel>
+                          <FormDescription>
+                            Do you need us to provide room space for you on campus?
+                          </FormDescription>
+                        </div>
+                        <FormControl>
+                          <Switch
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                      </FormItem>
                     </div>
+                  {!field.value && (
+                    <FormField control={form.control} name="whereToFind" render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Where can we best find you while you're solving puzzles?</FormLabel>
+                            <FormControl>
+                              <Input type="text" {...field} />
+                            </FormControl>
+                            <FormDescription>
+                              (e.g: Hegeman Common Room, Barus and Holley Room ###, Zoom, Discord, etc.)
+                            </FormDescription>
+                            <FormMessage className="text-right"/>
+                          </FormItem>
+                      )} />
                   )}
                 </div>
+                )} />
+              </div>
               )}
-            </div>
           </div>
-          {/* Submit Button */}
-          <button type="submit" className="btn-gradient-top">Submit</button>
-        </div>
-      </form>
+          )} />
+        </section>
+          <Button type="submit">Submit</Button>
+        </form>
+      </Form>
     </div>
   );
 }

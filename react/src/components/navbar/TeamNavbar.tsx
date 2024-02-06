@@ -13,7 +13,7 @@ export default function TeamNavbar () {
       <NavigationMenuContent>
         <ul className="grid w-[150px] gap-3 p-4 md:grid-cols-1">
           <ListItem href={"my-team"} title={"Team Info"} />
-          <ListItem className='bg-gradient-to-b from-muted/50 to-muted' onClick={() => { logout() }} title={"Logout"} />
+          <ListItem className='bg-gradient-to-b from-muted/80 to-muted cursor-pointer' onClick={() => { logout() }} title={"Logout"} />
         </ul>
         
       </NavigationMenuContent>
