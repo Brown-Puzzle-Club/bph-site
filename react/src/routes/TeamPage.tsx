@@ -3,7 +3,6 @@ import { UserTeam } from "@/utils/django_types";
 import { useEffect, useState } from "react";
 import { BeatLoader } from "react-spinners";
 
-
 export default function TeamPage () {
 
   const { FetchTeam } = useDjangoContext();
