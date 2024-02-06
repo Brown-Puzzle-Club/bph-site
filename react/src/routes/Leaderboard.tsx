@@ -50,6 +50,24 @@ export default function Leaderboard () {
       <p className="text-center">TEST: cur tab = {curTab}</p>
       <div className="contact-content text-center dark bg-gradient-to-b from-muted/50 to-muted/80 pr-6 pb-2 pl-6 no-underline outline-none focus:shadow-md btn-gradient-1 relative mx-[5%] md:mx-[20%] h-full max-h-[70%] overflow-y-auto">
         
+        <style>
+          {`
+            .contact-content::-webkit-scrollbar {
+              width: 8px;
+            }
+
+            .contact-content::-webkit-scrollbar-thumb {
+              background-color: rgba(255, 255, 255, 0.5);
+              border-radius: 4px;
+            }
+
+            .contact-content::-webkit-scrollbar-thumb:hover {
+              background-color: rgba(255, 255, 255, 0.7);
+            }
+          `}
+        </style>
+
+
       {teams.length > 0 ? collectTeams(teams, curTab).map((team, index, array) => (
           <div key={team.id} className={`contact-box ${index !== array.length - 1 ? 'btn-gradient-bot' : ''} pt-5 pb-5`}>
             {team.team_name}
