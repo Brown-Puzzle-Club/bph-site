@@ -44,8 +44,8 @@ export default function Leaderboard () {
     <div className="contact bg-slate-900 text-white h-[90vh] overscroll-contain overflow-hidden overflow-y-auto ">
       <h1 className="text-4xl font-bold text-center py-5">Teams</h1>
       <div className="tabs flex items-center justify-center gap-4">
-          <button onClick={() => setTab(LeaderboardTab.IN_PERSON)} className="select-none rounded-md transition-colors p-3 hover:bg-slate-300 hover:text-accent-foreground focus:bg-white/100 focus:text-accent-foreground">On-Campus</button>
-          <button onClick={() => setTab(LeaderboardTab.REMOTE)} className="select-none rounded-md transition-colors p-3 hover:bg-slate-300 hover:text-accent-foreground focus:bg-white/100 focus:text-accent-foreground">Remote</button>
+          <button onClick={() => setTab(LeaderboardTab.IN_PERSON)} className={`select-none rounded-md transition-colors p-3 ${curTab === LeaderboardTab.REMOTE ? 'hover:bg-slate-300 hover:text-accent-foreground' : ''} ${curTab === LeaderboardTab.IN_PERSON ? 'bg-white text-accent-foreground' : ''}`}>On-Campus</button>
+          <button onClick={() => setTab(LeaderboardTab.REMOTE)} className={`select-none rounded-md transition-colors p-3 ${curTab === LeaderboardTab.IN_PERSON ? 'hover:bg-slate-300 hover:text-accent-foreground' : ''} ${curTab === LeaderboardTab.REMOTE ? 'bg-white text-accent-foreground' : ''}`}>Remote</button>
       </div>
       <p className="text-center">TEST: cur tab = {curTab}</p>
       <div className="contact-content text-center dark bg-gradient-to-b from-muted/50 to-muted/80 pr-6 pb-2 pl-6 no-underline outline-none focus:shadow-md btn-gradient-1 relative mx-[5%] md:mx-[20%] h-full max-h-[70%] overflow-y-auto">
