@@ -144,6 +144,7 @@ urlpatterns = [
     path('contact', views.react_base, name='contact'),
     path('leaderboard', views.react_base, name='leaderboard'),
     path('archive', views.react_base, name='archive'),
+    path('register-new', views.react_base, name='register-new'),
     
     path('my-team', views.team_locked_react, name='my-team'),
 
