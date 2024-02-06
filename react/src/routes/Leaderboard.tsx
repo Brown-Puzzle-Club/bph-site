@@ -44,14 +44,14 @@ export default function Leaderboard () {
     <div className="contact bg-slate-900 text-white h-[90vh] overscroll-contain overflow-hidden overflow-y-auto ">
       <h1 className="text-4xl font-bold text-center py-5">Teams</h1>
       <div className="tabs flex items-center justify-center gap-4">
-          <button onClick={() => setTab(LeaderboardTab.IN_PERSON)} className="content-center justify-center bg-[red] rounded">In Person</button>
-          <button onClick={() => setTab(LeaderboardTab.REMOTE)} className="content-center justify-center bg-[blue] rounded">Remote</button>
+          <button onClick={() => setTab(LeaderboardTab.IN_PERSON)} className="select-none rounded-md transition-colors p-3 hover:bg-slate-300 hover:text-accent-foreground focus:bg-white/100 focus:text-accent-foreground">On-Campus</button>
+          <button onClick={() => setTab(LeaderboardTab.REMOTE)} className="select-none rounded-md transition-colors p-3 hover:bg-slate-300 hover:text-accent-foreground focus:bg-white/100 focus:text-accent-foreground">Remote</button>
       </div>
       <p className="text-center">TEST: cur tab = {curTab}</p>
-      <div className="contact-content text-center dark bg-gradient-to-b from-muted/50 to-muted/80 p-6 no-underline outline-none focus:shadow-md btn-gradient-1 relative mx-[5%] md:mx-[20%]">
+      <div className="contact-content text-center dark bg-gradient-to-b from-muted/50 to-muted/80 pr-6 pb-2 pl-6 no-underline outline-none focus:shadow-md btn-gradient-1 relative mx-[5%] md:mx-[20%] h-full max-h-[70%] overflow-y-auto">
         
-        {teams.length > 0 ? collectTeams(teams, curTab).map((team) => (
-          <div key={team.id} className="contact-box btn-gradient-bot pb-5 ">
+      {teams.length > 0 ? collectTeams(teams, curTab).map((team, index, array) => (
+          <div key={team.id} className={`contact-box ${index !== array.length - 1 ? 'btn-gradient-bot' : ''} pt-5 pb-5`}>
             {team.team_name}
           </div>
         )) : <BeatLoader className="justify-center content-center pr-2" color={'#fff'} size={12} /> }
