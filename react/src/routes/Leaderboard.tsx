@@ -49,7 +49,6 @@ export default function Leaderboard () {
       </div>
       <p className="text-center">TEST: cur tab = {curTab}</p>
       <div className="contact-content text-center dark bg-gradient-to-b from-muted/50 to-muted/80 p-6 no-underline outline-none focus:shadow-md btn-gradient-1 relative mx-[5%] md:mx-[20%]">
-        
         {teams.length > 0 ? collectTeams(teams, curTab).map((team) => (
           <div key={team.id} className="contact-box btn-gradient-bot pb-5 ">
             {team.team_name}

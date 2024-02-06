@@ -14,14 +14,14 @@ export default function Credits () {
             <li><b>Puzzle Directors:</b> <strong>Thomas Gordon</strong> ('26) and <strong>Ian Rider</strong> ('24)</li>
             <li><b>Tech + Design Director:</b> <strong>Orion Bloomfield</strong> ('24)</li>
             <li><b>Art Director:</b> <strong>Jaclyn Cohen</strong> ('26)</li>
+            <li><b>Story Director:</b> <strong>Aren Guralp</strong> ('27)</li>
           </ul>
         </div>
 
         <div className="credits-box py-5 btn-gradient-bot"> 
           <h4 className="text-2xl font-bold pb-3">Puzzle Writers / HQ</h4>
           <ul>
-            <li>(<b>Event Lead</b>) <strong>Thomas Gordon</strong> ('26)</li>
-            <li>(<b>Story Lead</b>) <strong>Aren Guralp</strong> ('27)</li>
+            <li>(<b>Construction Lead</b>) <strong>Thomas Gordon</strong> ('26)</li>
             <li>(<b>Test Lead</b>) <strong>Ian Rider</strong> ('24)</li>
             <li><strong>Sierra Bornheim</strong> ('24)</li>
             <li><strong>Orion Bloomfield</strong> ('24)</li>
@@ -37,6 +37,7 @@ export default function Credits () {
             <li><strong>Audrey Feigin</strong> ('27)</li>
             <li><strong>Erin Finn</strong> ('27)</li>
             <li><strong>Eliot Geer</strong> ('27)</li>
+            <li><strong>Aren Guralp</strong> ('27)</li>
             <li><strong>Bailey Merlino</strong> ('27)</li>
             <li><strong>Alex Wang</strong> ('27)</li>
             <li><strong>Thomas Mowen</strong></li> 
