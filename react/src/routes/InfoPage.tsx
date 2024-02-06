@@ -64,14 +64,14 @@ export default function InfoPage() {
   return (
     <div className="info bg-slate-900 text-white h-[90vh]">
       <ProgressDocs>
-        <h1>Important Info</h1>
+        <h1 id="important-info">Important Info</h1>
         <h4>What is this?</h4>
         <div>
           <p>
             This is a puzzlehunt! Teams of people will compete to solve puzzles
             (think escape room, not jigsaw) using information both online and in
             real life. Brown Puzzlehunt 2024 is Brown Puzzle Club's second
-            annual puzzlehunt; to see an example of a complete event please
+            annual puzzlehunt; to see an example of a complete event, 
             check out last year's{" "}
             <a href="https://2023.brownpuzzlehunt.com/">hunt archive</a>.
           </p>
@@ -79,20 +79,20 @@ export default function InfoPage() {
         <h4 className="pb-2">When and where is it?</h4>
         <div>
           <p>
-            <b className="text-lg pr-2 pb-2">Brown Puzzlehunt 2024</b> is taking
+            <b className="text-lg pb-2">Brown Puzzlehunt 2024</b> is taking
             place at{" "}
-            <b className="text-lg pr-2 pb-2">
+            <b className="text-lg pb-2">
               Brown University, in Providence, Rhode Island.
             </b>
           </p>
           <p>
-            <b className="text-lg pr-2 pb-2">Kickoff</b> will start promptly at{" "}
+            <b className="text-lg pb-2">Kickoff</b> will start promptly on{" "}
             <strong>Saturday, April 13, 2024 at 11:00 AM EDT</strong>, in{" "}
             <b>MacMillan Hall Room 117</b>, with doors opening at{" "}
             <b>10:30 AM</b>.
           </p>
           <p>
-            <b className="text-lg pr-2 pb-2">Puzzles</b> will be released{" "}
+            <b className="text-lg pb-2">Puzzles</b> will be released on{" "}
             <strong>Saturday, April 13, 2024 at 12:00 PM EDT</strong>. HQ will
             close on <strong>Sunday, April 14, 2024 at 7:00 PM EDT</strong>, at
             which point hints will no longer be answered, the leaderboard will
@@ -100,81 +100,87 @@ export default function InfoPage() {
             picked up.
           </p>
           <p>
-            <b className="text-lg pr-2 pb-2">In-person puzzles</b> will require
-            a physical presence on campus; <br />
-            <b className="text-lg pr-2 pb-2">Physical puzzles</b> will require
-            collecting objects from HQ; and <br />
-            <b className="text-lg pr-2 pb-2">Events</b> are not essential to
-            finish, but will be a fun time anyway.
+            <b className="text-lg pb-2">In-person puzzles</b> will require
+            a physical presence on-campus.<br />
+            <b className="text-lg pb-2">Physical puzzles</b> will require
+            collecting objects from HQ.<br />
+            <b className="text-lg pb-2">Events</b> are not essential to
+            finish, but will be fun and help you progress.
           </p>
           <p>
-            <b className="text-lg pr-2 pb-2">Wrap-up</b> will be held at{" "}
-            <b>8:30pm</b> in <b>MacMillan Hall Room 117</b>, with doors opening
-            at <b>8:15pm</b>. Wrapup and Kickoff will both be livestreamed.
+            <b className="text-lg pb-2">Wrap-up</b> will be held on{" "}
+            <strong>Sunday, April 14, 2024 at 8:30 PM EDT</strong> 
+            in <b>MacMillan Hall Room 117</b>, with doors opening
+            at <b>8:15pm</b>. Kickoff and Wrap-up will both be livestreamed.
           </p>
         </div>
         <h4>What's the goal?</h4>
         <div>
           <p>
-            The official winner will be the first team to find Blueno hidden
-            somewhere on campus.
+            Teams will compete to be the first to earn Brown Investigation Bureau's prestigious 
+            'Detective of the Year' award!
           </p>
           <p>
-            Only teams which are on-campus during the final runaround will be
-            able to find Blueno. Additionally, only teams with one or more
-            current undergraduate/graduate Brown or RISD students on-campus are
-            eligible to find Blueno.
+            Any detective worth their salt would kill for this title! But watch out - only teams 
+            present in-person for the final runaround of the hunt are eligible to claim it for themselves.
           </p>
           <p>
-            If you know that you will be on-campus and think that you might be
-            in the position to find Blueno first, we highly encourage you to
-            include a Brown University or RISD undergraduate/graduate student on
-            your team.
+            Additionally, for your team to win, you must have at least one current 
+            Brown/RISD student on-campus. If you don't have a current Brown/RISD student 
+            on your team, you'll be able to do the final runaround, but you won't be 
+            able to win.
           </p>
         </div>
         <h4>Who can participate?</h4>
         <div>
           <p>
             Brown Puzzlehunt is open to anyone, anywhere in the world. We have
-            taken steps to ensure that every puzzle is as accessible to remote
-            solvers. However, teams with current members of the Brown/RISD
-            community, may have some advantage in solving puzzles.
+            taken steps to ensure that every puzzle is accessible to remote
+            solvers (except for the final runaround). 
+            However, teams familiar with Brown/RISD culture 
+            may have some advantage in solving puzzles.
           </p>
           <p>
             <b>We recommend teams to be around 7 to 10 people</b>. The maximum
-            team size is 12 people, but there's no minimum team size- you can
-            still have fun with teams of 5! Students and those new to hunting
+            team size is 12 people, but there's no minimum team size - you can
+            still have fun with a team of 2! Students and those new to hunting
             are encouraged to build teams on the larger side.
           </p>
         </div>
         <h4>How do puzzles work?</h4>
         <div>
           <p>
-            All puzzles will be visible on the website; this is where you will
-            submit your answers and receive new puzzles. If something in real
-            life is part of a puzzle, the website will direct you towards it
+            All puzzles will be visible on the website. This is where you will
+            submit your answers and receive new puzzles. If something on-campus 
+            is part of a puzzle, the website will direct you towards it
             first.
           </p>
           <p>
-            Some puzzles will be available to start, and solving puzzles will
-            lead to unlocking more puzzles.
+            Some puzzles will be available at the start of the hunt, and solving 
+            puzzles will lead to unlocking more puzzles.
           </p>
           <p>
-            Each answer is a string of letters A-Z. Answers are not case or
-            space sensitive.
+            Each answer is a string of letters A-Z. Answers are not case- or
+            space-sensitive.
           </p>
           <p>
-            You have <b>20 total guesses</b> for each puzzle. Contact us if you
-            run out of guesses, and we would be happy to grant more. Random
+            You have <b>20 total guesses</b> for each puzzle. If you
+            run out of guesses,{" "}<a href="/contact">contact us</a>, and we would be happy to grant more. Random
             guessing and brute-forcing are discouraged.
           </p>
         </div>
         <h4>How do hints work?</h4>
         <div>
           <p>
-            Starting on <strong>Saturday, April 13, 2024</strong>, at 3pm, teams
+            Starting on <strong>Saturday, April 13, 2024</strong>, at <b>3:00 PM EDT</b>, teams
             will gain one hint request every three hours, which they can use to
             ask for help on any puzzle.
+          </p>
+          <p>
+            You can use a hint to get help on a puzzle. This can be something
+            like a nudge in the right direction (i.e. you give us your progress
+            on the puzzle and we'll try to get you unstuck) or an answer to a
+            question (e.g. “Which answers to these crossword clues are wrong?”).
           </p>
           <p>
             If you are a beginner student team or a team with a strong on-site
@@ -188,24 +194,14 @@ export default function InfoPage() {
             can email us at any time.
           </p>
           <p>
-            You can use a hint to get help on a puzzle. This can be something
-            like a nudge in the right direction (i.e. you give us your progress
-            on the puzzle and we’ll try to get you unstuck) or an answer to a
-            question (e.g. “Which answers to these crossword clues are wrong?”).
-          </p>
-          <p>
             You can only have <b>one open hint request</b> at a time.
           </p>
         </div>
-        <h4>Non Brown/RISD in-person participants</h4>
+        <h4>I'm a non-Brown/RISD participant on-campus.</h4>
         <div>
           <p>
-            Anyone who is participating on-campus will need to fill out{" "}
-            <a
-              onClick={() => {
-                alert("TODO: add new waiver");
-              }}
-            >
+            Anyone who is participating on-campus will need to print and fill out{" "}
+            <a href="https://studentactivities.brown.edu/sites/default/files/safety/Physical%20Activity%20Release.pdf">
               this waiver form
             </a>
             . We'll collect these at kickoff.
@@ -224,8 +220,7 @@ export default function InfoPage() {
             participating in the hunt.
           </p>
           <p>
-            <b className="bg-[#1d3650]">Use of Google</b>{" "}
-            <b className="bg-[#1d3650]">is not only permitted, but essential</b>
+            <b className="bg-[#1d3650]">Use of Google is not only permitted, but essential</b>
             . You may also benefit from other online tools, such as:
           </p>
           <ul className="pl-3">
@@ -263,11 +258,11 @@ export default function InfoPage() {
           </p>
           <p>
             If you have any questions about these rules, or if you want to
-            contact us for any reason, email{" "}
-            <a href="mailto:puzzle@brown.edu">puzzle@brown.edu</a>.
+            contact us for any reason, feel free to{" "}
+            <a href="/contact">contact us</a>.
           </p>
         </div>
-        <h1>FAQs</h1>
+        <h1 id="FAQ">FAQs</h1>
         <h4>What is a puzzlehunt? How do I solve these puzzles?</h4>
         <div>
           <p>
@@ -286,13 +281,15 @@ export default function InfoPage() {
             looking at puzzles from other online hunts such as{" "}
             <a href="https://galacticpuzzlehunt.com/">Galactic Puzzle Hunt</a>,{" "}
             <a href="https://teammatehunt.com/">Teammate Hunt</a>, or{" "}
-            <a href="https://puzzlepotluck.com/">Puzzle Potluck</a>.
+            <a href="https://puzzlepotluck.com/">Puzzle Potluck</a>. You can 
+            also check out last year's{" "}
+            <a href="https://2023.brownpuzzlehunt.com/">Brown Puzzlehunt</a>.
           </p>
         </div>
         <h4>Who's writing this hunt?</h4>
         <div>
           <p>
-            See <a href="/credits">/credits</a>
+            Check out our <a href="/credits">Credits</a> page!
           </p>
         </div>
         <h4>How hard will this hunt be? How long will it be?</h4>
@@ -322,7 +319,7 @@ export default function InfoPage() {
             in-person puzzles.
           </p>
         </div>
-        <h4>I'm stuck on a puzzle. What should I do?</h4>
+        <h4 id="stuck">I'm stuck on a puzzle. What should I do?</h4>
         <div>
           <p>Here are some general puzzle tips that might be useful:</p>
           <ul>
@@ -335,10 +332,9 @@ export default function InfoPage() {
               Get fresh eyes on the puzzle, or conversely, take a break and look
               at something else.
             </li>
-            <li>Consider what information you haven't used yet</li>
+            <li>Consider what information you haven't used yet.</li>
             <li>
-              It can be useful to put everything you have into your favorite
-              search engine.
+              Put everything you have into your favorite search engine.
             </li>
             <li>
               Look at{" "}
@@ -366,7 +362,7 @@ export default function InfoPage() {
         <h4>I have a question that's not on this list!</h4>
         <div>
           <p>
-            Please use <a href="/contact">contact HQ</a> and we'll do our best
+            Please <a href="/contact">contact HQ</a> and we'll do our best
             to answer it.
           </p>
         </div>
@@ -376,7 +372,7 @@ export default function InfoPage() {
           specific approvals or permissions. This means that all puzzlehunters
           are welcome to access the greens, outdoor areas, and some buildings
           during daylight hours. If you want to experience Brown Puzzlehunt
-          while being on-campus, this page will help you with information and
+          while being on-campus, this section will help you with information and
           logistics!
         </p>
         <h4>Being Safe On-Campus</h4>
@@ -395,15 +391,11 @@ export default function InfoPage() {
             immoral, or untoward, including accessing unauthorized spaces. If
             you think that a puzzle is asking you to do something dangerous,
             against the law, or disrespectful, stop and think. If you're really
-            not sure, please <a href="/contact">contact us</a> and check.
+            not sure, please{" "}<a href="/contact">contact us</a> and check.
           </p>
           <p>
-            Anyone who is attending on-campus will need to fill out{" "}
-            <a
-              onClick={() => {
-                alert("TODO");
-              }}
-            >
+            Anyone who is attending on-campus will need to print and fill out{" "}
+            <a href="https://studentactivities.brown.edu/sites/default/files/safety/Physical%20Activity%20Release.pdf">
               this waiver form
             </a>
             . We'll collect these at kickoff.
@@ -423,18 +415,18 @@ export default function InfoPage() {
         <div>
           <div className="locations flex flex-col lg:flex-row items-center pt-5">
             <LocationBox
-              location_name="Kickoff"
+              location_name="Kickoff and Wrap-up"
               location_addr="MacMillan Hall Room 117"
-              location_desc="Doors open at 10:30 AM EDT"
+              location_desc="Doors open at 10:30 AM EDT."
               image_src="https://www.brownpuzzlehunt.com/static/images/macmillan_squiggle.8117221443f2.png"
               map_link="https://maps.app.goo.gl/p7xAA65kqwhHXH147"
               justify_left={true}
             />
             <LocationBox
               location_name="Brown Puzzle Club HQ"
-              location_addr="Sayles Hall Room 306"
-              location_desc="Enter through the west side through the Main Green entrance."
-              map_link="#"
+              location_addr="Salomon Center Room 103"
+              location_desc="Enter through the west side through the Main Green entrance, and descend the stairs."
+              map_link="https://www.google.com/maps/place/Salomon+Center/@41.8265578,-71.4031996,18.51z/data=!4m14!1m7!3m6!1s0x89e4453cc2dcb3eb:0x3b5e63a94276b39c!2sSalomon+Center!8m2!3d41.8265309!4d-71.4024032!16s%2Fg%2F11bbrgkqyc!3m5!1s0x89e4453cc2dcb3eb:0x3b5e63a94276b39c!8m2!3d41.8265309!4d-71.4024032!16s%2Fg%2F11bbrgkqyc"
               image_src="https://www.brownpuzzlehunt.com/static/images/macmillan_squiggle.8117221443f2.png"
             />
           </div>
@@ -457,7 +449,7 @@ export default function InfoPage() {
             </div>
             <span>
               Brown University is a 10-15 minute walk from our nearest train
-              station: Providence Station which is across the river from College
+              station, Providence Station, which is across the river from College
               Hill. If you're traveling from Boston, we recommend Amtrak
               Northeast Regional as the least expensive provider. Providence is
               also accessible via the MBTA Rapid Transit system, along the
@@ -472,9 +464,7 @@ export default function InfoPage() {
               There are a number of bus companies which provide bus services
               from cities in the New England and New York area and beyond
               terminating to Providence, including but not limited to: FlixBus,
-              Peter Pan Lines, and Greyhound. We recommend doing your own
-              research if you plan to take the bus from your starting location
-              to Providence.
+              Peter Pan Lines, and Greyhound.
             </span>
           </div>
           <div className="transport-box flex items-center">
@@ -489,7 +479,7 @@ export default function InfoPage() {
               Street. The visitor entrance is located at the intersection of
               Power and Thayer Streets. Parking costs $2.00 per hour over the
               weekend. If you want overnight parking or require a permit for
-              more than one day, you can <a href="/contact">contact us</a> and
+              more than one day, you can{" "}<a href="/contact">contact us</a> and
               we'll try to help you out.
             </span>
           </div>
@@ -523,7 +513,7 @@ export default function InfoPage() {
         <h4>Events</h4>
         <div>
           <p>
-            We're excited to say that there will be events which are on-campus!
+            We're excited to say that there will be events on-campus!
             These events will provide one “free solve” to teams who complete it,
             which can be used to get the answer to a puzzle that they're stuck
             on. Anyone who is on-campus during the event is welcome to
@@ -548,7 +538,7 @@ export default function InfoPage() {
         <h4>Other</h4>
         <div>
           <p>
-            If you have any other questions, please let <a>contact us</a> at any
+            If you have any other questions, please{" "}<a href="/contact">contact us</a> at any
             time!
           </p>
         </div>

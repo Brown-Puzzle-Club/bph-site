@@ -31,18 +31,18 @@ const components: { title: string; href: string; description: string }[] = [
       "Information on when, where, and how to participate in the event.",
   },
   {
-    title: "In-person Participation",
+    title: "In-Person Participation",
     href: "/info#on-campus",
     description:
       "All are welcome to participate in-person! Find out more here.",
   },
   {
-    title: "What is a Puzzlehunt?",
+    title: "What is a puzzlehunt?",
     href: "/info#FAQ",
     description: "Details on our event structure with examples and helpful links.",
   },
   {
-    title: "I'm Stuck! What do I do?",
+    title: "I'm stuck! What do I do?",
     href: "/info#stuck",
     description:
       "Resources and tips for when you're lost.",

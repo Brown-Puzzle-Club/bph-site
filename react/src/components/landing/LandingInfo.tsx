@@ -17,8 +17,8 @@ const LandingInfo: React.FC = () => {
           </div>
           <h1 className="text-2xl font-bold">WHAT</h1>
           <div className="border-b border-sky-500 mx-auto mt-2 w-10"></div>
-          <p className="text-muted-foreground leading-tight pt-6">Brown's second annual puzzlehunt, run by <a className="underline font-semibold" href="/credits">Brown Puzzle Club</a>, offering experiences for both in-person and remote solvers. We are a novice friendly hunt!</p>
-          <p className='pt-3 italic font-light'>&gt; <a className="hover:underline" href="/rules">what is a puzzlehunt?</a></p>
+          <p className="text-muted-foreground leading-tight pt-6">Brown's second annual puzzlehunt, run by <a className="underline font-semibold" href="/credits">Brown Puzzle Club</a>, offering experiences for both in-person and remote solvers. We are a novice-friendly hunt!</p>
+          <p className='pt-3 italic font-light'>&gt; <a className="hover:underline" href="/info#FAQ">what is a puzzlehunt?</a></p>
         </div>
         <div className="when-box col-start-1 col-span-5 md:col-start-6 md:col-span-3 text-center dark bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md btn-gradient-1 relative">
           <div className="clock absolute rotate-[30deg]" style={{top: "-30px",right: "-30px",}}>
@@ -27,9 +27,9 @@ const LandingInfo: React.FC = () => {
           <h1 className="text-2xl font-bold">WHEN</h1>
           <div className="border-b border-sky-500 mx-auto mt-2 w-10"></div>
           <p className="text-muted-foreground leading-tight pt-6">
-            The hunt will kickoff:
+            The hunt will begin on:
             <br/><span className='font-semibold underline decoration-dashed cursor-help'>Saturday, April 13th 2024 @ 12:00PM EDT</span> 
-            <br/><br/>and close:
+            <br/><br/>and end on:
             <br/><span className='font-semibold underline decoration-dashed cursor-help'>Sunday, April 14th 2024 @ 6:00PM EDT</span></p>
         </div>
       </div>
