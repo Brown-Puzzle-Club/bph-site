@@ -1,7 +1,9 @@
+import { registerFormSchema } from "@/routes/Register";
 import { User } from "@/utils/django_types";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { createContext, useContext, useEffect, useState } from "react";
+import { z } from "zod";
 
 type AuthContextType = {
   loggedIn: boolean;
@@ -9,6 +11,7 @@ type AuthContextType = {
   user?: User;
   login: (username: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  register: (values: z.infer<typeof registerFormSchema>) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -17,6 +20,7 @@ const AuthContext = createContext<AuthContextType>({
   user: undefined,
   login: async () => {},
   logout: async () => {},
+  register: async () => {},
 });
 
 // is it bad to make the context async?
@@ -78,11 +82,29 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
     await axios.post('/api/logout');
     setUser(undefined);
     setLoggedIn(false);
-    window.location.assign("/");
+    window.location.assign("/landing");
+  }
+
+  const register = async (values: z.infer<typeof registerFormSchema>) => {
+    console.log('Registering with', values);
+    try {
+      await axios.post('/api/register', values).then((response) => {
+        console.log(response)
+        const cur_user = response.data as User
+        setUser(cur_user)
+        setLoggedIn(true);
+        // redirect to home page
+        window.location.assign("/");
+      });
+    } catch (error) {
+      const e = error as Error;
+      console.error(e.message);
+      throw e;
+    }
   }
 
   return (
-    <AuthContext.Provider value={{ checkingLoginStatus, loggedIn, user, login, logout }}>
+    <AuthContext.Provider value={{ checkingLoginStatus, loggedIn, user, login, logout, register }}>
       {children}
     </AuthContext.Provider>
   );

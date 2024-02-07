@@ -62,7 +62,7 @@ const router = createBrowserRouter([
     element: <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<Archive/>} />
   },
   {
-    path: "/register-new",
+    path: "/register",
     element: <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<RegisterForm />} />
   }
 ]);

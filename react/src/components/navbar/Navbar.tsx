@@ -110,7 +110,7 @@ const HuntLogo = () => {
   const [hover, setHover] = useState(false);
 
   return (
-    <a href="/" className="text-white font-bold pl-3 pr-4 md:pr-1 whitespace-nowrap justify-center"
+    <a href="/landing" className="text-white font-bold pl-3 pr-4 md:pr-1 whitespace-nowrap justify-center"
       onMouseEnter={() => {setHover(true)}}
       onMouseLeave={() => {setHover(false)}}
     >
@@ -198,9 +198,7 @@ const NavbarRight = () => {
   return (
     <div className="right flex justify-end w-1/3">
       <NavigationMenuRight>
-        <NavigationMenuList>
           {checkingLoginStatus && <BeatLoader className="justify-center content-center pr-2" color={'#fff'} size={12} /> || (loggedIn && <TeamNavbar/> || <LoginNavbar/>)}
-        </NavigationMenuList>
       </NavigationMenuRight>
     </div>
   )

@@ -47,7 +47,6 @@ export default function Leaderboard () {
           <button onClick={() => setTab(LeaderboardTab.IN_PERSON)} className={`select-none rounded-md transition-colors p-3 ${curTab === LeaderboardTab.REMOTE ? 'hover:bg-slate-300 hover:text-accent-foreground' : ''} ${curTab === LeaderboardTab.IN_PERSON ? 'bg-white text-accent-foreground' : ''}`}>On-Campus</button>
           <button onClick={() => setTab(LeaderboardTab.REMOTE)} className={`select-none rounded-md transition-colors p-3 ${curTab === LeaderboardTab.IN_PERSON ? 'hover:bg-slate-300 hover:text-accent-foreground' : ''} ${curTab === LeaderboardTab.REMOTE ? 'bg-white text-accent-foreground' : ''}`}>Remote</button>
       </div>
-      <p className="text-center">TEST: cur tab = {curTab}</p>
       <div className="text-center dark bg-gradient-to-b from-muted/50 to-muted/80 pb-2 pt-2 no-underline outline-none focus:shadow-md btn-gradient-1 relative mx-[5%] md:mx-[20%]">
         <div className="contact-content pl-6 pr-6 h-full max-h-[70%] overflow-y-auto">
         <style>

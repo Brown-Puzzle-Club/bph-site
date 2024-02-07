@@ -1,4 +1,6 @@
 from rest_framework import permissions, viewsets, mixins
+
+from puzzles.api.form_serializers import UserRegistrationSerializer
 from .serializers import *
 
 from rest_framework.response import Response
@@ -55,3 +57,46 @@ def logout_view(request: Request) -> Response:
     logout(request._request)
     
     return Response({'status': 'success'})
+
+
+@api_view(['POST'])
+def register_view(request):
+    serializer = UserRegistrationSerializer(data=request.data)
+
+    if serializer.is_valid():
+
+        user = User.objects.create_user(
+            serializer.validated_data.get('team_id'),
+            password=serializer.validated_data.get('password'),
+            first_name=serializer.validated_data.get('team_name'),
+        )
+
+        team = Team.objects.create(
+                user=user,
+                team_name=serializer.validated_data.get('team_name'),
+                in_person=serializer.validated_data.get('in_person',False),
+                brown_team=(serializer.validated_data.get('num_brown_members') is not None
+                    and serializer.validated_data.get('num_brown_members') > 0),
+                num_brown_members=serializer.validated_data.get('num_brown_members',0),
+                classroom_need=serializer.validated_data.get('classroom_need',False),
+                where_to_find=serializer.validated_data.get('where_to_find',""),
+                phone_number=serializer.validated_data.get('phone_number',""),
+                color_choice=serializer.validated_data.get('color_choice',''),
+                emoji_choice=serializer.validated_data.get('emoji_choice',''),
+            )
+
+        for team_member in serializer.validated_data.get('members'):
+            TeamMember.objects.create(
+                team=team,
+                name=team_member.get('name'),
+                email=team_member.get('email'),
+            )
+        
+        # Log in the newly registered user
+        login(request._request, user)
+        
+        # Return the serialized user data
+        return Response(UserSerializer(user).data)
+    else:
+        # Return errors if registration fails
+        return Response(serializer.errors, status=400)

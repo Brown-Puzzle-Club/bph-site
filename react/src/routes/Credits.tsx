@@ -11,7 +11,8 @@ export default function Credits () {
           <h4 className="text-5xl font-bold pb-5">Leadership</h4>
           <ul>
             <li><b>General Director:</b> <strong>Nishka Pant</strong> ('24)</li>
-            <li><b>Puzzle Directors:</b> <strong>Thomas Gordon</strong> ('26) and <strong>Ian Rider</strong> ('24)</li>
+            <li><b>Puzzle Construction Director:</b> <strong>Thomas Gordon</strong> ('26)</li>
+            <li><b>Puzzle Test Director:</b> <strong>Ian Rider</strong> ('24)</li>
             <li><b>Tech + Design Director:</b> <strong>Orion Bloomfield</strong> ('24)</li>
             <li><b>Art Director:</b> <strong>Jaclyn Cohen</strong> ('26)</li>
             <li><b>Story Director:</b> <strong>Aren Guralp</strong> ('27)</li>
@@ -21,8 +22,6 @@ export default function Credits () {
         <div className="credits-box py-5 btn-gradient-bot"> 
           <h4 className="text-2xl font-bold pb-3">Puzzle Writers / HQ</h4>
           <ul>
-            <li>(<b>Construction Lead</b>) <strong>Thomas Gordon</strong> ('26)</li>
-            <li>(<b>Test Lead</b>) <strong>Ian Rider</strong> ('24)</li>
             <li><strong>Sierra Bornheim</strong> ('24)</li>
             <li><strong>Orion Bloomfield</strong> ('24)</li>
             <li><strong>Jiahua Chen</strong> ('24)</li>
@@ -30,9 +29,11 @@ export default function Credits () {
             <li><strong>Lorenzo Mahoney</strong> ('24)</li>
             <li><strong>Abigail Nelkin</strong> ('24)</li>
             <li><strong>Nishka Pant</strong> ('24)</li>
+            <li><strong>Ian Rider</strong> ('24)</li>
             <li><strong>Jay Sarva</strong> ('24.5)</li>
             <li><strong>Jeremy Fleming</strong> ('25)</li>
             <li><strong>Zach Gottshall</strong> ('25)</li>
+            <li><strong>Thomas Gordon</strong> ('26)</li>
             <li><strong>Megan Carlson</strong> ('27)</li>
             <li><strong>Audrey Feigin</strong> ('27)</li>
             <li><strong>Erin Finn</strong> ('27)</li>
@@ -47,7 +48,7 @@ export default function Credits () {
         </div>
 
         <div className="credits-box py-5 btn-gradient-bot"> 
-          <h4 className="text-2xl font-bold pb-3">Artists</h4>
+          <h4 className="text-2xl font-bold pb-3">Art Team</h4>
           <ul>
             <li>(<b>Team Lead</b>) <strong>Jaclyn Cohen</strong> ('26)</li>
             <li><strong>Lucid Clairvoyant</strong> ('24)</li>
