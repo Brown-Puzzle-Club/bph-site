@@ -9,7 +9,7 @@ def process_team(context):
     team["total_free_answers_awarded"] = context.team.total_free_answers_awarded
     team["num_free_answers_remaining"] = context.team.num_free_answers_remaining
     team["is_prerelease_testsolver"] = context.team.is_prerelease_testsolver
-    team["brown_members"] = context.team.brown_members
+    team["brown_team"] = context.team.brown_team
     team["in_person"] = context.team.in_person
 
     team["solves"] = context.team.solves_by_case

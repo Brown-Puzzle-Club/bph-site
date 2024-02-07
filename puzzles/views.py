@@ -83,6 +83,12 @@ def react_base(request):
     })
 
 @require_GET
+def team_locked_react(request):
+    if not request.context.team:
+        raise Http404 # TODO: make redirecting work better.
+    return react_base(request)
+
+@require_GET
 def prerelease_locked_react(request):
     if not request.context.team or not request.context.team.is_prerelease_testsolver:
         raise Http404
@@ -171,7 +177,8 @@ def require_before_hunt_closed_or_admin(request):
 
 @require_GET
 def index(request):
-    return render(request, 'home.html')
+    return redirect('https://2023.brownpuzzlehunt.com')
+    # return render(request, 'home.html')
 
 
 @require_GET
@@ -259,19 +266,11 @@ def register(request):
                 password=data.get('password'),
                 first_name=data.get('team_name'),
             )
-            # brown_members=logistics_data.get('brown_members')
-            # in_person_sat=logistics_data.get('in_person_sat')
-            # in_person_sun=logistics_data.get('in_person_sun')
-            # location=logistics_data.get('where_to_find')
-            # phone_number=logistics_data.get('phone_number')
-
-            # print("TESTING LOGISTICS OUTPUT:")
-            # print(brown_members, in_person_sat, in_person_sun, location, phone_number)
 
             team = Team.objects.create(
                 user=user,
                 team_name=data.get('team_name'),
-                # logistics info (BPH ADD)
+
                 brown_members=logistics_data.get('brown_members'),
                 brown_affiliation_desc=logistics_data.get(
                     'brown_affiliation_desc'),
