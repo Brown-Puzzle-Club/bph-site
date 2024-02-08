@@ -1,7 +1,7 @@
 
 
 export const MURDER_WEAPON_EMOJIS = [
-  "🔫","🗡️","🔨","🪓","🪛","🏹","💣","🎷","🎤","🧲","💉","🐕","✏️","🚂","🛹","🪨","🔥","🪤","🗜️","🦯","🫧"
+  "🔫","🗡️","🔨","🪓","🏹","💣","🎷","🎤","🧲","💉","🐕","✏️","🚂","🛹","🔥","🗜️","🦯",
 ]
 
 export const PFP_COLOR_CHOICES = [
@@ -9,7 +9,7 @@ export const PFP_COLOR_CHOICES = [
   "#000000", // black
   "#a46666", // red
   "#7f7367", // brown
-  "#efeeae", // yellow
+  "#decc57", // yellow
   "#677f67", // green
   "#5780a8", // blue
   "#926dca", // purple
