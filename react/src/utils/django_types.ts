@@ -36,6 +36,8 @@ const UserTeamSchema = z.object({
   merge_in: z.boolean(),
   merge_in_preferences: z.string(),
   user: z.number(),
+  emoji_choice: z.string(),
+  color_choice: z.string(),
 });
 type UserTeam = z.infer<typeof UserTeamSchema>;
 
