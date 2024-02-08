@@ -21,7 +21,7 @@ export default function LoginNavbar() {
     } catch (error) {
       const e = error as Error;
       if (e.response && e.response.status === 401) {
-        setError("Incorrect username or password. Please try again.");
+        setError("Incorrect username or password.");
       } else {
         console.error(e.message);
         setError("An error occurred. Please try again later.");

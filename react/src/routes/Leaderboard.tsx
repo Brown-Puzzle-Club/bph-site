@@ -48,23 +48,7 @@ export default function Leaderboard () {
           <button onClick={() => setTab(LeaderboardTab.REMOTE)} className={`select-none rounded-md transition-colors p-3 ${curTab === LeaderboardTab.IN_PERSON ? 'hover:bg-slate-300 hover:text-accent-foreground' : ''} ${curTab === LeaderboardTab.REMOTE ? 'bg-white text-accent-foreground' : ''}`}>Remote</button>
       </div>
       <div className="text-center dark bg-gradient-to-b from-muted/50 to-muted/80 pb-2 pt-2 no-underline outline-none focus:shadow-md btn-gradient-1 relative mx-[5%] md:mx-[20%]">
-        <div className="contact-content pl-6 pr-6 h-full max-h-[70%] overflow-y-auto">
-        <style>
-          {`
-            .contact-content::-webkit-scrollbar {
-              width: 8px;
-            }
-
-            .contact-content::-webkit-scrollbar-thumb {
-              background-color: rgba(255, 255, 255, 0.5);
-              border-radius: 4px;
-            }
-
-            .contact-content::-webkit-scrollbar-thumb:hover {
-              background-color: rgba(255, 255, 255, 0.7);
-            }
-          `}
-        </style>
+        <div className="contact-content custom-scroll pl-6 pr-6 h-full max-h-[65dvh] overflow-y-auto">
 
       {teams.length > 0 ? collectTeams(teams, curTab).map((team, index, array) => (
           <div key={team.id} className={`contact-box ${index !== array.length - 1 ? 'btn-gradient-bot' : ''} pt-5 pb-5`}>
