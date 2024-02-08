@@ -20,7 +20,12 @@ export default function LoginNavbar() {
       await login(username, password);
     } catch (error) {
       const e = error as Error;
-      setError(e.message);
+      if (e.response && e.response.status === 401) {
+        setError("Incorrect username or password. Please try again.");
+      } else {
+        console.error(e.message);
+        setError("An error occurred. Please try again later.");
+      }
     }
     
     setFormProgress(false);
