@@ -1,5 +1,5 @@
 import { registerFormSchema } from "@/routes/Register";
-import { User } from "@/utils/django_types";
+import { UserTeam } from "@/utils/django_types";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { createContext, useContext, useEffect, useState } from "react";
@@ -8,7 +8,7 @@ import { z } from "zod";
 type AuthContextType = {
   loggedIn: boolean;
   checkingLoginStatus: boolean;
-  user?: User;
+  team?: UserTeam;
   login: (username: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   register: (values: z.infer<typeof registerFormSchema>) => Promise<void>;
@@ -17,7 +17,7 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType>({
   loggedIn: false,
   checkingLoginStatus: true,
-  user: undefined,
+  team: undefined,
   login: async () => {},
   logout: async () => {},
   register: async () => {},
@@ -27,14 +27,14 @@ const AuthContext = createContext<AuthContextType>({
 export const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [checkingLoginStatus, setCheckingLoginStatus] = useState(true);
   const [loggedIn, setLoggedIn] = useState(false);
-  const [user, setUser] = useState(undefined as User | undefined);
+  const [team, setUserTeam] = useState(undefined as UserTeam | undefined);
 
   const CheckAlreadyLoggedIn = async () => {
     setCheckingLoginStatus(true);
     let out = undefined
     try {
-      const response = axios.get('/api/user');
-      out = (await response).data[0] as User;
+      const team_response = axios.get('/api/my-team');
+      out = (await team_response).data[0] as UserTeam;
     } catch (error) {
       const e = error as Error;
       console.error(e.message);
@@ -47,10 +47,10 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
     setCheckingLoginStatus(false);
     const session = Cookies.get('sessionid');
     if (session) {
-      CheckAlreadyLoggedIn().then((user) => {
-        console.log(user)
-        if (user) {
-          setUser(user);
+      CheckAlreadyLoggedIn().then((team) => {
+        console.log(team)
+        if (team) {
+          setUserTeam(team);
           setLoggedIn(true);
         }
       });
@@ -65,8 +65,8 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
         password: password,
       }).then((response) => {
         console.log(response)
-        const cur_user = response.data as User
-        setUser(cur_user)
+        const cur_team = response.data as UserTeam
+        setUserTeam(cur_team)
         setLoggedIn(true);
         window.location.reload()  ;
       });
@@ -80,7 +80,7 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
   const logout = async () => {
     console.log('Logging out');
     await axios.post('/api/logout');
-    setUser(undefined);
+    setUserTeam(undefined);
     setLoggedIn(false);
     window.location.assign("/landing");
   }
@@ -90,8 +90,8 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
     try {
       await axios.post('/api/register', values).then((response) => {
         console.log(response)
-        const cur_user = response.data as User
-        setUser(cur_user)
+        const cur_team = response.data as UserTeam
+        setUserTeam(cur_team)
         setLoggedIn(true);
         // redirect to home page
         window.location.assign("/");
@@ -104,7 +104,7 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
   }
 
   return (
-    <AuthContext.Provider value={{ checkingLoginStatus, loggedIn, user, login, logout, register }}>
+    <AuthContext.Provider value={{ checkingLoginStatus, loggedIn, team, login, logout, register }}>
       {children}
     </AuthContext.Provider>
   );

@@ -246,7 +246,7 @@ class Team(models.Model):
 
     # misc bph2024 adds:
     color_choice = models.CharField(default=_('#ffffff'), max_length=200, verbose_name=_('Color choice'))
-    emoji_choice = models.CharField(default=_(''), max_length=200, verbose_name=_('Emoji choice'))
+    emoji_choice = models.CharField(default=_('❓'), max_length=200, verbose_name=_('Emoji choice'))
 
     # merge_out = models.BooleanField(verbose_name=_('Is the team interested in joining up with a larger team for the hunt.'), default=False)
     # merge_out_preferences = models.CharField(default="", max_length=200, verbose_name=_('Merge out with larger team preferences'), help_text=_('(e.g. size, age-range, in-person vs remote, etc.)'))
