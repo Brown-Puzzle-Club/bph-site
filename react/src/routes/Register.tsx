@@ -1,8 +1,11 @@
+import TeamIcon from "@/components/team/TeamIcon";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { useAuth } from "@/hooks/useAuth";
+import { MURDER_WEAPON_EMOJIS, PFP_COLOR_CHOICES } from "@/utils/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -36,8 +39,8 @@ export const registerFormSchema = z.object({
   phone_number: z.string().optional(),
   classroom_need: z.boolean().optional(),
   where_to_find: z.string().optional(),
-  color_choice: z.string().optional(),
-  emoji_choice: z.string().optional(),
+  color_choice: z.string(),
+  emoji_choice: z.string(),
 }).refine(data => {
   return data.password === data.retype_password;
 }, {
@@ -64,8 +67,12 @@ export const registerFormSchema = z.object({
 export default function RegisterForm() {
   const [memberCount, setMemberCount] = useState(1);
   const [submitting, setSubmitting] = useState(false);
-  const { register, user } = useAuth();
-  console.log(user)
+
+  const [emojiChoice, setEmojiChoice] = useState('❓');
+  const [colorChoice, setColorChoice] = useState('#1e293ba1');
+
+  const { register, team } = useAuth();
+  console.log(team)
 
   const form = useForm<z.infer<typeof registerFormSchema>>({
     resolver: zodResolver(registerFormSchema),
@@ -100,7 +107,7 @@ export default function RegisterForm() {
 
   return (
     <div className="register-page">
-      {user ? <h1 className="dark text-right pr-5 text-slate-400 fixed right-0 text-sm"><b>NOTE</b>: You are already registered ☝️</h1> : null}
+      {team ? <h1 className="dark text-right pr-8 text-slate-400 fixed right-0 text-sm"><b>NOTE</b>: You are already registered ☝️</h1> : null}
       <div className="mx-[20%] lg:mx-[30%]">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 text-white dark">
@@ -188,7 +195,7 @@ export default function RegisterForm() {
               )} />
           </section>
           {/* On Campus Participation Section */}
-          <section className="on-campus space-y-4">
+          <section className="on-campus space-y-4 border-b-4 border-slate-800 pb-8">
             <h1 className="text-center font-bold text-xl">On Campus</h1>
             <FormField control={form.control} name="in_person" render={({ field }) => (
               <div>
@@ -273,6 +280,63 @@ export default function RegisterForm() {
                 )}
             </div>
             )} />
+          </section>
+          <section className="additional-questions">
+            <h1 className="text-center font-bold text-xl pb-4">Detective Orientation</h1>
+            <div className="flex">
+              <div className="flex flex-shrink-0 w-20 h-20 justify-center items-center">
+                <TeamIcon emoji={emojiChoice} color={colorChoice} emoji_cn="text-5xl"/>
+              </div>
+              <div className="flex-grow additional-form border-l-4 border-slate-800 pl-10 ml-5 space-y-4">
+                <FormField control={form.control} name="emoji_choice" render={({ field }) => (
+                  <FormItem>
+                  <FormLabel>Favorite Murder Weapon</FormLabel>
+                    <Select onValueChange={(value) => {
+                      field.onChange(value);
+                      setEmojiChoice(value);
+                    }} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue className="text-slate-400" placeholder="Choose your weapon" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent className="dark">
+                        {MURDER_WEAPON_EMOJIS.map((emoji) => {
+                          return (<SelectItem value={emoji} className="text-xl">{emoji}</SelectItem>)
+                        })}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage className="text-right"/>
+                  </FormItem>
+                )} />
+                <FormField control={form.control} name="color_choice" render={({ field }) => (
+                  <FormItem>
+                  <FormLabel>Favorite Color</FormLabel>
+                    <Select onValueChange={(value) => {
+                      field.onChange(value);
+                      setColorChoice(value);
+                    }} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue className="text-slate-400" placeholder="Choose your color" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent className="dark">
+                        {PFP_COLOR_CHOICES.map((color) => {
+                          
+                          return (<SelectItem value={color} className="text-xl">
+                            {/* square div with color as the background color */}
+                            <div className="w-10 h-10 border-2 border-slate-800 rounded" style={{backgroundColor: color}}></div>
+                          </SelectItem>)
+                        })}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage className="text-right"/>
+                  </FormItem>
+                )} />
+              </div>
+            </div>
+
           </section>
             { !submitting ? <Button type="submit">Submit</Button> : <Button type="submit" disabled>Submitting...</Button> }
           </form>

@@ -45,9 +45,11 @@ def login_view(request: Request) -> Response:
     username = request.data.get('username')
     password = request.data.get('password')
     user = authenticate(request, username=username, password=password)
+
     if user is not None:
         login(request._request, user)
-        return Response(UserSerializer(user).data)
+        team = Team.objects.get(user=user)
+        return Response(TeamSerializer(team).data)
     else:
         return Response({'status': 'failure'}, status=401)
     
@@ -64,6 +66,8 @@ def register_view(request):
     serializer = UserRegistrationSerializer(data=request.data)
 
     if serializer.is_valid():
+        
+        logout(request._request)
 
         user = User.objects.create_user(
             serializer.validated_data.get('team_id'),
@@ -96,7 +100,7 @@ def register_view(request):
         login(request._request, user)
         
         # Return the serialized user data
-        return Response(UserSerializer(user).data)
+        return Response(TeamSerializer(team).data)
     else:
         # Return errors if registration fails
         return Response(serializer.errors, status=400)
