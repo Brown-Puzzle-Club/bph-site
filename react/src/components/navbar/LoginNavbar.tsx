@@ -4,6 +4,12 @@ import { BeatLoader } from 'react-spinners';
 import { Button } from '../ui/button';
 import { NavigationMenuContent, NavigationMenuItem, NavigationMenuList, NavigationMenuTrigger } from '../ui/navigation-menu';
 
+interface CustomError extends Error {
+  response?: {
+    status: number;
+  };
+}
+
 export default function LoginNavbar() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -19,7 +25,7 @@ export default function LoginNavbar() {
     try {
       await login(username, password);
     } catch (error) {
-      const e = error as Error;
+      const e = error as CustomError;
       if (e.response && e.response.status === 401) {
         setError("Incorrect username or password.");
       } else {
