@@ -55,7 +55,7 @@ export default function Credits () {
             <li><strong>Christine Wang</strong> (RISD '24)</li>
             <li><strong>Eliot Geer</strong> ('27)</li>
             <li><strong>Annie Johnson</strong> ('27)</li>
-            <li><strong>Phil Avilov</strong> (BROWN-RISD '28)</li>
+            <li><strong>Phil Avilov</strong> (RISD '28)</li>
             <li><strong>@<a href="https://www.instagram.com/codnjs.oo/">codnjs.oo</a></strong></li>
           </ul>
         </div>
