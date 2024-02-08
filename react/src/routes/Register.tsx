@@ -155,7 +155,7 @@ export default function RegisterForm() {
             {/* Members Section */}
             <section className="team-members border-b-4 border-slate-800 space-y-4 pb-8">
               <h1 className="text-center font-bold text-xl">Team Members</h1>
-              <h4 className="text-center text-slate-400 text-sm"><b>We recommend teams to be around 7 to 10 people</b>. The maximum team size is 12 people, but there's no minimum team size—you can still have fun with a team of 2!</h4>
+              <h4 className="text-center text-slate-400 text-sm"><b>We recommend teams to be around 7 to 10 people</b>. The maximum team size is 12 people, but there's no minimum team size — you can still have fun with a team of 2!</h4>
               <FormField control={form.control} name="members" render={() => (
                 <FormItem>
                   <div className="space-y-4">
@@ -197,7 +197,7 @@ export default function RegisterForm() {
                     <div className="space-y-0.5">
                       <FormLabel>In Person Participation</FormLabel>
                       <FormDescription>
-                        Are you planning on participating in the hunt on Brown University Campus?
+                        Are you planning on participating in the hunt on Brown University's campus?
                       </FormDescription>
                     </div>
                     <FormControl>
@@ -213,7 +213,7 @@ export default function RegisterForm() {
                   <div className="in-person-fields border-l-4 border-slate-800 space-y-6 pl-10 ml-5">
                   <FormField control={form.control} name="num_brown_members" render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Number of Brown Community Team Members</FormLabel>
+                      <FormLabel>Number of Brown/RISD Community Team Members</FormLabel>
                       <FormControl>
                         <Input type="number" min={0} max={MEMBER_COUNT_MAX} {...field} onChange={event => field.onChange(+event.target.value)}/>
                       </FormControl>

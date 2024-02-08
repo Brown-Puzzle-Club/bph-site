@@ -49,7 +49,7 @@ export default function LoginNavbar() {
                 name="username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="p-2 border rounded-md focus:outline-none focus:ring focus:border-primary"
+                className="p-2 text-black border rounded-md focus:outline-none focus:ring focus:border-primary"
                 placeholder="Enter your username"
                 required
               />
@@ -64,7 +64,7 @@ export default function LoginNavbar() {
                 name="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="p-2 border rounded-md focus:outline-none focus:ring focus:border-primary"
+                className="p-2 text-black border rounded-md focus:outline-none focus:ring focus:border-primary"
                 placeholder="Enter your password"
                 required
               />  
