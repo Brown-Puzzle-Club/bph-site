@@ -43,7 +43,7 @@ urlpatterns = [
     re_path(r'^admin/', admin.site.urls),
     re_path(r'^impersonate/', include('impersonate.urls')),
 
-    path('', views.index, name='index'),
+    # path('', views.index, name='index'),
 
     # path('rules', views.rules, name='rules'),
     # path('on-campus', views.on_campus, name='on_campus'),
@@ -136,7 +136,7 @@ urlpatterns = [
 
     # path('react', views.prerelease_locked_react, name='react'),
     path('social-deduction', views.prerelease_locked_react, name='social-deduction'),
-    path('landing', views.react_base, name='landing'),
+    path('', views.react_base, name='landing'),
     path('info', views.react_base, name='info'),
     
     path('credits', views.react_base, name='credits'),
