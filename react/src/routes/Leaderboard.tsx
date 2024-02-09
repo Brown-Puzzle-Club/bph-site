@@ -59,30 +59,14 @@ export default function Leaderboard () {
           <button onClick={() => setTab(LeaderboardTab.REMOTE)} className={`select-none rounded-t-md transition-colors py-2 px-6 hover:text-white ${curTab === LeaderboardTab.IN_PERSON ? 'hover:bg-[#b3957c]' : ''} ${curTab === LeaderboardTab.REMOTE ? 'bg-[#957a62] text-white font-bold' : 'bg-[#745a45] text-[#ffffffb8]'}`}>Remote</button>
       </div>
       <div className="text-left dark bg-gradient-to-b from-[#b3957c] to-[#a28369] pb-2 pt-2 no-underline outline-none focus:shadow-md border-4 border-[#957a62] rounded-xl relative mx-[5%] md:mx-[20%]">
-        <div className="contact-content h-full max-h-[70%] overflow-y-auto">
-        <style>
-          {`
-            .contact-content::-webkit-scrollbar {
-              width: 8px;
-            }
-
-            .contact-content::-webkit-scrollbar-thumb {
-              background-color: rgba(255, 255, 255, 0.5);
-              border-radius: 4px;
-            }
-
-            .contact-content::-webkit-scrollbar-thumb:hover {
-              background-color: rgba(255, 255, 255, 0.7);
-            }
-          `}
-        </style>
-      {teams.length > 0 ? collectTeams(teams, curTab).map((cur_team, index, array) => (
-          <div key={cur_team.id} className={`team-box px-6 pt-3 pb-3 flex items-center space-x-4 text-slate-800 ${index !== array.length - 1 ? 'border-b-4 border-[#957a62]' : ''} ${cur_team.id === team?.id ? 'bg-[#ceaa8a]' : ''}`}>
-            <span className="text-xl font-bold w-9">{index + 1}</span>
-            <TeamIcon className="w-12 h-12" color={cur_team?.color_choice || '#000000'} emoji={cur_team?.emoji_choice || '❓'} emoji_cn='text-3xl'/>
-            <a className="truncate text-lg" href="">{cur_team.team_name}</a>
-          </div>
-        )) : <BeatLoader className="text-center justify-center content-center pr-2" color={'#000'} size={12} /> }
+        <div className="contact-content custom-scroll h-full max-h-[65dvh] overflow-y-auto">
+          {teams.length > 0 ? collectTeams(teams, curTab).map((cur_team, index, array) => (
+            <div key={cur_team.id} className={`team-box px-6 pt-3 pb-3 flex items-center space-x-4 text-slate-800 ${index !== array.length - 1 ? 'border-b-4 border-[#957a62]' : ''} ${cur_team.id === team?.id ? 'bg-[#ceaa8a]' : ''}`}>
+              <span className="text-xl font-bold w-9">{index + 1}</span>
+              <TeamIcon className="w-12 h-12" color={cur_team?.color_choice || '#000000'} emoji={cur_team?.emoji_choice || '❓'} emoji_cn='text-3xl'/>
+              <a className="truncate text-lg" href="">{cur_team.team_name}</a>
+            </div>
+          )) : <BeatLoader className="text-center justify-center content-center pr-2" color={'#000'} size={12} /> }
       </div>
       </div>
     </div>
