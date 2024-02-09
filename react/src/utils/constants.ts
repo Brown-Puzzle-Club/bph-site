@@ -17,3 +17,5 @@ export const PFP_COLOR_CHOICES = [
   "#27514a", // slate-green
   "#1e293b", // dark-slate
 ]
+
+export const [MEMBER_COUNT_MIN, MEMBER_COUNT_MAX] = [1, 12];

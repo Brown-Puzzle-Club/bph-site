@@ -28,3 +28,19 @@ class UserRegistrationSerializer(serializers.Serializer):
             raise serializers.ValidationError("Required for in person teams that don't need a room reserved.", code="missing_where_to_find")
 
         return data
+
+class TeamUpdateSerializer(serializers.Serializer):
+    in_person = serializers.BooleanField(required=False)
+    num_brown_members = serializers.IntegerField(required=False)
+    phone_number = serializers.CharField(required=False)
+    classroom_need = serializers.BooleanField(required=False)
+    where_to_find = serializers.CharField(required=False)
+    color_choice = serializers.CharField(required=False)
+    emoji_choice = serializers.CharField(required=False)
+    members = TeamMemberSerializer(many=True)
+
+    def validate(self, data):
+        if data['in_person'] and not data.get('classroom_need', True) and data.get('where_to_find', '') == '':
+            raise serializers.ValidationError("Required for in person teams that don't need a room reserved.", code="missing_where_to_find")
+
+        return data
