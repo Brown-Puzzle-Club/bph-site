@@ -140,7 +140,7 @@ export default function MyTeamPage() {
       <div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 text-white dark">
-          <a href={`/team/${team?.id}`} className="dark bg-muted/20 hover:bg-muted/80 btn-gradient-1 flex font-semibold items-center text-center justify-center my-5 mx-[33%] transition-colors duration-300 group">
+            <a href={`/team/${team?.id}`} className="dark bg-muted/20 hover:bg-muted/80 btn-gradient-1 flex font-semibold items-center text-center justify-center my-5 mx-[33%] transition-colors duration-300 group">
               <FaEye className="w-5 h-5 text-slate-400 group-hover:text-white transition-colors duration-300"/>
               <p className="px-2 text-slate-400 group-hover:text-white transition-colors duration-300">See page as visible to other teams</p>
               <FaEye className="w-5 h-5 text-slate-400 group-hover:text-white transition-colors duration-300"/>
