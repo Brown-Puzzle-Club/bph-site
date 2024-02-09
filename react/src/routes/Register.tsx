@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { useAuth } from "@/hooks/useAuth";
-import { MURDER_WEAPON_EMOJIS, PFP_COLOR_CHOICES } from "@/utils/constants";
+import { MEMBER_COUNT_MAX, MEMBER_COUNT_MIN, MURDER_WEAPON_EMOJIS, PFP_COLOR_CHOICES } from "@/utils/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -94,7 +94,6 @@ export default function RegisterForm() {
     setSubmitting(false);
   };
 
-  const [MEMBER_COUNT_MIN, MEMBER_COUNT_MAX] = [1, 12];
   const addMemberCount = () => {
     setMemberCount((count) => Math.min(count + 1, MEMBER_COUNT_MAX));
   }

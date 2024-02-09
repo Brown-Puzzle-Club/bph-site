@@ -1,6 +1,6 @@
 from rest_framework import permissions, viewsets, mixins
 
-from puzzles.api.form_serializers import UserRegistrationSerializer
+from puzzles.api.form_serializers import TeamUpdateSerializer, UserRegistrationSerializer
 from .serializers import *
 
 from rest_framework.response import Response
@@ -38,6 +38,17 @@ class BasicTeamViewSet(mixins.RetrieveModelMixin,
                        viewsets.GenericViewSet):
     queryset = Team.objects.all()
     serializer_class = TeamBasicSerializer
+
+
+
+class TeamMemberViewSet(viewsets.ModelViewSet):
+    serializer_class = TeamMemberSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        current_team = self.request.user.team
+        queryset = TeamMember.objects.filter(team=current_team)
+        return queryset
 
 
 @api_view(['POST'])
@@ -103,4 +114,34 @@ def register_view(request):
         return Response(TeamSerializer(team).data)
     else:
         # Return errors if registration fails
+        return Response(serializer.errors, status=400)
+    
+
+@api_view(['POST'])
+def update_team(request: Request) -> Response:
+    serializer = TeamUpdateSerializer(data=request.data)
+
+    if serializer.is_valid():
+        
+        team = Team.objects.get(user=request.user)
+
+        team.in_person = serializer.validated_data.get('in_person', team.in_person)
+        team.num_brown_members = serializer.validated_data.get('num_brown_members', team.num_brown_members)
+        team.phone_number = serializer.validated_data.get('phone_number', team.phone_number)
+        team.classroom_need = serializer.validated_data.get('classroom_need', team.classroom_need)
+        team.where_to_find = serializer.validated_data.get('where_to_find', team.where_to_find)
+        team.color_choice = serializer.validated_data.get('color_choice', team.color_choice)
+        team.emoji_choice = serializer.validated_data.get('emoji_choice', team.emoji_choice)
+        team.save()
+
+        TeamMember.objects.filter(team=team).delete()
+        for team_member in serializer.validated_data.get('members'):
+            TeamMember.objects.create(
+                team=team,
+                name=team_member.get('name'),
+                email=team_member.get('email'),
+            )
+
+        return Response(serializer.data)
+    else:
         return Response(serializer.errors, status=400)

@@ -24,6 +24,7 @@ const UserTeamSchema = z.object({
   total_free_answers_awarded: z.number(),
   last_solve_time: z.string().nullable(),
   is_prerelease_testsolver: z.boolean(),
+  num_brown_members: z.number(),
   is_hidden: z.boolean(),
   brown_team: z.boolean(),
   in_person: z.boolean(),
@@ -46,5 +47,11 @@ const TeamSchema = z.object({
 });
 type Team = z.infer<typeof TeamSchema>;
 
-export type { Team, User, UserTeam };
+const TeamMemberSchema = z.object({
+  name: z.string(),
+  email: z.string(),
+});
+type TeamMember = z.infer<typeof TeamMemberSchema>;
+
+export type { Team, TeamMember, User, UserTeam };
 
