@@ -1,5 +1,9 @@
 
 {% block content %}
+  <head>
+    <title>Brown Puzzlehunt 2024</title>
+    <link rel="icon" type="image/x-icon" href="/static/images/navbar_logo_head.png">
+  </head>
   <script>
     var djangoContext = '{{ context|escapejs }}';
     window.CSRF_TOKEN = "{{ csrf_token }}";
