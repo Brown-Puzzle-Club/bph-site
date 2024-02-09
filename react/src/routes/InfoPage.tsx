@@ -2,6 +2,21 @@ import ProgressDocs from "@/components/ProgressDocs";
 import { FaCar } from "react-icons/fa";
 import { FaBus, FaLocationDot, FaTrain } from "react-icons/fa6";
 
+import macmillan from "../assets/info/macmillan_squiggle.png";
+import salomon from "../assets/info/salomon_squiggle.png";
+
+import team from "../assets/info/dooble1.svg";
+import guy from "../assets/info/dooble3.svg";
+import hooray from "../assets/info/kingdooble.svg";
+import gift from "../assets/info/giftdooble.svg";
+import waiver from "../assets/info/waiverdooble.svg";
+import google from "../assets/info/googlydooble.svg";
+import wiggle from "../assets/info/squigglydooble.svg";
+import brown from "../assets/info/browndooble.svg";
+import rubix from "../assets/info/rubixdooble.svg";
+import building from "../assets/info/kongdooble.svg";
+
+
 const smoothScroll = (element_id: string) => {
   const element = document.getElementById(element_id);
   if (element) {
@@ -13,15 +28,15 @@ const LocationBox = ({
   location_name,
   location_addr,
   location_desc,
-  image_src,
   map_link,
+  img_src,
   justify_left,
 }: {
   location_name: string;
   location_addr: string;
   location_desc: string;
-  image_src: string;
   map_link: string;
+  img_src?: string;
   justify_left?: boolean;
 }) => {
   return (
@@ -33,7 +48,7 @@ const LocationBox = ({
       
       {justify_left && (
         <div className="map float-left">
-          <img className="object-contain h-40 w-40" src={image_src}></img>
+          <img className="object-contain h-40 w-40" src={img_src}></img>
         </div>
       )}
       <div
@@ -53,7 +68,7 @@ const LocationBox = ({
       </div>
       {!justify_left && (
         <div className="map float-right">
-          <img className="object-contain h-40 w-40" src={image_src}></img>
+          <img className="object-contain h-60 w-60" src={img_src}></img>
         </div>
       )}
     </div>
@@ -67,6 +82,10 @@ export default function InfoPage() {
       <ProgressDocs>
         <h1 id="important-info">Important Info</h1>
         <h4>What is this?</h4>
+        <img
+              className="h-52 invert float-right m-4"
+              src={wiggle}
+            />
         <div>
           <p>
             This is a puzzlehunt! Teams of people will compete to solve puzzles
@@ -110,12 +129,16 @@ export default function InfoPage() {
           </p>
           <p>
             <b className="text-lg pb-2">Wrap-up</b> will be held on{" "}
-            <strong>Sunday, April 14, 2024 at 8:30 PM EDT</strong> 
+            <strong>Sunday, April 14, 2024 at 8:30 PM EDT</strong>{" "}
             in <b>MacMillan Hall Room 117</b>, with doors opening
             at <b>8:15pm</b>. Kickoff and Wrap-up will both be livestreamed.
           </p>
         </div>
         <h4>What's the goal?</h4>
+        <img
+              className="h-52 invert float-right m-4"
+              src={gift}
+            />
         <div>
           <p>
             Teams will compete to be the first to earn Brown Investigation Bureau's prestigious 
@@ -132,8 +155,12 @@ export default function InfoPage() {
             able to win.
           </p>
         </div>
-        <h4>Who can participate?</h4>
-        <div>
+        <img
+              className="h-48 invert float-left m-4"
+              src={team}
+            />
+        <div className="text-right">
+          <h4>Who can participate?</h4>
           <p>
             Brown Puzzlehunt is open to anyone, anywhere in the world. We have
             taken steps to ensure that every puzzle is accessible to remote
@@ -149,6 +176,10 @@ export default function InfoPage() {
           </p>
         </div>
         <h4>How do puzzles work?</h4>
+        <img
+              className="h-60 invert float-right m-4"
+              src={rubix}
+            />
         <div>
           <p>
             All puzzles will be visible on the website. This is where you will
@@ -170,8 +201,12 @@ export default function InfoPage() {
             guessing and brute-forcing are discouraged.
           </p>
         </div>
-        <h4>How do hints work?</h4>
-        <div>
+        <img
+              className="h-72 invert float-left m-4"
+              src={hooray}
+            />
+        <div className="text-right">
+          <h4>How do hints work?</h4>
           <p>
             Starting on <strong>Saturday, April 13, 2024</strong>, at <b>3:00 PM EDT</b>, teams
             will gain one hint request every three hours, which they can use to
@@ -214,6 +249,10 @@ export default function InfoPage() {
           </p>
         </div>
         <h4>What else?</h4>
+        <img
+              className="h-60 invert float-right m-4"
+              src={google}
+            />
         <div>
           <p>
             You may use any external sources for help, including other people,
@@ -288,6 +327,10 @@ export default function InfoPage() {
           </p>
         </div>
         <h4>Who's writing this hunt?</h4>
+        <img
+              className="h-36 invert float-right m-4"
+              src={guy}
+            />
         <div>
           <p>
             Check out our <a href="/credits">Credits</a> page!
@@ -311,6 +354,10 @@ export default function InfoPage() {
           </p>
         </div>
         <h4>What's unique about this puzzlehunt?</h4>
+        <img
+              className="w-1/4 invert float-right m-4"
+              src={brown}
+            />
         <div>
           <p>
             Brown Puzzlehunt is a hunt written by current Brown and RISD
@@ -376,8 +423,12 @@ export default function InfoPage() {
           while being on-campus, this section will help you with information and
           logistics!
         </p>
-        <h4>Being Safe On-Campus</h4>
-        <div>
+        <img
+              className="h-60 invert float-left m-4"
+              src={waiver}
+            />
+        <div className="text-right">
+          <h4>Being Safe On-Campus</h4>
           <p>
             Brown University is not a playground for puzzlers; it is also a live
             university, with classes, students, faculty, research, and other
@@ -416,19 +467,19 @@ export default function InfoPage() {
         <div>
           <div className="locations flex flex-col lg:flex-row items-center pt-5">
             <LocationBox
-              location_name="Kickoff and Wrap-up"
+              location_name="Kickoff"
               location_addr="MacMillan Hall Room 117"
               location_desc="Doors open at 10:30 AM EDT."
-              image_src="https://www.brownpuzzlehunt.com/static/images/macmillan_squiggle.8117221443f2.png"
               map_link="https://maps.app.goo.gl/p7xAA65kqwhHXH147"
+              img_src={macmillan}
               justify_left={true}
             />
             <LocationBox
               location_name="Brown Puzzle Club HQ"
               location_addr="Salomon Center Room 103"
               location_desc="Enter through the west side through the Main Green entrance, and descend the stairs."
+              img_src={salomon}
               map_link="https://www.google.com/maps/place/Salomon+Center/@41.8265578,-71.4031996,18.51z/data=!4m14!1m7!3m6!1s0x89e4453cc2dcb3eb:0x3b5e63a94276b39c!2sSalomon+Center!8m2!3d41.8265309!4d-71.4024032!16s%2Fg%2F11bbrgkqyc!3m5!1s0x89e4453cc2dcb3eb:0x3b5e63a94276b39c!8m2!3d41.8265309!4d-71.4024032!16s%2Fg%2F11bbrgkqyc"
-              image_src="https://www.brownpuzzlehunt.com/static/images/macmillan_squiggle.8117221443f2.png"
             />
           </div>
           <p>
@@ -493,6 +544,10 @@ export default function InfoPage() {
           </p>
         </div>
         <h4>Solving Spaces</h4>
+        <img
+              className="h-60 invert float-right m-4"
+              src={building}
+            />
         <div>
           <p>
             If you are going to be on-campus,{" "}
