@@ -119,7 +119,7 @@ export default function InfoPage() {
         <div>
           <p>
             Teams will compete to be the first to earn Brown Investigation Bureau's prestigious 
-            'Detective of the Year' award!
+            'Detective of the Month' award!
           </p>
           <p>
             Any detective worth their salt would kill for this title! But watch out - only teams 

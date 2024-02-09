@@ -33,13 +33,13 @@ export default function Credits () {
             <li><strong>Jay Sarva</strong> ('24.5)</li>
             <li><strong>Jeremy Fleming</strong> ('25)</li>
             <li><strong>Zach Gottshall</strong> ('25)</li>
+            <li><strong>Megan Carlson</strong> ('26)</li>
             <li><strong>Thomas Gordon</strong> ('26)</li>
-            <li><strong>Megan Carlson</strong> ('27)</li>
+            <li><strong>Bailey Merlino</strong> ('26)</li>
             <li><strong>Audrey Feigin</strong> ('27)</li>
             <li><strong>Erin Finn</strong> ('27)</li>
             <li><strong>Eliot Geer</strong> ('27)</li>
             <li><strong>Aren Guralp</strong> ('27)</li>
-            <li><strong>Bailey Merlino</strong> ('27)</li>
             <li><strong>Alex Wang</strong> ('27)</li>
             <li><strong>Thomas Mowen</strong></li> 
             <li><strong>Alex DeFranco</strong></li>
@@ -55,7 +55,7 @@ export default function Credits () {
             <li><strong>Christine Wang</strong> (RISD '24)</li>
             <li><strong>Eliot Geer</strong> ('27)</li>
             <li><strong>Annie Johnson</strong> ('27)</li>
-            <li><strong>Phil Avilov</strong> (BROWN-RISD '28)</li>
+            <li><strong>Phil Avilov</strong> (RISD '28)</li>
             <li><strong>@<a href="https://www.instagram.com/codnjs.oo/">codnjs.oo</a></strong></li>
           </ul>
         </div>

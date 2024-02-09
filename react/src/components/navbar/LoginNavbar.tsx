@@ -4,6 +4,12 @@ import { BeatLoader } from 'react-spinners';
 import { Button } from '../ui/button';
 import { NavigationMenuContent, NavigationMenuItem, NavigationMenuList, NavigationMenuTrigger } from '../ui/navigation-menu';
 
+interface CustomError extends Error {
+  response?: {
+    status: number;
+  };
+}
+
 export default function LoginNavbar() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -19,8 +25,13 @@ export default function LoginNavbar() {
     try {
       await login(username, password);
     } catch (error) {
-      const e = error as Error;
-      setError(e.message);
+      const e = error as CustomError;
+      if (e.response && e.response.status === 401) {
+        setError("Incorrect username or password.");
+      } else {
+        console.error(e.message);
+        setError("An error occurred. Please try again later.");
+      }
     }
     
     setFormProgress(false);
@@ -49,7 +60,7 @@ export default function LoginNavbar() {
                 name="username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="p-2 border rounded-md focus:outline-none focus:ring focus:border-primary"
+                className="p-2 text-white bg-slate-950 border rounded-md focus:outline-none focus:ring focus:border-primary"
                 placeholder="Enter your username"
                 required
               />
@@ -64,7 +75,7 @@ export default function LoginNavbar() {
                 name="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="p-2 border rounded-md focus:outline-none focus:ring focus:border-primary"
+                className="p-2 text-white bg-slate-950 border rounded-md focus:outline-none focus:ring focus:border-primary"
                 placeholder="Enter your password"
                 required
               />  
