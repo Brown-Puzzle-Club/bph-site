@@ -582,7 +582,7 @@ export default function InfoPage() {
             </div>
             <div className="event-box bg-red items-center flex-auto lg:w-1/3 text-center">
               <div className="title text-xl font-bold">Event #2</div>
-              <div className="time">Saturday 7:00 PM EDT</div>
+              <div className="time">Saturday 8:00 PM EDT</div>
             </div>
             <div className="event-box bg-red items-center flex-auto lg:w-1/3 text-center">
               <div className="title text-xl font-bold">Event #3</div>
