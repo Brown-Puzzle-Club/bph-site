@@ -107,7 +107,7 @@ export default function RegisterForm() {
 
   return (
     <div className="register-page">
-      {team ? <h1 className="dark text-right pr-8 text-slate-400 fixed right-0 text-sm"><b>NOTE</b>: You are already registered ☝️</h1> : null}
+      {team ? <h1 className="dark text-right pr-10 text-slate-400 fixed right-0 text-sm"><b>NOTE</b>: You are already registered ☝️</h1> : null}
       <div className="mx-[20%] lg:mx-[30%]">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 text-white dark">
