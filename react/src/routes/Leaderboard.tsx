@@ -35,11 +35,11 @@ export default function Leaderboard () {
   }, [team]);
 
   const collectRemoteTeams = (teams: Team[]) => {
-    return teams.filter((team) => !team.in_person && !team.is_hidden);
+    return teams.filter((cur_team) => !cur_team.in_person && (!cur_team.is_hidden || cur_team.id === team?.id) );
   }
 
   const collectInPersonTeams = (teams: Team[]) => {
-    return teams.filter((team) => team.in_person && !team.is_hidden);
+    return teams.filter((cur_team) => cur_team.in_person && (!cur_team.is_hidden || cur_team.id === team?.id));
   }
 
   const collectTeams = (teams: Team[], tab: LeaderboardTab) => {
