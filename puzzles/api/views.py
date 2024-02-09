@@ -39,8 +39,6 @@ class BasicTeamViewSet(mixins.RetrieveModelMixin,
     queryset = Team.objects.all()
     serializer_class = TeamBasicSerializer
 
-
-
 class TeamMemberViewSet(viewsets.ModelViewSet):
     serializer_class = TeamMemberSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -145,3 +143,14 @@ def update_team(request: Request) -> Response:
         return Response(serializer.data)
     else:
         return Response(serializer.errors, status=400)
+    
+
+@api_view(['GET'])
+def team_members_view(request: Request, team_id: int) -> Response:
+    try:
+        team = Team.objects.get(id=team_id)
+        team_members = TeamMember.objects.filter(team=team)
+        serializer = TeamMemberSerializer(team_members, many=True)
+        return Response(serializer.data)
+    except Team.DoesNotExist:
+        return Response({'error': 'Team not found'}, status=404)

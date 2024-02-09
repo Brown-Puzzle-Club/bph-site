@@ -78,7 +78,7 @@ urlpatterns = [
     #      name='password_reset_complete'),
 
     path('teams', views.teams, name='teams'),
-    path('team/<quotedstr:team_name>', views.team, name='team'),
+    # path('team/<quotedstr:team_name>', views.team, name='team'),
     path('teams/unhidden', views.teams_unhidden, name='teams-unhidden'),
     path('edit-team', views.edit_team, name='edit-team'),
 
@@ -147,6 +147,7 @@ urlpatterns = [
     path('register', views.react_base, name='register'),
     
     path('my-team', views.team_locked_react, name='my-team'),
+    path('team/<quotedstr:team_name>', views.react_base, name='team'),
 
     path('api/', include('puzzles.api.urls')),
 ]

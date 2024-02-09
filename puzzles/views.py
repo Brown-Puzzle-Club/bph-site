@@ -77,19 +77,19 @@ from puzzles.react_bridge import process_context
 from puzzles.shortcuts import dispatch_shortcut
 
 @require_GET
-def react_base(request):
+def react_base(request, **kwargs):
     return render(request, 'react_base.html', {
         "context": json.dumps(process_context(request, render_puzzles(request)), default=str),
     })
 
 @require_GET
-def team_locked_react(request):
+def team_locked_react(request, **kwargs):
     if not request.context.team:
         raise Http404 # TODO: make redirecting work better.
     return react_base(request)
 
 @require_GET
-def prerelease_locked_react(request):
+def prerelease_locked_react(request,**kwargs):
     if not request.context.team or not request.context.team.is_prerelease_testsolver:
         raise Http404
     return react_base(request)
