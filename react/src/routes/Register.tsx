@@ -72,7 +72,7 @@ export default function RegisterForm() {
   const [colorChoice, setColorChoice] = useState('#1e293ba1');
 
   const { register, team } = useAuth();
-  console.log(team)
+  // console.log(team)
 
   const form = useForm<z.infer<typeof registerFormSchema>>({
     resolver: zodResolver(registerFormSchema),
@@ -90,7 +90,10 @@ export default function RegisterForm() {
 
   const onSubmit = async (values: z.infer<typeof registerFormSchema>) => {
     setSubmitting(true);
-    await register(values);
+    await register(values).catch((error) => {
+      console.error(error);
+      alert("Team username and/or team name already taken. Please choose a different one.")
+    });
     setSubmitting(false);
   };
 

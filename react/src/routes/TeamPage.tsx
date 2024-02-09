@@ -38,20 +38,7 @@ export default function TeamPage() {
         <div className="teampage-content">
           <TeamIcon className="w-24 h-24 mx-auto text-center" color={team?.color_choice ?? ""} emoji={team?.emoji_choice ?? ""} emoji_cn="text-6xl"/>
           <h1 className="text-4xl font-bold text-center pt-5 pb-7">{team?.team_name}</h1>
-          <section className="team-members text-center dark bg-gradient-to-b from-muted/50 to-muted/80 px-6 py-4 no-underline outline-none focus:shadow-md btn-gradient-1 relative mx-[5%] md:mx-[30%]">
-            <div className="members-info">
-              <h1 className="text-center font-bold text-xl">{members?.length} Members</h1>
-              <div className="justify-center items-center flex">
-                <div className="members pt-6 flex justify-center items-center space-x-2">
-                  {members?.map((member, index) => (
-                    <p id={index.toString()}>{member.name}
-                      {index < members?.length - 1 ? ',' : ''}
-                    </p>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </section>
+          <h1 className="text-center font-bold text-xl">{members?.length ?? 0} Member{members?.length !== 1 ? 's' : ''}</h1>
         </div>}
       
     </div>

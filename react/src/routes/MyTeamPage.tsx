@@ -215,7 +215,7 @@ export default function MyTeamPage() {
             <section className="team-members text-center dark bg-gradient-to-b from-muted/50 to-muted/80 px-6 py-4 no-underline outline-none focus:shadow-md btn-gradient-1 relative mx-[5%] md:mx-[30%]">
               {membersLoading ? <BeatLoader className="justify-center content-center pr-2" color={'#fff'} size={12} />  :
               <div className="members-info">
-                <h1 className="text-center font-bold text-xl">{memberCount} Members</h1>
+                <h1 className="text-center font-bold text-xl">{memberCount} Member{memberCount !== 1 ? 's' : ''}</h1>
                 <div className="justify-center items-center flex">
                   <Dialog>
                     <DialogTrigger><a className={`text-center justify-center align-center underline ${membersError ? 'text-[#d66464]' : 'text-slate-400'}`} onClick={() => setMembersError(false)}>⚙️ edit team roster ⚙️</a></DialogTrigger>
