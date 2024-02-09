@@ -19,7 +19,7 @@ import Countdown from "react-countdown";
 import { BeatLoader } from "react-spinners";
 import TeamNavbar from "./TeamNavbar";
 
-import bluenoir_logo from "@/assets/navbar_logo.png";
+import bluenoir_logo from "@/assets/navbar_logo_head.png";
 import { useState } from "react";
 
 
@@ -117,7 +117,7 @@ const HuntLogo = () => {
       <img
         src={bluenoir_logo}
         alt="Brown Puzzlehunt 2024 Logo"
-        className="h-6 w-5 inline mr-1"
+        className="h-7 w-7 inline mr-1"
         style={{
           transition: "200ms ease",
           transform: hover ? "rotate(20deg)" : "none"
