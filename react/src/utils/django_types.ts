@@ -13,6 +13,7 @@ const UserSchema = z.object({
 });
 type User = z.infer<typeof UserSchema>;
 
+
 const UserTeamSchema = z.object({
   id: z.number(),
   team_name: z.string(),
@@ -24,17 +25,11 @@ const UserTeamSchema = z.object({
   last_solve_time: z.string().nullable(),
   is_prerelease_testsolver: z.boolean(),
   is_hidden: z.boolean(),
-  brown_members: z.boolean(),
-  brown_affiliation_desc: z.string(),
-  in_person_sat: z.number(),
-  in_person_sun: z.number(),
+  brown_team: z.boolean(),
+  in_person: z.boolean(),
   classroom_need: z.boolean(),
-  location: z.string(),
+  where_to_find: z.string(),
   phone_number: z.string(),
-  merge_out: z.boolean(),
-  merge_out_preferences: z.string(),
-  merge_in: z.boolean(),
-  merge_in_preferences: z.string(),
   user: z.number(),
   emoji_choice: z.string(),
   color_choice: z.string(),
@@ -44,6 +39,10 @@ type UserTeam = z.infer<typeof UserTeamSchema>;
 const TeamSchema = z.object({
   id: z.number(),
   team_name: z.string(),
+  emoji_choice: z.string(),
+  color_choice: z.string(),
+  in_person: z.boolean(),
+  is_hidden: z.boolean(),
 });
 type Team = z.infer<typeof TeamSchema>;
 
