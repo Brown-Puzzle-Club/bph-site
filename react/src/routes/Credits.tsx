@@ -42,7 +42,7 @@ export default function Credits () {
             <li><strong>Aren Guralp</strong> ('27)</li>
             <li><strong>Alex Wang</strong> ('27)</li>
             <li><strong>Thomas Mowen</strong></li> 
-            <li><strong>Alex DeFranco</strong></li>
+            <li><strong>Alex DelFranco</strong></li>
             <li><strong>Liam Oliva</strong></li>
           </ul>
         </div>
@@ -56,7 +56,7 @@ export default function Credits () {
             <li><strong>Eliot Geer</strong> ('27)</li>
             <li><strong>Annie Johnson</strong> ('27)</li>
             <li><strong>Phil Avilov</strong> (RISD '28)</li>
-            <li><strong>@<a href="https://www.instagram.com/codnjs.oo/">codnjs.oo</a></strong></li>
+            <li><strong>Kristine Lee (@<a href="https://www.instagram.com/codnjs.oo/">codnjs.oo</a>)</strong></li>
           </ul>
         </div>
 
