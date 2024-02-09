@@ -72,7 +72,6 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
       });
     } catch (error) {
       const e = error as Error;
-      console.error(e.message);
       throw e;
     }
   }
@@ -98,7 +97,6 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
       });
     } catch (error) {
       const e = error as Error;
-      console.error(e.message);
       throw e;
     }
   }
