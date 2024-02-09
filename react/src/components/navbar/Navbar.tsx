@@ -110,7 +110,7 @@ const HuntLogo = () => {
   const [hover, setHover] = useState(false);
 
   return (
-    <a href="/landing" className="text-white font-bold pl-3 pr-4 md:pr-1 whitespace-nowrap justify-center"
+    <a href="/" className="text-white font-bold pl-3 pr-4 md:pr-1 whitespace-nowrap justify-center"
       onMouseEnter={() => {setHover(true)}}
       onMouseLeave={() => {setHover(false)}}
     >

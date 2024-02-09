@@ -31,7 +31,7 @@ const router = createBrowserRouter([
     element: <PageWrapper bg_color={"#1c160d"} navbar_color={"#1c110d96"} route={<SocialDeduction />} />
   },
   {
-    path: "/landing",
+    path: "/",
     element: <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<Landing />} />
   },
   {

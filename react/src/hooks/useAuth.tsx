@@ -81,7 +81,7 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
     await axios.post('/api/logout');
     setUserTeam(undefined);
     setLoggedIn(false);
-    window.location.assign("/landing");
+    window.location.assign("/");
   }
 
   const register = async (values: z.infer<typeof registerFormSchema>) => {
