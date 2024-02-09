@@ -14,6 +14,7 @@ import InfoPage from "./routes/InfoPage";
 import Landing from "./routes/Landing";
 import Leaderboard from './routes/Leaderboard';
 import SocialDeduction from "./routes/major_cases/SocialDeduction";
+import MyTeamPage from './routes/MyTeamPage';
 import RegisterForm from './routes/Register';
 import TeamPage from './routes/TeamPage';
 
@@ -55,6 +56,10 @@ const router = createBrowserRouter([
   },
   {
     path: "/my-team",
+    element: <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<MyTeamPage />} />
+  },
+  {
+    path: "/team/:team_id",
     element: <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<TeamPage />} />
   },
   {
