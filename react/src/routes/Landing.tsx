@@ -1,13 +1,20 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import LandingInfo from "../components/landing/LandingInfo";
 import LandingSplash from "../components/landing/LandingSplash";
 
 export default function Landing() {
   const [visitedBefore, setVisitedBefore] = useState(false);
 
+  useEffect(() => {
+    const hasVisitedBefore = localStorage.getItem('visitedBefore');
+    if (hasVisitedBefore) {
+      setVisitedBefore(true);
+    }
+  }, []);
+
   const dismissAlert = () => {
     setVisitedBefore(true);
-    localStorage.setItem('visitedBefore', 'false');
+    localStorage.setItem('visitedBefore', 'true');
   };
 
   return (
