@@ -46,7 +46,7 @@ class TeamSerializer(serializers.ModelSerializer):
 class TeamBasicSerializer(serializers.ModelSerializer):
     class Meta:
         model = Team
-        fields = ['id', 'team_name', 'emoji_choice', 'color_choice']
+        fields = ['id', 'team_name', 'emoji_choice', 'color_choice', 'in_person', 'is_hidden']
 
 
 class PuzzleUnlockSerializer(serializers.ModelSerializer):

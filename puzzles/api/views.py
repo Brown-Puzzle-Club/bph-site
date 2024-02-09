@@ -67,7 +67,7 @@ def register_view(request):
 
     if serializer.is_valid():
         
-        logout(request._request)
+        # logout(request._request)
 
         user = User.objects.create_user(
             serializer.validated_data.get('team_id'),
