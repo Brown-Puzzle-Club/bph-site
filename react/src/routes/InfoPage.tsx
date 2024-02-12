@@ -476,7 +476,7 @@ export default function InfoPage() {
             />
             <LocationBox
               location_name="Brown Puzzle Club HQ"
-              location_addr="Salomon Center Room 103"
+              location_addr="Salomon Center Room 003"
               location_desc="Enter through the west side through the Main Green entrance, and descend the stairs."
               img_src={salomon}
               map_link="https://www.google.com/maps/place/Salomon+Center/@41.8265578,-71.4031996,18.51z/data=!4m14!1m7!3m6!1s0x89e4453cc2dcb3eb:0x3b5e63a94276b39c!2sSalomon+Center!8m2!3d41.8265309!4d-71.4024032!16s%2Fg%2F11bbrgkqyc!3m5!1s0x89e4453cc2dcb3eb:0x3b5e63a94276b39c!8m2!3d41.8265309!4d-71.4024032!16s%2Fg%2F11bbrgkqyc"
