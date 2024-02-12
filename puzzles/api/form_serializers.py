@@ -12,9 +12,9 @@ class UserRegistrationSerializer(serializers.Serializer):
     members = TeamMemberSerializer(many=True)
     in_person = serializers.BooleanField()
     num_brown_members = serializers.IntegerField(required=False)
-    phone_number = serializers.CharField(required=False)
+    phone_number = serializers.CharField(required=False, allow_blank=True)
     classroom_need = serializers.BooleanField(required=False)
-    where_to_find = serializers.CharField(required=False)
+    where_to_find = serializers.CharField(required=False, allow_blank=True)
     color_choice = serializers.CharField(required=False)
     emoji_choice = serializers.CharField(required=False)
 
@@ -32,9 +32,9 @@ class UserRegistrationSerializer(serializers.Serializer):
 class TeamUpdateSerializer(serializers.Serializer):
     in_person = serializers.BooleanField(required=False)
     num_brown_members = serializers.IntegerField(required=False)
-    phone_number = serializers.CharField(required=False)
+    phone_number = serializers.CharField(required=False, allow_blank=True)
     classroom_need = serializers.BooleanField(required=False)
-    where_to_find = serializers.CharField(required=False)
+    where_to_find = serializers.CharField(required=False, allow_blank=True)
     color_choice = serializers.CharField(required=False)
     emoji_choice = serializers.CharField(required=False)
     members = TeamMemberSerializer(many=True)
