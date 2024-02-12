@@ -117,6 +117,7 @@ export default function MyTeamPage() {
   const [valuesSet, setValuesSet] = useState(false);
   useEffect(() => {
     if (form && team && !valuesSet) {
+      console.log("team:", team)
       const emoji = team?.emoji_choice || "❓"
       const color = team?.color_choice || "#1e293ba1"
       form.setValue("emoji_choice", emoji);
@@ -281,11 +282,11 @@ export default function MyTeamPage() {
                     </DialogContent>
                   </Dialog>
                 </div>
-                <div className="members pt-6 flex justify-center items-center space-x-2">
+                <div className="members pt-6 flex flex-wrap justify-center items-center">
                   {members.map((member, index) => (
-                    <p id={index.toString()}>{member.name}
-                      {index < memberCount - 1 ? ',' : ''}
-                    </p>
+                    <span id={index.toString()} className="nowrap">{member.name} 
+                      {index < memberCount - 1 ? ', ' : ''}
+                    </span>
                   ))}
                 </div>
               </div>

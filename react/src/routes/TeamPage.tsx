@@ -52,10 +52,10 @@ export default function TeamPage() {
             <div className="members-info">
               <h1 className="text-center font-bold text-xl">{members?.length ?? 0} Member{members?.length !== 1 ? 's' : ''}</h1>
               <div className="justify-center items-center flex">
-                <div className="members pt-6 flex justify-center items-center space-x-2">
+                <div className="members pt-6 flex flex-wrap justify-center items-center">
                   {members?.map((member, index) => (
-                    <p id={index.toString()}>{member.name}
-                      {index < members?.length - 1 ? ',' : ''}
+                    <p id={index.toString()} className="">{member.name}
+                      {index < members?.length - 1 ? ', ' : ''}
                     </p>
                   ))}
                 </div>
