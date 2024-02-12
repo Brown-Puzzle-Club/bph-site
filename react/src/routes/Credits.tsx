@@ -36,13 +36,14 @@ export default function Credits () {
             <li><strong>Megan Carlson</strong> ('26)</li>
             <li><strong>Thomas Gordon</strong> ('26)</li>
             <li><strong>Bailey Merlino</strong> ('26)</li>
+            <li><strong>Phil Avilov</strong> (RISD '27)</li>
             <li><strong>Audrey Feigin</strong> ('27)</li>
             <li><strong>Erin Finn</strong> ('27)</li>
             <li><strong>Eliot Geer</strong> ('27)</li>
             <li><strong>Aren Guralp</strong> ('27)</li>
-            <li><strong>Alex Wang</strong> ('27)</li>
-            <li><strong>Thomas Mowen</strong></li> 
+            <li><strong>Alex Wang</strong> ('27)</li> 
             <li><strong>Alex DelFranco</strong></li>
+            <li><strong>Thomas Mowen</strong></li>
             <li><strong>Liam Oliva</strong></li>
           </ul>
         </div>
