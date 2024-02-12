@@ -19,3 +19,9 @@ jobs:
       - name: Pull from Git
         run: |
           ssh obloomfi@${{ secrets.REMOTE_SERVER }} -i ~/.ssh/id_rsa "./update_server"
+      - name: Purge cache
+        uses: jakejarvis/cloudflare-purge-action@master
+        env:
+          CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
+          CLOUDFLARE_KEY: ${{ secrets.CLOUDFLARE_KEY }}
+          PURGE_URLS: '["https://www.brownpuzzlehunt.com/static/react/index.js", "https://www.brownpuzzlehunt.com/static/react/index.css"]'
