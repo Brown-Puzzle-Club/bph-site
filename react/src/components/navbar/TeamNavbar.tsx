@@ -16,7 +16,7 @@ export default function TeamNavbar () {
           <TeamIcon className="w-7 h-7" color={team?.color_choice || '#000000'} emoji={team?.emoji_choice || '❓'} emoji_cn='text-md'/>
         </NavigationMenuTrigger>
         <NavigationMenuContent>
-          <ul className="grid w-[150px] gap-3 p-4 md:grid-cols-1">
+          <ul className="grid w-[300px] gap-3 p-4 md:grid-cols-1">
             <ListItem href={"/my-team"} className="truncate" title={team?.team_name} />
             <ListItem className='bg-gradient-to-b from-muted/80 to-muted cursor-pointer' onClick={() => { logout() }} title={"Logout"} />
           </ul>

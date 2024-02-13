@@ -2,6 +2,7 @@ import TeamIcon from "@/components/team/TeamIcon";
 import { useAuth } from "@/hooks/useAuth";
 import { useDjangoContext } from "@/hooks/useDjangoContext";
 import { Team, UserTeam } from "@/utils/django_types";
+import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { BeatLoader } from "react-spinners";
 
@@ -15,12 +16,19 @@ export default function Leaderboard () {
   const { team } = useAuth();
   const { FetchTeams } = useDjangoContext();
   const [teams, setTeams] = useState<Team[]>([]);
-  // TODO: set starting tab based on if your logged in team is in person or remote
-  const [curTab, setTab] = useState<LeaderboardTab>(LeaderboardTab.IN_PERSON);
+  const [curTab, setTab] = useState<LeaderboardTab>(() => {
+    const savedTab = Cookies.get("leaderboardTab");
+    return savedTab ? (savedTab as LeaderboardTab) : LeaderboardTab.IN_PERSON;
+  });
 
-  const getTab = (team: Team | UserTeam) => {
+  const getTeamTab = (team: Team | UserTeam) => {
    return team.in_person ? LeaderboardTab.IN_PERSON : LeaderboardTab.REMOTE;
   }
+
+  useEffect(() => {
+    // 1 hour expiration of cookie that keeps track of your current tab
+    Cookies.set("leaderboardTab", curTab, { expires: 1 / 24 });
+  }, [curTab]);
 
   useEffect(() => {
     FetchTeams().then((teams) => {
@@ -29,8 +37,9 @@ export default function Leaderboard () {
   },[FetchTeams]);
 
   useEffect(() => {
-    if (team) {
-      setTab(getTab(team));
+    const savedTab = Cookies.get("leaderboardTab");
+    if (team && !savedTab) {
+      setTab(getTeamTab(team));
     }
   }, [team]);
 

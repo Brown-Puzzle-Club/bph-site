@@ -116,7 +116,7 @@ export default function MyTeamPage() {
 
   const [valuesSet, setValuesSet] = useState(false);
   useEffect(() => {
-    if (form && team && !valuesSet) {
+    if (form && team && members && !valuesSet) {
       console.log("team:", team)
       const emoji = team?.emoji_choice || "❓"
       const color = team?.color_choice || "#1e293ba1"

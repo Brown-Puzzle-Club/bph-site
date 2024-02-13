@@ -165,6 +165,7 @@ export default function RegisterForm() {
             <section className="team-members border-b-4 border-slate-800 space-y-4 pb-8">
               <h1 className="text-center font-bold text-xl">Team Members</h1>
               <h4 className="text-center text-slate-400 text-sm"><b>We recommend teams to be around 7 to 10 people</b>. The maximum team size is 12 people, but there's no minimum team size — you can still have fun with a team of 2!</h4>
+              <h4 className="text-center text-slate-400 text-sm"><b>Team membership is modifiable at any time before the hunt</b></h4>
               <FormField control={form.control} name="members" render={() => (
                 <FormItem>
                   <div className="space-y-4">
@@ -199,6 +200,9 @@ export default function RegisterForm() {
           {/* On Campus Participation Section */}
           <section className="on-campus space-y-4 border-b-4 border-slate-800 pb-8">
             <h1 className="text-center font-bold text-xl">On Campus</h1>
+            <h4 className="text-center text-slate-400 text-sm"><b>Brown Puzzlehunt offers equal accessibility to remote and in-person solvers</b>, but will run separate leaderboards due to slight event differences:</h4>
+            <h4 className="text-center text-slate-400 text-sm"><b>In person teams</b> will have access to events, physical puzzles, in-person interactions, and runarounds. <b>Remote teams</b> will have alternative content for physical puzzles and will be exempt from events and runarounds.</h4>
+            <h4 className="text-center text-slate-400 text-sm"><b>Your teams' in-person / remote status is modifiable at any time before the hunt.</b></h4>
             <FormField control={form.control} name="in_person" render={({ field }) => (
               <div>
                 <div className="pb-5">
