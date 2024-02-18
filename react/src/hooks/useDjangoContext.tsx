@@ -1,13 +1,14 @@
-import { Team, TeamMember, User, UserTeam } from "@/utils/django_types";
+import { DjangoContext, Team, TeamMember, User, UserTeam } from "@/utils/django_types";
 import axios from "axios";
 import { createContext, useCallback, useContext } from "react";
 
-
+// prolly doesn't need to be a context... TODO: make hooks for these all with useQuery??
 type DjangoContextType = {
   FetchUser: () => Promise<User>;
   FetchTeam: () => Promise<UserTeam>;
   FetchTeamMembers : () => Promise<TeamMember[]>;
   FetchTeams : () => Promise<Team[]>;
+  FetchContext : () => Promise<DjangoContext>;
 }
 
 const DjangoContext = createContext<DjangoContextType>({
@@ -22,6 +23,9 @@ const DjangoContext = createContext<DjangoContextType>({
   },
   FetchTeams: async () => {
     return [] as Team[];
+  },
+  FetchContext: async () => {
+    return {} as DjangoContext;
   }
 });
 
@@ -48,8 +52,14 @@ export const DjangoContextProvider = ({ children }: { children: React.ReactNode 
     return data as Team[];
   },[]);
 
+  const FetchContext = useCallback(async () => {
+    const response = await fetch('/api/context');
+    const data = await response.json();
+    return data as DjangoContext;
+  },[]);
+
   return (
-    <DjangoContext.Provider value={{ FetchUser, FetchTeam, FetchTeamMembers, FetchTeams }}>
+    <DjangoContext.Provider value={{ FetchUser, FetchTeam, FetchTeamMembers, FetchTeams, FetchContext }}>
       {children}
     </DjangoContext.Provider>
   );

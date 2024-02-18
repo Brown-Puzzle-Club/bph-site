@@ -1,7 +1,3 @@
-
-
-import { context } from "../../../context";
-// console.log(context)
 import pfpDaisycula from "../../../assets/major_cases/social-deduction/pfp-daisycula.png";
 import pfpGorgon from "../../../assets/major_cases/social-deduction/pfp-gorgon.png";
 import pfpGreenribbon from "../../../assets/major_cases/social-deduction/pfp-greenribbon.png";
@@ -10,6 +6,7 @@ import pfpWolfguy from "../../../assets/major_cases/social-deduction/pfp-wolfguy
 
 import deadProfile from "../../../assets/major_cases/social-deduction/dead.png";
 
+import { DjangoContext } from "@/utils/django_types";
 import assasinProfile from "../../../assets/major_cases/social-deduction/assassin.png";
 import bodyguardProfile from "../../../assets/major_cases/social-deduction/bodyguard.png";
 import doctorProfile from "../../../assets/major_cases/social-deduction/doctor.png";
@@ -43,23 +40,22 @@ const NUM_TO_SLUG: { [key: number]: string } = {
   4: "sd-mc-5"
 }
 
-export function fetchMinorCaseCharacterName(n: number): string {
-  return titleCase(context?.team?.minor_case_solves?.["social-deduction"]?.[NUM_TO_SLUG[n]]?.["answer"] ?? MISS_TEXT)
+export function fetchMinorCaseCharacterName(context: DjangoContext | undefined ,n: number): string {
+  return titleCase(context?.team_context?.minor_case_solves?.["social-deduction"]?.[NUM_TO_SLUG[n]]?.submitted_answer ?? MISS_TEXT)
 }
 
-export function isMinorCaseCharacterSolved(n: number): boolean {
-  const solves = context?.team?.minor_case_solves;
+export function isMinorCaseCharacterSolved(context: DjangoContext | undefined, n: number): boolean {
+  const solves = context?.team_context?.minor_case_solves;
   return solves !== undefined && "social-deduction" in solves && NUM_TO_SLUG[n] in solves["social-deduction"]
 }
 
-function numberOfCasesSolves(): number {
-  const solves = context?.team?.minor_case_solves;
+export function numberOfCasesSolves(context: DjangoContext | undefined): number {
+  const solves = context?.team_context?.minor_case_solves;
   if (solves === undefined || !("social-deduction" in solves)) {
     return 0;
   }
   return Object.keys(solves["social-deduction"]).length;
 }
-export const NUM_CASES_SOLVED: number = numberOfCasesSolves();
 
 export enum InternalCharacter {
   NONE = "NONE",
@@ -75,7 +71,7 @@ export enum InternalCharacter {
   SLEEPY_GHOST = "SLEEPY_GHOST",
 }
 
-export const CHAR_NAME : { [key in InternalCharacter]: string } = {
+export const CHAR_NAME = (context: DjangoContext | undefined) : { [key in InternalCharacter]: string } => ({
   NONE: "",
   INVISIGUY: "Ghoulsby",
   DAISYCULA: "Miss Daisycula",
@@ -83,12 +79,12 @@ export const CHAR_NAME : { [key in InternalCharacter]: string } = {
   GREEN_RIBBON: "Mournful Wilson",
   WOLF_GUY: "Werewolfsheim",
   // THIS IS TO MAKE SURE THAT NOBODY CAN READ THE ANSWERS FROM THE SOURCE CODE
-  HEART_GHOST: fetchMinorCaseCharacterName(0),
-  NORMAL_GHOST: fetchMinorCaseCharacterName(1),
-  HAPPY_GHOST: fetchMinorCaseCharacterName(2),
-  ANXIOUS_GHOST: fetchMinorCaseCharacterName(3),
-  SLEEPY_GHOST: fetchMinorCaseCharacterName(4),
-}
+  HEART_GHOST: fetchMinorCaseCharacterName(context, 0),
+  NORMAL_GHOST: fetchMinorCaseCharacterName(context, 1),
+  HAPPY_GHOST: fetchMinorCaseCharacterName(context, 2),
+  ANXIOUS_GHOST: fetchMinorCaseCharacterName(context, 3),
+  SLEEPY_GHOST: fetchMinorCaseCharacterName(context, 4),
+})
 
 export enum Role {
   ASSASSIN = "Assassin",

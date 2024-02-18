@@ -13,13 +13,14 @@ import {
 import { cn } from "@/lib/utils";
 import LoginNavbar from "./LoginNavbar";
 
-import { context } from "@/context";
 import { useAuth } from "@/hooks/useAuth";
+import { useDjangoContext } from "@/hooks/useDjangoContext";
 import Countdown from "react-countdown";
 import { BeatLoader } from "react-spinners";
 import TeamNavbar from "./TeamNavbar";
 
 import bluenoir_logo from "@/assets/navbar_logo_head.png";
+import { DjangoContext } from "@/utils/django_types";
 import { useState } from "react";
 
 
@@ -130,6 +131,14 @@ const HuntLogo = () => {
 }
 
 const NavbarLeft = () => {
+  const { FetchContext } = useDjangoContext();
+  const [context, setContext] = React.useState<DjangoContext>();
+
+  React.useEffect(() => {
+    FetchContext().then((context) => {
+      setContext(context);
+    });
+  }, [FetchContext]);
 
   return (
     <div className="left flex justify-start w-1/3">
@@ -152,7 +161,7 @@ const NavbarLeft = () => {
                           The Hunt
                         </div>
                         <p className="text-sm leading-tight text-muted-foreground">
-                          {context?.hunt_has_started ? "The hunt has started! Good luck!" : <Countdown date={context?.start_time} renderer={hunt_start_timer} />}
+                          {context?.hunt_context.hunt_has_started ? "The hunt has started! Good luck!" : <Countdown date={context?.hunt_context.start_time} renderer={hunt_start_timer} />}
                         </p>
                       </a>
                     </NavigationMenuLink>
@@ -205,6 +214,7 @@ const NavbarRight = () => {
 }
  
 export default function Navbar({navbarColor}: {navbarColor: string}) {
+
   return (
     <div className={`navbar dark sticky top-0 z-40 w-full backdrop-blur-sm flex transition-colors duration-500 lg:z-50 lg:border-b lg:border-slate-900/10 dark:border-slate-50/[0.06] supports-backdrop-blur:bg-white/60 dark:bg-transparent`}
     style={{

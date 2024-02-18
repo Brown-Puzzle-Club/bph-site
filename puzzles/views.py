@@ -73,14 +73,11 @@ from puzzles.hunt_config import (
 )
 
 from puzzles.messaging import send_mail_wrapper, dispatch_victory_alert, show_victory_notification
-from puzzles.react_bridge import process_context
 from puzzles.shortcuts import dispatch_shortcut
 
 @require_GET
 def react_base(request, **kwargs):
-    return render(request, 'react_base.html', {
-        "context": json.dumps(process_context(request, render_puzzles(request)), default=str),
-    })
+    return render(request, 'react_base.html')
 
 @require_GET
 def team_locked_react(request, **kwargs):

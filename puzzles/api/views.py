@@ -1,4 +1,5 @@
 from rest_framework import permissions, viewsets, mixins
+from puzzles import models
 
 from puzzles.api.form_serializers import TeamUpdateSerializer, UserRegistrationSerializer
 from .serializers import *
@@ -47,7 +48,26 @@ class TeamMemberViewSet(viewsets.ModelViewSet):
         current_team = self.request.user.team
         queryset = TeamMember.objects.filter(team=current_team)
         return queryset
+    
 
+class ErrataViewSet(viewsets.ModelViewSet):
+    queryset = Erratum.objects.all()
+    serializer_class = ErratumSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return models.Erratum.get_visible_errata(self.request._request.context)
+
+
+@api_view(['GET'])
+def context_view(request: Request) -> Response:
+    serializer = ContextSerializer(data=request._request.context)
+
+    if serializer.is_valid():
+        validated_data = serializer.validated_data
+        return Response(validated_data)
+    else:
+        return Response(serializer.errors, status=400)
 
 @api_view(['POST'])
 def login_view(request: Request) -> Response:
@@ -75,8 +95,6 @@ def register_view(request):
     serializer = UserRegistrationSerializer(data=request.data)
 
     if serializer.is_valid():
-        
-        # logout(request._request)
 
         user = User.objects.create_user(
             serializer.validated_data.get('team_id'),
