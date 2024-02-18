@@ -28,7 +28,7 @@ export default function SocialDeduction() {
 
   useEffect(() => {
     FetchContext().then((context) => {
-      console.log(context);
+      // console.log(context);
       setContext(context);
     })},[FetchContext]);
 

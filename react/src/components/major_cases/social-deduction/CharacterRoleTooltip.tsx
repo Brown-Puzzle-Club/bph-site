@@ -1,7 +1,7 @@
 import { CharacterRoleAssetMap, CharacterRoleColorMap, InternalCharacter, Role } from "../../../utils/major_cases/social-deduction/constants";
 
 
-export default function CharacterRoleTooltip({char_role, scale, extraClasses, CHAR_NAMES}: {char_role: InternalCharacter | Role, scale?: boolean, extraClasses?: string, CHAR_NAMES: { [key in InternalCharacter]: string }}) {
+export default function CharacterRoleTooltip({char_role, scale, extraClasses, CHAR_NAMES}: {char_role: InternalCharacter | Role, scale?: boolean, extraClasses?: string, CHAR_NAMES?: { [key in InternalCharacter]: string }}) {
   const tooltipColor = CharacterRoleColorMap[char_role];
   const tooltipAsset = CharacterRoleAssetMap[char_role];
   const name = (char_role in InternalCharacter) ? CHAR_NAMES?.[char_role as InternalCharacter] ?? char_role : char_role;
