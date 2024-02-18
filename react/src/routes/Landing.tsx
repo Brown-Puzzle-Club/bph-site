@@ -7,7 +7,6 @@ const isMobileDevice = /iphone|ipad|ipod|android|blackberry|windows phone|iemobi
 
 export default function Landing() {
   const [visitedBefore, setVisitedBefore] = useState(false);
-  
 
   useEffect(() => {
     const hasVisitedBefore = localStorage.getItem('visitedBefore');

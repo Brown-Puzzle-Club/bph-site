@@ -225,6 +225,21 @@ class Context:
             if puzzle.round.slug == "events":
                 return True
         return False
+    
+    # BPH 2024 context
+
+    def solves_by_case(self):
+        return self.team.solves_by_case if self.team else {}
+    
+    def minor_case_solves(self):
+        return self.team.minor_case_solves if self.team else {}
+    
+    def minor_case_incoming(self):
+        return self.team.db_minor_case_incoming if self.team else {}
+    
+    def minor_case_active(self):
+        return self.team.db_minor_case_active if self.team else {}
+    
 
     # The purpose of this logic is to keep archive links current. For example,
     # https://2019.galacticpuzzlehunt.com/archive is a page that exists but only

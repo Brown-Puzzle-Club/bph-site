@@ -562,11 +562,7 @@ class Team(models.Model):
             if submit.puzzle.round.slug not in out[submit.puzzle.round.major_case.slug]:
                 out[submit.puzzle.round.major_case.slug][submit.puzzle.round.slug] = {}
             if submit.puzzle.slug not in out[submit.puzzle.round.major_case.slug][submit.puzzle.round.slug]:
-                out[submit.puzzle.round.major_case.slug][submit.puzzle.round.slug][submit.puzzle.slug] = {
-                    'puzzle': submit.puzzle.name,
-                    'solve_time': submit.submitted_datetime,
-                    'answer': submit.submitted_answer,
-                }
+                out[submit.puzzle.round.major_case.slug][submit.puzzle.round.slug][submit.puzzle.slug] = submit
         return out
     
     def minor_case_solves(self):
@@ -577,26 +573,22 @@ class Team(models.Model):
             if submit.puzzle.round.major_case.slug not in out:
                 out[submit.puzzle.round.major_case.slug] = {}
             if submit.puzzle.slug == submit.puzzle.round.meta.slug:
-                out[submit.puzzle.round.major_case.slug][submit.puzzle.round.slug] = {
-                    'minor_case': submit.puzzle.round.name,
-                    'solve_time': submit.submitted_datetime,
-                    'answer': submit.submitted_answer,
-                }
+                out[submit.puzzle.round.major_case.slug][submit.puzzle.round.slug] = submit
         return out
     
     def db_minor_case_incoming(self):
-        return {
-            incoming.minor_case_round_id: incoming
+        return [
+            incoming
             for incoming in self.minorcaseincoming_set
             .select_related('minor_case_round')
-        }
+        ]
     
     def db_minor_case_active(self):
-        return {
-            active.minor_case_round_id: active
+        return [
+            active
             for active in self.minorcaseactive_set
             .select_related('minor_case_round')
-        }
+        ]
 
     def db_unlocks(self):
         return {

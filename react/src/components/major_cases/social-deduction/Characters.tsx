@@ -26,7 +26,7 @@ import InternalCharacterRoleTooltip from './CharacterRoleTooltip'
 
 const GHOST_HOVER = 'hover:drop-shadow-[0_15px_15px_rgba(255,255,255,0.2)]'
 
-export default function InternalCharacters () {
+export default function InternalCharacters ({CHAR_NAMES}: {CHAR_NAMES: { [key in InternalCharacter]: string }}) {
   const [selectedInternalCharacter, setSelectedInternalCharacter] = useState<InternalCharacter>(InternalCharacter.ANXIOUS_GHOST)
 
   useEffect(() => {
@@ -154,7 +154,7 @@ export default function InternalCharacters () {
               zIndex: 4,
             }}
           >
-            <InternalCharacterRoleTooltip char_role={selectedInternalCharacter} scale={true} />
+            <InternalCharacterRoleTooltip char_role={selectedInternalCharacter} scale={true} CHAR_NAMES={CHAR_NAMES}/>
           </div>
         
 
