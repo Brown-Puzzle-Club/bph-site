@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 // import MinorCase from '../components/MinorCase';
 import MinorCaseModal from "@/components/MinorCaseModal";
 // import { MinorCaseStatus, context } from "../context";
@@ -6,12 +6,12 @@ import { getCookie } from "../utils/api";
 
 // function renderActiveCases(casesRecord: MinorCaseStatus | undefined, openModal: (caseName: string) => void) : JSX.Element[] {
 //   return casesRecord? Object.entries(casesRecord).map(([minorCase, values]) => (
-//     // <MinorCase 
-//     //   key={minorCase} 
-//     //   name={values.name} 
-//     //   description={values.description} 
-//     //   major_case_name={values.major_case_name} 
-//     //   major_case_slug={values.major_case_slug} 
+//     // <MinorCase
+//     //   key={minorCase}
+//     //   name={values.name}
+//     //   description={values.description}
+//     //   major_case_name={values.major_case_name}
+//     //   major_case_slug={values.major_case_slug}
 //     //   bgColor="pink-100"
 //     //   onClick={() => {openModal(values.name)}}
 //     // />
@@ -22,30 +22,33 @@ function EventPage() {
   // const [newCases, setNewCases] = useState<JSX.Element[]>([]);
   // const [, setDoneCases] = useState<JSX.Element[]>([]);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [selectedCase, setSelectedCase] = useState<string>("");
   // const [selectedCase, setSelectedCase] = useState<string>('');
-  const [output, setOutput] = useState<string>('');
+  const [output, setOutput] = useState<string>("");
 
   const submit = async () => {
+    const csrftoken = getCookie("csrftoken");
 
-    const csrftoken = getCookie('csrftoken');
-    
     try {
       const result = await fetch("/move_minor_case/admin/sd-mc-1/", {
-        method: 'POST',
+        method: "POST",
         body: JSON.stringify({
           // ...
         }),
-        headers: { "X-CSRFToken": csrftoken || '', 'Content-Type': 'application/json' },
+        headers: {
+          "X-CSRFToken": csrftoken || "",
+          "Content-Type": "application/json",
+        },
       });
 
-      if (!result.ok) { 
+      if (!result.ok) {
         // HTTP response code was not 2xx. Maybe introspect more...
         setOutput(`Error: ${result.status} ${result.statusText}`);
       } else {
         // console.log('hi')
         const res = await result.json();
-        console.log(res)
-        setOutput(res['success']);
+        console.log(res);
+        setOutput(res["success"]);
       }
     } catch (e) {
       // This error handling will be very poor.
@@ -53,17 +56,17 @@ function EventPage() {
     }
   };
 
-  // const openModal = (caseName: string) => {
-  //   setSelectedCase(caseName);
-  //   setModalOpen(true);
-  // };
+  const openModal = (caseName: string) => {
+    setSelectedCase(caseName);
+    setModalOpen(true);
+  };
 
   const closeModal = () => {
     setModalOpen(false);
   };
 
-  const addBox = (side: 'left' | 'right') => {
-    return side
+  const addBox = (side: "left" | "right") => {
+    return side;
     // TODO: fix
     // if (side === 'left') {
     //   // Clear the middle column when clicking on the left box
@@ -94,12 +97,14 @@ function EventPage() {
         {/* Top row content */}
         Top Row
       </div>
-
       {/* Middle rows */}
       <div className="flex-1 flex">
         <div className="w-1/4 bg-gray-300 flex flex-col justify-center items-center">
           {/* Left column content */}
-          <div className="bg-blue-200 p-4 w-3/4 cursor-pointer h-1/2" onClick={() => addBox('left')}>
+          <div
+            className="bg-blue-200 p-4 w-3/4 cursor-pointer h-1/2"
+            onClick={() => addBox("left")}
+          >
             {/* Box content */}
             Left Box
           </div>
@@ -113,13 +118,15 @@ function EventPage() {
         </div>
         <div className="w-1/4 bg-gray-300 flex flex-col justify-center items-center">
           {/* Right column content */}
-          <div className="bg-green-200 p-4 w-3/4 cursor-pointer h-1/2" onClick={() => addBox('right')}>
+          <div
+            className="bg-green-200 p-4 w-3/4 cursor-pointer h-1/2"
+            onClick={() => addBox("right")}
+          >
             {/* Box content */}
-            Right Box
+            <p onClick={() => openModal("TODO: fix")}>Right Box</p>
           </div>
         </div>
       </div>
-
       {/* Cases row */}
       <div className="bg-blue-200 p-4 flex justify-center items-center">
         {/* Render a box for each active case */}
@@ -127,16 +134,18 @@ function EventPage() {
           {/* {context? renderActiveCases(context.team?.minor_case_active, openModal) : null} */}
         </div>
       </div>
-
       {/* Bottom row */}
       <div className="bg-blue-200 p-4 flex flex-col justify-center items-center">
         {/* Yellow bottom box */}
       </div>
-
       {/* Modal */}
-      <MinorCaseModal isOpen={modalOpen} closeModal={closeModal} caseName={"TODO: fix"} />
+      <MinorCaseModal
+        isOpen={modalOpen}
+        closeModal={closeModal}
+        caseId={2} // TODO: actual case given puzzle
+      />
     </div>
   );
 }
 
-export default EventPage
+export default EventPage;
