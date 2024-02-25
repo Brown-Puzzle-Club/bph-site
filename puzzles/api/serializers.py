@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from puzzles.models import AnswerSubmission, Erratum, ExtraGuessGrant, Hint, MajorCase, MinorCaseActive, MinorCaseIncoming, Puzzle, PuzzleMessage, PuzzleUnlock, RatingField, Round, Survey, Team, TeamMember
+from puzzles.models import AnswerSubmission, Erratum, ExtraGuessGrant, Hint, MajorCase, MinorCaseActive, MinorCaseIncoming, Puzzle, PuzzleMessage, PuzzleUnlock, RatingField, Round, Survey, Team, TeamMember, MinorCaseCompleted
 from rest_framework import serializers
 
 
@@ -75,6 +75,13 @@ class MinorCaseActiveSerializer(serializers.ModelSerializer):
         fields = ['id', 'active_datetime', 'minor_case_round']
 
 
+class MinorCaseCompletedSerializer(serializers.ModelSerializer):
+    minor_case_round = RoundSerializer()
+    class Meta:
+        model = MinorCaseCompleted
+        fields = ['id', 'completed_datetime', 'minor_case_round']
+
+
 class AnswerSubmissionSerializer(serializers.ModelSerializer):
     class Meta:
         model = AnswerSubmission
@@ -133,6 +140,7 @@ class TeamPuzzleContextSerializer(serializers.Serializer):
     minor_case_solves = serializers.DictField(child=serializers.DictField(child=AnswerSubmissionSerializer()))
     minor_case_incoming = MinorCaseIncomingSerializer(many=True)
     minor_case_active = MinorCaseActiveSerializer(many=True)
+    minor_case_completed = MinorCaseCompletedSerializer(many=True)
     unlocks = serializers.DictField(child=serializers.DateTimeField())
 
 

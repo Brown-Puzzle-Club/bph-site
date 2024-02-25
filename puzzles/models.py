@@ -591,11 +591,11 @@ class Team(models.Model):
         ]
 
     def db_minor_case_completed(self):
-        return {
-            completed.minor_case_round_id: completed
+        return [
+            completed
             for completed in self.minorcasecompleted_set
             .select_related('minor_case_round')
-        }
+        ]
 
     def db_unlocks(self):
         return {

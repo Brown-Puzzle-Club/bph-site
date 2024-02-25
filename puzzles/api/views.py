@@ -1,3 +1,4 @@
+from psycopg2 import IntegrityError
 from rest_framework import permissions, viewsets, mixins
 from puzzles import models
 
@@ -58,6 +59,14 @@ class ErrataViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return models.Erratum.get_visible_errata(self.request._request.context)
 
+
+class MinorCaseActiveViewSet(viewsets.ModelViewSet):
+    queryset = MinorCaseActive.objects.all()
+    serializer_class = MinorCaseActiveSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return MinorCaseActive.objects.filter(team=self.request._request.context.team)
 
 @api_view(['GET'])
 def context_view(request: Request) -> Response:
@@ -161,6 +170,33 @@ def update_team(request: Request) -> Response:
         return Response(serializer.data)
     else:
         return Response(serializer.errors, status=400)
+    
+@api_view(['POST'])
+def move_minor_case(request: Request, round_id):
+    "move minor case state"
+    # print("attempted to move minor case")
+    try:
+        # print("team", request._request.context.team)
+        # print("round_id", round_id)
+        incoming_case = MinorCaseActive.objects.get(team=request._request.context.team, minor_case_round__id=round_id)
+        # print(incoming_case)
+        # for case in incoming_case:
+        #     print(case.minor_case_round.id)
+    except MinorCaseActive.DoesNotExist:
+        return Response({'error': 'MinorCaseIncoming not found'}, status=404)
+
+    try:
+        active_case = models.MinorCaseCompleted.objects.create(
+            team=incoming_case.team,
+            minor_case_round=incoming_case.minor_case_round,
+            completed_datetime=incoming_case.active_datetime,
+        )
+        active_case.save()
+    except:
+        # Extract the error message from the exception
+        return Response({'error': 'MinorCase already completed'}, status=400)
+
+    return Response({'success': 'Move operation successful'}, status=200)
     
 
 @api_view(['GET'])
