@@ -1,14 +1,12 @@
-import useSocket from "@/hooks/useSocket";
+import { PresenceInfo } from "@/hooks/useSocket";
 import Loader from "@/components/Loader";
 import { CircleUserRound } from "lucide-react";
 
 interface PresenceCounterProps {
-  path: string;
+  presenceInfo: PresenceInfo | null;
 }
 
-const PresenceCounter = ({ path }: PresenceCounterProps) => {
-  const { presenceInfo } = useSocket(path);
-
+const PresenceCounter = ({ presenceInfo }: PresenceCounterProps) => {
   return (
     <div className="flex w-fit items-center gap-2 rounded-xl border border-red-500 p-2">
       {presenceInfo ? (

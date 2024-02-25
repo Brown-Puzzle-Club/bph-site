@@ -4,6 +4,7 @@ import collections
 import json
 import logging
 import requests
+import datetime
 import traceback
 
 from asgiref.sync import async_to_sync
@@ -379,10 +380,29 @@ class VotingConsumer(WebsocketConsumer):
     @touch_presence
     def receive(self, text_data):
         client_room = Room.objects.get(channel_name=self.get_room())
-        self.send(text_data=f"hello! you said: {text_data} also, there are {client_room.get_anonymous_count()} people connected to your room :o")
+        data = json.loads(text_data)
+        print(data)
+
+        if data['type'] == 'vote':
+            data = data['data']
+            if data['oldVote'] is not None:
+                pass
+
+            if data['newVote'] is not None:
+                pass
+
+            response = {
+                "type": 'vote',
+                "data": {
+                    "vote_counts": [0 for _ in range(data["numOptions"])],
+                    "expiration_time": datetime.datetime.now().isoformat()
+                }
+            }
+
+            self.send(json.dumps(response));
+
 
     def forward_message(self, event):
-        print("forwarding a message")
         self.send(text_data=event['data'])
 
 class HintsConsumer(AdminWebsocketConsumer):
