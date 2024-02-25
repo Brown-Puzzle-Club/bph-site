@@ -1,9 +1,14 @@
+
 {% block content %}
+  <head>
+    <title>Brown Puzzlehunt 2024</title>
+    <link rel="icon" type="image/x-icon" href="/static/images/blueno_when_3.ico">
+  </head>
   <script>
-    var djangoContext = '{{ context|escapejs }}';
+    window.CSRF_TOKEN = "{{ csrf_token }}";
   </script>
   <script type="module" crossorigin src="/static/react/index.js"></script>
   <link rel="stylesheet" crossorigin href="/static/react/index.css">
-  <div id="root"></div>  <!-- This is where your React app will be mounted -->
+  <div id="root" style="background-color: #222b50;"></div>  <!-- This is where your React app will be mounted -->
   {% load static %}
-{% endblock %} 
+{% endblock %}  

@@ -5,7 +5,7 @@ import { InternalCharacter, Role } from '../../../utils/major_cases/social-deduc
 import CharacterRoleTooltip from './CharacterRoleTooltip';
 import { getCookie } from '../../../utils/api';
 
-export default function Verdict() {
+export default function Verdict({CHAR_NAMES} : {CHAR_NAMES : {  [key in InternalCharacter]: string }}) {
   const [output, setOutput] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [assignments, setAssignments] = useState({});
@@ -85,7 +85,7 @@ export default function Verdict() {
     return (
       (assigned_character && !assigned) ? <></> :
       <div ref={roleRef} className="draggable-role inline-flex cursor-grab">
-        <CharacterRoleTooltip char_role={role} extraClasses={assigned ? 'border-2 border-[#b8a38738]' : ''}/>
+        <CharacterRoleTooltip char_role={role} extraClasses={assigned ? 'border-2 border-[#b8a38738]' : ''} CHAR_NAMES={CHAR_NAMES}/>
       </div>
     );
   };
@@ -133,7 +133,7 @@ export default function Verdict() {
             if (character === InternalCharacter.NONE) return <div key={"verdict-" + i}></div>;
             return (
               <div className={"text-xl py-1 flex items-center space-x-1 character " + character} key={"verdict-" + i}>
-                <CharacterRoleTooltip char_role={character}/>
+                <CharacterRoleTooltip char_role={character} CHAR_NAMES={CHAR_NAMES}/>
                 <p>was the</p>
                 <RoleDropTarget character={character}/>
                 <br/>

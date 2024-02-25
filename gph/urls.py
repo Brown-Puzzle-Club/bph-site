@@ -26,6 +26,7 @@ from django.views.decorators.cache import cache_page
 from puzzles import puzzlehandlers
 from puzzles import views
 
+
 class QuotedStringConverter:
     regex = '[^/]+'
 
@@ -35,44 +36,49 @@ class QuotedStringConverter:
     def to_url(self, value):
         return quote_plus(value, safe='')
 
+
 register_converter(QuotedStringConverter, 'quotedstr')
 
 urlpatterns = [
     re_path(r'^admin/', admin.site.urls),
     re_path(r'^impersonate/', include('impersonate.urls')),
 
-    path('', views.index, name='index'),
+    # path('', views.index, name='index'),
 
-    path('rules', views.rules, name='rules'),
-    path('on-campus', views.on_campus, name='on_campus'),
-    path('contact-hq', views.contact_hq, name='contact-hq'),
-    path('archive', views.archive, name='archive'),
-    path('register', views.register, name='register'),
-    path('club', views.club, name='club' ),
-    path('credits', views.credits, name='credits' ),
-    
+    # path('rules', views.rules, name='rules'),
+    # path('on-campus', views.on_campus, name='on_campus'),
+    # path('contact-hq', views.contact_hq, name='contact-hq'),
+    # path('archive', views.archive, name='archive'),
+    # path('register', views.register, name='register'),
+    # path('club', views.club, name='club'),
+    # path('credits', views.credits, name='credits'),
 
-    path('login',
-        auth_views.LoginView.as_view(template_name='login.html'),
-        name='login'),
+
+    # path('login',
+    #      auth_views.LoginView.as_view(template_name='login.html'),
+    #      name='login'),
     path('logout', auth_views.LogoutView.as_view(), name='logout'),
-    path('password-change', views.password_change, name='password_change'),
-    path('password-change-done',
-        auth_views.PasswordChangeDoneView.as_view(template_name='password_change_done.html'),
-        name='password_change_done'),
-    path('password-reset', views.password_reset, name='password_reset'),
-    path('password-reset-done',
-        auth_views.PasswordResetDoneView.as_view(template_name='password_reset_done.html'),
-        name='password_reset_done'),
-    re_path(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,32})/$',
-        auth_views.PasswordResetConfirmView.as_view(template_name='password_reset_confirm.html'),
-        name='password_reset_confirm'),
-    path('reset/done',
-        auth_views.PasswordResetCompleteView.as_view(template_name='password_change_done.html'),
-        name='password_reset_complete'),
+    # path('password-change', views.password_change, name='password_change'),
+    # path('password-change-done',
+    #      auth_views.PasswordChangeDoneView.as_view(
+    #          template_name='password_change_done.html'),
+    #      name='password_change_done'),
+    # path('password-reset', views.password_reset, name='password_reset'),
+    # path('password-reset-done',
+    #      auth_views.PasswordResetDoneView.as_view(
+    #          template_name='password_reset_done.html'),
+    #      name='password_reset_done'),
+    # re_path(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,32})/$',
+    #         auth_views.PasswordResetConfirmView.as_view(
+    #             template_name='password_reset_confirm.html'),
+    #         name='password_reset_confirm'),
+    # path('reset/done',
+    #      auth_views.PasswordResetCompleteView.as_view(
+    #          template_name='password_change_done.html'),
+    #      name='password_reset_complete'),
 
     path('teams', views.teams, name='teams'),
-    path('team/<quotedstr:team_name>', views.team, name='team'),
+    # path('team/<quotedstr:team_name>', views.team, name='team'),
     path('teams/unhidden', views.teams_unhidden, name='teams-unhidden'),
     path('edit-team', views.edit_team, name='edit-team'),
 
@@ -82,7 +88,8 @@ urlpatterns = [
     path('puzzle/<slug:slug>', views.puzzle, name='puzzle'),
     path('solve/<slug:slug>', views.solve, name='solve'),
     path('free-answer/<slug:slug>', views.free_answer, name='free-answer'),
-    path('post-hunt-solve/<slug:slug>', views.post_hunt_solve, name='post-hunt-solve'),
+    path('post-hunt-solve/<slug:slug>',
+         views.post_hunt_solve, name='post-hunt-solve'),
     path('survey/<slug:slug>', views.survey, name='survey'),
     path('hints', views.hint_list, name='hint-list'),
     path('hints/<slug:slug>', views.hints, name='hints'),
@@ -92,25 +99,21 @@ urlpatterns = [
     path('solution/<slug:slug>', views.solution, name='solution'),
     path('solution/<path:path>', views.solution_static, name='solution-static'),
 
-    path('puzzle/interactive-demo/submit',
-        puzzlehandlers.interactive_demo_submit,
-        name='interactive_demo_submit'),
-    path('puzzle/space-piracy/submit',
-         puzzlehandlers.space_piracy_submit,
-         name='space_piracy_submit'),
-    path('puzzle/reptiles/submit',
-         puzzlehandlers.reptiles_submit,
-         name='reptiles_submit'),
-    path('puzzle/tic-tac-toe/submit',
-         puzzlehandlers.tic_tac_toe_submit,
-         name='tic_tac_toe_submit'),
-    path('social-deduction/submit',
-         puzzlehandlers.soc_ded_confirm_submit,
-         name='social_deduction_submit'),
-    
-    path('move_minor_case/<str:team_id>/<str:round_id>/',
-         puzzlehandlers.move_minor_case_submit,
-         name='move_minor_case_submit'),
+    # path('puzzle/interactive-demo/submit',
+    #      puzzlehandlers.interactive_demo_submit,
+    #      name='interactive_demo_submit'),
+    # path('puzzle/space-piracy/submit',
+    #      puzzlehandlers.space_piracy_submit,
+    #      name='space_piracy_submit'),
+    # path('puzzle/reptiles/submit',
+    #      puzzlehandlers.reptiles_submit,
+    #      name='reptiles_submit'),
+    # path('puzzle/tic-tac-toe/submit',
+    #      puzzlehandlers.tic_tac_toe_submit,
+    #      name='tic_tac_toe_submit'),
+    # path('social-deduction/submit',
+    #      puzzlehandlers.soc_ded_confirm_submit,
+    #      name='social_deduction_submit'),
 
     path('story', views.story, name='story'),
     path('victory', views.victory, name='victory'),
@@ -129,10 +132,23 @@ urlpatterns = [
     path('robots.txt', views.robots),
     # see https://docs.djangoproject.com/en/4.0/topics/i18n/translation/#note-on-performance
     path('jsi18n/', cache_page(86400, key_prefix='js18n-V1')
-        (JavaScriptCatalog.as_view()), name='javascript-catalog'),
+         (JavaScriptCatalog.as_view()), name='javascript-catalog'),
 
-    path('react', views.prerelease_locked_react, name='react'),
+    # path('react', views.prerelease_locked_react, name='react'),
     path('social-deduction', views.prerelease_locked_react, name='social-deduction'),
-    path('eventpage', views.prerelease_locked_react, name='eventpage')
+    path('eventpage', views.prerelease_locked_react, name='eventpage'),
+    path('', views.react_base, name='landing'),
+    path('info', views.react_base, name='info'),
+    
+    path('credits', views.react_base, name='credits'),
+    path('club', views.react_base, name='credits'),
+    path('contact', views.react_base, name='contact'),
+    path('leaderboard', views.react_base, name='leaderboard'),
+    path('archive', views.react_base, name='archive'),
+    path('register', views.react_base, name='register'),
+    
+    path('my-team', views.team_locked_react, name='my-team'),
+    path('team/<quotedstr:team_name>', views.react_base, name='team'),
+
+    path('api/', include('puzzles.api.urls')),
 ]
-  

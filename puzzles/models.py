@@ -237,21 +237,21 @@ class Team(models.Model):
     )
 
     # LOGISTICS DATA (BPH ADD)
-    brown_members = models.BooleanField(default=False, verbose_name=_('Any Brown community members on the team?'), help_text=_('(Undergraduates, Graduates, Faculty, or Alumni)'))
-    brown_affiliation_desc = models.CharField(default="",max_length=200,verbose_name=_('For each member, please describe their affiliation to Brown/RISD (if applicable)'))
-    in_person_sat = models.IntegerField(default=0, verbose_name=_('number person on Saturday, April 15th'))
-    in_person_sun = models.IntegerField(default=0, verbose_name=_('number person on Sunday, April 16th?'))
+    in_person = models.BooleanField(default=False, verbose_name=_('In person team?'))
+    brown_team = models.BooleanField(default=False, verbose_name=_('Any Brown community members on the team?'), help_text=_('(Undergraduates, Graduates, Faculty, or Alumni)'))
+    num_brown_members = models.IntegerField(default=0, verbose_name=_('Number of Brown members'),)
     classroom_need = models.BooleanField(default=False,verbose_name=_('Do you want to request a classroom to hunt in?'),help_text=_('Our availability will be limited, so please do not request one if you can make alternate plans.'))
-    location = models.CharField(default=_('NO LOCATION'), max_length=200, verbose_name=_('Location during hunt'), help_text=_('(e.g: Hegeman Common Room, Barus and Holley Room ###, Zoom, Discord, etc.)'))
+    where_to_find = models.CharField(default=_('NO LOCATION'), max_length=200, verbose_name=_('Location during hunt'), help_text=_('(e.g: Hegeman Common Room, Barus and Holley Room ###, Zoom, Discord, etc.)'))
     phone_number = models.CharField(default=_('-1'), max_length=200, verbose_name=_('Phone number'))
 
-    merge_out = models.BooleanField(verbose_name=_('Is the team interested in joining up with a larger team for the hunt.'), default=False)
-    merge_out_preferences = models.CharField(default="", max_length=200, verbose_name=_('Merge out with larger team preferences'), help_text=_('(e.g. size, age-range, in-person vs remote, etc.)'))
-    merge_in = models.BooleanField(verbose_name=_('Is the team interested in taking on lone-solvers.'), default=False)
-    merge_in_preferences = models.CharField(default="", max_length=200, verbose_name=_('Lone solver merge in preferences'), help_text=_('(e.g. size, age-range, in-person vs remote, etc.). DO NOT GIVE A TEAM MORE THAN THE NUMBER OF MEMBERS THEY ARE ASKING FOR!'))
+    # misc bph2024 adds:
+    color_choice = models.CharField(default=_('#ffffff'), max_length=200, verbose_name=_('Color choice'))
+    emoji_choice = models.CharField(default=_('❓'), max_length=200, verbose_name=_('Emoji choice'))
 
-    def in_person(self):
-        return self.in_person_sat + self.in_person_sun > 0
+    # merge_out = models.BooleanField(verbose_name=_('Is the team interested in joining up with a larger team for the hunt.'), default=False)
+    # merge_out_preferences = models.CharField(default="", max_length=200, verbose_name=_('Merge out with larger team preferences'), help_text=_('(e.g. size, age-range, in-person vs remote, etc.)'))
+    # merge_in = models.BooleanField(verbose_name=_('Is the team interested in taking on lone-solvers.'), default=False)
+    # merge_in_preferences = models.CharField(default="", max_length=200, verbose_name=_('Lone solver merge in preferences'), help_text=_('(e.g. size, age-range, in-person vs remote, etc.). DO NOT GIVE A TEAM MORE THAN THE NUMBER OF MEMBERS THEY ARE ASKING FOR!'))
     
     # def meta_solve_count(self):
     #     solve_cnt = 0
@@ -562,11 +562,7 @@ class Team(models.Model):
             if submit.puzzle.round.slug not in out[submit.puzzle.round.major_case.slug]:
                 out[submit.puzzle.round.major_case.slug][submit.puzzle.round.slug] = {}
             if submit.puzzle.slug not in out[submit.puzzle.round.major_case.slug][submit.puzzle.round.slug]:
-                out[submit.puzzle.round.major_case.slug][submit.puzzle.round.slug][submit.puzzle.slug] = {
-                    'puzzle': submit.puzzle.name,
-                    'solve_time': submit.submitted_datetime,
-                    'answer': submit.submitted_answer,
-                }
+                out[submit.puzzle.round.major_case.slug][submit.puzzle.round.slug][submit.puzzle.slug] = submit
         return out
     
     def minor_case_solves(self):
@@ -577,26 +573,22 @@ class Team(models.Model):
             if submit.puzzle.round.major_case.slug not in out:
                 out[submit.puzzle.round.major_case.slug] = {}
             if submit.puzzle.slug == submit.puzzle.round.meta.slug:
-                out[submit.puzzle.round.major_case.slug][submit.puzzle.round.slug] = {
-                    'minor_case': submit.puzzle.round.name,
-                    'solve_time': submit.submitted_datetime,
-                    'answer': submit.submitted_answer,
-                }
+                out[submit.puzzle.round.major_case.slug][submit.puzzle.round.slug] = submit
         return out
     
     def db_minor_case_incoming(self):
-        return {
-            incoming.minor_case_round_id: incoming
+        return [
+            incoming
             for incoming in self.minorcaseincoming_set
             .select_related('minor_case_round')
-        }
+        ]
     
     def db_minor_case_active(self):
-        return {
-            active.minor_case_round_id: active
+        return [
+            active
             for active in self.minorcaseactive_set
             .select_related('minor_case_round')
-        }
+        ]
 
     def db_minor_case_completed(self):
         return {

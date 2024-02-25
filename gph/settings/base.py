@@ -10,11 +10,13 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.10/ref/settings/
 '''
 
-import os, sys
+import os
+import sys
 import dj_database_url
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+BASE_DIR = os.path.dirname(os.path.dirname(
+    os.path.dirname(os.path.abspath(__file__))))
 
 # Ensure logs directory exists.
 LOGS_DIR = os.path.join(BASE_DIR, 'logs')
@@ -47,6 +49,8 @@ INSTALLED_APPS = [
     'mathfilters',
     'channels',
     'puzzles',
+    'rest_framework',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -117,20 +121,20 @@ ASGI_APPLICATION = 'gph.asgi.application'
 
 # Apparently conn_max_age=0 is better for Heroku:
 # https://stackoverflow.com/questions/48644208/django-postgresql-heroku-operational-error-fatal-too-many-connections-for-r
-#DATABASES = {
+# DATABASES = {
 #    'default': dj_database_url.config(conn_max_age=0, ssl_require=True),
-#}
+# }
 
 DATABASES = {
-     'default': {
-         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-         'NAME': 'bphdb',
-         'USER': 'bph', 
-         'PASSWORD': 'puzzle_hunting_is_so_cool',
-         'HOST': 'localhost', # '127.0.0.1' probably works also
-         'PORT': '5432',
-     }
- }
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'bphdb',
+        'USER': 'bph',
+        'PASSWORD': 'puzzle_hunting_is_so_cool',
+        'HOST': 'localhost',  # '127.0.0.1' probably works also
+        'PORT': '5432',
+    }
+}
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
@@ -145,9 +149,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
 
-LANGUAGE_CODE = 'en-us' #FIXME
+LANGUAGE_CODE = 'en-us'  # FIXME
 
-TIME_ZONE = 'America/New_York' #FIXME
+TIME_ZONE = 'America/New_York'  # FIXME
 
 USE_I18N = True
 
@@ -163,7 +167,8 @@ FORMAT_MODULE_PATH = ['gph.formats']
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.normpath(os.path.join(BASE_DIR, 'static'))
-SOLUTION_STATIC_ROOT = os.path.normpath(os.path.join(BASE_DIR, 'puzzles/templates/solution_bodies'))
+SOLUTION_STATIC_ROOT = os.path.normpath(os.path.join(
+    BASE_DIR, 'puzzles/templates/solution_bodies'))
 STATICFILES_STORAGE = 'gph.storage.CustomStorage'
 
 # Email SMTP information
@@ -256,6 +261,14 @@ LOGGING = {
         },
     },
 }
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+}
+
+SESSION_COOKIE_HTTPONLY = False
 
 # Google Analytics
 GA_CODE = ''

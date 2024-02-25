@@ -1,34 +1,28 @@
 import { useState } from 'react';
-import MinorCase from '../components/MinorCase';
-import MinorCaseModal from "../components/MinorCaseModal";
-import { MinorCaseStatus, context } from "../context";
+// import MinorCase from '../components/MinorCase';
+import MinorCaseModal from "@/components/MinorCaseModal";
+// import { MinorCaseStatus, context } from "../context";
 import { getCookie } from "../utils/api";
 
-console.log(context)
-if (context != null) {
-  console.log(context.team?.minor_case_active)
-}
-
-
-function renderActiveCases(casesRecord: MinorCaseStatus | undefined, openModal: (caseName: string) => void) : JSX.Element[] {
-  return casesRecord? Object.entries(casesRecord).map(([minorCase, values]) => (
-    <MinorCase 
-      key={minorCase} 
-      name={values.name} 
-      description={values.description} 
-      major_case_name={values.major_case_name} 
-      major_case_slug={values.major_case_slug} 
-      bgColor="pink-100"
-      onClick={() => {openModal(values.name)}}
-    />
-  )) : [];
-}
+// function renderActiveCases(casesRecord: MinorCaseStatus | undefined, openModal: (caseName: string) => void) : JSX.Element[] {
+//   return casesRecord? Object.entries(casesRecord).map(([minorCase, values]) => (
+//     // <MinorCase 
+//     //   key={minorCase} 
+//     //   name={values.name} 
+//     //   description={values.description} 
+//     //   major_case_name={values.major_case_name} 
+//     //   major_case_slug={values.major_case_slug} 
+//     //   bgColor="pink-100"
+//     //   onClick={() => {openModal(values.name)}}
+//     // />
+//   )) : [];
+// }
 
 function EventPage() {
-  const [newCases, setNewCases] = useState<JSX.Element[]>([]);
-  const [, setDoneCases] = useState<JSX.Element[]>([]);
+  // const [newCases, setNewCases] = useState<JSX.Element[]>([]);
+  // const [, setDoneCases] = useState<JSX.Element[]>([]);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const [selectedCase, setSelectedCase] = useState<string>('');
+  // const [selectedCase, setSelectedCase] = useState<string>('');
   const [output, setOutput] = useState<string>('');
 
   const submit = async () => {
@@ -59,34 +53,36 @@ function EventPage() {
     }
   };
 
-  const openModal = (caseName: string) => {
-    setSelectedCase(caseName);
-    setModalOpen(true);
-  };
+  // const openModal = (caseName: string) => {
+  //   setSelectedCase(caseName);
+  //   setModalOpen(true);
+  // };
 
   const closeModal = () => {
     setModalOpen(false);
   };
 
   const addBox = (side: 'left' | 'right') => {
-    if (side === 'left') {
-      // Clear the middle column when clicking on the left box
-      if (context != null) {
-        const solvedCasesFromContext = context.team?.minor_case_completed;
-        const solvedCases = renderActiveCases(solvedCasesFromContext, openModal);
+    return side
+    // TODO: fix
+    // if (side === 'left') {
+    //   // Clear the middle column when clicking on the left box
+    //   if (context != null) {
+    //     const solvedCasesFromContext = context.team?.minor_case_completed;
+    //     const solvedCases = renderActiveCases(solvedCasesFromContext, openModal);
 
-        setNewCases(solvedCases);
-        setDoneCases([]);
-      }
-    } else {
-      if (context != null) {
-        const minorCasesFromContext = context.team?.minor_case_incoming;
-        const incomingCases = renderActiveCases(minorCasesFromContext, openModal);
+    //     setNewCases(solvedCases);
+    //     setDoneCases([]);
+    //   }
+    // } else {
+    //   if (context != null) {
+    //     const minorCasesFromContext = context.team?.minor_case_incoming;
+    //     const incomingCases = renderActiveCases(minorCasesFromContext, openModal);
 
-        setNewCases(incomingCases);
-        setDoneCases([]);
-      }
-    }
+    //     setNewCases(incomingCases);
+    //     setDoneCases([]);
+    //   }
+    // }
   };
 
   return (
@@ -111,7 +107,7 @@ function EventPage() {
         <div className="w-1/2 bg-gray-500 flex flex-col justify-between items-center">
           {/* Middle column content */}
           <div className="w-1/2 bg-gray-500 flex flex-wrap justify-around items-start">
-            {newCases}
+            {/* {newCases} */}
             {/* {doneCases} */}
           </div>
         </div>
@@ -128,7 +124,7 @@ function EventPage() {
       <div className="bg-blue-200 p-4 flex justify-center items-center">
         {/* Render a box for each active case */}
         <div className="flex">
-          {context? renderActiveCases(context.team?.minor_case_active, openModal) : null}
+          {/* {context? renderActiveCases(context.team?.minor_case_active, openModal) : null} */}
         </div>
       </div>
 
@@ -138,7 +134,7 @@ function EventPage() {
       </div>
 
       {/* Modal */}
-      <MinorCaseModal isOpen={modalOpen} closeModal={closeModal} caseName={selectedCase} />
+      <MinorCaseModal isOpen={modalOpen} closeModal={closeModal} caseName={"TODO: fix"} />
     </div>
   );
 }

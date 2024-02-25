@@ -1,4 +1,4 @@
-import background from '../../../assets/major_cases/social-deduction/Background.png'
+import background from '../../../assets/major_cases/social-deduction/Background.jpg'
 import RelativeAsset from '../../RelativeAsset'
 
 // characters
@@ -26,7 +26,7 @@ import InternalCharacterRoleTooltip from './CharacterRoleTooltip'
 
 const GHOST_HOVER = 'hover:drop-shadow-[0_15px_15px_rgba(255,255,255,0.2)]'
 
-export default function InternalCharacters () {
+export default function InternalCharacters ({CHAR_NAMES}: {CHAR_NAMES: { [key in InternalCharacter]: string }}) {
   const [selectedInternalCharacter, setSelectedInternalCharacter] = useState<InternalCharacter>(InternalCharacter.ANXIOUS_GHOST)
 
   useEffect(() => {
@@ -57,7 +57,7 @@ export default function InternalCharacters () {
         {/* MAIN CHARACTERS */}
         <InternalCharacterAsset character={InternalCharacter.GREEN_RIBBON} imageSrc={greenribbon} hoverImageSrc={greenribbonPose}
           extraStyles={{
-            top: '16%',
+            top: '12%',
             left: '7%',
             width: '28%',
             zIndex: 1,
@@ -154,7 +154,7 @@ export default function InternalCharacters () {
               zIndex: 4,
             }}
           >
-            <InternalCharacterRoleTooltip char_role={selectedInternalCharacter} scale={true} />
+            <InternalCharacterRoleTooltip char_role={selectedInternalCharacter} scale={true} CHAR_NAMES={CHAR_NAMES}/>
           </div>
         
 
