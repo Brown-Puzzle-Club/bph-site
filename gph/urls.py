@@ -80,24 +80,24 @@ urlpatterns = [
     path('teams', views.teams, name='teams'),
     # path('team/<quotedstr:team_name>', views.team, name='team'),
     path('teams/unhidden', views.teams_unhidden, name='teams-unhidden'),
-    path('edit-team', views.edit_team, name='edit-team'),
+    path('edit-team', views.edit_team, name='edit-team'), # type: ignore
 
     path('puzzles', views.puzzles, name='puzzles'),
     path('round/<slug:slug>', views.round, name='round'),
     path('round/events', views.round, name='events'),
     path('puzzle/<slug:slug>', views.puzzle, name='puzzle'),
-    path('solve/<slug:slug>', views.solve, name='solve'),
-    path('free-answer/<slug:slug>', views.free_answer, name='free-answer'),
-    path('post-hunt-solve/<slug:slug>',
-         views.post_hunt_solve, name='post-hunt-solve'),
+    path('solve/<slug:slug>', views.solve, name='solve'), # type: ignore
+    path('free-answer/<slug:slug>', views.free_answer, name='free-answer'), # type: ignore
+    path('post-hunt-solve/<slug:slug>', # type: ignore
+         views.post_hunt_solve, name='post-hunt-solve'), # type: ignore
     path('survey/<slug:slug>', views.survey, name='survey'),
     path('hints', views.hint_list, name='hint-list'),
-    path('hints/<slug:slug>', views.hints, name='hints'),
+    path('hints/<slug:slug>', views.hints, name='hints'), # type: ignore
     path('hint/<int:id>', views.hint, name='hint'),
-    path('stats', views.hunt_stats, name='hunt-stats'),
-    path('stats/<slug:slug>', views.stats, name='stats'),
-    path('solution/<slug:slug>', views.solution, name='solution'),
-    path('solution/<path:path>', views.solution_static, name='solution-static'),
+    path('stats', views.hunt_stats, name='hunt-stats'), # type: ignore
+    path('stats/<slug:slug>', views.stats, name='stats'), # type: ignore
+    path('solution/<slug:slug>', views.solution, name='solution'), # type: ignore
+    path('solution/<path:path>', views.solution_static, name='solution-static'), # type: ignore
 
     # path('puzzle/interactive-demo/submit',
     #      puzzlehandlers.interactive_demo_submit,
@@ -119,13 +119,13 @@ urlpatterns = [
     path('victory', views.victory, name='victory'),
     path('errata', views.errata, name='errata'),
     path('wrapup', views.wrapup, name='wrapup'),
-    path('wrapup/finishers', views.finishers, name='finishers'),
+    path('wrapup/finishers', views.finishers, name='finishers'), # type: ignore
 
     path('bridge', views.bridge, name='bridge'),
-    path('bigboard', views.bigboard, name='bigboard'),
+    path('bigboard', views.bigboard, name='bigboard'), # type: ignore
     path('bigboard/unhidden', views.bigboard_unhidden, name='bigboard-unhidden'),
-    path('biggraph', views.biggraph, name='biggraph'),
-    path('bridge/guess.csv', views.guess_csv, name='guess-csv'),
+    path('biggraph', views.biggraph, name='biggraph'), # type: ignore
+    path('bridge/guess.csv', views.guess_csv, name='guess-csv'), # type: ignore
     path('bridge/hint.csv', views.hint_csv, name='hint-csv'),
     path('bridge/puzzle.log', views.puzzle_log, name='puzzle-log'),
     path('shortcuts', views.shortcuts, name='shortcuts'),
@@ -139,16 +139,17 @@ urlpatterns = [
     path('eventpage', views.prerelease_locked_react, name='eventpage'),
     path('', views.react_base, name='landing'),
     path('info', views.react_base, name='info'),
-    
+
     path('credits', views.react_base, name='credits'),
     path('club', views.react_base, name='credits'),
     path('contact', views.react_base, name='contact'),
     path('leaderboard', views.react_base, name='leaderboard'),
     path('archive', views.react_base, name='archive'),
     path('register', views.react_base, name='register'),
-    
+
     path('my-team', views.team_locked_react, name='my-team'),
     path('team/<quotedstr:team_name>', views.react_base, name='team'),
 
     path('api/', include('puzzles.api.urls')),
+    path('websocket-demo/', views.react_base, name='websocket-demo'),
 ]

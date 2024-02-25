@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'mathfilters',
     'channels',
     'puzzles',
+    'gph.apps.CustomRoomsConfig',
     'rest_framework',
     'rest_framework.authtoken',
 ]
