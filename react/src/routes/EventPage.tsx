@@ -56,8 +56,6 @@ function EventPage() {
 
       const result = await fetch("api/move_minor_case/" + caseID, {
         method: 'POST',
-
-
         body: JSON.stringify({
           // ...
         }),
