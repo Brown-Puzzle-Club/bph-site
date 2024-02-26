@@ -13,7 +13,6 @@ const UserSchema = z.object({
 });
 type User = z.infer<typeof UserSchema>;
 
-
 const UserTeamSchema = z.object({
   id: z.number(),
   team_name: z.string(),
@@ -58,7 +57,7 @@ const AnswerSubmissionSchema = z.object({
   submitted_answer: z.string(),
   is_correct: z.boolean(),
   submitted_datetime: z.date(),
-  used_free_answer: z.boolean()
+  used_free_answer: z.boolean(),
 });
 type AnswerSubmission = z.infer<typeof AnswerSubmissionSchema>;
 
@@ -76,14 +75,14 @@ type Round = z.infer<typeof RoundSchema>;
 const MinorCaseIncomingSchema = z.object({
   id: z.number(),
   incoming_datetime: z.date(),
-  minor_case_round: RoundSchema
+  minor_case_round: RoundSchema,
 });
 type MinorCaseIncoming = z.infer<typeof MinorCaseIncomingSchema>;
 
 const MinorCaseActiveSchema = z.object({
   id: z.number(),
   active_datetime: z.date(),
-  minor_case_round: RoundSchema
+  minor_case_round: RoundSchema,
 });
 type MinorCaseActive = z.infer<typeof MinorCaseActiveSchema>;
 
@@ -117,14 +116,23 @@ const HuntContextSchema = z.object({
   hunt_is_over: z.boolean(),
   hunt_is_closed: z.boolean(),
   max_guesses_per_puzzle: z.number(),
-  max_members_per_team: z.number()
+  max_members_per_team: z.number(),
 });
 
 const ContextSchema = z.object({
   team_context: TeamPuzzleContextSchema,
-  hunt_context: HuntContextSchema
+  hunt_context: HuntContextSchema,
 });
 type DjangoContext = z.infer<typeof ContextSchema>;
 
-export type { AnswerSubmission, DjangoContext, MinorCaseActive, MinorCaseIncoming, MinorCaseCompleted, Round, Team, TeamMember, User, UserTeam };
+const MinorCaseSchema = z.object({
+  name: z.string(),
+  description: z.string(),
+  //
+});
+type MinorCase = z.infer<typeof MinorCaseSchema>;
+
+
+export type { AnswerSubmission, DjangoContext, MinorCaseActive, MinorCaseIncoming, MinorCaseCompleted, Round, Team, TeamMember, User, UserTeam, MinorCase };
+
 
