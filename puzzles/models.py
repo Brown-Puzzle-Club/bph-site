@@ -576,13 +576,6 @@ class Team(models.Model):
                 out[submit.puzzle.round.major_case.slug][submit.puzzle.round.slug] = submit
         return out
     
-    def db_minor_case_incoming(self):
-        return [
-            incoming
-            for incoming in self.minorcaseincoming_set
-            .select_related('minor_case_round')
-        ]
-    
     def db_minor_case_active(self):
         return [
             active
@@ -723,24 +716,47 @@ class PuzzleUnlock(models.Model):
         verbose_name_plural = _('puzzle unlocks')
 
 
-class MinorCaseIncoming(models.Model):
-    '''Represents a team having a minor case incoming.'''
+class MinorCaseVote(models.Model):
+    '''Represents a team voting on a minor case puzzle.'''
 
     team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_('team'))
-    minor_case_round = models.ForeignKey(Round, on_delete=models.CASCADE, verbose_name=_('minor case round'))
+    minor_case = models.ForeignKey(Round, on_delete=models.CASCADE, verbose_name=_('minor case'))
+    num_votes = models.IntegerField(verbose_name=_('Number of votes'))
 
-    incoming_datetime = models.DateTimeField(verbose_name=_('Incoming datetime'))
+
+class MinorCaseIncomingEvent(models.Model):
+    
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_('team'))
+    timestamp = models.DateTimeField(verbose_name=_('Event creation datetime'))
+    votes = models.ManyToManyField(MinorCaseVote, verbose_name=_('Votes'))
+    expiration = models.DateTimeField(verbose_name=_('Expiration datetime'))
+    final_vote = models.OneToOneField('MinorCaseVoteEvent', on_delete=models.CASCADE, verbose_name=_('Final vote'))
+
 
     def __str__(self):
         return '%s -> %s @ %s' % (
-            self.team, self.minor_case_round, self.incoming_datetime
+            self.team, self.minor_case_round, self.event_datetime
         )
 
     class Meta:
         unique_together = ('team', 'minor_case_round')
-        verbose_name = _('minor case incoming')
-        verbose_name_plural = _('minor cases incoming')
+        verbose_name = _('minor case incoming event')
+        verbose_name_plural = _('minor cases incoming events')
 
+    def cases(self):
+        # get all of the field minor_case from self.votes
+        return [vote.minor_case for vote in self.votes.all()]
+
+class MinorCaseVoteEvent(models.Model):
+    '''Represents a finalized team vote on a single puzzle'''
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_('team'))
+    timestamp = models.DateTimeField(verbose_name=_('Event creation datetime'))
+    # the selected case from the vote.
+    selected_case = models.ForeignKey(Round, on_delete=models.CASCADE, verbose_name=_('Selected minor case'))
+    # the incomingEvent that caused the vote to occur
+    incoming_event = models.OneToOneField('MinorCaseIncomingEvent', on_delete=models.CASCADE, verbose_name=_('Incoming cases event'))
+    # what the votes looked like at the time of the selection
+    final_votes = models.ManyToManyField(MinorCaseVote, verbose_name=_('Final votes'))
 
 class MinorCaseActive(models.Model):
     '''Represents a team having a minor case active.'''

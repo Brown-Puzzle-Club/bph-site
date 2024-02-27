@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from puzzles.models import AnswerSubmission, Erratum, ExtraGuessGrant, Hint, MajorCase, MinorCaseActive, MinorCaseIncoming, Puzzle, PuzzleMessage, PuzzleUnlock, RatingField, Round, Survey, Team, TeamMember
+from puzzles.models import AnswerSubmission, Erratum, ExtraGuessGrant, Hint, MajorCase, MinorCaseActive, MinorCaseCompleted, MinorCaseIncomingEvent, Puzzle, PuzzleMessage, PuzzleUnlock, RatingField, Round, Survey, Team, TeamMember
 from rest_framework import serializers
 
 
@@ -16,6 +16,7 @@ class MajorCaseSerializer(serializers.ModelSerializer):
 
 
 class RoundSerializer(serializers.ModelSerializer):
+    major_case = MajorCaseSerializer()
     class Meta:
         model = Round
         fields = '__all__'
@@ -61,11 +62,10 @@ class PuzzleUnlockSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class MinorCaseIncomingSerializer(serializers.ModelSerializer):
-    minor_case_round = RoundSerializer()
+class MinorCaseIncomingEventSerializer(serializers.ModelSerializer):
     class Meta:
-        model = MinorCaseIncoming
-        fields = ['id', 'incoming_datetime', 'minor_case_round']
+        model = MinorCaseIncomingEvent
+        fields = '__all__'
 
 
 class MinorCaseActiveSerializer(serializers.ModelSerializer):
@@ -73,6 +73,13 @@ class MinorCaseActiveSerializer(serializers.ModelSerializer):
     class Meta:
         model = MinorCaseActive
         fields = ['id', 'active_datetime', 'minor_case_round']
+
+
+class MinorCaseCompletedSerializer(serializers.ModelSerializer):
+    minor_case_round = RoundSerializer()
+    class Meta:
+        model = MinorCaseCompleted
+        fields = ['id', 'completed_datetime', 'minor_case_round']
 
 
 class AnswerSubmissionSerializer(serializers.ModelSerializer):
@@ -131,8 +138,8 @@ class TeamPuzzleContextSerializer(serializers.Serializer):
     num_free_answers_remaining = serializers.IntegerField()
     solves_by_case = serializers.DictField(child=serializers.DictField(child=serializers.DictField(child=AnswerSubmissionSerializer())))
     minor_case_solves = serializers.DictField(child=serializers.DictField(child=AnswerSubmissionSerializer()))
-    minor_case_incoming = MinorCaseIncomingSerializer(many=True)
     minor_case_active = MinorCaseActiveSerializer(many=True)
+    minor_case_completed = MinorCaseCompletedSerializer(many=True)
     unlocks = serializers.DictField(child=serializers.DateTimeField())
 
 

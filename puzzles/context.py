@@ -234,11 +234,13 @@ class Context:
     def minor_case_solves(self):
         return self.team.minor_case_solves if self.team else {}
     
-    def minor_case_incoming(self):
-        return self.team.db_minor_case_incoming if self.team else {}
-    
     def minor_case_active(self):
         return self.team.db_minor_case_active if self.team else {}
+    
+    def minor_case_completed(self):
+        return self.team.db_minor_case_completed if self.team else {}
+    
+
     
 
     # The purpose of this logic is to keep archive links current. For example,
