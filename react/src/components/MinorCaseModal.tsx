@@ -1,25 +1,101 @@
 // Modal.tsx
-import React from 'react';
+import React, { useEffect, useState } from "react";
+
+import { useDjangoContext } from "@/hooks/useDjangoContext";
+import { MinorCase } from "@/utils/django_types";
+// import manila from "../assets/main/manila_open.PNG";
 
 interface ModalProps {
   isOpen: boolean;
   closeModal: () => void;
-  caseName: string;
+  caseID : number;
+  onSubmit: (caseID : number) => void;
 }
 
-const MinorCaseModal: React.FC<ModalProps> = ({ isOpen, closeModal, caseName }) => {
+const MinorCaseModal: React.FC<ModalProps> = ({
+  isOpen,
+  closeModal,
+  caseID,
+  onSubmit
+}) => {
+  const { FetchCase } = useDjangoContext();
+  const [cur_case, setCase] = useState<MinorCase>();
+  const [loading, setIsLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const result = await FetchCase(caseID);
+        setCase(result);
+      } catch (error) {
+        console.error("Error fetching case:", error);
+      }
+    };
+
+    fetchData();
+    setIsLoading(false);
+  }, [FetchCase]);
+
   if (!isOpen) {
     return null;
   }
 
+  function submitVote(event: MouseEvent<HTMLButtonElement, MouseEvent>): void {
+    //make some backend call to change the status of puzzle from incoming to active
+    //open minor case page
+    throw new Error("Function not implemented.");
+  }
+
+  const handleSubmit = () => {
+    onSubmit(caseID);
+  }
+
   return (
-    <div className="fixed inset-0 flex items-center justify-center">
-        <div className="bg-white p-6 rounded-md w-3/5 h-1/2">
-            <h2 className="text-purple-500">{caseName}</h2>
-            {/* Add other modal content as needed */}
-            <button onClick={closeModal}>Close</button>
+    <>
+      {loading ? (
+        <div>Loading TODO spinny</div>
+      ) : (
+        <div className="fixed inset-0 flex items-center justify-center">
+          <div
+            className="bg-white p-6 rounded-md w-3/5 h-1/2 flex-row flex"
+            style={
+              {
+                // backgroundImage: manila,
+              }
+            }
+          >
+            <div className="w-2/4">Art assets</div>
+            <div></div>
+            <div></div>
+            <div className="w-2/4 grid grid-rows-9">
+              {/*Div containg all puzzle info */}
+              <div className="grid grid-cols-4 mb-4 row-span-1">
+                <h2 className="col-span-3 text-purple-500 text-xl">
+                  {cur_case?.name}
+                </h2>
+                <button
+                  className="col-span-1 self-end flex justify-end"
+                  onClick={closeModal}
+                >
+                  X
+                </button>
+              </div>
+              <h3 className="row-span-7">{cur_case?.description}</h3>
+              <div className="flex justify-center">
+                {/* Container for centering */}
+                <button className="self-end row-span-1" onClick={submitVote}>
+                  Enter
+                </button>
+
+                <button onClick={handleSubmit}>Complete</button>
+              </div>
+            </div>
+          </div>
+          
         </div>
-    </div>
+      )}
+    </>
   );
 };
 

@@ -7,11 +7,16 @@ interface SocketCallbacks {
   onError?: (event: Event) => void;
 }
 
-interface PresenceInfo {
+export interface PresenceInfo {
   channel_name: string;
   members: string[];
   anons: number;
   num_connected: number;
+}
+
+export interface VotingInfo {
+  vote_counts: number[];
+  expiration_time: string | null;
 }
 
 const PresenceInfoSchema = z.object({
@@ -21,22 +26,23 @@ const PresenceInfoSchema = z.object({
   num_connected: z.number().nonnegative(),
 });
 
-// interface VotingInfo {}
+const VotingInfoSchema = z.object({
+  vote_counts: z.array(z.number().nonnegative()),
+  expiration_time: z.string().nullable(),
+});
 
-const useSocket = (
-  path: string,
-  callbacks: SocketCallbacks | undefined = undefined
-) => {
+const useSocket = (path: string, callbacks: SocketCallbacks | undefined = undefined) => {
   const { onMessage, onOpen, onClose, onError } = callbacks ?? {};
 
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [presenceInfo, setPresenceInfo] = useState<PresenceInfo | null>(null);
-  // const [votingInfo, setVotingInfo] = useState<VotingInfo>({});
+  const [votingInfo, setVotingInfo] = useState<VotingInfo>({
+    vote_counts: [0, 0, 0, 0, 0, 0],
+    expiration_time: null,
+  });
 
   useEffect(() => {
-    const url = `${location.protocol === "https:" ? "wss://" : "ws://"}${
-      location.host
-    }/${path}`;
+    const url = `${location.protocol === "https:" ? "wss://" : "ws://"}${location.host}/${path}`;
 
     const socket = new WebSocket(url);
 
@@ -52,6 +58,13 @@ const useSocket = (
           const typechecked_data = PresenceInfoSchema.safeParse(data.data);
           if (typechecked_data.success) {
             setPresenceInfo(typechecked_data.data);
+          } else {
+            console.error(typechecked_data.error);
+          }
+        } else if (data.type === "vote") {
+          const typechecked_data = VotingInfoSchema.safeParse(data.data);
+          if (typechecked_data.success) {
+            setVotingInfo(typechecked_data.data);
           } else {
             console.error(typechecked_data.error);
           }
@@ -84,7 +97,7 @@ const useSocket = (
     };
   }, [path, onMessage, onOpen, onClose, onError]);
 
-  return { socket, presenceInfo };
+  return { socket, presenceInfo, votingInfo };
 };
 
 export default useSocket;

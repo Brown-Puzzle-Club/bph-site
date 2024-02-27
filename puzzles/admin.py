@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import reverse
 from django import forms
-
+from channels_presence.models import Room, Presence
 from puzzles.models import (
     MajorCase,
     Round,
@@ -33,8 +33,15 @@ class RoundAdmin(admin.ModelAdmin):
         return reverse('round', args=(obj.slug,))
 
     ordering = ('order',)
-    
+
     list_display = ('name', 'slug', 'major_case', 'meta_answer', 'order')
+
+class RoomAdmin(admin.ModelAdmin):
+    list_display = ('channel_name',)
+
+class PresenceAdmin(admin.ModelAdmin):
+    list_display = ('room', 'channel_name', 'user', 'last_seen')
+    list_filter = ('room', 'user')
 
 class PuzzleMessageInline(admin.TabularInline):
     model = PuzzleMessage
@@ -137,3 +144,5 @@ admin.site.register(ExtraGuessGrant, ExtraGuessGrantAdmin)
 admin.site.register(Erratum, ErratumAdmin)
 admin.site.register(Survey, SurveyAdmin)
 admin.site.register(Hint, HintAdmin)
+admin.site.register(Room, RoomAdmin)
+admin.site.register(Presence, PresenceAdmin)

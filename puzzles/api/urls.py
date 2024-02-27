@@ -2,13 +2,15 @@ from rest_framework import routers
 from django.urls import include, path
 from . import views
 
+
 app_name = 'puzzles-api'
 
 router = routers.DefaultRouter()
 router.register(r'user', views.UserViewSet, basename='user')
 router.register(r'my-team', views.TeamViewSet, basename='team')
 router.register(r'teams', views.BasicTeamViewSet, basename='team')
-router.register(r'team-members', views.TeamMemberViewSet, basename='team-member')
+router.register(r'team-members', views.TeamMemberViewSet,
+                basename='team-member')
 router.register(r'errata', views.ErrataViewSet, basename='erratum')
 
 
