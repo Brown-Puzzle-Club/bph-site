@@ -695,6 +695,19 @@ class Team(models.Model):
         if unlocked_at == context.now:
             show_unlock_notification(context, unlock)
         return unlock
+    
+    @staticmethod
+    def unlock_case(team, minor_case, unlock_datetime):
+        unlock = MinorCaseActive(
+            team=team,
+            minor_case_round=minor_case,
+            active_datetime=unlock_datetime
+        )
+        unlock.save()
+
+        # TODO: unlock notification
+
+        return unlock
 
 
 @receiver(post_save, sender=Team)
@@ -755,24 +768,59 @@ class MinorCaseVote(models.Model):
     '''Represents a team voting on a minor case puzzle.'''
 
     team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_('team'))
-    minor_case_round = models.ForeignKey(Round, on_delete=models.CASCADE, verbose_name=_('minor case round'))
+    minor_case = models.ForeignKey(Round, on_delete=models.CASCADE, verbose_name=_('minor case'))
+    num_votes = models.IntegerField(verbose_name=_('Number of votes'))
 
-    incoming_datetime = models.DateTimeField(verbose_name=_('Incoming datetime'))
+
+class MinorCaseIncomingEvent(models.Model):
+    
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_('team'))
+    timestamp = models.DateTimeField(verbose_name=_('Event creation datetime'))
+    votes = models.ManyToManyField(MinorCaseVote, verbose_name=_('Votes'), blank=True)
+    expiration = models.DateTimeField(verbose_name=_('Expiration datetime'), null=True, blank=True)
+    final_vote = models.OneToOneField('MinorCaseVoteEvent', on_delete=models.CASCADE, verbose_name=_('Final vote'), null=True, blank=True)
+
 
     def __str__(self):
         return '%s -> %s @ %s' % (
-            self.team, self.minor_case_round, self.event_datetime
+            self.team, self.timestamp, self.votes
         )
 
     class Meta:
-        unique_together = ('team', 'minor_case_round')
         verbose_name = _('minor case incoming event')
         verbose_name_plural = _('minor cases incoming events')
 
     def cases(self):
-        # get all of the field minor_case from self.votes
         return [vote.minor_case for vote in self.votes.all()]
+    
+    def finalize_vote(self):
+        '''Finalizes the vote for the incoming event, and creates a MinorCaseVoteEvent'''
 
+        most_voted_case = max(self.votes.all(), key=lambda vote: vote.num_votes).minor_case
+        current_time = timezone.now()
+
+        vote_event = MinorCaseVoteEvent.objects.create(
+            team=self.team,
+            timestamp=current_time,
+            selected_case=most_voted_case,
+            incoming_event=self,
+            final_votes=self.votes
+        )
+
+        self.final_vote = vote_event
+        self.expiration = current_time
+        self.save()
+        return vote_event
+
+    @staticmethod
+    def get_current_incoming_event(context):
+        '''gets the current incoming event for the team, if there is one active, else returns None'''
+        most_recent_case = MinorCaseIncomingEvent.objects.filter(team=context.team).order_by('-timestamp').first()
+        if most_recent_case and not most_recent_case.final_vote:
+            return most_recent_case
+        return None
+
+    
 class MinorCaseVoteEvent(models.Model):
     '''Represents a finalized team vote on a single puzzle'''
     team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_('team'))
@@ -782,7 +830,13 @@ class MinorCaseVoteEvent(models.Model):
     # the incomingEvent that caused the vote to occur
     incoming_event = models.OneToOneField('MinorCaseIncomingEvent', on_delete=models.CASCADE, verbose_name=_('Incoming cases event'))
     # what the votes looked like at the time of the selection
-    final_votes = models.ManyToManyField(MinorCaseVote, verbose_name=_('Final votes'))
+    final_votes = models.ManyToManyField(MinorCaseVote, verbose_name=_('Final votes'), blank=True)
+
+    def save(self, *args, **kwargs):
+        super(MinorCaseVoteEvent, self).save(*args, **kwargs)
+        # on creation of the vote event, sets the case for the team as an active case.
+        Team.unlock_case(self.team, self.selected_case, self.timestamp)
+
 
 class MinorCaseActive(models.Model):
     '''Represents a team having a minor case active.'''

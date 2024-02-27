@@ -41,9 +41,10 @@ const MinorCaseModal: React.FC<ModalProps> = ({
     return null;
   }
 
-  function submitVote(event: MouseEvent<HTMLButtonElement, MouseEvent>): void {
+  function submitVote(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
     //make some backend call to change the status of puzzle from incoming to active
     //open minor case page
+    console.log(event);
     throw new Error("Function not implemented.");
   }
 

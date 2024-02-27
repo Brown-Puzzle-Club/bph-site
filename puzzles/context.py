@@ -227,12 +227,14 @@ class Context:
         return False
     
     # BPH 2024 context
-
     def solves_by_case(self):
         return self.team.solves_by_case if self.team else {}
     
     def minor_case_solves(self):
         return self.team.minor_case_solves if self.team else {}
+    
+    def current_incoming_event(self):
+        return models.MinorCaseIncomingEvent.get_current_incoming_event(self)
     
     def minor_case_active(self):
         return self.team.db_minor_case_active if self.team else {}
