@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from puzzles.models import AnswerSubmission, Erratum, ExtraGuessGrant, Hint, MajorCase, MinorCaseActive, MinorCaseCompleted, MinorCaseIncomingEvent, Puzzle, PuzzleMessage, PuzzleUnlock, RatingField, Round, Survey, Team, TeamMember
+from puzzles.models import AnswerSubmission, Erratum, ExtraGuessGrant, Hint, MajorCase, MinorCaseActive, MinorCaseCompleted, MinorCaseIncomingEvent, MinorCaseVoteEvent, Puzzle, PuzzleMessage, PuzzleUnlock, RatingField, Round, Survey, Team, TeamMember
 from rest_framework import serializers
 
 
@@ -67,6 +67,10 @@ class MinorCaseIncomingEventSerializer(serializers.ModelSerializer):
         model = MinorCaseIncomingEvent
         fields = '__all__'
 
+class VoteEventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MinorCaseVoteEvent
+        fields = ['selected_case', 'incoming_event']
 
 class MinorCaseActiveSerializer(serializers.ModelSerializer):
     minor_case_round = RoundSerializer()
@@ -127,6 +131,7 @@ class ErrataSerializer(serializers.ModelSerializer):
     class Meta:
         model = Erratum
         fields = '__all__'
+
 
 # a single context call for all of a team's puzzle and solve progression data
 # IMPORTANT NOTE: This serializer contains the frontent context payload, so must be safe for a team to view 

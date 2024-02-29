@@ -1,3 +1,4 @@
+from datetime import datetime
 from psycopg2 import IntegrityError
 from rest_framework import permissions, viewsets, mixins
 from puzzles import models
@@ -69,16 +70,6 @@ class RoundsViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return models.Round.get_unlocked_rounds(self.request._request.context)
-
-
-class RoundsViewSet(viewsets.ModelViewSet):
-    serializer_class = RoundSerializer
-    permission_classes = [permissions.IsAuthenticated]
-    queryset = Round.objects.all()
-
-    def get_queryset(self):
-        return models.Round.get_unlocked_rounds(self.request._request.context)
-
 
 class MinorCaseActiveViewSet(viewsets.ModelViewSet):
     queryset = MinorCaseActive.objects.all()
@@ -238,3 +229,21 @@ def team_members_view(request: Request, team_id: int) -> Response:
         return Response(serializer.data)
     except Team.DoesNotExist:
         return Response({'error': 'Team not found'}, status=404)
+
+
+@api_view(['POST'])
+def create_vote_event(request: Request) -> Response:
+    serializer = VoteEventSerializer(data=request.data)
+    team = request._request.context.team
+
+    if serializer.is_valid():
+        vote_event = MinorCaseVoteEvent.objects.create(
+            timestamp=datetime.now(),
+            team=team,
+            selected_case=serializer.validated_data.get('selected_case'),
+            incoming_event=serializer.validated_data.get('incoming_event'),
+        )
+        vote_event.save()
+        return Response(serializer.data)
+    else:
+        return Response(serializer.errors, status=400)

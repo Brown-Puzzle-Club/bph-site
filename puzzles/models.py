@@ -698,14 +698,25 @@ class Team(models.Model):
     
     @staticmethod
     def unlock_case(team, minor_case, unlock_datetime):
-        unlock = MinorCaseActive(
-            team=team,
-            minor_case_round=minor_case,
-            active_datetime=unlock_datetime
-        )
-        unlock.save()
+        print(f"EVENT: unlocking case {minor_case} for team {team} at {unlock_datetime}")
+        
+        try:
+            unlock = MinorCaseActive.objects.get_or_create(
+              team=team,
+              minor_case_round=minor_case,
+              active_datetime=unlock_datetime
+            )
+        except:
+            print(f"Case {minor_case} already set active for team {team}.")
+            pass
 
-        # TODO: unlock notification
+        # unlock all puzzles in the minor case
+        for puzzle in Puzzle.objects.filter(round=minor_case):
+            try:
+                PuzzleUnlock.objects.get_or_create(team=team, puzzle=puzzle, unlock_datetime=unlock_datetime)
+            except:
+                print(f"Puzzle {puzzle} already unlocked for team {team}. Skipping.")
+                pass
 
         return unlock
 
