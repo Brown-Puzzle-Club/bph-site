@@ -85,7 +85,7 @@ urlpatterns = [
     path('puzzles', views.puzzles, name='puzzles'),
     path('round/<slug:slug>', views.round, name='round'),
     path('round/events', views.round, name='events'),
-    path('puzzle/<slug:slug>', views.puzzle, name='puzzle'),
+    # path('puzzle/<slug:slug>', views.puzzle, name='puzzle'), 
     path('solve/<slug:slug>', views.solve, name='solve'), # type: ignore
     path('free-answer/<slug:slug>', views.free_answer, name='free-answer'), # type: ignore
     path('post-hunt-solve/<slug:slug>', # type: ignore
@@ -152,4 +152,6 @@ urlpatterns = [
 
     path('api/', include('puzzles.api.urls')),
     path('websocket-demo/', views.react_base, name='websocket-demo'),
+    path('minorcase/<str:slug>/', views.prerelease_locked_react, name='minorcase-details'),
+    path('puzzle/<str:slug>/', views.prerelease_locked_react, name='puzzle-details'),
 ]

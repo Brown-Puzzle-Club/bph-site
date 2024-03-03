@@ -25,4 +25,5 @@ urlpatterns = [
     path('update-team', views.update_team, name='update-team'),
     path('teams/<int:team_id>/members', views.team_members_view, name='get-team-members'),
     path('create_vote_event', views.create_vote_event, name='create-vote-event'),
+    # path('minorcase/<str:slug>/', views.minor_case_detail, name='minorcase-detail'),
 ]

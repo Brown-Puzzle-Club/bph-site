@@ -93,6 +93,14 @@ const MinorCaseCompletedSchema = z.object({
 });
 type MinorCaseCompleted = z.infer<typeof MinorCaseCompletedSchema>;
 
+// TODO: fix
+// const PuzzleSchema = z.object({
+//   name: z.string(),
+//   description: z.string(),
+//   slug: z.string(),
+//   data: z.date(),
+// });
+
 const TeamPuzzleContextSchema = z.object({
   is_admin: z.boolean(),
   is_superuser: z.boolean(),
@@ -128,6 +136,7 @@ type DjangoContext = z.infer<typeof ContextSchema>;
 const MinorCaseSchema = z.object({
   name: z.string(),
   description: z.string(),
+  slug: z.string(),
   //
 });
 type MinorCase = z.infer<typeof MinorCaseSchema>;

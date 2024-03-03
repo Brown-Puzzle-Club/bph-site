@@ -19,6 +19,8 @@ import MyTeamPage from "./routes/MyTeamPage";
 import RegisterForm from "./routes/Register";
 import TeamPage from "./routes/TeamPage";
 import WebsocketDemo from "./routes/WebsocketDemo";
+import MinorCasePage from "./routes/MinorCasePage";
+import PuzzlePage from "./routes/PuzzlePage";
 
 declare const CSRF_TOKEN: string;
 try {
@@ -45,6 +47,26 @@ const router = createBrowserRouter([
         bg_color={"#02031d"}
         navbar_color={"#0f0d2e82"}
         route={<EventPage />}
+      />
+    ),
+  },
+  {
+    path: "/minorcase/:slug",
+    element: (
+      <PageWrapper
+        bg_color={"#02031d"}
+        navbar_color={"#0f0d2e82"}
+        route={<MinorCasePage />}
+      />
+    ),
+  },
+  {
+    path: "/puzzle/:slug",
+    element: (
+      <PageWrapper
+        bg_color={"#02031d"}
+        navbar_color={"#0f0d2e82"}
+        route={<PuzzlePage />}
       />
     ),
   },

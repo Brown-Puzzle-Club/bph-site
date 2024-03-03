@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useDjangoContext } from "@/hooks/useDjangoContext";
 import { MinorCase } from "@/utils/django_types";
 // import manila from "../assets/main/manila_open.PNG";
+import { Link } from "react-router-dom";
 
 interface ModalProps {
   isOpen: boolean;
@@ -23,11 +24,14 @@ const MinorCaseModal: React.FC<ModalProps> = ({
   const [loading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
+    if (!isOpen) return;
     const fetchData = async () => {
+      console.log("fetching");
       setIsLoading(true);
       try {
         const result = await FetchCase(caseID);
         setCase(result);
+        console.log(result);
       } catch (error) {
         console.error("Error fetching case:", error);
       }
@@ -35,7 +39,7 @@ const MinorCaseModal: React.FC<ModalProps> = ({
 
     fetchData();
     setIsLoading(false);
-  }, [FetchCase]);
+  }, [isOpen, FetchCase, caseID]);
 
   if (!isOpen) {
     return null;
@@ -83,8 +87,13 @@ const MinorCaseModal: React.FC<ModalProps> = ({
                 </button>
               </div>
               <h3 className="row-span-7">{cur_case?.description}</h3>
+              
+              {/* Link to the minor case page */}
+              <Link className="col-span-3 text-purple-500 text-xl" to={`/minorcase/${cur_case?.slug}`}>Go to Minor Case Page</Link>
+
               <div className="flex justify-center">
                 {/* Container for centering */}
+                <div>{cur_case?.name}</div>
                 <button className="self-end row-span-1" onClick={submitVote}>
                   Enter
                 </button>

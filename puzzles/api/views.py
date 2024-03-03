@@ -247,3 +247,25 @@ def create_vote_event(request: Request) -> Response:
         return Response(serializer.data)
     else:
         return Response(serializer.errors, status=400)
+    
+@api_view(['GET'])
+def minor_case_detail(request, slug):
+    print("a")
+    # Retrieve the MinorCase object based on the slug
+    return Response({'slug': slug})
+    # try:
+    #     # print("team", request._request.context.team)
+    #     # print("round_id", round_id)
+    #     case = MinorCaseActive.objects.get(team=request._request.context.team)
+    #     # print(incoming_case)
+    #     # for case in incoming_case:
+    #     #     print(case.minor_case_round.id)
+    # except MinorCaseActive.DoesNotExist:
+    #     try:
+    #         case = MinorCaseCompleted.objects.get(team=request._request.context.team)
+    #     except:
+    #         return Response({'error': 'MinorCaseIncoming not found'}, status=404)
+
+
+    # Render a template or return JSON data, depending on your requirements
+    # return Response({'case': case})
