@@ -12,7 +12,13 @@ from django.urls import reverse
 from django.utils import timezone
 
 from puzzles import hunt_config
-from puzzles.hunt_config import HUNT_START_TIME, HUNT_END_TIME, HUNT_CLOSE_TIME, HUNT_SOLUTION_TIME, META_SLUGS
+from puzzles.hunt_config import (
+    HUNT_START_TIME,
+    HUNT_END_TIME,
+    HUNT_CLOSE_TIME,
+    HUNT_SOLUTION_TIME,
+    META_SLUGS,
+)
 from puzzles import models
 from puzzles.shortcuts import get_shortcuts
 
@@ -21,7 +27,9 @@ def context_middleware(get_response):
     def middleware(request):
         request.context = Context(request)
         return get_response(request)
+
     return middleware
+
 
 # A context processor takes a request and returns a dictionary of (key: value)s
 # to merge into the request's context.
@@ -30,7 +38,9 @@ def context_middleware(get_response):
 def context_processor(request):
     def thunk(name):
         return lambda: getattr(request.context, name)
+
     return {name: thunk(name) for name in request.context._cached_names}
+
 
 # Construct a get/set property from a name and a function to compute a value.
 # Doing this with name="foo" causes accesses to self.foo to call fn and cache
@@ -39,17 +49,19 @@ def context_processor(request):
 
 def wrap_cacheable(name, fn):
     def fget(self):
-        if not hasattr(self, '_cache'):
+        if not hasattr(self, "_cache"):
             self._cache = {}
         if name not in self._cache:
             self._cache[name] = fn(self)
         return self._cache[name]
 
     def fset(self, value):
-        if not hasattr(self, '_cache'):
+        if not hasattr(self, "_cache"):
             self._cache = {}
         self._cache[name] = value
+
     return property(fget, fset)
+
 
 # Decorator for a class, like the `Context` class below but also the `Team`
 # model, that replaces all non-special methods that take no arguments other
@@ -62,9 +74,9 @@ def context_cache(cls):
     for c in (BaseContext, cls):
         for name, fn in c.__dict__.items():
             if (
-                not name.startswith('__') and
-                isinstance(fn, types.FunctionType) and
-                inspect.getfullargspec(fn).args == ['self']
+                not name.startswith("__")
+                and isinstance(fn, types.FunctionType)
+                and inspect.getfullargspec(fn).args == ["self"]
             ):
                 setattr(cls, name, wrap_cacheable(name, fn))
                 cached_names.append(name)
@@ -78,6 +90,7 @@ def context_cache(cls):
 # team has solved. This object ensures it only needs to be computed once,
 # without explicitly having to pass it around from one place to the other.
 
+
 # There are currently two types of contexts: request Contexts (below) and Team
 # models (in models.py). Simple properties that are generally useful to either
 # can go in BaseContext. The fact that Teams are contexts enables the above
@@ -89,7 +102,9 @@ class BaseContext:
         return timezone.localtime()
 
     def start_time(self):
-        return HUNT_START_TIME - self.team.start_offset if self.team else HUNT_START_TIME
+        return (
+            HUNT_START_TIME - self.team.start_offset if self.team else HUNT_START_TIME
+        )
 
     def time_since_start(self):
         return self.now - self.start_time
@@ -129,14 +144,20 @@ class BaseContext:
 
 
 # Also include the constants from hunt_config.
-for (key, value) in hunt_config.__dict__.items():
-    if key.isupper() and key not in ('HUNT_START_TIME', 'HUNT_END_TIME', 'HUNT_CLOSE_TIME', 'HUNT_SOLUTION_TIME'):
+for key, value in hunt_config.__dict__.items():
+    if key.isupper() and key not in (
+        "HUNT_START_TIME",
+        "HUNT_END_TIME",
+        "HUNT_CLOSE_TIME",
+        "HUNT_SOLUTION_TIME",
+    ):
         (lambda v: setattr(BaseContext, key.lower(), lambda self: v))(value)
 
 # Also include select constants from settings.
-for key in ('RECAPTCHA_SITEKEY', 'GA_CODE', 'DOMAIN'):
+for key in ("RECAPTCHA_SITEKEY", "GA_CODE", "DOMAIN"):
     (lambda v: setattr(BaseContext, key.lower(), lambda self: v))(
-        getattr(settings, key))
+        getattr(settings, key)
+    )
 
 
 # The properties of a request Context are accessible both from views and from
@@ -158,7 +179,7 @@ class Context:
         return self.request_user.is_superuser
 
     def team(self):
-        return getattr(self.request_user, 'team', None)
+        return getattr(self.request_user, "team", None)
 
     def shortcuts(self):
         return tuple(get_shortcuts(self))
@@ -177,16 +198,24 @@ class Context:
     #     return (self.team.runaround_solve_time is not None or self.team.all_metas_solve_time is not None) if self.team else False
 
     def all_puzzles(self):
-        return tuple(models.Puzzle.objects.select_related('round').order_by('round__order', 'order'))
+        return tuple(
+            models.Puzzle.objects.select_related("round").order_by(
+                "round__order", "order"
+            )
+        )
 
     def unclaimed_hints(self):
-        return models.Hint.objects.filter(status=models.Hint.NO_RESPONSE, claimer='').count()
+        return models.Hint.objects.filter(
+            status=models.Hint.NO_RESPONSE, claimer=""
+        ).count()
 
     def visible_errata(self):
         return models.Erratum.get_visible_errata(self)
 
     def errata_page_visible(self):
-        return self.is_superuser or any(erratum.updates_text for erratum in self.visible_errata)
+        return self.is_superuser or any(
+            erratum.updates_text for erratum in self.visible_errata
+        )
 
     def puzzle(self):
         return None  # set by validate_puzzle
@@ -195,7 +224,7 @@ class Context:
         return self.unlocks[self.puzzle]
 
     def time_since_unlock(self):
-        return (self.now - self.unlocks[self.puzzle])
+        return self.now - self.unlocks[self.puzzle]
 
     def hours_since_unlock(self):
         return self.time_since_unlock.total_seconds() // 3600
@@ -225,21 +254,20 @@ class Context:
             if puzzle.round.slug == "events":
                 return True
         return False
-    
+
     # BPH 2024 context
 
     def solves_by_case(self):
         return self.team.solves_by_case if self.team else {}
-    
+
     def minor_case_solves(self):
         return self.team.minor_case_solves if self.team else {}
-    
+
     def minor_case_incoming(self):
         return self.team.db_minor_case_incoming if self.team else {}
-    
+
     def minor_case_active(self):
         return self.team.db_minor_case_active if self.team else {}
-    
 
     # The purpose of this logic is to keep archive links current. For example,
     # https://2019.galacticpuzzlehunt.com/archive is a page that exists but only
@@ -249,4 +277,4 @@ class Context:
     # the most recent GPH, so it'll show all GPHs run so far. If you don't have
     # an archive, you don't have to bother with this.
     def archive_link(self):
-        return reverse('archive') if settings.DEBUG else 'https://FIXME/archive'
+        return reverse("archive") if settings.DEBUG else "https://FIXME/archive"

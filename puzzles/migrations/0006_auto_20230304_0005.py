@@ -6,35 +6,50 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('puzzles', '0005_auto_20220903_1806'),
+        ("puzzles", "0005_auto_20220903_1806"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='team',
-            name='brown_members',
-            field=models.BooleanField(default=False, help_text='(Undergraduates, Graduates, Faculty, or Alumni)', verbose_name='Any Brown community members on the team?'),
+            model_name="team",
+            name="brown_members",
+            field=models.BooleanField(
+                default=False,
+                help_text="(Undergraduates, Graduates, Faculty, or Alumni)",
+                verbose_name="Any Brown community members on the team?",
+            ),
         ),
         migrations.AddField(
-            model_name='team',
-            name='in_person_sat',
-            field=models.BooleanField(default=False, verbose_name='in person on Saturday, April 15th?'),
+            model_name="team",
+            name="in_person_sat",
+            field=models.BooleanField(
+                default=False, verbose_name="in person on Saturday, April 15th?"
+            ),
         ),
         migrations.AddField(
-            model_name='team',
-            name='in_person_sun',
-            field=models.BooleanField(default=False, verbose_name='in person on Sunday, April 16th?'),
+            model_name="team",
+            name="in_person_sun",
+            field=models.BooleanField(
+                default=False, verbose_name="in person on Sunday, April 16th?"
+            ),
         ),
         migrations.AddField(
-            model_name='team',
-            name='location',
-            field=models.CharField(default='Providence', help_text='(e.g: Hegeman Common Room, Barus and Holley Room ###, Zoom, Discord, etc.)', max_length=200, verbose_name='Location during hunt'),
+            model_name="team",
+            name="location",
+            field=models.CharField(
+                default="Providence",
+                help_text="(e.g: Hegeman Common Room, Barus and Holley Room ###, Zoom, Discord, etc.)",
+                max_length=200,
+                verbose_name="Location during hunt",
+            ),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='team',
-            name='phone_number',
-            field=models.CharField(default='999-999-9999', max_length=200, verbose_name='Phone number'),
+            model_name="team",
+            name="phone_number",
+            field=models.CharField(
+                default="999-999-9999", max_length=200, verbose_name="Phone number"
+            ),
             preserve_default=False,
         ),
     ]
