@@ -6,21 +6,32 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('puzzles', '0010_auto_20230404_1141'),
+        ("puzzles", "0010_auto_20230404_1141"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='MajorCase',
+            name="MajorCase",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255, verbose_name='Name')),
-                ('slug', models.SlugField(max_length=255, unique=True, verbose_name='Slug')),
-                ('order', models.IntegerField(default=0, verbose_name='Order')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=255, verbose_name="Name")),
+                (
+                    "slug",
+                    models.SlugField(max_length=255, unique=True, verbose_name="Slug"),
+                ),
+                ("order", models.IntegerField(default=0, verbose_name="Order")),
             ],
             options={
-                'verbose_name': 'major case',
-                'verbose_name_plural': 'major cases',
+                "verbose_name": "major case",
+                "verbose_name_plural": "major cases",
             },
         ),
     ]

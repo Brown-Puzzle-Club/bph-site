@@ -6,20 +6,29 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('puzzles', '0012_auto_20240104_0121'),
+        ("puzzles", "0012_auto_20240104_0121"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='minorcaseactive',
-            options={'verbose_name': 'minor case active', 'verbose_name_plural': 'minor cases active'},
+            name="minorcaseactive",
+            options={
+                "verbose_name": "minor case active",
+                "verbose_name_plural": "minor cases active",
+            },
         ),
         migrations.AlterModelOptions(
-            name='minorcaseincoming',
-            options={'verbose_name': 'minor case incoming', 'verbose_name_plural': 'minor cases incoming'},
+            name="minorcaseincoming",
+            options={
+                "verbose_name": "minor case incoming",
+                "verbose_name_plural": "minor cases incoming",
+            },
         ),
         migrations.AlterModelOptions(
-            name='round',
-            options={'verbose_name': 'round (minor case)', 'verbose_name_plural': 'rounds (minor cases)'},
+            name="round",
+            options={
+                "verbose_name": "round (minor case)",
+                "verbose_name_plural": "rounds (minor cases)",
+            },
         ),
     ]

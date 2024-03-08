@@ -6,13 +6,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('puzzles', '0016_auto_20240207_0314'),
+        ("puzzles", "0016_auto_20240207_0314"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='team',
-            name='emoji_choice',
-            field=models.CharField(default='❓', max_length=200, verbose_name='Emoji choice'),
+            model_name="team",
+            name="emoji_choice",
+            field=models.CharField(
+                default="❓", max_length=200, verbose_name="Emoji choice"
+            ),
         ),
     ]

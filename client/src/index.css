@@ -1,0 +1,288 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 48.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+
+    --radius: 0.5rem;
+
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+
+    color-scheme: light dark;
+    color: rgba(255, 255, 255, 0.87);
+    background-color: #242424;
+
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 48.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+body {
+  background-color: #05061c;
+}
+
+.navbar button {
+  background: none;
+  color: white;
+}
+
+.btn-gradient-1 {
+  border-width: 4px;
+  border-style: solid;
+  background-image: linear-gradient(to right, #536785, #273a63) 1;
+  background-origin: border-box;
+  background-clip: border-box;
+  border-radius: 1rem;
+}
+
+.btn-gradient-bot {
+  border-bottom-width: 4px;
+  border-style: solid;
+  background-image: linear-gradient(to right, #a4b2c7, #566c9a) 1;
+  background-origin: border-box;
+  background-clip: border-box;
+}
+
+.info h1 {
+  margin-top: 0.5rem;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  --tw-text-opacity: 1;
+  color: rgb(148 163 184 / var(--tw-text-opacity));
+  padding-top: 0.25rem;
+  color: #afc5ff; /*#9798ff;*/
+  -webkit-animation: glow_subtle 4s ease-in-out infinite alternate;
+  -moz-animation: glow_subtle 4s ease-in-out infinite alternate;
+  animation: glow_subtle 4s ease-in-out infinite alternate;
+}
+/* // color: #6581c2; */
+
+@keyframes glow {
+  from {
+    text-shadow: 0 0 10px #221f1f55, 0 0 10px #0ea5fd2d, 0 0 15px #0ea5fd2d, 0 0 20px #0ea5fd2d,
+      0 0 25px #0ea5fd2d, 0 0 30px #0ea5fd2d, 0 0 35px #0ea5fd2d;
+  }
+  to {
+    text-shadow: 0 0 10px #0088ff78, 0 0 15px #0088ff78, 0 0 20px #0088ff78, 0 0 25px #0088ff78,
+      0 0 30px #0088ff78, 0 0 35px #0088ff78, 0 0 40px #0088ff78;
+  }
+}
+
+.contact a {
+  text-decoration-line: underline;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.info h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.info h3 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.info h4 {
+  --tw-text-opacity: 1;
+  color: rgb(226 232 240 / var(--tw-text-opacity));
+  letter-spacing: -0.025em;
+  font-weight: 800;
+  font-size: 1.5rem;
+  line-height: 2rem;
+  display: inline-block;
+  padding-bottom: 0.25rem;
+  padding-top: 0.25rem;
+}
+
+.info p {
+  color: #94a3b8;
+  padding-top: 0.25rem;
+  padding-bottom: 1rem;
+}
+
+.info p:last-of-type {
+  padding-bottom: 2.5rem;
+}
+
+.info span {
+  color: #94a3b8;
+  padding-top: 0.25rem;
+  padding-bottom: 1rem;
+  padding-left: 2rem;
+}
+
+.info a {
+  text-decoration-line: underline;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.info strong {
+  font-weight: 600;
+  text-decoration-line: underline;
+  text-decoration-style: dashed;
+  cursor: help;
+}
+
+.info li {
+  color: #94a3b8;
+  padding-top: 0.25rem;
+  padding-bottom: 1rem;
+  list-style-type: circle;
+  list-style-position: inside;
+}
+
+.info .event-box {
+  color: #afc5ff;
+  -webkit-animation: glow_subtle 4s ease-in-out infinite alternate;
+  -moz-animation: glow_subtle 4s ease-in-out infinite alternate;
+  animation: glow_subtle 4s ease-in-out infinite alternate;
+}
+
+.credits-content li b {
+  color: white;
+}
+
+.credits-content li {
+  color: #94a3b8;
+}
+
+.credits a {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+@keyframes glow_subtle {
+  from {
+    text-shadow: 0 0 8px #0ea5fd2d, 0 0 12px #0ea5fd2d;
+  }
+  to {
+    text-shadow: 0 0 8px #0088ff78, 0 0 12px #0088ff78;
+  }
+}
+
+.credits strong {
+  -webkit-animation: glow_subtle 4s ease-in-out infinite alternate;
+  -moz-animation: glow_subtle 4s ease-in-out infinite alternate;
+  animation: glow_subtle 4s ease-in-out infinite alternate;
+}
+
+@keyframes shakeImg {
+  30% {
+    transform: rotate(20deg);
+  }
+  70% {
+    transform: rotate(-25deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+.shake-animation {
+  animation: shakeImg 1s ease-in-out; /* Adjust the duration and easing as needed */
+}
+
+.custom-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 4px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.7);
+}
