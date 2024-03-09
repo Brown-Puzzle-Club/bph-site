@@ -1,11 +1,4 @@
-import {
-  DjangoContext,
-  MinorCase,
-  Team,
-  TeamMember,
-  User,
-  UserTeam,
-} from "@/utils/django_types";
+import { DjangoContext, Round, Team, TeamMember, User, UserTeam } from "@/utils/django_types";
 import axios from "axios";
 import { createContext, useCallback, useContext } from "react";
 
@@ -16,7 +9,7 @@ type DjangoContextType = {
   FetchTeamMembers: () => Promise<TeamMember[]>;
   FetchTeams: () => Promise<Team[]>;
   FetchContext: () => Promise<DjangoContext>;
-  FetchCase: (round_id: number) => Promise<MinorCase>;
+  FetchCase: (round_id: number) => Promise<Round>;
 };
 
 const DjangoContext = createContext<DjangoContextType>({
@@ -36,15 +29,11 @@ const DjangoContext = createContext<DjangoContextType>({
     return {} as DjangoContext;
   },
   FetchCase: async () => {
-    return {} as MinorCase;
+    return {} as Round;
   },
 });
 
-export const DjangoContextProvider = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
+export const DjangoContextProvider = ({ children }: { children: React.ReactNode }) => {
   const FetchUser = useCallback(async () => {
     const response = axios.get("/api/user");
     return (await response).data[0] as User;
@@ -75,7 +64,7 @@ export const DjangoContextProvider = ({
   const FetchCase = useCallback(async (round_id: number) => {
     const response = await fetch(`/api/rounds/${round_id}`);
     const data = await response.json();
-    return data as MinorCase;
+    return data as Round;
   }, []);
 
   return (

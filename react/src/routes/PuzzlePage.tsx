@@ -1,9 +1,7 @@
-import React from 'react'
+// import React from 'react'
 
 function PuzzlePage() {
-  return (
-    <div>PuzzlePage</div>
-  )
+  return <div>PuzzlePage</div>;
 }
 
-export default PuzzlePage
+export default PuzzlePage;

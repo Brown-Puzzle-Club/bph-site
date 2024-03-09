@@ -1,61 +1,77 @@
-
-import { useEffect, useState } from 'react';
-import MinorCase from '@/components/MinorCase';
+import { useEffect, useState } from "react";
+import MinorCase from "@/components/MinorCase";
 
 // import MinorCase from '../components/MinorCase';
 
 import MinorCaseModal from "@/components/MinorCaseModal";
 // import { MinorCaseStatus, context } from "../context";
 import { getCookie } from "../utils/api";
-import { useDjangoContext } from '@/hooks/useDjangoContext';
-import { DjangoContext, MinorCaseActive, MinorCaseCompleted, MinorCaseIncoming } from '@/utils/django_types';
+import { useDjangoContext } from "@/hooks/useDjangoContext";
+import {
+  DjangoContext,
+  MinorCaseActive,
+  MinorCaseCompleted,
+  MinorCaseIncoming,
+} from "@/utils/django_types";
 
-
-function renderActiveCases(casesRecord : (MinorCaseActive| MinorCaseIncoming| MinorCaseCompleted)[], openModal: (caseID: number) => void) : JSX.Element[] {
+function renderActiveCases(
+  casesRecord: (MinorCaseActive | MinorCaseIncoming | MinorCaseCompleted)[],
+  openModal: (caseID: number) => void,
+): JSX.Element[] {
   if (casesRecord.length === 0) {
     return [];
   }
+
+  console.log(casesRecord);
+
   return casesRecord.map((minorCase) => (
-    <MinorCase 
-      key={minorCase.id} 
-      name={minorCase.minor_case_round.name} 
-      description={minorCase.minor_case_round.description} 
-      major_case_name={''} 
-      major_case_slug={'#TODO: fix'} 
+    <MinorCase
+      key={minorCase.id}
+      name={minorCase.minor_case_round.name}
+      description={minorCase.minor_case_round.description}
+      major_case_name={""}
+      major_case_slug={"#TODO: fix"}
       bgColor="pink-100"
-      onClick={() => {openModal(minorCase.minor_case_round.id)}}
+      onClick={() => {
+        openModal(minorCase.minor_case_round.id);
+      }}
     />
   ));
-
 }
 
+const findCaseFromContext = (case_id: number, context: DjangoContext | undefined) => {
+  if (!context) return undefined;
+
+  const cases_query = context.team_context.minor_case_active?.filter((mca) => {
+    return mca?.minor_case_round.id === case_id;
+  });
+  // TODO: maybe better error handling later
+  return cases_query.length == 1 ? cases_query[0].minor_case_round : undefined;
+};
 
 function EventPage() {
   const [newCases, setNewCases] = useState<JSX.Element[]>([]);
-  const [ , setDoneCases] = useState<JSX.Element[]>([]);
+  const [, setDoneCases] = useState<JSX.Element[]>([]);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   const [selectedCase, setSelectedCase] = useState<number>(-1); //TODO: fix -1
-  const [output, setOutput] = useState<string>('');
+  const [output, setOutput] = useState<string>("");
   const { FetchContext } = useDjangoContext();
-  const [context, setContext] = useState<DjangoContext>(); 
-
+  const [context, setContext] = useState<DjangoContext>();
 
   useEffect(() => {
     FetchContext().then((context) => {
       console.log(context);
       setContext(context);
-    })}, [FetchContext]);
+    });
+  }, [FetchContext]);
 
-  const submit = async (caseID : number) => {
-
+  const submit = async (caseID: number) => {
     const csrftoken = getCookie("csrftoken");
 
-
     try {
-
       const result = await fetch("api/move_minor_case/" + caseID, {
-        method: 'POST',
+        method: "POST",
         body: JSON.stringify({
           // ...
         }),
@@ -73,8 +89,7 @@ function EventPage() {
         const res = await result.json();
 
         // console.log(res)
-        setOutput(res['success']);
-
+        setOutput(res["success"]);
       }
     } catch (e) {
       // This error handling will be very poor.
@@ -82,9 +97,7 @@ function EventPage() {
     }
   };
 
-
-
-  const openModal = (caseID : number) => {
+  const openModal = (caseID: number) => {
     setSelectedCase(caseID);
 
     setModalOpen(true);
@@ -94,12 +107,11 @@ function EventPage() {
     setModalOpen(false);
   };
 
-
-  const addBox = (side: 'left' | 'right') => {
+  const addBox = (side: "left" | "right") => {
     // return side
 
     // TODO: fix
-    if (side === 'left') {
+    if (side === "left") {
       // Clear the middle column when clicking on the left box
       if (context != null) {
         const solvedCasesFromContext = context.team_context.minor_case_completed;
@@ -122,7 +134,7 @@ function EventPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex min-h-screen flex-col">
       {/* <button onClick={submit(3)}>Submit test API</button> */}
       API OUTPUT: {output}
       {/* Top row */}
@@ -131,50 +143,54 @@ function EventPage() {
         Top Row
       </div>
       {/* Middle rows */}
-      <div className="flex-1 flex">
-        <div className="w-1/4 bg-gray-300 flex flex-col justify-center items-center">
+      <div className="flex flex-1">
+        <div className="flex w-1/4 flex-col items-center justify-center bg-gray-300">
           {/* Left column content */}
           <div
-            className="bg-blue-200 p-4 w-3/4 cursor-pointer h-1/2"
+            className="h-1/2 w-3/4 cursor-pointer bg-blue-200 p-4"
             onClick={() => addBox("left")}
           >
             {/* Box content */}
             Left Box
           </div>
         </div>
-        <div className="w-1/2 bg-gray-500 flex flex-col justify-between items-center">
+        <div className="flex w-1/2 flex-col items-center justify-between bg-gray-500">
           {/* Middle column content */}
-          <div className="w-1/2 bg-gray-500 flex flex-wrap justify-around items-start">
+          <div className="flex w-1/2 flex-wrap items-start justify-around bg-gray-500">
             {newCases}
             {/* {doneCases} */}
           </div>
         </div>
-        <div className="w-1/4 bg-gray-300 flex flex-col justify-center items-center">
+        <div className="flex w-1/4 flex-col items-center justify-center bg-gray-300">
           {/* Right column content */}
           <div
-            className="bg-green-200 p-4 w-3/4 cursor-pointer h-1/2"
+            className="h-1/2 w-3/4 cursor-pointer bg-green-200 p-4"
             onClick={() => addBox("right")}
           >
             {/* Box content */}
-            <p onClick={() => openModal(0)}>Right Box</p> 
+            <p onClick={() => openModal(0)}>Right Box</p>
           </div>
         </div>
       </div>
       {/* Cases row */}
-      <div className="bg-blue-200 p-4 flex justify-center items-center">
+      <div className="flex items-center justify-center bg-blue-200 p-4">
         {/* Render a box for each active case */}
         <div className="flex">
-          {context? renderActiveCases(context.team_context.minor_case_active, openModal) : null}
+          {context ? renderActiveCases(context.team_context.minor_case_active, openModal) : null}
         </div>
       </div>
       {/* Bottom row */}
-      <div className="bg-blue-200 p-4 flex flex-col justify-center items-center">
+      <div className="flex flex-col items-center justify-center bg-blue-200 p-4">
         {/* Yellow bottom box */}
       </div>
       {/* Modal */}
-
-      <MinorCaseModal isOpen={modalOpen} closeModal={closeModal} caseID={selectedCase} onSubmit={submit} />
-
+      <MinorCaseModal
+        isOpen={modalOpen}
+        closeModal={closeModal}
+        caseID={selectedCase}
+        onSubmit={submit}
+        cur_case={findCaseFromContext(selectedCase, context)}
+      />
     </div>
   );
 }
