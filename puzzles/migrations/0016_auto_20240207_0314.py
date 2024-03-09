@@ -6,28 +6,34 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('puzzles', '0015_auto_20240207_0306'),
+        ("puzzles", "0015_auto_20240207_0306"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='team',
-            name='in_person',
-            field=models.BooleanField(default=False, verbose_name='In person team?'),
+            model_name="team",
+            name="in_person",
+            field=models.BooleanField(default=False, verbose_name="In person team?"),
         ),
         migrations.AlterField(
-            model_name='team',
-            name='color_choice',
-            field=models.CharField(default='#ffffff', max_length=200, verbose_name='Color choice'),
+            model_name="team",
+            name="color_choice",
+            field=models.CharField(
+                default="#ffffff", max_length=200, verbose_name="Color choice"
+            ),
         ),
         migrations.AlterField(
-            model_name='team',
-            name='emoji_choice',
-            field=models.CharField(default='', max_length=200, verbose_name='Emoji choice'),
+            model_name="team",
+            name="emoji_choice",
+            field=models.CharField(
+                default="", max_length=200, verbose_name="Emoji choice"
+            ),
         ),
         migrations.AlterField(
-            model_name='team',
-            name='num_brown_members',
-            field=models.IntegerField(default=0, verbose_name='Number of Brown members'),
+            model_name="team",
+            name="num_brown_members",
+            field=models.IntegerField(
+                default=0, verbose_name="Number of Brown members"
+            ),
         ),
     ]

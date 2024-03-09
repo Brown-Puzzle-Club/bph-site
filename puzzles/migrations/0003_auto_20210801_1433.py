@@ -8,141 +8,221 @@ import django.utils.timezone
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('puzzles', '0002_auto_20200921_0438'),
+        ("puzzles", "0002_auto_20200921_0438"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='puzzle',
-            name='deep',
+            model_name="puzzle",
+            name="deep",
         ),
         migrations.RemoveField(
-            model_name='puzzle',
-            name='metas',
+            model_name="puzzle",
+            name="metas",
         ),
         migrations.AddField(
-            model_name='hint',
-            name='is_followup',
+            model_name="hint",
+            name="is_followup",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='puzzle',
-            name='order',
+            model_name="puzzle",
+            name="order",
             field=models.IntegerField(default=0),
         ),
         migrations.AddField(
-            model_name='puzzle',
-            name='unlock_global',
-            field=models.IntegerField(default=-1, help_text='If nonnegative, puzzle unlocks after N main round solves in any round.'),
+            model_name="puzzle",
+            name="unlock_global",
+            field=models.IntegerField(
+                default=-1,
+                help_text="If nonnegative, puzzle unlocks after N main round solves in any round.",
+            ),
         ),
         migrations.AddField(
-            model_name='puzzle',
-            name='unlock_hours',
-            field=models.IntegerField(default=-1, help_text='If nonnegative, puzzle unlocks N hours after the hunt starts.'),
+            model_name="puzzle",
+            name="unlock_hours",
+            field=models.IntegerField(
+                default=-1,
+                help_text="If nonnegative, puzzle unlocks N hours after the hunt starts.",
+            ),
         ),
         migrations.AddField(
-            model_name='puzzle',
-            name='unlock_local',
-            field=models.IntegerField(default=-1, help_text='If nonnegative, puzzle unlocks after N main round solves in this round.'),
+            model_name="puzzle",
+            name="unlock_local",
+            field=models.IntegerField(
+                default=-1,
+                help_text="If nonnegative, puzzle unlocks after N main round solves in this round.",
+            ),
         ),
         migrations.AddField(
-            model_name='puzzleunlock',
-            name='view_datetime',
+            model_name="puzzleunlock",
+            name="view_datetime",
             field=models.DateTimeField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='answersubmission',
-            name='submitted_answer',
+            model_name="answersubmission",
+            name="submitted_answer",
             field=models.CharField(max_length=255),
         ),
         migrations.AlterField(
-            model_name='hint',
-            name='answered_datetime',
+            model_name="hint",
+            name="answered_datetime",
             field=models.DateTimeField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='hint',
-            name='claimed_datetime',
+            model_name="hint",
+            name="claimed_datetime",
             field=models.DateTimeField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='puzzle',
-            name='answer',
-            field=models.CharField(help_text='Answer (fine if unnormalized)', max_length=255),
+            model_name="puzzle",
+            name="answer",
+            field=models.CharField(
+                help_text="Answer (fine if unnormalized)", max_length=255
+            ),
         ),
         migrations.AlterField(
-            model_name='puzzle',
-            name='body_template',
-            field=models.CharField(blank=True, help_text='File name of a Django template (including .html) under\n        puzzle_bodies and solution_bodies containing the puzzle and\n        solution content, respectively. Defaults to slug + ".html" if not\n        specified.', max_length=255),
+            model_name="puzzle",
+            name="body_template",
+            field=models.CharField(
+                blank=True,
+                help_text='File name of a Django template (including .html) under\n        puzzle_bodies and solution_bodies containing the puzzle and\n        solution content, respectively. Defaults to slug + ".html" if not\n        specified.',
+                max_length=255,
+            ),
         ),
         migrations.AlterField(
-            model_name='puzzle',
-            name='emoji',
-            field=models.CharField(default=':question:', help_text='Emoji to use in Discord integrations involving this puzzle', max_length=32),
+            model_name="puzzle",
+            name="emoji",
+            field=models.CharField(
+                default=":question:",
+                help_text="Emoji to use in Discord integrations involving this puzzle",
+                max_length=32,
+            ),
         ),
         migrations.AlterField(
-            model_name='puzzle',
-            name='name',
+            model_name="puzzle",
+            name="name",
             field=models.CharField(max_length=255),
         ),
         migrations.AlterField(
-            model_name='puzzle',
-            name='slug',
-            field=models.SlugField(help_text='Slug used in URLs to identify this puzzle (must be unique)', max_length=255, unique=True),
+            model_name="puzzle",
+            name="slug",
+            field=models.SlugField(
+                help_text="Slug used in URLs to identify this puzzle (must be unique)",
+                max_length=255,
+                unique=True,
+            ),
         ),
         migrations.AlterField(
-            model_name='puzzlemessage',
-            name='guess',
+            model_name="puzzlemessage",
+            name="guess",
             field=models.CharField(max_length=255),
         ),
         migrations.AlterField(
-            model_name='puzzleunlock',
-            name='unlock_datetime',
+            model_name="puzzleunlock",
+            name="unlock_datetime",
             field=models.DateTimeField(),
         ),
         migrations.AlterField(
-            model_name='team',
-            name='is_hidden',
-            field=models.BooleanField(default=False, help_text='If a team is hidden, it will not be visible to the public'),
+            model_name="team",
+            name="is_hidden",
+            field=models.BooleanField(
+                default=False,
+                help_text="If a team is hidden, it will not be visible to the public",
+            ),
         ),
         migrations.AlterField(
-            model_name='team',
-            name='team_name',
-            field=models.CharField(help_text='Public team name for scoreboards and communications', max_length=255, unique=True),
+            model_name="team",
+            name="team_name",
+            field=models.CharField(
+                help_text="Public team name for scoreboards and communications",
+                max_length=255,
+                unique=True,
+            ),
         ),
         migrations.AlterField(
-            model_name='teammember',
-            name='name',
+            model_name="teammember",
+            name="name",
             field=models.CharField(max_length=255),
         ),
         migrations.CreateModel(
-            name='Round',
+            name="Round",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255)),
-                ('slug', models.SlugField(max_length=255, unique=True)),
-                ('order', models.IntegerField(default=0)),
-                ('meta', models.ForeignKey(blank=True, limit_choices_to={'is_meta': True}, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='puzzles.puzzle')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=255)),
+                ("slug", models.SlugField(max_length=255, unique=True)),
+                ("order", models.IntegerField(default=0)),
+                (
+                    "meta",
+                    models.ForeignKey(
+                        blank=True,
+                        limit_choices_to={"is_meta": True},
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="+",
+                        to="puzzles.puzzle",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Erratum',
+            name="Erratum",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('updates_text', models.TextField(blank=True, help_text='\n        Text to show on the Updates (errata) page. If blank, it will not appear there.\n        Use $PUZZLE to refer to the puzzle. HTML is ok.\n    ')),
-                ('puzzle_text', models.TextField(blank=True, help_text='\n        Text to show on the puzzle page. If blank, it will not appear there. HTML is ok.\n    ')),
-                ('timestamp', models.DateTimeField(default=django.utils.timezone.now)),
-                ('published', models.BooleanField(default=False)),
-                ('puzzle', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='puzzles.puzzle')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "updates_text",
+                    models.TextField(
+                        blank=True,
+                        help_text="\n        Text to show on the Updates (errata) page. If blank, it will not appear there.\n        Use $PUZZLE to refer to the puzzle. HTML is ok.\n    ",
+                    ),
+                ),
+                (
+                    "puzzle_text",
+                    models.TextField(
+                        blank=True,
+                        help_text="\n        Text to show on the puzzle page. If blank, it will not appear there. HTML is ok.\n    ",
+                    ),
+                ),
+                ("timestamp", models.DateTimeField(default=django.utils.timezone.now)),
+                ("published", models.BooleanField(default=False)),
+                (
+                    "puzzle",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="puzzles.puzzle",
+                    ),
+                ),
             ],
             options={
-                'verbose_name_plural': 'Errata',
+                "verbose_name_plural": "Errata",
             },
         ),
         migrations.AddField(
-            model_name='puzzle',
-            name='round',
-            field=models.ForeignKey(default=None, on_delete=django.db.models.deletion.CASCADE, to='puzzles.round'),
+            model_name="puzzle",
+            name="round",
+            field=models.ForeignKey(
+                default=None,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="puzzles.round",
+            ),
             preserve_default=False,
         ),
     ]

@@ -6,18 +6,25 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('puzzles', '0006_auto_20230304_0005'),
+        ("puzzles", "0006_auto_20230304_0005"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='team',
-            name='location',
-            field=models.CharField(default='NO LOCATION', help_text='(e.g: Hegeman Common Room, Barus and Holley Room ###, Zoom, Discord, etc.)', max_length=200, verbose_name='Location during hunt'),
+            model_name="team",
+            name="location",
+            field=models.CharField(
+                default="NO LOCATION",
+                help_text="(e.g: Hegeman Common Room, Barus and Holley Room ###, Zoom, Discord, etc.)",
+                max_length=200,
+                verbose_name="Location during hunt",
+            ),
         ),
         migrations.AlterField(
-            model_name='team',
-            name='phone_number',
-            field=models.CharField(default='-1', max_length=200, verbose_name='Phone number'),
+            model_name="team",
+            name="phone_number",
+            field=models.CharField(
+                default="-1", max_length=200, verbose_name="Phone number"
+            ),
         ),
     ]
