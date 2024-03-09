@@ -66,7 +66,6 @@ MIDDLEWARE = [
     "impersonate.middleware.ImpersonateMiddleware",
     "puzzles.messaging.log_request_middleware",
     "puzzles.context.context_middleware",
-    "puzzles.views.accept_ranges_middleware",
 ]
 
 redis_url = os.environ.get("REDISCLOUD_URL")

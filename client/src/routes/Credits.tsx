@@ -148,7 +148,7 @@ export default function Credits() {
               <strong>Hammad Izhar</strong> ('24)
             </li>
             <li>
-              <strong>Andrew Li</strong> ('25)
+              <strong>Andrew Li</strong> ('24)
             </li>
             <li>
               <strong>Ryan Huang</strong> ('26)
