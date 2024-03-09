@@ -33,15 +33,12 @@ Past these major features, we have tailored the site to work best for our event,
   - **Windows/other:** [Install PostgreSQL 14](https://www.postgresql.org/download/) from here and add the correct path env variables such that `pg_config` is found from the terminal (`which pg_config` in unix terminal)
 - Start the development server with `./manage.py runserver`
   - If you get a warning (red text) about making migrations, stop the server, run `./manage.py migrate`, then start it again.
-  - If all went well, the dev server should start, printing its local URL to stdout.
-- Build and serve React
+  - If all went well, the dev server should start.
+  - Go to `http://localhost:8000/api/...` to see any of your API queries.
+- Build and serve the site
   - Requirements: [Node LTS](https://nodejs.org/en/download)
   - `cd` into the `client/` directory and run `npm istall`
-  - _React-only development_
-    - `npm run dev` and type the route you are developing into your browser url.
-  - _Django-integrated development_
-    - Build the react project to Django static files by running `npm run build`. Alternatively, you can run `npm run build-watch` to have rebuilds occur on new file edits.
-    - View the react page served on the Django route you made by following the `./manage.py runserver` steps above.
+  - `npm run dev`and go to `http://localhost:5173/` to see the site! (This needs to be run with the server for api routes to work)
 
 # Style Guide
 
@@ -50,7 +47,7 @@ Past these major features, we have tailored the site to work best for our event,
 - **Frontend:**
   - our code is formatted using standard ESLint.
   - our code is styled using tailwind classNames whenever possible. If you are unfamiliar, please read the [documentation](https://tailwindcss.com/)
-  - for larger boilerplate components (*buttons, menus, interactive widgets, etc.*) we are using the shadcn component library whenever possible. Look at the `ui/` folder for examples imported and their usage across the site. To import new components, please read the [documentation](https://ui.shadcn.com/docs)
+  - for larger boilerplate components (_buttons, menus, interactive widgets, etc._) we are using the shadcn component library whenever possible. Look at the `ui/` folder for examples imported and their usage across the site. To import new components, please read the [documentation](https://ui.shadcn.com/docs)
 - **Backend:**
   - our code is formatted using Python Black formatter, without type-checking
 
@@ -62,7 +59,7 @@ Past these major features, we have tailored the site to work best for our event,
 
 - ...make a new backend-protected page?
 
-  - Add the route to `client/src/main.tsx` like above, but also add a path to `bph/urls.py` that leads to a more protected React view (prerelease_locked, team_locked, or a new one you can make in `puzzles/views.py`)
+  - TODO: this is not implemented yet :P
 
 - ...access backend state in the frontend?
 
