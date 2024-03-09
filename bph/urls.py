@@ -18,9 +18,6 @@ from urllib.parse import quote_plus, unquote_plus
 
 from django.urls import path, re_path, include, register_converter
 from django.contrib import admin
-from django.contrib.auth import views as auth_views
-
-from puzzles import views
 
 
 class QuotedStringConverter:
@@ -38,8 +35,5 @@ register_converter(QuotedStringConverter, "quotedstr")
 urlpatterns = [
     re_path(r"^admin/", admin.site.urls),
     path("api/", include("puzzles.api.urls")),
-    # all other paths go to React client
-    path("social-deduction", views.prerelease_locked_react, name="social-deduction"),
-    path("", views.react_base, name="landing page"),
-    path("<path:any_path>/", views.react_base, name="catch-all-react"),
+    # all other paths go to React client router
 ]
