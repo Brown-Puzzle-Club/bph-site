@@ -4,6 +4,6 @@ __pycache__/
 logs/
 venv/
 db.sqlite3
-puzzles/static/react/
+bph/puzzles/static/react/
 # static/
 manage.py

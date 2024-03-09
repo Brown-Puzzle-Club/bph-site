@@ -6,28 +6,44 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('puzzles', '0009_puzzle_unlock_meta'),
+        ("puzzles", "0009_puzzle_unlock_meta"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='team',
-            name='merge_in',
-            field=models.BooleanField(default=False, verbose_name='Is the team interested in taking on lone-solvers.'),
+            model_name="team",
+            name="merge_in",
+            field=models.BooleanField(
+                default=False,
+                verbose_name="Is the team interested in taking on lone-solvers.",
+            ),
         ),
         migrations.AddField(
-            model_name='team',
-            name='merge_in_preferences',
-            field=models.CharField(default='', help_text='(e.g. size, age-range, in-person vs remote, etc.). DO NOT GIVE A TEAM MORE THAN THE NUMBER OF MEMBERS THEY ARE ASKING FOR!', max_length=200, verbose_name='Lone solver merge in preferences'),
+            model_name="team",
+            name="merge_in_preferences",
+            field=models.CharField(
+                default="",
+                help_text="(e.g. size, age-range, in-person vs remote, etc.). DO NOT GIVE A TEAM MORE THAN THE NUMBER OF MEMBERS THEY ARE ASKING FOR!",
+                max_length=200,
+                verbose_name="Lone solver merge in preferences",
+            ),
         ),
         migrations.AddField(
-            model_name='team',
-            name='merge_out',
-            field=models.BooleanField(default=False, verbose_name='Is the team interested in joining up with a larger team for the hunt.'),
+            model_name="team",
+            name="merge_out",
+            field=models.BooleanField(
+                default=False,
+                verbose_name="Is the team interested in joining up with a larger team for the hunt.",
+            ),
         ),
         migrations.AddField(
-            model_name='team',
-            name='merge_out_preferences',
-            field=models.CharField(default='', help_text='(e.g. size, age-range, in-person vs remote, etc.)', max_length=200, verbose_name='Merge out with larger team preferences'),
+            model_name="team",
+            name="merge_out_preferences",
+            field=models.CharField(
+                default="",
+                help_text="(e.g. size, age-range, in-person vs remote, etc.)",
+                max_length=200,
+                verbose_name="Merge out with larger team preferences",
+            ),
         ),
     ]
