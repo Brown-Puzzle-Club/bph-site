@@ -23,6 +23,7 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext as _
+from django.apps import apps
 
 from puzzles.context import Context
 from puzzles.hunt_config import (
@@ -364,6 +365,7 @@ def broadcast_presence(sender, room, **kwargs):
         }
 
         async_to_sync(channel.group_send)(room.channel_name, channel_layer_message)
+
 class VotingConsumer(WebsocketConsumer):
     def get_room(self):
         return f"{self.scope['path'].split('/')[-1]}-{self.scope['user'].team}"
@@ -381,21 +383,21 @@ class VotingConsumer(WebsocketConsumer):
     def receive(self, text_data):
         client_room = Room.objects.get(channel_name=self.get_room())
         data = json.loads(text_data)
-        print(data)
 
         if data['type'] == 'vote':
             data = data['data']
-            if data['oldVote'] is not None:
-                pass
+            print(data)
+            MinorCaseIncomingEvent = apps.get_model('puzzles', 'MinorCaseIncomingEvent')
+            incoming_event = MinorCaseIncomingEvent.get_current_incoming_event(self.scope.get('user')) # type: ignore
+            incoming_event.vote(data['oldVote'], data['newVote'])
 
-            if data['newVote'] is not None:
-                pass
+            print(incoming_event.get_votes())
 
             response = {
                 "type": 'vote',
                 "data": {
-                    "vote_counts": [0 for _ in range(data["numOptions"])],
-                    "expiration_time": datetime.datetime.now().isoformat()
+                    "cases": incoming_event.get_votes(),
+                    "expiration_time": None
                 }
             }
 

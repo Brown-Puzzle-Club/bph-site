@@ -602,7 +602,7 @@ class Team(models.Model):
             if submit.puzzle.slug == submit.puzzle.round.meta.slug:
                 out[submit.puzzle.round.major_case.slug][submit.puzzle.round.slug] = submit
         return out
-    
+
     def db_minor_case_active(self):
         return [
             active
@@ -695,11 +695,11 @@ class Team(models.Model):
         if unlocked_at == context.now:
             show_unlock_notification(context, unlock)
         return unlock
-    
+
     @staticmethod
     def unlock_case(team, minor_case, unlock_datetime):
         print(f"EVENT: unlocking case {minor_case} for team {team} at {unlock_datetime}")
-        
+
         try:
             unlock = MinorCaseActive.objects.get_or_create(
               team=team,
@@ -784,13 +784,13 @@ class MinorCaseVote(models.Model):
 
 
 class MinorCaseIncomingEvent(models.Model):
-    
+
     team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_('team'))
     timestamp = models.DateTimeField(verbose_name=_('Event creation datetime'))
     votes = models.ManyToManyField(MinorCaseVote, verbose_name=_('Votes'), blank=True)
     expiration = models.DateTimeField(verbose_name=_('Expiration datetime'), null=True, blank=True)
     final_vote = models.OneToOneField('MinorCaseVoteEvent', on_delete=models.CASCADE, verbose_name=_('Final vote'), null=True, blank=True)
-
+    is_initialized = models.BooleanField(verbose_name=_('Is initialized'), default=False)
 
     def __str__(self):
         return '%s -> %s @ %s' % (
@@ -801,9 +801,39 @@ class MinorCaseIncomingEvent(models.Model):
         verbose_name = _('minor case incoming event')
         verbose_name_plural = _('minor cases incoming events')
 
+    def generate_minor_cases(self):
+        return Round.objects.exclude(minorcaseactive__team=self.team).order_by('order')[:6]
+
+    def initialize_votes(self):
+        if self.is_initialized:
+            return
+
+        for minor_case in self.generate_minor_cases():
+            self.votes.add(MinorCaseVote.objects.create(team=self.team, minor_case=minor_case, num_votes=0))
+
+        self.is_initialized = True
+        self.save()
+
+    def get_votes(self):
+        return {vote.minor_case.name: {"desc": vote.minor_case.desc, "voteCount": vote.num_votes} for vote in self.votes.all()}
+
     def cases(self):
-        return [vote.minor_case for vote in self.votes.all()]
-    
+        return [vote.minor_case.name for vote in self.votes.all()]
+
+    def vote(self, old_vote: None | str, new_vote: None | str):
+        print(old_vote, new_vote)
+        if old_vote:
+            vote = self.votes.get(minor_case__name=old_vote)
+            if vote:
+                vote.num_votes -= 1
+                vote.save()
+        if new_vote:
+            vote = self.votes.get(minor_case__name=new_vote)
+            if vote:
+                vote.num_votes += 1
+                vote.save()
+        self.save()
+
     def finalize_vote(self):
         '''Finalizes the vote for the incoming event, and creates a MinorCaseVoteEvent'''
 
@@ -829,9 +859,15 @@ class MinorCaseIncomingEvent(models.Model):
         most_recent_case = MinorCaseIncomingEvent.objects.filter(team=context.team).order_by('-timestamp').first()
         if most_recent_case and not most_recent_case.final_vote:
             return most_recent_case
+
+        if most_recent_case is None:
+            incoming_event = MinorCaseIncomingEvent.objects.create(team=context.team, timestamp=timezone.now())
+            incoming_event.initialize_votes()
+            return incoming_event
+
         return None
 
-    
+
 class MinorCaseVoteEvent(models.Model):
     '''Represents a finalized team vote on a single puzzle'''
     team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_('team'))

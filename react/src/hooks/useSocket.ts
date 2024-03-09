@@ -14,8 +14,12 @@ export interface PresenceInfo {
   num_connected: number;
 }
 
+export interface Vote {
+  desc: string,
+  voteCount: number;
+}
 export interface VotingInfo {
-  vote_counts: number[];
+  cases: Record<string, Vote>;
   expiration_time: string | null;
 }
 
@@ -27,7 +31,10 @@ const PresenceInfoSchema = z.object({
 });
 
 const VotingInfoSchema = z.object({
-  vote_counts: z.array(z.number().nonnegative()),
+  cases: z.record(z.object({
+    desc: z.string(),
+    voteCount: z.number().nonnegative()
+  })),
   expiration_time: z.string().nullable(),
 });
 
@@ -37,7 +44,7 @@ const useSocket = (path: string, callbacks: SocketCallbacks | undefined = undefi
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [presenceInfo, setPresenceInfo] = useState<PresenceInfo | null>(null);
   const [votingInfo, setVotingInfo] = useState<VotingInfo>({
-    vote_counts: [0, 0, 0, 0, 0, 0],
+    cases: {},
     expiration_time: null,
   });
 

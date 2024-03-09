@@ -8,7 +8,7 @@ interface CaseVotingProps {
   votingOptions: string[];
 }
 
-const CaseVoting = ({ path, votingOptions }: CaseVotingProps) => {
+const CaseVoting = ({ path }: CaseVotingProps) => {
   const { socket, presenceInfo, votingInfo } = useSocket(path, { onMessage: console.log });
 
   return !socket || socket.readyState != WebSocket.OPEN ? (
@@ -20,7 +20,6 @@ const CaseVoting = ({ path, votingOptions }: CaseVotingProps) => {
         socket={socket}
         presenceInfo={presenceInfo}
         votingInfo={votingInfo}
-        options={votingOptions}
       />
     </>
   );

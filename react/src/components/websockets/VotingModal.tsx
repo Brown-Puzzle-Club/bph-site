@@ -14,19 +14,24 @@ import { useEffect, useState } from "react";
 import { useTimer } from "react-timer-hook";
 
 interface VotingModalProps {
-  options: string[];
   presenceInfo: PresenceInfo | null;
   votingInfo: VotingInfo | null;
   socket: WebSocket;
 }
 
-const VotingModal = ({ socket, options, votingInfo, presenceInfo }: VotingModalProps) => {
+const VotingModal = ({ socket, votingInfo, presenceInfo }: VotingModalProps) => {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const { seconds, isRunning } = useTimer({ expiryTimestamp: new Date() });
 
   useEffect(() => {
-    console.log(votingInfo);
-  }, [votingInfo]);
+    socket.send(JSON.stringify({
+      type: "vote",
+      data: {
+        oldVote: null,
+        newVote: null,
+      }
+    }))
+  }, [socket]);
 
   const setVote = (option: string) => {
     setSelectedOption((currOption) => {
@@ -37,7 +42,6 @@ const VotingModal = ({ socket, options, votingInfo, presenceInfo }: VotingModalP
           data: {
             oldVote: currOption,
             newVote: newVote,
-            numOptions: options.length,
           },
         }),
       );
@@ -56,10 +60,9 @@ const VotingModal = ({ socket, options, votingInfo, presenceInfo }: VotingModalP
           <DialogDescription>Select the next case you'd like to work on.</DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
-          {options.map((option, idx) => (
-            <div className="flex items-center gap-4 text-black">
+          {votingInfo && presenceInfo && Object.keys(votingInfo.cases).sort().map((option) => (
+            <div className="flex items-center gap-4 text-black" key={option}>
               <Button
-                key={option}
                 variant="secondary"
                 className={cn(selectedOption == option && "ring-2", "flex-1")}
                 onClick={() => {
@@ -70,7 +73,7 @@ const VotingModal = ({ socket, options, votingInfo, presenceInfo }: VotingModalP
                 {option}
               </Button>
               <p>
-                {votingInfo?.vote_counts[idx]}/{presenceInfo?.num_connected}
+                {votingInfo?.cases[option].voteCount}/{presenceInfo?.num_connected}
               </p>
             </div>
           ))}

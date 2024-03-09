@@ -11,6 +11,7 @@ from puzzles.models import (
     PuzzleUnlock,
     MinorCaseActive,
     MinorCaseIncomingEvent,
+    MinorCaseVote,
     MinorCaseVoteEvent,
     MinorCaseCompleted,
     AnswerSubmission,
@@ -88,6 +89,10 @@ class MinorCaseIncomingEventAdmin(admin.ModelAdmin):
     list_display = ('team', 'timestamp', 'expiration', 'final_vote')
     list_filter = ('team', 'timestamp', 'expiration', 'final_vote')
 
+class MinorCaseVoteAdmin(admin.ModelAdmin):
+    list_display = ('team', 'minor_case', 'num_votes')
+    list_filter = ('minor_case', 'team')
+
 class MinorCaseVoteEventAdmin(admin.ModelAdmin):
     list_display = ('team', 'timestamp', 'selected_case')
     list_filter = ('team', 'timestamp', 'selected_case')
@@ -135,6 +140,7 @@ admin.site.register(TeamMember, TeamMemberAdmin)
 admin.site.register(PuzzleUnlock, PuzzleUnlockAdmin)
 
 admin.site.register(MinorCaseIncomingEvent, MinorCaseIncomingEventAdmin)
+admin.site.register(MinorCaseVote, MinorCaseVoteAdmin)
 admin.site.register(MinorCaseVoteEvent, MinorCaseVoteEventAdmin)
 admin.site.register(MinorCaseActive, MinorCaseActiveAdmin)
 admin.site.register(MinorCaseCompleted, MinorCaseCompletedAdmin)
