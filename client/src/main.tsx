@@ -1,4 +1,5 @@
 import axios from "axios";
+import Cookies from "js-cookie";
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -19,9 +20,8 @@ import MyTeamPage from "./routes/MyTeamPage";
 import RegisterForm from "./routes/Register";
 import TeamPage from "./routes/TeamPage";
 
-declare const CSRF_TOKEN: string;
 try {
-  axios.defaults.headers.common["X-CSRFToken"] = CSRF_TOKEN;
+  axios.defaults.headers.common["X-CSRFToken"] = Cookies.get("csrftoken");
 } catch (e) {
   console.error("Error setting CSRF token in axios headers");
 }
