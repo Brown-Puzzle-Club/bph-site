@@ -2,7 +2,7 @@ import { ErrorResponse, isRouteErrorResponse, useRouteError } from "react-router
 
 const Error404 = ({ error }: { error: ErrorResponse }) => {
   return (
-    <div className="min-h-[90%] flex items-center justify-center">
+    <div className="h-[90vh] flex items-center justify-center">
       <div className="text-center text-muted-foreground text-5xl">
         <h1 className="text-[10rem] pb-20">🔎 ?</h1>
         <h2>
