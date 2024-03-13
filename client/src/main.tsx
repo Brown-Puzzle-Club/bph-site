@@ -20,7 +20,9 @@ import MyTeamPage from "./routes/MyTeamPage";
 import RegisterForm from "./routes/Register";
 import TeamPage from "./routes/TeamPage";
 import "./styles/index.css";
-import "./styles/puzzlestyle-default.css";
+import "./styles/puzzlestyle-data.css";
+import "./styles/puzzlestyle-red-thread.css";
+import "./styles/puzzlestyle-soc-deduction.css";
 
 try {
   axios.defaults.headers.common["X-CSRFToken"] = Cookies.get("csrftoken");

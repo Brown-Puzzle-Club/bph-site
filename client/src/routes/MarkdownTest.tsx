@@ -21,7 +21,7 @@ export default function MarkdownTest() {
       <div className="flex justify-center pt-6">
         <div className="w-1/2">
           <h1 className="text-3xl text-center pb-5">Markdown Result</h1>
-          <MarkdownWrapper markdown={markdown}puzzleStyle={PuzzleStyle.DEFAULT}/>
+          <MarkdownWrapper markdown={markdown} puzzleStyle={PuzzleStyle.RED_THREAD} />
         </div>
       </div>
     </div>
