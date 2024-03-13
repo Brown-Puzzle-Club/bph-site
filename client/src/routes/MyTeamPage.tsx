@@ -176,7 +176,7 @@ export default function MyTeamPage() {
   }, [form, team, members, valuesSet]);
 
   return (
-    <div className="register-page min-h-[87vh]">
+    <div className="register-page">
       <div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 text-white dark">

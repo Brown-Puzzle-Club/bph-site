@@ -1,6 +1,6 @@
 export default function Credits() {
   return (
-    <div className="credits bg-slate-900 text-white h-[90vh] overscroll-contain overflow-hidden overflow-y-auto ">
+    <div className="credits bg-slate-900 text-white overscroll-contain overflow-hidden overflow-y-auto ">
       <div className="credits-top text-center p-5">
         <p>
           Brown Puzzlehunt is put together by <a href="/club">Brown Puzzle Club</a>.

@@ -1,7 +1,6 @@
+import MarkdownWrapper from "@/components/markdown/MarkdownWrapper";
+import { PuzzleStyle } from "@/utils/constants";
 import { useState } from "react";
-import Markdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import "../styles/puzzlestyle.css";
 
 export default function MarkdownTest() {
   const [markdown, setMarkdown] = useState("");
@@ -22,12 +21,7 @@ export default function MarkdownTest() {
       <div className="flex justify-center pt-6">
         <div className="w-1/2">
           <h1 className="text-3xl text-center pb-5">Markdown Result</h1>
-          <Markdown
-            className="bg-muted-100 p-6 border border-gray-500 border-dashed rounded puzzle-styling"
-            remarkPlugins={[remarkGfm]}
-          >
-            {markdown}
-          </Markdown>
+          <MarkdownWrapper markdown={markdown}puzzleStyle={PuzzleStyle.DEFAULT}/>
         </div>
       </div>
     </div>

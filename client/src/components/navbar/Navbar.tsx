@@ -9,7 +9,7 @@ import {
   NavigationMenuRight,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/utils";
 import LoginNavbar from "./LoginNavbar";
 
 import { useAuth } from "@/hooks/useAuth";

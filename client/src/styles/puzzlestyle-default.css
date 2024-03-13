@@ -1,4 +1,8 @@
-.puzzle-styling {
+.puzzle-default {
+  background-color: #fff5e0;
+  padding: 1.5rem;
+  color: #333;
+
   h1,
   h2,
   h3,
@@ -8,8 +12,24 @@
     color: #333;
   }
 
+  h1 {
+    font-size: 2.5rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+  }
+
+  h3 {
+    font-size: 1.75rem;
+  }
+
+  h4 {
+    font-size: 1.5rem;
+  }
+
   a {
-    color: #fa6432;
+    color: #a28369;
     text-decoration: none;
   }
   a:hover,
@@ -63,7 +83,8 @@
   blockquote {
     padding-left: 1em;
     font-style: italic;
-    border-left: solid 1px #fa6432;
+    border-left: solid 3px #a28369;
+    background-color: #7b643524;
   }
 
   table {
@@ -74,6 +95,9 @@
   }
   table * {
     border: none;
+  }
+  table thead {
+    background-color: rgba(200, 200, 200, 0.2);
   }
   table thead,
   table tr {
@@ -103,7 +127,7 @@
     overflow: auto;
     font-size: 0.85rem;
     font-family: monospace, monospace;
-    border: 1px dashed rgba(250, 100, 50, 0.5);
+    border: 1px dashed #745a45;
   }
 
   .title {

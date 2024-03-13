@@ -72,7 +72,7 @@ const LocationBox = ({
 export default function InfoPage() {
   //bg-[#02031d]
   return (
-    <div className="info bg-slate-900 text-white h-[90vh]">
+    <div className="info bg-slate-900 text-white">
       <ProgressDocs>
         <h1 id="important-info">Important Info</h1>
         <h4>What is this?</h4>
