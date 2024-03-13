@@ -23,12 +23,7 @@ const MarkdownComponents: object = {
 
       return (
         <div className="postImgWrapper">
-          <img
-            src={"https://drive.google.com/uc?export=view&id=1DetMRMehXlN_TiL8jO9oQohbUSgMhOSg"}
-            width={width}
-            height={height}
-            alt={alt}
-          ></img>
+          <img src={image.properties.src} width={width} height={height} alt={alt}></img>
           {hasCaption ? (
             <div className="caption" aria-label={caption}>
               {caption}
