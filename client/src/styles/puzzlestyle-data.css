@@ -1,15 +1,41 @@
-.puzzle-data {
-  background-color: blue;
-  padding: 1.5rem;
-  color: #333;
+@font-face {
+  font-family: "Acquire";
+  src: url("..//assets/fonts/aquire-font/Aquire-BW0ox.otf") format("truetype");
+}
 
+@font-face {
+  font-family: "Cartesian";
+  src: url("..//assets/fonts/cartesian-font/Cartesian-4B576.ttf") format("truetype");
+}
+
+.puzzle-dataouter {
+  /* background-color: #e7d5b0; */
+  background-image: url("../assets/main_page/pinkpaper.PNG");
+  background-size: cover;
+  padding-top: 5.5rem;
+  padding-left: 0.5rem;
+  color: #333;
+  width: 533px;
+  height: 1000px;
+  display: flex;
+  transform: translateX(20%);
+
+  .puzzle-data {
+    margin-top: 8rem;
+    margin-left: 5rem;
+    width: 75%;
+    max-height: 60%;
+    overflow-y: scroll;
+    justify-self: left;
+  }
   h1,
   h2,
   h3,
   h4 {
-    margin: 2.5rem 0 1.5rem 0;
+    margin: 0.5rem 0 1.5rem 0;
     line-height: 1.25;
     color: #333;
+    font-family: "Acquire", sans-serif;
   }
 
   h1 {
@@ -41,6 +67,7 @@
   p {
     margin: 1em 0;
     line-height: 1.5;
+    font-family: "Cartesian", sans-serif;
   }
   p code {
     background-color: #eee;
