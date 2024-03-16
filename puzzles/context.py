@@ -191,7 +191,8 @@ class Context:
         return self.team.num_free_answers_remaining if self.team else 0
 
     def unlocks(self):
-        return models.Team.compute_unlocks(self)
+        # return models.Team.compute_unlocks(self)
+        return self.team.unlocks
 
     #
     # def completed_hunt(self):

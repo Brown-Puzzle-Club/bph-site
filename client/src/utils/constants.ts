@@ -40,3 +40,14 @@ export enum PuzzleStyle {
   DATA = "puzzle-data",
   //... TODO: add more for major case styling vibes (socded, data, etc.)
 }
+
+export const toPuzzleStyle = (major_case_slug: string) => {
+  switch (major_case_slug) {
+    case "red-thread":
+      return PuzzleStyle.RED_THREAD;
+    case "social-deduction":
+      return PuzzleStyle.SOCIAL_DEDUCTION;
+    case "data":
+      return PuzzleStyle.DATA;
+  }
+};

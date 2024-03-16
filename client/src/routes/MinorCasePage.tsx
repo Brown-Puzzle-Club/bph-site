@@ -23,10 +23,10 @@ function MinorCasePage() {
         <div>
           <h2>Puzzles Unlocked</h2>
           <ul>
-            {Object.entries(context.team_context.unlocks).map(([puzzleName, unlockTime]) => (
-              <li key={puzzleName}>
-                <Link to={`/puzzle/${puzzleName}`}>
-                  <strong>{puzzleName}</strong>: {unlockTime.toLocaleString()}
+            {Object.entries(context.team_context.unlocks).map(([slug, puzzle]) => (
+              <li key={slug}>
+                <Link to={`/puzzle/${slug}`}>
+                  <strong>{puzzle.name}</strong>: ({slug})
                 </Link>
               </li>
             ))}

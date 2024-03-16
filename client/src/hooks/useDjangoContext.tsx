@@ -1,4 +1,12 @@
-import { DjangoContext, MinorCase, Team, TeamMember, User, UserTeam } from "@/utils/django_types";
+import {
+  DjangoContext,
+  MinorCase,
+  Puzzle,
+  Team,
+  TeamMember,
+  User,
+  UserTeam,
+} from "@/utils/django_types";
 import axios from "axios";
 import { createContext, useCallback, useContext } from "react";
 
@@ -10,6 +18,7 @@ type DjangoContextType = {
   FetchTeams: () => Promise<Team[]>;
   FetchContext: () => Promise<DjangoContext>;
   FetchCase: (round_id: number) => Promise<MinorCase>;
+  FetchPuzzle: (puzzle_slug: string) => Promise<Puzzle>;
 };
 
 const DjangoContext = createContext<DjangoContextType>({
@@ -30,6 +39,9 @@ const DjangoContext = createContext<DjangoContextType>({
   },
   FetchCase: async () => {
     return {} as MinorCase;
+  },
+  FetchPuzzle: async () => {
+    return {} as Puzzle;
   },
 });
 
@@ -67,6 +79,12 @@ export const DjangoContextProvider = ({ children }: { children: React.ReactNode 
     return data as MinorCase;
   }, []);
 
+  const FetchPuzzle = useCallback(async (puzzle_slug: string) => {
+    const response = await fetch(`/api/puzzle/${puzzle_slug}`);
+    const data = await response.json();
+    return data as Puzzle;
+  }, []);
+
   return (
     <DjangoContext.Provider
       value={{
@@ -76,6 +94,7 @@ export const DjangoContextProvider = ({ children }: { children: React.ReactNode 
         FetchTeams,
         FetchContext,
         FetchCase,
+        FetchPuzzle,
       }}
     >
       {children}

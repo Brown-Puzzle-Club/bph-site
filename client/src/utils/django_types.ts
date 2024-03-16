@@ -61,16 +61,35 @@ const AnswerSubmissionSchema = z.object({
 });
 type AnswerSubmission = z.infer<typeof AnswerSubmissionSchema>;
 
+const MajorCaseSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  order: z.number(),
+  slug: z.string(),
+});
+type MajorCase = z.infer<typeof MajorCaseSchema>;
+
 const RoundSchema = z.object({
   id: z.number(),
   name: z.string(),
   order: z.number(),
-  major_case: z.string().nullable(),
+  major_case: MajorCaseSchema,
   description: z.string(),
   unlock_global_minor: z.number(),
   unlock_local_major: z.number(),
 });
 type Round = z.infer<typeof RoundSchema>;
+
+const PuzzleSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  slug: z.string(),
+  order: z.number(),
+  is_meta: z.boolean(),
+  round: RoundSchema,
+  body: z.string(),
+});
+type Puzzle = z.infer<typeof PuzzleSchema>;
 
 const MinorCaseIncomingSchema = z.object({
   id: z.number(),
@@ -103,7 +122,7 @@ const TeamPuzzleContextSchema = z.object({
   minor_case_incoming: z.array(MinorCaseIncomingSchema),
   minor_case_active: z.array(MinorCaseActiveSchema),
   minor_case_completed: z.array(MinorCaseCompletedSchema),
-  unlocks: z.record(z.date()),
+  unlocks: z.record(PuzzleSchema),
 });
 
 const HuntContextSchema = z.object({
@@ -136,10 +155,12 @@ type MinorCase = z.infer<typeof MinorCaseSchema>;
 export type {
   AnswerSubmission,
   DjangoContext,
+  MajorCase,
   MinorCase,
   MinorCaseActive,
   MinorCaseCompleted,
   MinorCaseIncoming,
+  Puzzle,
   Round,
   Team,
   TeamMember,

@@ -145,17 +145,13 @@ class Puzzle(models.Model):
         help_text=_("Slug used in URLs to identify this puzzle (must be unique)"),
     )
 
-    # As in the comment above, although we replace blank values with the
-    # default in clean(), a blank body template could sneak in anyway, but it
-    # seems less likely to be harmful here.
-    body_template = models.CharField(
-        max_length=255,
+    body = models.TextField(
+        default="",
         blank=True,
-        verbose_name=_("Body template"),
+        verbose_name=_("Puzzle Body"),
+        null=True,
         help_text=_(
-            """Path of a Markdown file (including .md) under puzzlemarkdown containing the puzzle and
-        solution content, respectively. Defaults to <major-case-slug>/<minor-case-slug>/<puzzle-slug> + ".md" if not
-        specified. All paths are relative to the puzzlemarkdown/ directory as a root."""
+            "Markdown-compliant body of the puzzle. This is the main text that will be displayed to the user."
         ),
     )
 
@@ -206,12 +202,6 @@ class Puzzle(models.Model):
     class Meta:
         verbose_name = _("puzzle")
         verbose_name_plural = _("puzzles")
-
-    def clean(self):
-        if not self.body_template:
-            self.body_template = (
-                f"{self.round.major_case.slug}/{self.round.slug}/{self.slug}.md"
-            )
 
     def __str__(self):
         return self.name
@@ -677,6 +667,14 @@ class Team(models.Model):
             submission.puzzle_id: submission.puzzle
             for submission in self.submissions
             if submission.is_correct
+        }
+
+    def unlocks(self):
+        return {
+            unlock.puzzle.slug: unlock.puzzle
+            for unlock in self.puzzleunlock_set.select_related(
+                "puzzle", "puzzle__round"
+            )
         }
 
     def solves_by_case(self):

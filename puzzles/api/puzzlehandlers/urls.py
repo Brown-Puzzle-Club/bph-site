@@ -3,6 +3,7 @@ from django.urls import path
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.decorators import api_view
+from puzzles.api import api_views
 
 
 @api_view(["GET"])
@@ -16,5 +17,5 @@ urlpatterns = [
     # (for instance, if working on puzzle [slug])
     # path("[slug]/do-something", [slug]_api.do_something))
     #                                             ^---- each interactive puzzle should have its own [slug]_api.py file in this directory.
-    path("<slug>/", index, name="puzzle-index"),
+    path("<str:puzzle_slug>", api_views.get_puzzle, name="puzzle-index"),
 ]
