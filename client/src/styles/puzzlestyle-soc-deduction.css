@@ -1,15 +1,41 @@
-.puzzle-soc-deduction {
-  background-color: purple;
-  padding: 1.5rem;
-  color: #333;
+@font-face {
+  font-family: "Copasetic";
+  src: url("..//assets/fonts/copasetic-font/CopaseticNf-EGr9.ttf") format("truetype");
+}
 
+@font-face {
+  font-family: "Parisish";
+  src: url("..//assets/fonts/parisish-font/Parisish-EEoW.ttf") format("truetype");
+}
+
+.puzzle-soc-deductionouter {
+  /* background-color: #e7d5b0; */
+  background-image: url("../assets/main_page/greenpaper.PNG");
+  background-size: cover;
+  padding-top: 5.5rem;
+  padding-left: 0.5rem;
+  color: #333;
+  width: 533px;
+  height: 1000px;
+  display: flex;
+  transform: translateX(20%);
+
+  .puzzle-soc-deduction {
+    margin-top: 8rem;
+    margin-left: 5rem;
+    width: 75%;
+    max-height: 60%;
+    overflow-y: scroll;
+    justify-self: left;
+  }
   h1,
   h2,
   h3,
   h4 {
-    margin: 2.5rem 0 1.5rem 0;
+    margin: 0.5rem 0 1.5rem 0;
     line-height: 1.25;
     color: #333;
+    font-family: "Copasetic", sans-serif;
   }
 
   h1 {
@@ -41,6 +67,7 @@
   p {
     margin: 1em 0;
     line-height: 1.5;
+    font-family: "Parisish", sans-serif;
   }
   p code {
     background-color: #eee;

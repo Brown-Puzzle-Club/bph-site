@@ -21,7 +21,7 @@ export default function MarkdownTest() {
       </div>
       {/* HTML RESULT BOX */}
       <div className="flex justify-center pt-6">
-        <div className="w-1/2">
+        <div className="w-1/2 flex flex-col justify-around">
           <h1 className="text-3xl text-center pb-5">Markdown Result</h1>
           {/* three buttons to toggle PuzzleStyle */}
           <div className="flex justify-center pb-5">

@@ -46,12 +46,16 @@ export default function MarkdownWrapper({
   puzzleStyle?: PuzzleStyle;
 }) {
   return (
-    <ReactMarkdown
-      className={cn(puzzleStyle ? puzzleStyle?.valueOf() : "puzzle-default", className)}
-      remarkPlugins={[remarkGfm]}
-      components={MarkdownComponents}
+    <div
+      className={cn(puzzleStyle ? puzzleStyle?.valueOf() : "puzzle-default", className) + "outer"}
     >
-      {markdown}
-    </ReactMarkdown>
+      <ReactMarkdown
+        className={cn(puzzleStyle ? puzzleStyle?.valueOf() : "puzzle-default", className)}
+        remarkPlugins={[remarkGfm]}
+        components={MarkdownComponents}
+      >
+        {markdown}
+      </ReactMarkdown>
+    </div>
   );
 }
