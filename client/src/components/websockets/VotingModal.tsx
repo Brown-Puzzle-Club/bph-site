@@ -9,7 +9,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { PresenceInfo, VotingInfo } from "@/hooks/useSocket";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/utils";
 import { useEffect, useState } from "react";
 import { useTimer } from "react-timer-hook";
 

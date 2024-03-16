@@ -11,6 +11,7 @@ import Club from "./routes/Club";
 import Contact from "./routes/Contact";
 import Credits from "./routes/Credits";
 import ErrorPage from "./routes/ErrorPage";
+import EventPage from "./routes/EventPage";
 import InfoPage from "./routes/InfoPage";
 import Landing from "./routes/Landing";
 import Leaderboard from "./routes/Leaderboard";
@@ -110,6 +111,12 @@ const router = createBrowserRouter([
           <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<MarkdownTest />} />
         ),
       },
+      {
+        path: "/eventpage",
+        element: (
+          <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<EventPage />} />
+        ),
+      },
     ],
   },
 ]);
@@ -121,5 +128,5 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <RouterProvider router={router} />
       </AuthContextProvider>
     </DjangoContextProvider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

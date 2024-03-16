@@ -28,7 +28,7 @@ export default function MarkdownTest() {
             <button
               className={cn(
                 "p-2 bg-red-500 text-white",
-                puzzleStyle == PuzzleStyle.RED_THREAD && "border-2 border-black"
+                puzzleStyle == PuzzleStyle.RED_THREAD && "border-2 border-black",
               )}
               onClick={() => setPuzzleStyle(PuzzleStyle.RED_THREAD)}
             >
@@ -37,7 +37,7 @@ export default function MarkdownTest() {
             <button
               className={cn(
                 "p-2 bg-blue-500 text-white",
-                puzzleStyle == PuzzleStyle.SOCIAL_DEDUCTION && "border-2 border-black"
+                puzzleStyle == PuzzleStyle.SOCIAL_DEDUCTION && "border-2 border-black",
               )}
               onClick={() => setPuzzleStyle(PuzzleStyle.SOCIAL_DEDUCTION)}
             >
@@ -46,7 +46,7 @@ export default function MarkdownTest() {
             <button
               className={cn(
                 "p-2 bg-green-500 text-white",
-                puzzleStyle == PuzzleStyle.DATA && "border-2 border-black"
+                puzzleStyle == PuzzleStyle.DATA && "border-2 border-black",
               )}
               onClick={() => setPuzzleStyle(PuzzleStyle.DATA)}
             >

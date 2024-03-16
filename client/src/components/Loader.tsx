@@ -1,4 +1,4 @@
-import { cn } from "@/utils/cn";
+import { cn } from "@/utils/utils";
 import { Loader2 } from "lucide-react";
 
 const Loader = ({ className }: { className?: string }) => {
