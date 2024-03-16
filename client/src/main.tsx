@@ -17,7 +17,9 @@ import Landing from "./routes/Landing";
 import Leaderboard from "./routes/Leaderboard";
 import SocialDeduction from "./routes/major_cases/SocialDeduction";
 import MarkdownTest from "./routes/MarkdownTest";
+import MinorCasePage from "./routes/MinorCasePage";
 import MyTeamPage from "./routes/MyTeamPage";
+import PuzzlePage from "./routes/PuzzlePage";
 import RegisterForm from "./routes/Register";
 import TeamPage from "./routes/TeamPage";
 import "./styles/index.css";
@@ -115,6 +117,18 @@ const router = createBrowserRouter([
         path: "/eventpage",
         element: (
           <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<EventPage />} />
+        ),
+      },
+      {
+        path: "/minorcase/:slug",
+        element: (
+          <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<MinorCasePage />} />
+        ),
+      },
+      {
+        path: "/puzzle/:slug",
+        element: (
+          <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<PuzzlePage />} />
         ),
       },
     ],
