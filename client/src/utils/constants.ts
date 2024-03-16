@@ -33,3 +33,10 @@ export const PFP_COLOR_CHOICES = [
 ];
 
 export const [MEMBER_COUNT_MIN, MEMBER_COUNT_MAX] = [1, 12];
+
+export enum PuzzleStyle {
+  RED_THREAD = "puzzle-red-thread",
+  SOCIAL_DEDUCTION = "puzzle-soc-deduction",
+  DATA = "puzzle-data",
+  //... TODO: add more for major case styling vibes (socded, data, etc.)
+}

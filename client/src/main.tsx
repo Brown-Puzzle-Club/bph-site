@@ -1,11 +1,11 @@
 import axios from "axios";
+import Cookies from "js-cookie";
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { PageWrapper } from "./components/PageWrapper";
 import { AuthContextProvider } from "./hooks/useAuth";
 import { DjangoContextProvider } from "./hooks/useDjangoContext";
-import "./index.css";
 import Archive from "./routes/Archive";
 import Club from "./routes/Club";
 import Contact from "./routes/Contact";
@@ -15,13 +15,17 @@ import InfoPage from "./routes/InfoPage";
 import Landing from "./routes/Landing";
 import Leaderboard from "./routes/Leaderboard";
 import SocialDeduction from "./routes/major_cases/SocialDeduction";
+import MarkdownTest from "./routes/MarkdownTest";
 import MyTeamPage from "./routes/MyTeamPage";
 import RegisterForm from "./routes/Register";
 import TeamPage from "./routes/TeamPage";
+import "./styles/index.css";
+import "./styles/puzzlestyle-data.css";
+import "./styles/puzzlestyle-red-thread.css";
+import "./styles/puzzlestyle-soc-deduction.css";
 
-declare const CSRF_TOKEN: string;
 try {
-  axios.defaults.headers.common["X-CSRFToken"] = CSRF_TOKEN;
+  axios.defaults.headers.common["X-CSRFToken"] = Cookies.get("csrftoken");
 } catch (e) {
   console.error("Error setting CSRF token in axios headers");
 }
@@ -98,6 +102,12 @@ const router = createBrowserRouter([
         path: "/register",
         element: (
           <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<RegisterForm />} />
+        ),
+      },
+      {
+        path: "/markdown-test",
+        element: (
+          <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<MarkdownTest />} />
         ),
       },
     ],

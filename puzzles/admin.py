@@ -23,16 +23,12 @@ from puzzles.models import (
 
 
 class MajorCaseAdmin(admin.ModelAdmin):
-    def view_on_site(self, obj):
-        return reverse("major_case", args=(obj.slug,))
 
     ordering = ("order",)
     list_display = ("name", "slug", "order")
 
 
 class RoundAdmin(admin.ModelAdmin):
-    def view_on_site(self, obj):
-        return reverse("round", args=(obj.slug,))
 
     ordering = ("order",)
 
@@ -52,8 +48,6 @@ class PuzzleMessageInline(admin.TabularInline):
 
 
 class PuzzleAdmin(admin.ModelAdmin):
-    def view_on_site(self, obj):
-        return reverse("puzzle", args=(obj.slug,))
 
     inlines = [PuzzleMessageInline]
     ordering = ("round__order", "order")
@@ -83,9 +77,6 @@ class TeamMemberInline(admin.TabularInline):
 
 class TeamAdmin(admin.ModelAdmin):
     inlines = [TeamMemberInline]
-
-    def view_on_site(self, obj):
-        return reverse("team", args=(obj.team_name,))
 
     # You can't sort by this column but meh.
     def is_prerelease_testsolver_short(self, obj):
@@ -162,8 +153,6 @@ class SurveyAdmin(admin.ModelAdmin):
 
 
 class HintAdmin(admin.ModelAdmin):
-    def view_on_site(self, obj):
-        return reverse("hint", args=(obj.id,))
 
     list_display = (
         "team",

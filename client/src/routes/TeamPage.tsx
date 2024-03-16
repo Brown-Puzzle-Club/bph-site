@@ -43,7 +43,7 @@ export default function TeamPage() {
   }, []);
 
   return (
-    <div className="teampage text-center text-white min-h-[90vh]">
+    <div className="teampage text-center text-white">
       {IS_OWN_TEAM ? (
         <a
           href={`/my-team`}

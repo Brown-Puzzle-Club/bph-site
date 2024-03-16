@@ -18,7 +18,7 @@ export const PageWrapper = ({
       }}
     >
       <Navbar navbarColor={navbar_color} />
-      <div className="content">{route}</div>
+      <div className="content min-h-[90vh]">{route}</div>
       <Footer />
     </div>
   );
