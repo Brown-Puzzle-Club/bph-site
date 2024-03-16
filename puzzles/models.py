@@ -97,7 +97,7 @@ class Round(models.Model):
         null=True,
     )
     description = models.TextField(
-        default="", blank=True, verbose_name=_("Description")
+        default="", blank=True, verbose_name=_("Description"), null=True
     )
 
     unlock_global_minor = models.IntegerField(
@@ -148,10 +148,9 @@ class Puzzle(models.Model):
         blank=True,
         verbose_name=_("Body template"),
         help_text=_(
-            """File name of a Django template (including .html) under
-        puzzle_bodies and solution_bodies containing the puzzle and
-        solution content, respectively. Defaults to slug + ".html" if not
-        specified."""
+            """Path of a Markdown file (including .md) under puzzlemarkdown containing the puzzle and
+        solution content, respectively. Defaults to <major-case-slug>/<minor-case-slug>/<puzzle-slug> + ".md" if not
+        specified. All paths are relative to the puzzlemarkdown/ directory as a root."""
         ),
     )
 
@@ -205,7 +204,9 @@ class Puzzle(models.Model):
 
     def clean(self):
         if not self.body_template:
-            self.body_template = self.slug + ".html"
+            self.body_template = (
+                f"{self.round.major_case.slug}/{self.round.slug}/{self.slug}.md"
+            )
 
     def __str__(self):
         return self.name
