@@ -77,7 +77,6 @@ class MajorCase(models.Model):
 
 class Round(models.Model):
     name = models.CharField(max_length=255, verbose_name=_("Name"))
-    desc = models.CharField(max_length=1000, verbose_name=_("Description"))
     slug = models.SlugField(max_length=255, unique=True, verbose_name=_("Slug"))
     meta = models.ForeignKey(
         "Puzzle",
