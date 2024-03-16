@@ -21,14 +21,14 @@ export default function MarkdownTest() {
       </div>
       {/* HTML RESULT BOX */}
       <div className="flex justify-center pt-6">
-        <div className="w-1/2">
+        <div className="w-1/2 flex flex-col justify-around">
           <h1 className="text-3xl text-center pb-5">Markdown Result</h1>
           {/* three buttons to toggle PuzzleStyle */}
           <div className="flex justify-center pb-5">
             <button
               className={cn(
                 "p-2 bg-red-500 text-white",
-                puzzleStyle == PuzzleStyle.RED_THREAD && "border-2 border-black"
+                puzzleStyle == PuzzleStyle.RED_THREAD && "border-2 border-black",
               )}
               onClick={() => setPuzzleStyle(PuzzleStyle.RED_THREAD)}
             >
@@ -37,7 +37,7 @@ export default function MarkdownTest() {
             <button
               className={cn(
                 "p-2 bg-blue-500 text-white",
-                puzzleStyle == PuzzleStyle.SOCIAL_DEDUCTION && "border-2 border-black"
+                puzzleStyle == PuzzleStyle.SOCIAL_DEDUCTION && "border-2 border-black",
               )}
               onClick={() => setPuzzleStyle(PuzzleStyle.SOCIAL_DEDUCTION)}
             >
@@ -46,7 +46,7 @@ export default function MarkdownTest() {
             <button
               className={cn(
                 "p-2 bg-green-500 text-white",
-                puzzleStyle == PuzzleStyle.DATA && "border-2 border-black"
+                puzzleStyle == PuzzleStyle.DATA && "border-2 border-black",
               )}
               onClick={() => setPuzzleStyle(PuzzleStyle.DATA)}
             >
