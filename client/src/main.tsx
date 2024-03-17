@@ -19,6 +19,7 @@ import MarkdownTest from "./routes/MarkdownTest";
 import MyTeamPage from "./routes/MyTeamPage";
 import RegisterForm from "./routes/Register";
 import TeamPage from "./routes/TeamPage";
+import Connections from "./routes/Connections";
 import "./styles/index.css";
 import "./styles/puzzlestyle-data.css";
 import "./styles/puzzlestyle-red-thread.css";
@@ -36,6 +37,13 @@ const router = createBrowserRouter([
       <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<ErrorPage />} />
     ),
     children: [
+      {
+        path: "/connections",
+        element: (
+          <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<Connections />} />
+        ),
+        
+      },
       {
         path: "/social-deduction",
         element: (
