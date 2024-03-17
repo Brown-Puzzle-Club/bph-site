@@ -6,18 +6,28 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('puzzles', '0014_auto_20240207_0303'),
+        ("puzzles", "0014_auto_20240207_0303"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='team',
-            name='color_choice',
-            field=models.CharField(default='NO COLOR', help_text='(e.g: Blue, Red, Green, etc.)', max_length=200, verbose_name='Color choice'),
+            model_name="team",
+            name="color_choice",
+            field=models.CharField(
+                default="NO COLOR",
+                help_text="(e.g: Blue, Red, Green, etc.)",
+                max_length=200,
+                verbose_name="Color choice",
+            ),
         ),
         migrations.AddField(
-            model_name='team',
-            name='emoji_choice',
-            field=models.CharField(default='NO EMOJI', help_text='(e.g: :smile:, :heart:, :rocket:, etc.)', max_length=200, verbose_name='Emoji choice'),
+            model_name="team",
+            name="emoji_choice",
+            field=models.CharField(
+                default="NO EMOJI",
+                help_text="(e.g: :smile:, :heart:, :rocket:, etc.)",
+                max_length=200,
+                verbose_name="Emoji choice",
+            ),
         ),
     ]

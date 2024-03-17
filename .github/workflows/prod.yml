@@ -25,4 +25,3 @@ jobs:
           CLOUDFLARE_ZONE: ${{ secrets.CLOUDFLARE_ZONE }}
           CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
           CLOUDFLARE_KEY: ${{ secrets.CLOUDFLARE_KEY }}
-          PURGE_URLS: '["https://www.brownpuzzlehunt.com/static/react/index.js", "https://www.brownpuzzlehunt.com/static/react/index.css"]'

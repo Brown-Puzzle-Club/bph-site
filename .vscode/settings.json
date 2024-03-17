@@ -2,4 +2,6 @@
     "python.analysis.extraPaths": [
         "./puzzles/puzzlehandlers"
     ]
+}{
+  "python.analysis.typeCheckingMode": "off"
 }

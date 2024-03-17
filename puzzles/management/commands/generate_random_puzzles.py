@@ -31,23 +31,25 @@ answerphrases = [
     "{} Is the Solution",
 ]
 
+
 def random_answer():
     return "{} {}".format(random.choice(adjectives), random.choice(nouns))
 
+
 class Command(BaseCommand):
-    help = 'Randomly generate n puzzles for testing'
+    help = "Randomly generate n puzzles for testing"
 
     def add_arguments(self, parser):
-        parser.add_argument('num_puzzles', nargs=1, type=int)
+        parser.add_argument("num_puzzles", nargs=1, type=int)
 
     def handle(self, *args, **options):
-        n = options['num_puzzles'][0]
+        n = options["num_puzzles"][0]
         limit = 0
         round_order = 0
 
         for i in range(n):
             if i == limit:
-                title = 'Intro' if i == 0 else random.choice(nouns).title()
+                title = "Intro" if i == 0 else random.choice(nouns).title()
                 slug = slugify(title)
                 round_order += 1
                 puzzle_order = 0
@@ -68,10 +70,10 @@ class Command(BaseCommand):
             Puzzle(
                 name=title,
                 slug=slug,
-                body_template=slug + '.html',
+                body_template=slug + ".html",
                 answer=answer,
                 round=round,
                 order=puzzle_order,
             ).save()
 
-        self.stdout.write(self.style.SUCCESS('Randomly generated {} puzzles'.format(n)))
+        self.stdout.write(self.style.SUCCESS("Randomly generated {} puzzles".format(n)))

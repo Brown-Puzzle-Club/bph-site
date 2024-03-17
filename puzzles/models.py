@@ -10,7 +10,19 @@ from django.core.exceptions import ValidationError
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
-from django.db.models import F, FilteredRelation, Q, BooleanField, Value, Case, When, Count, Min, Max, IntegerField
+from django.db.models import (
+    F,
+    FilteredRelation,
+    Q,
+    BooleanField,
+    Value,
+    Case,
+    When,
+    Count,
+    Min,
+    Max,
+    IntegerField,
+)
 from django.db.models.functions import Coalesce
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -46,47 +58,62 @@ from puzzles.hunt_config import (
     TEAM_AGE_BEFORE_FREE_ANSWERS,
     INTRO_ROUND_SLUG,
     RUNAROUND_SLUG,
-    META_SLUGS
+    META_SLUGS,
 )
 
 
 class MajorCase(models.Model):
-    name = models.CharField(max_length=255, verbose_name=_('Name'))
-    slug = models.SlugField(max_length=255, unique=True,
-                            verbose_name=_('Slug'))
-    order = models.IntegerField(default=0, verbose_name=_('Order'))
+    name = models.CharField(max_length=255, verbose_name=_("Name"))
+    slug = models.SlugField(max_length=255, unique=True, verbose_name=_("Slug"))
+    order = models.IntegerField(default=0, verbose_name=_("Order"))
 
     class Meta:
-        verbose_name = _('major case')
-        verbose_name_plural = _('major cases')
+        verbose_name = _("major case")
+        verbose_name_plural = _("major cases")
 
     def __str__(self):
         return self.name
 
 
 class Round(models.Model):
-    name = models.CharField(max_length=255, verbose_name=_('Name'))
-    desc = models.CharField(max_length=1000, verbose_name=_('Description'))
-    slug = models.SlugField(max_length=255, unique=True,
-                            verbose_name=_('Slug'))
+    name = models.CharField(max_length=255, verbose_name=_("Name"))
+    slug = models.SlugField(max_length=255, unique=True, verbose_name=_("Slug"))
     meta = models.ForeignKey(
-        'Puzzle', limit_choices_to={'is_meta': True}, related_name='+',
-        null=True, blank=True, on_delete=models.SET_NULL, verbose_name=_('meta'))
-    order = models.IntegerField(default=0, verbose_name=_('Order'))
+        "Puzzle",
+        limit_choices_to={"is_meta": True},
+        related_name="+",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        verbose_name=_("meta"),
+    )
+    order = models.IntegerField(default=0, verbose_name=_("Order"))
 
-    major_case = models.ForeignKey(MajorCase, on_delete=models.CASCADE, verbose_name=_(
-        'major case'), blank=True, null=True)
+    major_case = models.ForeignKey(
+        MajorCase,
+        on_delete=models.CASCADE,
+        verbose_name=_("major case"),
+        blank=True,
+        null=True,
+    )
     description = models.TextField(
-        default="", blank=True, verbose_name=_('Description'))
+        default="", blank=True, verbose_name=_("Description"), null=True
+    )
 
-    unlock_global_minor = models.IntegerField(default=-1, verbose_name=_('Unlock global minor'),
-                                              help_text=_('If nonnegative, round unlocks after N solves in any major case.'))
-    unlock_local_major = models.IntegerField(default=-1, verbose_name=_('Unlock local minor'),
-                                             help_text=_('If nonnegative, round unlocks after N solves in this major case.'))
+    unlock_global_minor = models.IntegerField(
+        default=-1,
+        verbose_name=_("Unlock global minor"),
+        help_text=_("If nonnegative, round unlocks after N solves in any major case."),
+    )
+    unlock_local_major = models.IntegerField(
+        default=-1,
+        verbose_name=_("Unlock local minor"),
+        help_text=_("If nonnegative, round unlocks after N solves in this major case."),
+    )
 
     class Meta:
-        verbose_name = _('round (minor case)')
-        verbose_name_plural = _('rounds (minor cases)')
+        verbose_name = _("round (minor case)")
+        verbose_name_plural = _("rounds (minor cases)")
 
     def meta_answer(self):
         return self.meta.answer if self.meta else None
@@ -101,9 +128,9 @@ class Round(models.Model):
 
 
 class Puzzle(models.Model):
-    '''A single puzzle in the puzzlehunt.'''
+    """A single puzzle in the puzzlehunt."""
 
-    name = models.CharField(max_length=255, verbose_name=_('Name'))
+    name = models.CharField(max_length=255, verbose_name=_("Name"))
 
     # I considered making this default to django.utils.text.slugify(name) via
     # cleaning, but that's a bit more invasive because you need blank=True for
@@ -112,56 +139,79 @@ class Puzzle(models.Model):
     # can't be URL-reversed). Note that not all routes a model could enter the
     # database will call clean().
     slug = models.SlugField(
-        max_length=255, unique=True, verbose_name=_('Slug'),
-        help_text=_(
-            'Slug used in URLs to identify this puzzle (must be unique)'),
+        max_length=255,
+        unique=True,
+        verbose_name=_("Slug"),
+        help_text=_("Slug used in URLs to identify this puzzle (must be unique)"),
     )
 
     # As in the comment above, although we replace blank values with the
     # default in clean(), a blank body template could sneak in anyway, but it
     # seems less likely to be harmful here.
     body_template = models.CharField(
-        max_length=255, blank=True, verbose_name=_('Body template'),
-        help_text=_('''File name of a Django template (including .html) under
-        puzzle_bodies and solution_bodies containing the puzzle and
-        solution content, respectively. Defaults to slug + ".html" if not
-        specified.'''),
+        max_length=255,
+        blank=True,
+        verbose_name=_("Body template"),
+        help_text=_(
+            """Path of a Markdown file (including .md) under puzzlemarkdown containing the puzzle and
+        solution content, respectively. Defaults to <major-case-slug>/<minor-case-slug>/<puzzle-slug> + ".md" if not
+        specified. All paths are relative to the puzzlemarkdown/ directory as a root."""
+        ),
     )
 
     answer = models.CharField(
-        max_length=255, verbose_name=_('Answer'),
-        help_text=_('Answer (fine if unnormalized)'),
+        max_length=255,
+        verbose_name=_("Answer"),
+        help_text=_("Answer (fine if unnormalized)"),
     )
 
-    round = models.ForeignKey(
-        Round, on_delete=models.CASCADE, verbose_name=_('round'))
-    order = models.IntegerField(default=0, verbose_name=_('Order'))
-    is_meta = models.BooleanField(default=False, verbose_name=_('Is meta'))
+    round = models.ForeignKey(Round, on_delete=models.CASCADE, verbose_name=_("round"))
+    order = models.IntegerField(default=0, verbose_name=_("Order"))
+    is_meta = models.BooleanField(default=False, verbose_name=_("Is meta"))
 
     # For unlocking purposes, a "main round solve" is a solve that is not a
     # meta or in the intro round.
-    unlock_hours = models.IntegerField(default=-1, verbose_name=_('Unlock hours'),
-                                       help_text=_('If nonnegative, puzzle unlocks N hours after the hunt starts.'))
-    unlock_global = models.IntegerField(default=-1, verbose_name=_('Unlock global'),
-                                        help_text=_('If nonnegative, puzzle unlocks after N main round solves in any round.'))
-    unlock_local = models.IntegerField(default=-1, verbose_name=_('Unlock local'),
-                                       help_text=_('If nonnegative, puzzle unlocks after N main round solves in this round.'))
-    unlock_meta = models.IntegerField(default=-1, verbose_name=_('Unlock meta'),
-                                      help_text=_('If nonnegative, puzzle unlocks after N meta solves.'))
+    unlock_hours = models.IntegerField(
+        default=-1,
+        verbose_name=_("Unlock hours"),
+        help_text=_("If nonnegative, puzzle unlocks N hours after the hunt starts."),
+    )
+    unlock_global = models.IntegerField(
+        default=-1,
+        verbose_name=_("Unlock global"),
+        help_text=_(
+            "If nonnegative, puzzle unlocks after N main round solves in any round."
+        ),
+    )
+    unlock_local = models.IntegerField(
+        default=-1,
+        verbose_name=_("Unlock local"),
+        help_text=_(
+            "If nonnegative, puzzle unlocks after N main round solves in this round."
+        ),
+    )
+    unlock_meta = models.IntegerField(
+        default=-1,
+        verbose_name=_("Unlock meta"),
+        help_text=_("If nonnegative, puzzle unlocks after N meta solves."),
+    )
 
     emoji = models.CharField(
-        max_length=32, default=':question:', verbose_name=_('Emoji'),
-        help_text=_(
-            'Emoji to use in Discord integrations involving this puzzle')
+        max_length=32,
+        default=":question:",
+        verbose_name=_("Emoji"),
+        help_text=_("Emoji to use in Discord integrations involving this puzzle"),
     )
 
     class Meta:
-        verbose_name = _('puzzle')
-        verbose_name_plural = _('puzzles')
+        verbose_name = _("puzzle")
+        verbose_name_plural = _("puzzles")
 
     def clean(self):
         if not self.body_template:
-            self.body_template = self.slug + '.html'
+            self.body_template = (
+                f"{self.round.major_case.slug}/{self.round.slug}/{self.slug}.md"
+            )
 
     def __str__(self):
         return self.name
@@ -174,15 +224,17 @@ class Puzzle(models.Model):
             if c.isalpha():
                 if not last_alpha:
                     ret.append(c)
+                if not last_alpha:
+                    ret.append(c)
                 last_alpha = True
             elif c != "'":
-                if c != ' ':
+                if c != " ":
                     ret.append(c)
                 last_alpha = False
         if len(ret) >= 7:
-            return ''.join(ret[:4]) + '...'
+            return "".join(ret[:4]) + "..."
         else:
-            return ''.join(ret)
+            return "".join(ret)
 
     @property
     def normalized_answer(self):
@@ -192,18 +244,18 @@ class Puzzle(models.Model):
     def normalize_answer(s):
         if s is None:
             return s
-        nfkd_form = unicodedata.normalize('NFKD', s)
-        return ''.join([c.upper() for c in nfkd_form if c.isalpha()])
+        nfkd_form = unicodedata.normalize("NFKD", s)
+        return "".join([c.upper() for c in nfkd_form if c.isalpha()])
 
 
 @context_cache
 class Team(models.Model):
-    '''
+    """
     A team participating in the puzzlehunt.
 
     This model has a one-to-one relationship to Users -- every User created
     through the register flow will have a "Team" created for them.
-    '''
+    """
 
     # The associated User -- note that not all users necessarily have an
     # associated team.
@@ -212,69 +264,107 @@ class Team(models.Model):
     # Public team name for scoreboards and comms -- not necessarily the same as
     # the user's name from the User object
     team_name = models.CharField(
-        max_length=255, unique=True, verbose_name=_('Team name'),
-        help_text=_('Public team name for scoreboards and communications'),
+        max_length=255,
+        unique=True,
+        verbose_name=_("Team name"),
+        help_text=_("Public team name for scoreboards and communications"),
     )
 
     # Time of creation of team
     creation_time = models.DateTimeField(
-        auto_now_add=True, verbose_name=_('Creation time'))
+        auto_now_add=True, verbose_name=_("Creation time")
+    )
 
     start_offset = models.DurationField(
-        default=datetime.timedelta, verbose_name=_('Start offset'),
-        help_text=_('''How much earlier this team should start, for early-testing
-        teams; be careful with this!'''),
+        default=datetime.timedelta,
+        verbose_name=_("Start offset"),
+        help_text=_(
+            """How much earlier this team should start, for early-testing
+        teams; be careful with this!"""
+        ),
     )
     allow_time_unlocks = models.BooleanField(
-        default=True, verbose_name=_('Allow time unlocks'),
-        help_text=_('''Whether this team receives time-unlocked puzzles. Note that
-        if disabled, they may be able to access more puzzles by logging out'''),
+        default=True,
+        verbose_name=_("Allow time unlocks"),
+        help_text=_(
+            """Whether this team receives time-unlocked puzzles. Note that
+        if disabled, they may be able to access more puzzles by logging out"""
+        ),
     )
 
     total_hints_awarded = models.IntegerField(
-        default=0, verbose_name=_('Total hints awarded'),
-        help_text=_('''Number of additional hints to award the team (on top of
-        the default amount per day)'''),
+        default=0,
+        verbose_name=_("Total hints awarded"),
+        help_text=_(
+            """Number of additional hints to award the team (on top of
+        the default amount per day)"""
+        ),
     )
     total_free_answers_awarded = models.IntegerField(
-        default=0, verbose_name=_('Total free answers awarded'),
-        help_text=_('''Number of additional free answers to award the team (on
-        top of the default amount per day)'''),
+        default=0,
+        verbose_name=_("Total free answers awarded"),
+        help_text=_(
+            """Number of additional free answers to award the team (on
+        top of the default amount per day)"""
+        ),
     )
 
     last_solve_time = models.DateTimeField(
-        null=True, blank=True, verbose_name=_('Last solve time'))
+        null=True, blank=True, verbose_name=_("Last solve time")
+    )
 
     is_prerelease_testsolver = models.BooleanField(
-        default=False, verbose_name=_('Is prerelease testsolver'),
-        help_text=_('''Whether this team is a prerelease testsolver. If true, the
-        team will have access to puzzles before the hunt starts'''),
+        default=False,
+        verbose_name=_("Is prerelease testsolver"),
+        help_text=_(
+            """Whether this team is a prerelease testsolver. If true, the
+        team will have access to puzzles before the hunt starts"""
+        ),
     )
 
     is_hidden = models.BooleanField(
-        default=False, verbose_name=_('Is hidden'),
-        help_text=_('If a team is hidden, it will not be visible to the public')
+        default=False,
+        verbose_name=_("Is hidden"),
+        help_text=_("If a team is hidden, it will not be visible to the public"),
     )
 
     # LOGISTICS DATA (BPH ADD)
-    in_person = models.BooleanField(
-        default=False, verbose_name=_('In person team?'))
-    brown_team = models.BooleanField(default=False, verbose_name=_(
-        'Any Brown community members on the team?'), help_text=_('(Undergraduates, Graduates, Faculty, or Alumni)'))
+    in_person = models.BooleanField(default=False, verbose_name=_("In person team?"))
+    brown_team = models.BooleanField(
+        default=False,
+        verbose_name=_("Any Brown community members on the team?"),
+        help_text=_("(Undergraduates, Graduates, Faculty, or Alumni)"),
+    )
     num_brown_members = models.IntegerField(
-        default=0, verbose_name=_('Number of Brown members'),)
-    classroom_need = models.BooleanField(default=False, verbose_name=_('Do you want to request a classroom to hunt in?'), help_text=_(
-        'Our availability will be limited, so please do not request one if you can make alternate plans.'))
-    where_to_find = models.CharField(default=_('NO LOCATION'), max_length=200, verbose_name=_(
-        'Location during hunt'), help_text=_('(e.g: Hegeman Common Room, Barus and Holley Room ###, Zoom, Discord, etc.)'))
+        default=0,
+        verbose_name=_("Number of Brown members"),
+    )
+    classroom_need = models.BooleanField(
+        default=False,
+        verbose_name=_("Do you want to request a classroom to hunt in?"),
+        help_text=_(
+            "Our availability will be limited, so please do not request one if you can make alternate plans."
+        ),
+    )
+    where_to_find = models.CharField(
+        default=_("NO LOCATION"),
+        max_length=200,
+        verbose_name=_("Location during hunt"),
+        help_text=_(
+            "(e.g: Hegeman Common Room, Barus and Holley Room ###, Zoom, Discord, etc.)"
+        ),
+    )
     phone_number = models.CharField(
-        default=_('-1'), max_length=200, verbose_name=_('Phone number'))
+        default=_("-1"), max_length=200, verbose_name=_("Phone number")
+    )
 
     # misc bph2024 adds:
     color_choice = models.CharField(
-        default=_('#ffffff'), max_length=200, verbose_name=_('Color choice'))
+        default=_("#ffffff"), max_length=200, verbose_name=_("Color choice")
+    )
     emoji_choice = models.CharField(
-        default=_('❓'), max_length=200, verbose_name=_('Emoji choice'))
+        default=_("❓"), max_length=200, verbose_name=_("Emoji choice")
+    )
 
     # merge_out = models.BooleanField(verbose_name=_('Is the team interested in joining up with a larger team for the hunt.'), default=False)
     # merge_out_preferences = models.CharField(default="", max_length=200, verbose_name=_('Merge out with larger team preferences'), help_text=_('(e.g. size, age-range, in-person vs remote, etc.)'))
@@ -289,22 +379,23 @@ class Team(models.Model):
     #     return solve_cnt
 
     class Meta:
-        verbose_name = _('team')
-        verbose_name_plural = _('teams')
+        verbose_name = _("team")
+        verbose_name_plural = _("teams")
 
     def __str__(self):
+        return self.team_name  # possibly return JSON of all safe fields?
         return self.team_name  # possibly return JSON of all safe fields?
 
     def get_emails(self, with_names=False):
         return [
             ((member.email, str(member)) if with_names else member.email)
-            for member in self.teammember_set.all() if member.email
+            for member in self.teammember_set.all()
+            if member.email
         ]
 
     def puzzle_submissions(self, puzzle):
         return [
-            submission for submission in self.submissions
-            if submission.puzzle == puzzle
+            submission for submission in self.submissions if submission.puzzle == puzzle
         ]
 
     def puzzle_answer(self, puzzle):
@@ -312,20 +403,19 @@ class Team(models.Model):
 
     def guesses_remaining(self, puzzle):
         wrong_guesses = sum(
-            1 for submission in self.puzzle_submissions(puzzle)
+            1
+            for submission in self.puzzle_submissions(puzzle)
             if not submission.is_correct
         )
         extra_guess_grant = ExtraGuessGrant.objects.filter(
-            team=self,
-            puzzle=puzzle
+            team=self, puzzle=puzzle
         ).first()  # will be model or None
-        extra_guesses = (extra_guess_grant.extra_guesses if
-                         extra_guess_grant else 0)
+        extra_guesses = extra_guess_grant.extra_guesses if extra_guess_grant else 0
         return MAX_GUESSES_PER_PUZZLE + extra_guesses - wrong_guesses
 
     @staticmethod
     def leaderboard(current_team, hide_hidden=True, hide_remote=False):
-        '''
+        """
         Returns a list of dictionaries with data of teams in the order they
         should appear on the leaderboard. Dictionaries have the following keys:
           - 'id'
@@ -340,24 +430,24 @@ class Team(models.Model):
           - 'all_metas_solve_time': time of finishing all the metas ()
 
         This depends on the viewing team for hidden teams.
-        '''
+        """
 
         return Team.leaderboard_teams(current_team, hide_hidden, hide_remote).values(
-            'id',
-            'user_id',
-            'in_person',
-            'team_name',
-            'total_solves',
-            'last_solve_or_creation_time',
-            'runaround_solve_time',
-            'recent_meta_solve_time',
-            'all_metas_solve_time',
-            'meta_solve_count'
+            "id",
+            "user_id",
+            "in_person",
+            "team_name",
+            "total_solves",
+            "last_solve_or_creation_time",
+            "runaround_solve_time",
+            "recent_meta_solve_time",
+            "all_metas_solve_time",
+            "meta_solve_count",
         )
 
     @staticmethod
     def leaderboard_teams(current_team, hide_hidden=True, hide_remote=False):
-        '''
+        """
         Returns a (lazy, not-yet-evaluated) QuerySet of teams, in the order
         they should appear on the leaderboard, with the following annotations:
           - 'total_solves': number of solves (before hunt end)
@@ -368,7 +458,7 @@ class Team(models.Model):
           - 'all_metas_solve_time': time of finishing all the metas ()
 
         This depends on the viewing team for hidden teams.
-        '''
+        """
 
         q = Q()
         # be careful, this is not "always true", I think it's "always true" if
@@ -391,65 +481,74 @@ class Team(models.Model):
         # the ON clause, so every team survives; the other stuff aggregates it
         all_teams = all_teams.annotate(
             scoring_submissions=FilteredRelation(
-                'answersubmission',
+                "answersubmission",
                 condition=Q(
                     answersubmission__used_free_answer=False,
                     answersubmission__is_correct=True,
                     answersubmission__submitted_datetime__lt=HUNT_END_TIME,
+                ),
+            ),
+            total_solves=Count("scoring_submissions"),
+            runaround_solve_time=Min(
+                Case(
+                    When(
+                        scoring_submissions__puzzle__slug=RUNAROUND_SLUG,
+                        then="scoring_submissions__submitted_datetime",
+                    )
+                    # else, null by default
                 )
             ),
-            total_solves=Count('scoring_submissions'),
-            runaround_solve_time=Min(Case(
-                When(
-                    scoring_submissions__puzzle__slug=RUNAROUND_SLUG,
-                    then='scoring_submissions__submitted_datetime',
-                )
-                # else, null by default
-            )),
-            recent_meta_solve_time=Max(Case(  # only usable when all metas are solved.. So check meta_solve_count first.
-                When(
-                    Q(scoring_submissions__puzzle__slug__in=META_SLUGS),
-                    then='scoring_submissions__submitted_datetime',
-                ),
-                default=None,
-                output_field=models.DateTimeField(),
-            )),
-            meta_solve_count=Count(Case(
-                When(
-                    Q(scoring_submissions__puzzle__slug__in=META_SLUGS),
-                    then='scoring_submissions__submitted_datetime',
-                ),
-                default=None,
-                output_field=IntegerField(),
-            )),
-            all_metas_solve_time=Case(
-                When(meta_solve_count=len(META_SLUGS), then=Max(Case(
+            recent_meta_solve_time=Max(
+                Case(  # only usable when all metas are solved.. So check meta_solve_count first.
                     When(
                         Q(scoring_submissions__puzzle__slug__in=META_SLUGS),
-                        then='scoring_submissions__submitted_datetime',
+                        then="scoring_submissions__submitted_datetime",
                     ),
                     default=None,
                     output_field=models.DateTimeField(),
-                ))),
+                )
+            ),
+            meta_solve_count=Count(
+                Case(
+                    When(
+                        Q(scoring_submissions__puzzle__slug__in=META_SLUGS),
+                        then="scoring_submissions__submitted_datetime",
+                    ),
+                    default=None,
+                    output_field=IntegerField(),
+                )
+            ),
+            all_metas_solve_time=Case(
+                When(
+                    meta_solve_count=len(META_SLUGS),
+                    then=Max(
+                        Case(
+                            When(
+                                Q(scoring_submissions__puzzle__slug__in=META_SLUGS),
+                                then="scoring_submissions__submitted_datetime",
+                            ),
+                            default=None,
+                            output_field=models.DateTimeField(),
+                        )
+                    ),
+                ),
                 default=None,
                 output_field=models.DateTimeField(),
             ),
             # Coalesce(things) = the first of things that isn't null
-            last_solve_or_creation_time=Coalesce(
-                'last_solve_time', 'creation_time'),
+            last_solve_or_creation_time=Coalesce("last_solve_time", "creation_time"),
             in_person=Case(
-                When(Q(in_person_sat__gt=0) | Q(
-                    in_person_sun__gt=0), then=Value(True)),
+                When(Q(in_person_sat__gt=0) | Q(in_person_sun__gt=0), then=Value(True)),
                 default=Value(False),
                 output_field=BooleanField(),
-            )
+            ),
         ).order_by(
-            F('runaround_solve_time').asc(nulls_last=True),
-            F('all_metas_solve_time').asc(nulls_last=True),
-            F('meta_solve_count').desc(),
-            F('total_solves').desc(),
+            F("runaround_solve_time").asc(nulls_last=True),
+            F("all_metas_solve_time").asc(nulls_last=True),
+            F("meta_solve_count").desc(),
+            F("total_solves").desc(),
             # F('in_person').desc(),
-            F('last_solve_or_creation_time'),
+            F("last_solve_or_creation_time"),
         )
 
         return all_teams
@@ -495,12 +594,12 @@ class Team(models.Model):
         return self
 
     def asked_hints(self):
-        return tuple(self.hint_set.select_related('puzzle', 'puzzle__round'))
+        return tuple(self.hint_set.select_related("puzzle", "puzzle__round"))
 
     def num_hints_total(self):
-        '''
+        """
         Compute the total number of hints (used + remaining) available to this team.
-        '''
+        """
         FREE_HINT_CNT = 2
         if not HINTS_ENABLED or self.hunt_is_over:
             return 0
@@ -531,8 +630,14 @@ class Team(models.Model):
         return self.num_hints_total - self.num_hints_used
 
     def num_intro_hints_used(self):
-        return min(INTRO_HINTS, sum(hint.consumes_hint for hint in
-                                    self.asked_hints if hint.puzzle.round.slug == INTRO_ROUND_SLUG))
+        return min(
+            INTRO_HINTS,
+            sum(
+                hint.consumes_hint
+                for hint in self.asked_hints
+                if hint.puzzle.round.slug == INTRO_ROUND_SLUG
+            ),
+        )
 
     def num_intro_hints_remaining(self):
         return min(self.num_hints_remaining, INTRO_HINTS - self.num_intro_hints_used)
@@ -545,7 +650,7 @@ class Team(models.Model):
             return 0
         # TODO: FREE ANSWERS (VOUCHER) : count the number of puzzles in event that a team has
         # print(self.main_round_solves[1]['events'])
-        event_solve_cnt = self.main_round_solves[1]['events']
+        event_solve_cnt = self.main_round_solves[1]["events"]
         return self.total_free_answers_awarded + event_solve_cnt
 
         # OLD IMPLEMNTATION: based on auto unlock time.. If need to reassess, we can comment this back in and force feed hints.
@@ -555,19 +660,16 @@ class Team(models.Model):
         # return self.total_free_answers_awarded + sum(FREE_ANSWERS_PER_DAY[:days])
 
     def num_free_answers_used(self):
-        return sum(
-            1 for submission in self.submissions
-            if submission.used_free_answer
-        )
+        return sum(1 for submission in self.submissions if submission.used_free_answer)
 
     def num_free_answers_remaining(self):
         return self.num_free_answers_total - self.num_free_answers_used
 
     def submissions(self):
         return tuple(
-            self.answersubmission_set
-            .select_related('puzzle', 'puzzle__round')
-            .order_by('-submitted_datetime')
+            self.answersubmission_set.select_related(
+                "puzzle", "puzzle__round"
+            ).order_by("-submitted_datetime")
         )
 
     def solves(self):
@@ -588,8 +690,15 @@ class Team(models.Model):
                 out[submit.puzzle.round.major_case.slug] = {}
             if submit.puzzle.round.slug not in out[submit.puzzle.round.major_case.slug]:
                 out[submit.puzzle.round.major_case.slug][submit.puzzle.round.slug] = {}
-            if submit.puzzle.slug not in out[submit.puzzle.round.major_case.slug][submit.puzzle.round.slug]:
-                out[submit.puzzle.round.major_case.slug][submit.puzzle.round.slug][submit.puzzle.slug] = submit
+            if (
+                submit.puzzle.slug
+                not in out[submit.puzzle.round.major_case.slug][
+                    submit.puzzle.round.slug
+                ]
+            ):
+                out[submit.puzzle.round.major_case.slug][submit.puzzle.round.slug][
+                    submit.puzzle.slug
+                ] = submit
         return out
 
     def minor_case_solves(self):
@@ -600,28 +709,31 @@ class Team(models.Model):
             if submit.puzzle.round.major_case.slug not in out:
                 out[submit.puzzle.round.major_case.slug] = {}
             if submit.puzzle.slug == submit.puzzle.round.meta.slug:
-                out[submit.puzzle.round.major_case.slug][submit.puzzle.round.slug] = submit
+                out[submit.puzzle.round.major_case.slug][
+                    submit.puzzle.round.slug
+                ] = submit
         return out
 
     def db_minor_case_active(self):
         return [
             active
-            for active in self.minorcaseactive_set
-            .select_related('minor_case_round')
+            for active in self.minorcaseactive_set.select_related("minor_case_round")
         ]
 
     def db_minor_case_completed(self):
         return [
             completed
-            for completed in self.minorcasecompleted_set
-            .select_related('minor_case_round')
+            for completed in self.minorcasecompleted_set.select_related(
+                "minor_case_round"
+            )
         ]
 
     def db_unlocks(self):
         return {
             unlock.puzzle_id: unlock
-            for unlock in self.puzzleunlock_set
-            .select_related('puzzle', 'puzzle__round')
+            for unlock in self.puzzleunlock_set.select_related(
+                "puzzle", "puzzle__round"
+            )
         }
 
     def main_round_solves(self):
@@ -647,16 +759,20 @@ class Team(models.Model):
                 if puzzle.id in context.team.solves:
                     # print("META SOLVED:", puzzle)
                     metas_solved.append(puzzle)
+                    # print("META SOLVED:", puzzle)
+                    metas_solved.append(puzzle)
         # print("META SOLVED CNT:", len(metas_solved))
 
         for puzzle in context.all_puzzles:
             unlocked_at = None
             if 0 <= puzzle.unlock_hours and (
-                    puzzle.unlock_hours == 0 or
-                    not context.team or
-                    context.team.allow_time_unlocks):
-                unlock_time = context.start_time + \
-                    datetime.timedelta(hours=puzzle.unlock_hours)
+                puzzle.unlock_hours == 0
+                or not context.team
+                or context.team.allow_time_unlocks
+            ):
+                unlock_time = context.start_time + datetime.timedelta(
+                    hours=puzzle.unlock_hours
+                )
                 if unlock_time <= context.now:
                     unlocked_at = unlock_time
             # TODO: REMOVE TO REENABLE PRERELEASE FULL-VISIBILITY
@@ -676,8 +792,7 @@ class Team(models.Model):
                 if puzzle.id in context.team.db_unlocks:
                     unlocked_at = context.team.db_unlocks[puzzle.id].unlock_datetime
                 elif unlocked_at:
-                    unlocks.append(Team.unlock_puzzle(
-                        context, puzzle, unlocked_at))
+                    unlocks.append(Team.unlock_puzzle(context, puzzle, unlocked_at))
             if unlocked_at:
                 puzzles_unlocked[puzzle] = unlocked_at
         if unlocks:
@@ -687,9 +802,8 @@ class Team(models.Model):
     @staticmethod
     def unlock_puzzle(context, puzzle, unlocked_at):
         unlock = PuzzleUnlock(
-            team=context.team,
-            puzzle=puzzle,
-            unlock_datetime=unlocked_at)
+            team=context.team, puzzle=puzzle, unlock_datetime=unlocked_at
+        )
         context.team.db_unlocks[puzzle.id] = unlock
 
         if unlocked_at == context.now:
@@ -702,9 +816,7 @@ class Team(models.Model):
 
         try:
             unlock = MinorCaseActive.objects.get_or_create(
-              team=team,
-              minor_case_round=minor_case,
-              active_datetime=unlock_datetime
+                team=team, minor_case_round=minor_case, active_datetime=unlock_datetime
             )
         except:
             print(f"Case {minor_case} already set active for team {team}.")
@@ -713,7 +825,9 @@ class Team(models.Model):
         # unlock all puzzles in the minor case
         for puzzle in Puzzle.objects.filter(round=minor_case):
             try:
-                PuzzleUnlock.objects.get_or_create(team=team, puzzle=puzzle, unlock_datetime=unlock_datetime)
+                PuzzleUnlock.objects.get_or_create(
+                    team=team, puzzle=puzzle, unlock_datetime=unlock_datetime
+                )
             except:
                 print(f"Puzzle {puzzle} already unlocked for team {team}. Skipping.")
                 pass
@@ -724,63 +838,65 @@ class Team(models.Model):
 @receiver(post_save, sender=Team)
 def notify_on_team_creation(sender, instance, created, **kwargs):
     if created:
-        dispatch_general_alert(
-            _('Team created: {}').format(instance.team_name))
+        dispatch_general_alert(_("Team created: {}").format(instance.team_name))
 
 
 class TeamMember(models.Model):
-    '''A person on a team.'''
+    """A person on a team."""
 
-    team = models.ForeignKey(
-        Team, on_delete=models.CASCADE, verbose_name=_('team'))
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_("team"))
 
-    name = models.CharField(max_length=255, verbose_name=_('Name'))
-    email = models.EmailField(blank=True, verbose_name=_('Email (optional)'))
+    name = models.CharField(max_length=255, verbose_name=_("Name"))
+    email = models.EmailField(blank=True, verbose_name=_("Email (optional)"))
 
     class Meta:
-        verbose_name = _('team member')
-        verbose_name_plural = _('team members')
+        verbose_name = _("team member")
+        verbose_name_plural = _("team members")
 
     def __str__(self):
-        return '%s (%s)' % (self.name, self.email) if self.email else self.name
+        return "%s (%s)" % (self.name, self.email) if self.email else self.name
 
 
 @receiver(post_save, sender=TeamMember)
 def notify_on_team_member_creation(sender, instance, created, **kwargs):
     if created:
-        dispatch_general_alert(_('Team {} added member {} ({})').format(
-            instance.team, instance.name, instance.email))
+        dispatch_general_alert(
+            _("Team {} added member {} ({})").format(
+                instance.team, instance.name, instance.email
+            )
+        )
 
 
 class PuzzleUnlock(models.Model):
-    '''Represents a team having access to a puzzle (and when that occurred).'''
+    """Represents a team having access to a puzzle (and when that occurred)."""
 
-    team = models.ForeignKey(
-        Team, on_delete=models.CASCADE, verbose_name=_('team'))
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_("team"))
     puzzle = models.ForeignKey(
-        Puzzle, on_delete=models.CASCADE, verbose_name=_('puzzle'))
+        Puzzle, on_delete=models.CASCADE, verbose_name=_("puzzle")
+    )
 
-    unlock_datetime = models.DateTimeField(verbose_name=_('Unlock datetime'))
+    unlock_datetime = models.DateTimeField(verbose_name=_("Unlock datetime"))
     view_datetime = models.DateTimeField(
-        null=True, blank=True, verbose_name=_('View datetime'))
+        null=True, blank=True, verbose_name=_("View datetime")
+    )
 
     def __str__(self):
-        return '%s -> %s @ %s' % (
-            self.team, self.puzzle, self.unlock_datetime
-        )
+        return "%s -> %s @ %s" % (self.team, self.puzzle, self.unlock_datetime)
 
     class Meta:
-        unique_together = ('team', 'puzzle')
-        verbose_name = _('puzzle unlock')
-        verbose_name_plural = _('puzzle unlocks')
+        unique_together = ("team", "puzzle")
+        verbose_name = _("puzzle unlock")
+        verbose_name_plural = _("puzzle unlocks")
 
 
 class MinorCaseVote(models.Model):
-    '''Represents a team voting on a minor case puzzle.'''
+    """Represents a team voting on a minor case puzzle."""
 
-    team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_('team'))
-    minor_case = models.ForeignKey(Round, on_delete=models.CASCADE, verbose_name=_('minor case'))
-    num_votes = models.IntegerField(verbose_name=_('Number of votes'))
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_("team"))
+    minor_case = models.ForeignKey(
+        Round, on_delete=models.CASCADE, verbose_name=_("minor case")
+    )
+    num_votes = models.IntegerField(verbose_name=_("Number of votes"))
 
 
 class MinorCaseIncomingEvent(models.Model):
@@ -794,32 +910,11 @@ class MinorCaseIncomingEvent(models.Model):
     total_user_votes = models.IntegerField(verbose_name=_('Total user votes'), default=0)
 
     def __str__(self):
-        return '%s -> %s @ %s' % (
-            self.team, self.timestamp, self.votes
-        )
+        return "%s -> %s @ %s" % (self.team, self.timestamp, self.votes)
 
     class Meta:
-        verbose_name = _('minor case incoming event')
-        verbose_name_plural = _('minor cases incoming events')
-
-    def generate_minor_cases(self):
-        return Round.objects.exclude(minorcaseactive__team=self.team).order_by('order')[:6]
-
-    def initialize(self):
-        if self.is_initialized:
-            return
-
-        for minor_case in self.generate_minor_cases():
-            self.votes.add(MinorCaseVote.objects.create(team=self.team, minor_case=minor_case, num_votes=0))
-
-        self.is_initialized = True
-        self.save()
-
-    def get_votes(self):
-        return {vote.minor_case.name: {"desc": vote.minor_case.desc, "voteCount": vote.num_votes} for vote in self.votes.all()}
-
-    def get_expiration_time(self):
-        return self.expiration
+        verbose_name = _("minor case incoming event")
+        verbose_name_plural = _("minor cases incoming events")
 
     def cases(self):
         return [vote.minor_case.name for vote in self.votes.all()]
@@ -852,7 +947,7 @@ class MinorCaseIncomingEvent(models.Model):
         self.save()
 
     def finalize_vote(self):
-        '''Finalizes the vote for the incoming event, and creates a MinorCaseVoteEvent'''
+        """Finalizes the vote for the incoming event, and creates a MinorCaseVoteEvent"""
 
         if self.final_vote:
             return self.final_vote.selected_case.name
@@ -865,7 +960,7 @@ class MinorCaseIncomingEvent(models.Model):
             timestamp=current_time,
             selected_case=most_voted_case,
             incoming_event=self,
-            final_votes=self.votes
+            final_votes=self.votes,
         )
 
         self.final_vote = vote_event
@@ -875,8 +970,12 @@ class MinorCaseIncomingEvent(models.Model):
 
     @staticmethod
     def get_current_incoming_event(context):
-        '''gets the current incoming event for the team, if there is one active, else returns None'''
-        most_recent_case = MinorCaseIncomingEvent.objects.filter(team=context.team).order_by('-timestamp').first()
+        """gets the current incoming event for the team, if there is one active, else returns None"""
+        most_recent_case = (
+            MinorCaseIncomingEvent.objects.filter(team=context.team)
+            .order_by("-timestamp")
+            .first()
+        )
         if most_recent_case and not most_recent_case.final_vote:
             return most_recent_case
 
@@ -889,15 +988,24 @@ class MinorCaseIncomingEvent(models.Model):
 
 
 class MinorCaseVoteEvent(models.Model):
-    '''Represents a finalized team vote on a single puzzle'''
-    team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_('team'))
-    timestamp = models.DateTimeField(verbose_name=_('Event creation datetime'))
+    """Represents a finalized team vote on a single puzzle"""
+
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_("team"))
+    timestamp = models.DateTimeField(verbose_name=_("Event creation datetime"))
     # the selected case from the vote.
-    selected_case = models.ForeignKey(Round, on_delete=models.CASCADE, verbose_name=_('Selected minor case'))
+    selected_case = models.ForeignKey(
+        Round, on_delete=models.CASCADE, verbose_name=_("Selected minor case")
+    )
     # the incomingEvent that caused the vote to occur
-    incoming_event = models.OneToOneField('MinorCaseIncomingEvent', on_delete=models.CASCADE, verbose_name=_('Incoming cases event'))
+    incoming_event = models.OneToOneField(
+        "MinorCaseIncomingEvent",
+        on_delete=models.CASCADE,
+        verbose_name=_("Incoming cases event"),
+    )
     # what the votes looked like at the time of the selection
-    final_votes = models.ManyToManyField(MinorCaseVote, verbose_name=_('Final votes'), blank=True)
+    final_votes = models.ManyToManyField(
+        MinorCaseVote, verbose_name=_("Final votes"), blank=True
+    )
 
     def save(self, *args, **kwargs):
         super(MinorCaseVoteEvent, self).save(*args, **kwargs)
@@ -906,72 +1014,80 @@ class MinorCaseVoteEvent(models.Model):
 
 
 class MinorCaseActive(models.Model):
-    '''Represents a team having a minor case active.'''
+    """Represents a team having a minor case active."""
 
-    team = models.ForeignKey(
-        Team, on_delete=models.CASCADE, verbose_name=_('team'))
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_("team"))
     minor_case_round = models.ForeignKey(
-        Round, on_delete=models.CASCADE, verbose_name=_('minor case round'))
+        Round, on_delete=models.CASCADE, verbose_name=_("minor case round")
+    )
 
-    active_datetime = models.DateTimeField(verbose_name=_('Active datetime'))
+    active_datetime = models.DateTimeField(verbose_name=_("Active datetime"))
 
     def __str__(self):
-        return '%s -> %s @ %s' % (
-            self.team, self.minor_case_round, self.active_datetime
+        return "%s -> %s @ %s" % (
+            self.team,
+            self.minor_case_round,
+            self.active_datetime,
         )
 
     class Meta:
-        unique_together = ('team', 'minor_case_round')
-        verbose_name = _('minor case active')
-        verbose_name_plural = _('minor cases active')
+        unique_together = ("team", "minor_case_round")
+        verbose_name = _("minor case active")
+        verbose_name_plural = _("minor cases active")
 
 
 class MinorCaseCompleted(models.Model):
-    '''Represents a team completing a minor case.'''
-    team = models.ForeignKey(
-        Team, on_delete=models.CASCADE, verbose_name=_('team'))
-    minor_case_round = models.ForeignKey(
-        Round, on_delete=models.CASCADE, verbose_name=_('minor case round'))
+    """Represents a team completing a minor case."""
 
-    completed_datetime = models.DateTimeField(
-        verbose_name=_('Completed datetime'))
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_("team"))
+    minor_case_round = models.ForeignKey(
+        Round, on_delete=models.CASCADE, verbose_name=_("minor case round")
+    )
+
+    completed_datetime = models.DateTimeField(verbose_name=_("Completed datetime"))
 
     def __str__(self):
-        return '%s -> %s @ %s' % (
-            self.team, self.minor_case_round, self.completed_datetime
+        return "%s -> %s @ %s" % (
+            self.team,
+            self.minor_case_round,
+            self.completed_datetime,
         )
 
     class Meta:
-        unique_together = ('team', 'minor_case_round')
-        verbose_name = _('minor case completed')
-        verbose_name_plural = _('minor cases completed')
+        unique_together = ("team", "minor_case_round")
+        verbose_name = _("minor case completed")
+        verbose_name_plural = _("minor cases completed")
 
 
 class AnswerSubmission(models.Model):
-    '''Represents a team making a solve attempt on a puzzle (right or wrong).'''
+    """Represents a team making a solve attempt on a puzzle (right or wrong)."""
 
-    team = models.ForeignKey(
-        Team, on_delete=models.CASCADE, verbose_name=_('team'))
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_("team"))
     puzzle = models.ForeignKey(
-        Puzzle, on_delete=models.CASCADE, verbose_name=_('puzzle'))
+        Puzzle, on_delete=models.CASCADE, verbose_name=_("puzzle")
+    )
 
     submitted_answer = models.CharField(
-        max_length=255, verbose_name=_('Submitted answer'))
-    is_correct = models.BooleanField(verbose_name=_('Is correct'))
+        max_length=255, verbose_name=_("Submitted answer")
+    )
+    is_correct = models.BooleanField(verbose_name=_("Is correct"))
     submitted_datetime = models.DateTimeField(
-        auto_now_add=True, verbose_name=_('Submitted datetime'))
-    used_free_answer = models.BooleanField(verbose_name=_('Used free answer'))
+        auto_now_add=True, verbose_name=_("Submitted datetime")
+    )
+    used_free_answer = models.BooleanField(verbose_name=_("Used free answer"))
 
     def __str__(self):
-        return '%s -> %s: %s, %s' % (
-            self.team, self.puzzle, self.submitted_answer,
-            _('correct') if self.is_correct else _('wrong')
+        return "%s -> %s: %s, %s" % (
+            self.team,
+            self.puzzle,
+            self.submitted_answer,
+            _("correct") if self.is_correct else _("wrong"),
         )
 
     class Meta:
-        unique_together = ('team', 'puzzle', 'submitted_answer')
-        verbose_name = _('answer submission')
-        verbose_name_plural = _('answer submissions')
+        unique_together = ("team", "puzzle", "submitted_answer")
+        verbose_name = _("answer submission")
+        verbose_name_plural = _("answer submissions")
 
 
 @receiver(post_save, sender=AnswerSubmission)
@@ -981,54 +1097,72 @@ def notify_on_answer_submission(sender, instance, created, **kwargs):
 
         def format_time_ago(timestamp):
             if not timestamp:
-                return ''
+                return ""
             diff = now - timestamp
-            parts = ['', '', '', '']
+            parts = ["", "", "", ""]
             if diff.days > 0:
-                parts[0] = _('%dd') % diff.days
+                parts[0] = _("%dd") % diff.days
             seconds = diff.seconds
-            parts[3] = _('%02ds') % (seconds % 60)
+            parts[3] = _("%02ds") % (seconds % 60)
             minutes = seconds // 60
             if minutes:
-                parts[2] = _('%02dm') % (minutes % 60)
+                parts[2] = _("%02dm") % (minutes % 60)
                 hours = minutes // 60
                 if hours:
-                    parts[1] = _('%dh') % hours
-            return _(' {} ago').format(''.join(parts))
+                    parts[1] = _("%dh") % hours
+            return _(" {} ago").format("".join(parts))
+
         hints = Hint.objects.filter(team=instance.team, puzzle=instance.puzzle)
-        hint_line = ''
+        hint_line = ""
         if len(hints):
-            hint_line = _('\nHints:') + ','.join('%s (%s%s)' % (
-                format_time_ago(hint.submitted_datetime),
-                hint.get_status_display(),
-                format_time_ago(hint.answered_datetime),
-            ) for hint in hints)
+            hint_line = _("\nHints:") + ",".join(
+                "%s (%s%s)"
+                % (
+                    format_time_ago(hint.submitted_datetime),
+                    hint.get_status_display(),
+                    format_time_ago(hint.answered_datetime),
+                )
+                for hint in hints
+            )
         if instance.used_free_answer:
             dispatch_free_answer_alert(
-                _(':question: {} Team {} used a free answer on {}!{}').format(
-                    instance.puzzle.emoji, instance.team, instance.puzzle, hint_line))
+                _(":question: {} Team {} used a free answer on {}!{}").format(
+                    instance.puzzle.emoji, instance.team, instance.puzzle, hint_line
+                )
+            )
         else:
-            submitted_teams = AnswerSubmission.objects.filter(
-                puzzle=instance.puzzle,
-                submitted_answer=instance.submitted_answer,
-                used_free_answer=False,
-                team__is_hidden=False,
-            ).values_list('team_id', flat=True).distinct().count()
-            sigil = ':x:'
+            submitted_teams = (
+                AnswerSubmission.objects.filter(
+                    puzzle=instance.puzzle,
+                    submitted_answer=instance.submitted_answer,
+                    used_free_answer=False,
+                    team__is_hidden=False,
+                )
+                .values_list("team_id", flat=True)
+                .distinct()
+                .count()
+            )
+            sigil = ":x:"
             if instance.is_correct:
                 sigil = {
-                    1: ':first_place:', 2: ':second_place:', 3: ':third_place:'
-                }.get(submitted_teams, ':white_check_mark:')
+                    1: ":first_place:",
+                    2: ":second_place:",
+                    3: ":third_place:",
+                }.get(submitted_teams, ":white_check_mark:")
             elif submitted_teams > 1:
-                sigil = ':skull_crossbones:'
+                sigil = ":skull_crossbones:"
             dispatch_submission_alert(
-                _('{} {} Team {} submitted `{}` for {}: {}{}').format(
-                    sigil, instance.puzzle.emoji, instance.team,
-                    instance.submitted_answer, instance.puzzle,
-                    _('Correct!') if instance.is_correct else _('Incorrect.'),
+                _("{} {} Team {} submitted `{}` for {}: {}{}").format(
+                    sigil,
+                    instance.puzzle.emoji,
+                    instance.team,
+                    instance.submitted_answer,
+                    instance.puzzle,
+                    _("Correct!") if instance.is_correct else _("Incorrect."),
                     hint_line,
                 ),
-                correct=instance.is_correct)
+                correct=instance.is_correct,
+            )
         if not instance.is_correct:
             return
         show_solve_notification(instance)
@@ -1046,41 +1180,44 @@ def notify_on_answer_submission(sender, instance, created, **kwargs):
 
 
 class ExtraGuessGrant(models.Model):
-    '''Extra guesses granted to a particular team.'''
+    """Extra guesses granted to a particular team."""
 
-    team = models.ForeignKey(
-        Team, on_delete=models.CASCADE, verbose_name=_('team'))
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_("team"))
     puzzle = models.ForeignKey(
-        Puzzle, on_delete=models.CASCADE, verbose_name=_('puzzle'))
+        Puzzle, on_delete=models.CASCADE, verbose_name=_("puzzle")
+    )
 
-    extra_guesses = models.IntegerField(verbose_name=_('Extra guesses'))
+    extra_guesses = models.IntegerField(verbose_name=_("Extra guesses"))
 
     def __str__(self):
-        return _('%s has %d extra guesses for puzzle %s') % (
-            self.team, self.extra_guesses, self.puzzle,
+        return _("%s has %d extra guesses for puzzle %s") % (
+            self.team,
+            self.extra_guesses,
+            self.puzzle,
         )
 
     class Meta:
-        unique_together = ('team', 'puzzle')
-        verbose_name = _('extra guess grant')
-        verbose_name_plural = _('extra guess grants')
+        unique_together = ("team", "puzzle")
+        verbose_name = _("extra guess grant")
+        verbose_name_plural = _("extra guess grants")
 
 
 class PuzzleMessage(models.Model):
-    '''A "keep going" message shown on submitting a specific wrong answer.'''
+    """A "keep going" message shown on submitting a specific wrong answer."""
 
     puzzle = models.ForeignKey(
-        Puzzle, on_delete=models.CASCADE, verbose_name=_('puzzle'))
+        Puzzle, on_delete=models.CASCADE, verbose_name=_("puzzle")
+    )
 
-    guess = models.CharField(max_length=255, verbose_name=_('Guess'))
-    response = models.TextField(verbose_name=_('Response'))
+    guess = models.CharField(max_length=255, verbose_name=_("Guess"))
+    response = models.TextField(verbose_name=_("Response"))
 
     class Meta:
-        verbose_name = _('puzzle message')
-        verbose_name_plural = _('puzzle messages')
+        verbose_name = _("puzzle message")
+        verbose_name_plural = _("puzzle messages")
 
     def __str__(self):
-        return '%s: %s' % (self.puzzle, self.guess)
+        return "%s: %s" % (self.puzzle, self.guess)
 
     @property
     def semicleaned_guess(self):
@@ -1090,44 +1227,63 @@ class PuzzleMessage(models.Model):
     def semiclean_guess(s):
         if s is None:
             return s
-        nfkd_form = unicodedata.normalize('NFKD', s)
-        return ''.join([c.upper() for c in nfkd_form if c.isalnum()])
+        nfkd_form = unicodedata.normalize("NFKD", s)
+        return "".join([c.upper() for c in nfkd_form if c.isalnum()])
 
 
 class Erratum(models.Model):
-    '''An update made to the hunt while it's running that should be announced.'''
+    """An update made to the hunt while it's running that should be announced."""
 
     puzzle = models.ForeignKey(
-        Puzzle, null=True, blank=True, on_delete=models.CASCADE, verbose_name=_('puzzle'))
-    updates_text = models.TextField(blank=True, verbose_name=_('Updates text'), help_text=_('''
+        Puzzle,
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        verbose_name=_("puzzle"),
+    )
+    updates_text = models.TextField(
+        blank=True,
+        verbose_name=_("Updates text"),
+        help_text=_(
+            '''
         Text to show on the Updates (errata) page. If blank, it will not appear there.
         Use $PUZZLE to refer to the puzzle. The text will be prefixed with "On
         (date)," when displayed, so you should capitalize it the way it would
         appear mid-sentence. HTML is ok.
-    '''))
-    puzzle_text = models.TextField(blank=True, verbose_name=_('Puzzle text'), help_text=_('''
+    """
+        ),
+    )
+    puzzle_text = models.TextField(
+        blank=True,
+        verbose_name=_("Puzzle text"),
+        help_text=_(
+            """
         Text to show on the puzzle page. If blank, it will not appear there.
         The text will be prefixed with "On (date)," when displayed, so you
         should capitalize it the way it would appear mid-sentence. HTML is ok.
-    '''))
-    timestamp = models.DateTimeField(
-        default=timezone.now, verbose_name=_('Timestamp'))
-    published = models.BooleanField(default=False, verbose_name=_('Published'))
+    '''
+        ),
+    )
+    timestamp = models.DateTimeField(default=timezone.now, verbose_name=_("Timestamp"))
+    published = models.BooleanField(default=False, verbose_name=_("Published"))
 
     def __str__(self):
-        return _('%s erratum @ %s') % (self.puzzle, self.timestamp)
+        return _("%s erratum @ %s") % (self.puzzle, self.timestamp)
 
     @property
     def formatted_updates_text(self):
         if not self.puzzle:
             return self.updates_text
-        return self.updates_text.replace('$PUZZLE', '<a href="%s">%s</a>' % (
-            reverse('puzzle', args=(self.puzzle.slug,)), self.puzzle))
+        return self.updates_text.replace(
+            "$PUZZLE",
+            '<a href="%s">%s</a>'
+            % (reverse("puzzle", args=(self.puzzle.slug,)), self.puzzle),
+        )
 
     @staticmethod
     def get_visible_errata(context):
         errata = []
-        for erratum in Erratum.objects.select_related('puzzle').order_by('timestamp'):
+        for erratum in Erratum.objects.select_related("puzzle").order_by("timestamp"):
             if not context.is_superuser:
                 if not erratum.published:
                     continue
@@ -1137,17 +1293,24 @@ class Erratum(models.Model):
         return errata
 
     def get_emails(self):
-        teams = PuzzleUnlock.objects.filter(puzzle=self.puzzle).exclude(
-            view_datetime=None).values_list('team_id', flat=True)
-        return TeamMember.objects.filter(team_id__in=teams).exclude(email='').values_list('email', flat=True)
+        teams = (
+            PuzzleUnlock.objects.filter(puzzle=self.puzzle)
+            .exclude(view_datetime=None)
+            .values_list("team_id", flat=True)
+        )
+        return (
+            TeamMember.objects.filter(team_id__in=teams)
+            .exclude(email="")
+            .values_list("email", flat=True)
+        )
 
     class Meta:
-        verbose_name = _('erratum')
-        verbose_name_plural = _('errata')
+        verbose_name = _("erratum")
+        verbose_name_plural = _("errata")
 
 
 class RatingField(models.PositiveSmallIntegerField):
-    '''Represents a single numeric rating (either fun or difficulty) of a puzzle.'''
+    """Represents a single numeric rating (either fun or difficulty) of a puzzle."""
 
     def __init__(self, max_rating, adjective, **kwargs):
         self.max_rating = max_rating
@@ -1156,120 +1319,125 @@ class RatingField(models.PositiveSmallIntegerField):
 
     def formfield(self, **kwargs):
         choices = [(i, i) for i in range(1, self.max_rating + 1)]
-        return super().formfield(**{
-            'min_value': 1,
-            'max_value': self.max_rating,
-            'widget': forms.RadioSelect(
-                choices=choices,
-                attrs={'adjective': self.adjective},
-            ),
-            **kwargs,
-        })
+        return super().formfield(
+            **{
+                "min_value": 1,
+                "max_value": self.max_rating,
+                "widget": forms.RadioSelect(
+                    choices=choices,
+                    attrs={"adjective": self.adjective},
+                ),
+                **kwargs,
+            }
+        )
 
     def deconstruct(self):
         name, path, args, kwargs = super().deconstruct()
-        kwargs['max_rating'] = self.max_rating
-        kwargs['adjective'] = self.adjective
+        kwargs["max_rating"] = self.max_rating
+        kwargs["adjective"] = self.adjective
         return name, path, args, kwargs
 
 
 class Survey(models.Model):
-    '''A rating given by a team to a puzzle after solving it.'''
+    """A rating given by a team to a puzzle after solving it."""
 
-    team = models.ForeignKey(
-        Team, on_delete=models.CASCADE, verbose_name=_('team'))
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_("team"))
     puzzle = models.ForeignKey(
-        Puzzle, on_delete=models.CASCADE, verbose_name=_('puzzle'))
+        Puzzle, on_delete=models.CASCADE, verbose_name=_("puzzle")
+    )
     submitted_datetime = models.DateTimeField(
-        auto_now=True, verbose_name=_('Submitted datetime'))
+        auto_now=True, verbose_name=_("Submitted datetime")
+    )
 
     # NOTE: Due to some pretty dynamic queries, the names of rating fields
     # should be pretty unique! They definitely shouldn't overlap with the names
     # of any fields of Puzzle.
-    fun = RatingField(6, _('fun'))
-    difficulty = RatingField(6, _('hard'))
-    comments = models.TextField(blank=True, verbose_name=_('Anything else:'))
+    fun = RatingField(6, _("fun"))
+    difficulty = RatingField(6, _("hard"))
+    comments = models.TextField(blank=True, verbose_name=_("Anything else:"))
 
     def __str__(self):
-        return '%s: %s' % (self.puzzle, self.team)
+        return "%s: %s" % (self.puzzle, self.team)
 
     class Meta:
-        verbose_name = _('survey')
-        verbose_name_plural = _('surveys')
+        verbose_name = _("survey")
+        verbose_name_plural = _("surveys")
 
     @classmethod
     def fields(cls):
         return [
-            field for field in cls._meta.get_fields()
-            if isinstance(field, RatingField)
+            field for field in cls._meta.get_fields() if isinstance(field, RatingField)
         ]
 
 
 class Hint(models.Model):
-    '''A request for a hint.'''
+    """A request for a hint."""
 
-    NO_RESPONSE = 'NR'
-    ANSWERED = 'ANS'
-    REFUNDED = 'REF'
-    OBSOLETE = 'OBS'
+    NO_RESPONSE = "NR"
+    ANSWERED = "ANS"
+    REFUNDED = "REF"
+    OBSOLETE = "OBS"
 
     STATUSES = (
-        (NO_RESPONSE, _('No response')),
-        (ANSWERED, _('Answered')),
-
+        (NO_RESPONSE, _("No response")),
+        (ANSWERED, _("Answered")),
         # we can't answer for some reason, or think that the hint is too small
-        (REFUNDED, _('Refunded')),
-
+        (REFUNDED, _("Refunded")),
         # puzzle was solved while waiting for hint
-        (OBSOLETE, _('Obsolete')),
+        (OBSOLETE, _("Obsolete")),
     )
 
-    team = models.ForeignKey(
-        Team, on_delete=models.CASCADE, verbose_name=_('team'))
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_("team"))
     puzzle = models.ForeignKey(
-        Puzzle, on_delete=models.CASCADE, verbose_name=_('puzzle'))
-    is_followup = models.BooleanField(
-        default=False, verbose_name=_('Is followup'))
+        Puzzle, on_delete=models.CASCADE, verbose_name=_("puzzle")
+    )
+    is_followup = models.BooleanField(default=False, verbose_name=_("Is followup"))
 
     submitted_datetime = models.DateTimeField(
-        auto_now_add=True, verbose_name=_('Submitted datetime'))
-    hint_question = models.TextField(verbose_name=_('Hint question'))
+        auto_now_add=True, verbose_name=_("Submitted datetime")
+    )
+    hint_question = models.TextField(verbose_name=_("Hint question"))
     notify_emails = models.CharField(
-        default='none', max_length=255, verbose_name=_('Notify emails'))
+        default="none", max_length=255, verbose_name=_("Notify emails")
+    )
 
     claimed_datetime = models.DateTimeField(
-        null=True, blank=True, verbose_name=_('Claimed datetime'))
+        null=True, blank=True, verbose_name=_("Claimed datetime")
+    )
     # Making these null=True, blank=False is painful and apparently not
     # idiomatic Django. For example, if set that way, the Django admin won't
     # let you save a model with blank values. Just check for the empty string
     # or falsiness when you're using them.
-    claimer = models.CharField(
-        blank=True, max_length=255, verbose_name=_('Claimer'))
+    claimer = models.CharField(blank=True, max_length=255, verbose_name=_("Claimer"))
     discord_id = models.CharField(
-        blank=True, max_length=255, verbose_name=_('Discord id'))
+        blank=True, max_length=255, verbose_name=_("Discord id")
+    )
 
     answered_datetime = models.DateTimeField(
-        null=True, blank=True, verbose_name=_('Answered datetime'))
+        null=True, blank=True, verbose_name=_("Answered datetime")
+    )
     status = models.CharField(
-        choices=STATUSES, default=NO_RESPONSE, max_length=3, verbose_name=_('Status'))
-    response = models.TextField(blank=True, verbose_name=_('Response'))
+        choices=STATUSES, default=NO_RESPONSE, max_length=3, verbose_name=_("Status")
+    )
+    response = models.TextField(blank=True, verbose_name=_("Response"))
 
     class Meta:
-        verbose_name = _('hint')
-        verbose_name_plural = _('hints')
+        verbose_name = _("hint")
+        verbose_name_plural = _("hints")
 
     def __str__(self):
         def abbr(s):
             if len(s) > 50:
-                return s[:47] + '...'
+                return s[:47] + "..."
             return s
+
         o = '{}, {}: "{}"'.format(
             self.team.team_name,
             self.puzzle.name,
             abbr(self.hint_question),
         )
         if self.status != self.NO_RESPONSE:
-            o = o + ' {}'.format(self.get_status_display())
+            o = o + " {}".format(self.get_status_display())
         return o
 
     @property
@@ -1283,38 +1451,35 @@ class Hint(models.Model):
         return True
 
     def recipients(self):
-        if self.notify_emails == 'all':
+        if self.notify_emails == "all":
             return self.team.get_emails()
-        if self.notify_emails == 'none':
+        if self.notify_emails == "none":
             return []
         return [self.notify_emails]
 
     def full_url(self, claim=False):
-        url = settings.DOMAIN + 'hint/%s' % self.id
+        url = settings.DOMAIN + "hint/%s" % self.id
         if claim:
-            url += '?claim=true'
+            url += "?claim=true"
         return url
 
     def short_discord_message(self, threshold=500):
-        return (
-            _('{} requested on {} {} by {}\n'
-              '```{}```\n')
-        ).format(
-            _('*Followup hint*') if self.is_followup else _('Hint'),
-            self.puzzle.emoji, self.puzzle, self.team,
+        return (_("{} requested on {} {} by {}\n" "```{}```\n")).format(
+            _("*Followup hint*") if self.is_followup else _("Hint"),
+            self.puzzle.emoji,
+            self.puzzle,
+            self.team,
             self.hint_question[:threshold],
         )
 
     def long_discord_message(self):
         return self.short_discord_message(1000) + (
-            _('**Team:** {} ({})\n'
-              '**Puzzle:** {} ({})\n')
+            _("**Team:** {} ({})\n" "**Puzzle:** {} ({})\n")
         ).format(
-            settings.DOMAIN +
-            'team/%s' % quote_plus(self.team.team_name, safe=''),
-            settings.DOMAIN + 'hints?team=%s' % self.team_id,
-            settings.DOMAIN + 'solution/' + self.puzzle.slug,
-            settings.DOMAIN + 'hints?puzzle=%s' % self.puzzle_id,
+            settings.DOMAIN + "team/%s" % quote_plus(self.team.team_name, safe=""),
+            settings.DOMAIN + "hints?team=%s" % self.team_id,
+            settings.DOMAIN + "solution/" + self.puzzle.slug,
+            settings.DOMAIN + "hints?puzzle=%s" % self.puzzle_id,
         )
 
 
@@ -1328,17 +1493,19 @@ def notify_on_hint_update(sender, instance, created, update_fields, **kwargs):
     if not update_fields:
         update_fields = ()
     if instance.status == Hint.NO_RESPONSE:
-        if 'discord_id' not in update_fields:
+        if "discord_id" not in update_fields:
             discord_interface.update_hint(instance)
     else:
-        if 'discord_id' not in update_fields:
+        if "discord_id" not in update_fields:
             discord_interface.clear_hint(instance)
-        if 'response' in update_fields:
-            link = settings.DOMAIN.rstrip('/') + reverse(
-                'hints', args=(instance.puzzle.slug,))
+        if "response" in update_fields:
+            link = settings.DOMAIN.rstrip("/") + reverse(
+                "hints", args=(instance.puzzle.slug,)
+            )
             send_mail_wrapper(
-                _('Hint answered for {}').format(instance.puzzle),
-                'hint_answered_email',
-                {'hint': instance, 'link': link},
-                instance.recipients())
+                _("Hint answered for {}").format(instance.puzzle),
+                "hint_answered_email",
+                {"hint": instance, "link": link},
+                instance.recipients(),
+            )
             show_hint_notification(instance)

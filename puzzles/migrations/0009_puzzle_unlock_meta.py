@@ -6,13 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('puzzles', '0008_auto_20230307_0620'),
+        ("puzzles", "0008_auto_20230307_0620"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='puzzle',
-            name='unlock_meta',
-            field=models.IntegerField(default=-1, help_text='If nonnegative, puzzle unlocks after N meta solves.', verbose_name='Unlock meta'),
+            model_name="puzzle",
+            name="unlock_meta",
+            field=models.IntegerField(
+                default=-1,
+                help_text="If nonnegative, puzzle unlocks after N meta solves.",
+                verbose_name="Unlock meta",
+            ),
         ),
     ]
