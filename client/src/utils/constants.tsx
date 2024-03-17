@@ -1,7 +1,3 @@
-import AlexGame from "@/components/minor_cases/red-thread/AlexGame";
-import PDFTest from "@/components/minor_cases/red-thread/PDFTest";
-import VideoTest from "@/components/minor_cases/red-thread/VideoTest";
-
 export const MURDER_WEAPON_EMOJIS = [
   "🔫",
   "🗡️",
@@ -54,11 +50,4 @@ export const toPuzzleStyle = (major_case_slug: string) => {
     case "data":
       return PuzzleStyle.DATA;
   }
-};
-
-// if any puzzle has no markdown, it will attempt to route using this
-export const ALT_PUZZLE_ROUTES = {
-  "alex-game": <AlexGame />,
-  "pdf-test": <PDFTest />,
-  "video-test": <VideoTest />,
 };
