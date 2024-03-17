@@ -19,7 +19,6 @@ import { BeatLoader } from "react-spinners";
 import TeamNavbar from "./TeamNavbar";
 
 import bluenoir_logo from "@/assets/navbar_logo_head.png";
-import { DjangoContext } from "@/utils/django_types";
 import { useState } from "react";
 
 const components: { title: string; href: string; description: string }[] = [
@@ -143,14 +142,7 @@ const HuntLogo = () => {
 };
 
 const NavbarLeft = () => {
-  const { FetchContext } = useDjangoContext();
-  const [context, setContext] = React.useState<DjangoContext>();
-
-  React.useEffect(() => {
-    FetchContext().then((context) => {
-      setContext(context);
-    });
-  }, [FetchContext]);
+  const { data: context } = useDjangoContext();
 
   return (
     <div className="left flex justify-start w-1/3">

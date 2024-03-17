@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import Characters from "../../components/major_cases/social-deduction/Characters";
@@ -9,7 +9,6 @@ import TopbarSelector from "../../components/major_cases/social-deduction/Topbar
 import Verdict from "../../components/major_cases/social-deduction/Verdict";
 
 import { useDjangoContext } from "@/hooks/useDjangoContext";
-import { DjangoContext } from "@/utils/django_types";
 import { CHAR_NAME, numberOfCasesSolves } from "@/utils/major_cases/social-deduction/constants";
 
 export enum SelectedPanel {
@@ -21,16 +20,7 @@ export enum SelectedPanel {
 
 export default function SocialDeduction() {
   const [panel, setPanel] = useState<SelectedPanel>(SelectedPanel.RULES);
-
-  const { FetchContext } = useDjangoContext();
-  const [context, setContext] = useState<DjangoContext>();
-
-  useEffect(() => {
-    FetchContext().then((context) => {
-      // console.log(context);
-      setContext(context);
-    });
-  }, [FetchContext]);
+  const { data: context } = useDjangoContext();
 
   const CHAR_NAMES = CHAR_NAME(context);
   const NUM_CASES_SOLVED = numberOfCasesSolves(context);

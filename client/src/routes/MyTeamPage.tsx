@@ -33,7 +33,6 @@ import {
   MURDER_WEAPON_EMOJIS,
   PFP_COLOR_CHOICES,
 } from "@/utils/constants";
-import { TeamMember } from "@/utils/django_types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -42,7 +41,7 @@ import { FaEye } from "react-icons/fa";
 import validator from "validator";
 import { z } from "zod";
 
-import { useDjangoContext } from "@/hooks/useDjangoContext";
+import { useTeamMembers } from "@/hooks/useDjangoContext";
 import { BeatLoader } from "react-spinners";
 
 const editTeamFormSchema = z
@@ -96,21 +95,8 @@ export default function MyTeamPage() {
   const [emojiChoice, setEmojiChoice] = useState("");
   const [colorChoice, setColorChoice] = useState("#1e293ba1");
 
-  const [members, setMembers] = useState<TeamMember[]>([{ name: "", email: "" }]);
-  const [membersLoading, setMembersLoading] = useState(true);
-  const [membersError, setMembersError] = useState(false);
-
   const { team } = useAuth();
-
-  const { FetchTeamMembers } = useDjangoContext();
-  useEffect(() => {
-    setMembersLoading(true);
-    FetchTeamMembers().then((members) => {
-      setMembers(members);
-      setMemberCount(members.length);
-      setMembersLoading(false);
-    });
-  }, [FetchTeamMembers]);
+  const { data: members, isLoading: membersLoading, isError: membersError } = useTeamMembers();
 
   const form = useForm<z.infer<typeof editTeamFormSchema>>({
     resolver: zodResolver(editTeamFormSchema),

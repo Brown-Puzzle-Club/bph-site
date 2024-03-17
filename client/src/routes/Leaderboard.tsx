@@ -1,6 +1,6 @@
 import TeamIcon from "@/components/team/TeamIcon";
 import { useAuth } from "@/hooks/useAuth";
-import { useDjangoContext } from "@/hooks/useDjangoContext";
+import { useTeams } from "@/hooks/useDjangoContext";
 import { Team, UserTeam } from "@/utils/django_types";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
@@ -13,8 +13,7 @@ enum LeaderboardTab {
 
 export default function Leaderboard() {
   const { team } = useAuth();
-  const { FetchTeams } = useDjangoContext();
-  const [teams, setTeams] = useState<Team[]>([]);
+  const { data: teams } = useTeams();
   const [curTab, setTab] = useState<LeaderboardTab>(() => {
     const savedTab = Cookies.get("leaderboardTab");
     return savedTab ? (savedTab as LeaderboardTab) : LeaderboardTab.IN_PERSON;
@@ -28,12 +27,6 @@ export default function Leaderboard() {
     // 1 hour expiration of cookie that keeps track of your current tab
     Cookies.set("leaderboardTab", curTab, { expires: 1 / 24 });
   }, [curTab]);
-
-  useEffect(() => {
-    FetchTeams().then((teams) => {
-      setTeams(teams);
-    });
-  }, [FetchTeams]);
 
   useEffect(() => {
     const savedTab = Cookies.get("leaderboardTab");
@@ -94,7 +87,7 @@ export default function Leaderboard() {
       </div>
       <div className="text-left dark bg-gradient-to-b from-[#b3957c] to-[#a28369] pb-2 pt-2 no-underline outline-none focus:shadow-md border-4 border-[#957a62] rounded-xl relative mx-[5%] md:mx-[20%]">
         <div className="contact-content custom-scroll h-full max-h-[65dvh] overflow-y-auto">
-          {teams.length > 0 ? (
+          {teams ? (
             collectTeams(teams, curTab).map((cur_team, index, array) => (
               <div
                 key={cur_team.id}
