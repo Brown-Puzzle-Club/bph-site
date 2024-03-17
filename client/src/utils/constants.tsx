@@ -1,6 +1,6 @@
-import AlexGame from "@/components/minor_cases/AlexGame";
-import PDFTest from "@/components/minor_cases/PDFTest";
-import VideoTest from "@/components/minor_cases/VideoTest";
+import AlexGame from "@/components/minor_cases/red-thread/AlexGame";
+import PDFTest from "@/components/minor_cases/red-thread/PDFTest";
+import VideoTest from "@/components/minor_cases/red-thread/VideoTest";
 
 export const MURDER_WEAPON_EMOJIS = [
   "🔫",
