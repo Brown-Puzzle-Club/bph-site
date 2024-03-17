@@ -37,20 +37,20 @@ export default function Leaderboard() {
 
   useEffect(() => {
     const savedTab = Cookies.get("leaderboardTab");
-    if (team && !savedTab) {
-      setTab(getTeamTab(team));
+    if (team.isSuccess && !savedTab) {
+      setTab(getTeamTab(team.data));
     }
   }, [team]);
 
   const collectRemoteTeams = (teams: Team[]) => {
     return teams.filter(
-      (cur_team) => !cur_team.in_person && (!cur_team.is_hidden || cur_team.id === team?.id),
+      (cur_team) => !cur_team.in_person && (!cur_team.is_hidden || cur_team.id === team.data?.id)
     );
   };
 
   const collectInPersonTeams = (teams: Team[]) => {
     return teams.filter(
-      (cur_team) => cur_team.in_person && (!cur_team.is_hidden || cur_team.id === team?.id),
+      (cur_team) => cur_team.in_person && (!cur_team.is_hidden || cur_team.id === team.data?.id)
     );
   };
 
@@ -69,13 +69,25 @@ export default function Leaderboard() {
       <div className="tabs flex items-center justify-end gap-4 mx-[5%] md:mx-[20%] pr-10 z-10">
         <button
           onClick={() => setTab(LeaderboardTab.IN_PERSON)}
-          className={`select-none rounded-t-md transition-colors py-2 px-6 hover:text-white ${curTab === LeaderboardTab.REMOTE ? "hover:bg-[#b3957c]" : ""} ${curTab === LeaderboardTab.IN_PERSON ? "bg-[#957a62] text-white font-bold" : "bg-[#745a45] text-[#ffffffb8]"}`}
+          className={`select-none rounded-t-md transition-colors py-2 px-6 hover:text-white ${
+            curTab === LeaderboardTab.REMOTE ? "hover:bg-[#b3957c]" : ""
+          } ${
+            curTab === LeaderboardTab.IN_PERSON
+              ? "bg-[#957a62] text-white font-bold"
+              : "bg-[#745a45] text-[#ffffffb8]"
+          }`}
         >
           On-Campus
         </button>
         <button
           onClick={() => setTab(LeaderboardTab.REMOTE)}
-          className={`select-none rounded-t-md transition-colors py-2 px-6 hover:text-white ${curTab === LeaderboardTab.IN_PERSON ? "hover:bg-[#b3957c]" : ""} ${curTab === LeaderboardTab.REMOTE ? "bg-[#957a62] text-white font-bold" : "bg-[#745a45] text-[#ffffffb8]"}`}
+          className={`select-none rounded-t-md transition-colors py-2 px-6 hover:text-white ${
+            curTab === LeaderboardTab.IN_PERSON ? "hover:bg-[#b3957c]" : ""
+          } ${
+            curTab === LeaderboardTab.REMOTE
+              ? "bg-[#957a62] text-white font-bold"
+              : "bg-[#745a45] text-[#ffffffb8]"
+          }`}
         >
           Remote
         </button>
@@ -86,7 +98,9 @@ export default function Leaderboard() {
             collectTeams(teams, curTab).map((cur_team, index, array) => (
               <div
                 key={cur_team.id}
-                className={`team-box px-6 pt-3 pb-3 flex items-center space-x-4 text-slate-800 ${index !== array.length - 1 ? "border-b-4 border-[#957a62]" : ""} ${cur_team.id === team?.id ? "bg-[#ceaa8a]" : ""}`}
+                className={`team-box px-6 pt-3 pb-3 flex items-center space-x-4 text-slate-800 ${
+                  index !== array.length - 1 ? "border-b-4 border-[#957a62]" : ""
+                } ${cur_team.id === team.data?.id ? "bg-[#ceaa8a]" : ""}`}
               >
                 <span className="text-xl font-bold w-9">{index + 1}</span>
                 <TeamIcon

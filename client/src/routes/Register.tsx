@@ -124,7 +124,7 @@ export default function RegisterForm() {
 
   const onSubmit = async (values: z.infer<typeof registerFormSchema>) => {
     setSubmitting(true);
-    await register(values).catch((error) => {
+    await register.mutateAsync(values).catch((error) => {
       console.error(error);
       alert("Team username and/or team name already taken. Please choose a different one.");
     });

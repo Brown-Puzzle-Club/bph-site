@@ -157,8 +157,8 @@ export default function MyTeamPage() {
   useEffect(() => {
     if (form && team && members && !valuesSet) {
       console.log("team:", team);
-      const emoji = team?.emoji_choice || "❓";
-      const color = team?.color_choice || "#1e293ba1";
+      const emoji = team.data?.emoji_choice || "❓";
+      const color = team.data?.color_choice || "#1e293ba1";
       form.setValue("emoji_choice", emoji);
       form.setValue("color_choice", color);
       setEmojiChoice(emoji);
@@ -166,11 +166,11 @@ export default function MyTeamPage() {
 
       form.setValue("members", members);
 
-      form.setValue("in_person", team?.in_person || false);
-      form.setValue("num_brown_members", team?.num_brown_members || 0);
-      form.setValue("classroom_need", team?.classroom_need || false);
-      form.setValue("phone_number", team?.phone_number || "");
-      form.setValue("where_to_find", team?.where_to_find || "");
+      form.setValue("in_person", team.data?.in_person || false);
+      form.setValue("num_brown_members", team.data?.num_brown_members || 0);
+      form.setValue("classroom_need", team.data?.classroom_need || false);
+      form.setValue("phone_number", team.data?.phone_number || "");
+      form.setValue("where_to_find", team.data?.where_to_find || "");
       setValuesSet(true);
     }
   }, [form, team, members, valuesSet]);
@@ -181,7 +181,7 @@ export default function MyTeamPage() {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 text-white dark">
             <a
-              href={`/team/${team?.id}`}
+              href={`/team/${team.data?.id}`}
               className="dark bg-muted/20 hover:bg-muted/80 btn-gradient-1 flex font-semibold items-center text-center justify-center my-5 mx-[33%] transition-colors duration-300 group"
             >
               <FaEye className="w-5 h-5 text-slate-400 group-hover:text-white transition-colors duration-300" />
@@ -288,7 +288,7 @@ export default function MyTeamPage() {
                 </DialogContent>
               </Dialog>
             </div>
-            <h1 className="text-4xl font-bold text-center">{team?.team_name}</h1>
+            <h1 className="text-4xl font-bold text-center">{team.data?.team_name}</h1>
             <div className="flex justify-center items-center">
               {form.formState.isDirty ? (
                 !submitting ? (

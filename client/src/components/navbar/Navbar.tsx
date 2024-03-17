@@ -214,14 +214,16 @@ const NavbarMiddle = () => {
 };
 
 const NavbarRight = () => {
-  const { loggedIn, checkingLoginStatus } = useAuth();
+  const { team } = useAuth();
+  const { isLoading, isSuccess } = team;
+
   return (
     <div className="right flex justify-end w-1/3">
       <NavigationMenuRight>
-        {(checkingLoginStatus && (
+        {(isLoading && (
           <BeatLoader className="justify-center content-center pr-2" color={"#fff"} size={12} />
         )) ||
-          (loggedIn && <TeamNavbar />) || <LoginNavbar />}
+          (isSuccess && <TeamNavbar />) || <LoginNavbar />}
       </NavigationMenuRight>
     </div>
   );

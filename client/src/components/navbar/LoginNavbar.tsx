@@ -28,7 +28,7 @@ export default function LoginNavbar() {
     setFormProgress(true);
 
     try {
-      await login(username, password);
+      await login.mutateAsync({ username, password });
     } catch (error) {
       const e = error as CustomError;
       if (e.response && e.response.status === 401) {

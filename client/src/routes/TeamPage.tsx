@@ -14,7 +14,7 @@ export default function TeamPage() {
   const [loadingData, setLoadingData] = useState(true);
 
   const { team } = useAuth();
-  const IS_OWN_TEAM = team?.id.toString() === TEAM_ID;
+  const IS_OWN_TEAM = team.data?.id.toString() === TEAM_ID;
 
   useEffect(() => {
     setLoadingData(true);

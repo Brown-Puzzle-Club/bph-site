@@ -2,9 +2,8 @@ import axios from "axios";
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { PageWrapper } from "./components/PageWrapper";
-import { AuthContextProvider } from "./hooks/useAuth";
-import { DjangoContextProvider } from "./hooks/useDjangoContext";
 import "./index.css";
 import Archive from "./routes/Archive";
 import Club from "./routes/Club";
@@ -25,6 +24,14 @@ try {
 } catch (e) {
   console.error("Error setting CSRF token in axios headers");
 }
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60, // 1 minute
+    },
+  },
+});
 
 const router = createBrowserRouter([
   {
@@ -106,10 +113,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <DjangoContextProvider>
-      <AuthContextProvider>
-        <RouterProvider router={router} />
-      </AuthContextProvider>
-    </DjangoContextProvider>
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
   </React.StrictMode>
 );
