@@ -791,6 +791,7 @@ class MinorCaseIncomingEvent(models.Model):
     expiration = models.DateTimeField(verbose_name=_('Expiration datetime'), null=True, blank=True)
     final_vote = models.OneToOneField('MinorCaseVoteEvent', on_delete=models.CASCADE, verbose_name=_('Final vote'), null=True, blank=True)
     is_initialized = models.BooleanField(verbose_name=_('Is initialized'), default=False)
+    total_user_votes = models.IntegerField(verbose_name=_('Total user votes'), default=0)
 
     def __str__(self):
         return '%s -> %s @ %s' % (
@@ -804,7 +805,7 @@ class MinorCaseIncomingEvent(models.Model):
     def generate_minor_cases(self):
         return Round.objects.exclude(minorcaseactive__team=self.team).order_by('order')[:6]
 
-    def initialize_votes(self):
+    def initialize(self):
         if self.is_initialized:
             return
 
@@ -817,25 +818,44 @@ class MinorCaseIncomingEvent(models.Model):
     def get_votes(self):
         return {vote.minor_case.name: {"desc": vote.minor_case.desc, "voteCount": vote.num_votes} for vote in self.votes.all()}
 
+    def get_expiration_time(self):
+        return self.expiration
+
     def cases(self):
         return [vote.minor_case.name for vote in self.votes.all()]
 
     def vote(self, old_vote: None | str, new_vote: None | str):
-        print(old_vote, new_vote)
         if old_vote:
             vote = self.votes.get(minor_case__name=old_vote)
             if vote:
                 vote.num_votes -= 1
+                self.total_user_votes -= 1
                 vote.save()
+
         if new_vote:
             vote = self.votes.get(minor_case__name=new_vote)
             if vote:
                 vote.num_votes += 1
+                self.total_user_votes += 1
                 vote.save()
+
+        if self.expiration is None and self.total_user_votes > 0:
+            self.expiration = timezone.now() + timezone.timedelta(seconds=60)
+        elif self.expiration and old_vote is None and new_vote is not None:
+            self.expiration = timezone.now() - timezone.timedelta(seconds=5)
+        elif self.expiration and old_vote is not None and new_vote is None:
+            self.expiration = timezone.now() + timezone.timedelta(seconds=5)
+
+        if self.total_user_votes == 0:
+            self.expiration = None
+
         self.save()
 
     def finalize_vote(self):
         '''Finalizes the vote for the incoming event, and creates a MinorCaseVoteEvent'''
+
+        if self.final_vote:
+            return self.final_vote.selected_case.name
 
         most_voted_case = max(self.votes.all(), key=lambda vote: vote.num_votes).minor_case
         current_time = timezone.now()
@@ -862,7 +882,7 @@ class MinorCaseIncomingEvent(models.Model):
 
         if most_recent_case is None:
             incoming_event = MinorCaseIncomingEvent.objects.create(team=context.team, timestamp=timezone.now())
-            incoming_event.initialize_votes()
+            incoming_event.initialize()
             return incoming_event
 
         return None

@@ -7,3 +7,4 @@ db.sqlite3
 puzzles/static/react/
 # static/
 manage.py
+migrations/

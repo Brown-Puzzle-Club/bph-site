@@ -21,17 +21,34 @@ interface VotingModalProps {
 
 const VotingModal = ({ socket, votingInfo, presenceInfo }: VotingModalProps) => {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
-  const { seconds, isRunning } = useTimer({ expiryTimestamp: new Date() });
+  const { seconds, isRunning, restart, pause } = useTimer({
+    expiryTimestamp: new Date(),
+    onExpire: () => {
+      socket.send(JSON.stringify({ type: "finalizeVote" }));
+    },
+    autoStart: false,
+  });
 
   useEffect(() => {
-    socket.send(JSON.stringify({
-      type: "vote",
-      data: {
-        oldVote: null,
-        newVote: null,
-      }
-    }))
+    socket.send(
+      JSON.stringify({
+        type: "vote",
+        data: {
+          oldVote: null,
+          newVote: null,
+        },
+      }),
+    );
   }, [socket]);
+
+  useEffect(() => {
+    if (votingInfo !== null && votingInfo.expiration_time !== null) {
+      console.log(new Date(votingInfo.expiration_time));
+      restart(new Date(votingInfo.expiration_time));
+    } else {
+      pause();
+    }
+  }, [votingInfo, pause, restart]);
 
   const setVote = (option: string) => {
     setSelectedOption((currOption) => {
@@ -60,23 +77,27 @@ const VotingModal = ({ socket, votingInfo, presenceInfo }: VotingModalProps) => 
           <DialogDescription>Select the next case you'd like to work on.</DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
-          {votingInfo && presenceInfo && Object.keys(votingInfo.cases).sort().map((option) => (
-            <div className="flex items-center gap-4 text-black" key={option}>
-              <Button
-                variant="secondary"
-                className={cn(selectedOption == option && "ring-2", "flex-1")}
-                onClick={() => {
-                  console.log("clicked");
-                  setVote(option);
-                }}
-              >
-                {option}
-              </Button>
-              <p>
-                {votingInfo?.cases[option].voteCount}/{presenceInfo?.num_connected}
-              </p>
-            </div>
-          ))}
+          {votingInfo &&
+            presenceInfo &&
+            Object.keys(votingInfo.cases)
+              .sort()
+              .map((option) => (
+                <div className="flex items-center gap-4 text-black" key={option}>
+                  <Button
+                    variant="secondary"
+                    className={cn(selectedOption == option && "ring-2", "flex-1")}
+                    onClick={() => {
+                      console.log("clicked");
+                      setVote(option);
+                    }}
+                  >
+                    {option}
+                  </Button>
+                  <p>
+                    {votingInfo?.cases[option].voteCount}/{presenceInfo?.num_connected}
+                  </p>
+                </div>
+              ))}
 
           <p className="text-center text-black">
             {isRunning ? `${seconds} seconds left` : "Start the countdown by selecting an option!"}

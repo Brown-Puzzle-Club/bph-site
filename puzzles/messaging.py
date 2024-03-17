@@ -386,23 +386,33 @@ class VotingConsumer(WebsocketConsumer):
 
         if data['type'] == 'vote':
             data = data['data']
-            print(data)
             MinorCaseIncomingEvent = apps.get_model('puzzles', 'MinorCaseIncomingEvent')
             incoming_event = MinorCaseIncomingEvent.get_current_incoming_event(self.scope.get('user')) # type: ignore
             incoming_event.vote(data['oldVote'], data['newVote'])
-
-            print(incoming_event.get_votes())
 
             response = {
                 "type": 'vote',
                 "data": {
                     "cases": incoming_event.get_votes(),
-                    "expiration_time": None
+                    "expiration_time": incoming_event.get_expiration_time().isoformat() if incoming_event.get_expiration_time() else None,
                 }
             }
 
-            self.send(json.dumps(response));
+            # self.send(json.dumps(response))
+            channel = get_channel_layer()
+            if channel is not None:
+                async_to_sync(channel.group_send)(client_room.channel_name, json.dumps(response))
 
+        elif data['type'] == 'finalizeVote':
+            MinorCaseIncomingEvent = apps.get_model('puzzles', 'MinorCaseIncomingEvent')
+            incoming_event = MinorCaseIncomingEvent.get_current_incoming_event(self.scope.get('user')) # type: ignore
+
+            response = {
+                "type": 'finalizeVote',
+                "data":  {
+                    "chosenCase": incoming_event.finalize_vote()
+                }
+            }
 
     def forward_message(self, event):
         self.send(text_data=event['data'])
