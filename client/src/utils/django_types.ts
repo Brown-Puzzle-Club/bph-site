@@ -71,6 +71,7 @@ type MajorCase = z.infer<typeof MajorCaseSchema>;
 
 const RoundSchema = z.object({
   id: z.number(),
+  slug: z.string(),
   name: z.string(),
   order: z.number(),
   major_case: MajorCaseSchema,

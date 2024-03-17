@@ -1,10 +1,10 @@
 // Modal.tsx
 import React, { useEffect } from "react";
 
-import { Round } from "@/utils/django_types";
 import manila from "@/assets/main/manila_open.png";
-import { Link } from "react-router-dom";
+import { Round } from "@/utils/django_types";
 import { CASE_ART_BY_ROUND_SLUG } from "@/utils/main/constants";
+import { Link } from "react-router-dom";
 
 interface ModalProps {
   isOpen: boolean;
@@ -69,7 +69,7 @@ const MinorCaseModal: React.FC<ModalProps> = ({
             <h3 className="row-span-7">{cur_case?.description} description text</h3>{" "}
             {/* className="row-span-7" */}
             {/* Link to the minor case page */}
-            <Link className="text-xl text-purple-500" to={`/minorcase/${cur_case?.id}`}>
+            <Link className="text-xl text-purple-500" to={`/minorcase/${cur_case?.slug}`}>
               Go to Minor Case Page
             </Link>
             <div className="flex justify-between">
@@ -84,42 +84,6 @@ const MinorCaseModal: React.FC<ModalProps> = ({
           </div>
         </div>
       </div>
-      {/* <div className="fixed inset-0 flex items-center justify-center">
-          <div
-            className="bg-white p-6 rounded-md w-3/5 h-1/2 flex-row flex"
-            style={
-              {
-                // backgroundImage: manila,
-              }
-            }
-          >
-            <div className="w-2/4">Art assets</div>
-            <div></div>
-            <div></div>
-            <div className="w-2/4 grid grid-rows-9">
-              {/*Div containg all puzzle info 
-              <div className="grid grid-cols-4 mb-4 row-span-1">
-                <h2 className="col-span-3 text-purple-500 text-xl">
-                  {cur_case?.name}
-                </h2>
-                <button
-                  className="col-span-1 self-end flex justify-end"
-                  onClick={closeModal}
-                >
-                  X
-                </button>
-              </div>
-              <h3 className="row-span-7">{cur_case?.description}</h3>
-              <div className="flex justify-center">
-                {/* Container for centering 
-                <button className="self-end row-span-1" onClick={submitVote}>
-                  Enter
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-    </div> */}
     </>
   );
 };
