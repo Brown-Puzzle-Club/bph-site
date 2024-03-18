@@ -3,6 +3,18 @@ import { cn } from "@/utils/utils";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
+const parseStyle = (style: string) => {
+  // assert style is a string of the form "key1: value1; key2: value2; ..."
+
+  const styleObject: { [key: string]: string } = {};
+  const styleArray = style.split(";");
+  styleArray.forEach((pair) => {
+    const [key, value] = pair.split(":");
+    if (key && value) styleObject[key.trim()] = value.trim();
+  });
+  return styleObject;
+};
+
 const MarkdownComponents: object = {
   // TODO: figure out this typing.. documentation is poor
   //https://github.com/remarkjs/react-markdown?tab=readme-ov-file#components
@@ -33,6 +45,37 @@ const MarkdownComponents: object = {
       );
     }
     return <p>{paragraph.children}</p>;
+  },
+  a: (props: { href: string; children: string }) => {
+    console.log("PROPS:", props);
+    if (["youtube", "embed"].every((el) => props.href.includes(el))) {
+      return (
+        <div className="videoWrapper">
+          <iframe
+            src={props.href}
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            style={parseStyle(props.children)}
+          ></iframe>
+        </div>
+      );
+    }
+    if (["drive", "d"].every((el) => props.href.includes(el))) {
+      return (
+        <div className="ContentWrapper">
+          <iframe
+            src={props.href.replace("/view?usp=sharing", "").concat("/preview")}
+            frameBorder="0"
+            seamless
+            scrolling="no"
+            style={parseStyle(props.children)}
+          ></iframe>
+        </div>
+      );
+    }
+
+    return <a href={props.href}>{props.children}</a>;
   },
 };
 
