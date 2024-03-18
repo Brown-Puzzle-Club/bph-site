@@ -3,6 +3,7 @@ from django.urls import include, path
 from . import api_views
 from . import api_actions
 from .puzzlehandlers import urls as puzzle_handlers_urls
+from .puzzlehandlers import nyt_games_api
 
 app_name = "puzzles-api"
 
@@ -31,4 +32,14 @@ urlpatterns = [
         name="get-team-members",
     ),
     path("create_vote_event", api_actions.create_vote_event, name="create-vote-event"),
+    path(
+        "nyt/get-round-words/<int:connection_round>/",
+        nyt_games_api.index,
+        name="nyt_round_words",
+    ),
+    path(
+        "nyt/connections-guess/<int:connection_round>/<str:selected_words>",
+        nyt_games_api.check,
+        name="nyt_connections_guess",
+    ),
 ]
