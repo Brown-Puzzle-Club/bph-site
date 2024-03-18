@@ -5,5 +5,5 @@ logs/
 venv/
 db.sqlite3
 bph/puzzles/static/react/
-static/
+# static/
 manage.py

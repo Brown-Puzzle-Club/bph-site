@@ -7,138 +7,58 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("puzzles", "0020_merge_0018_merge_20240225_1810_0019_round_desc"),
+        ('puzzles', '0020_merge_0018_merge_20240225_1810_0019_round_desc'),
     ]
 
     operations = [
         migrations.CreateModel(
-            name="MinorCaseIncomingEvent",
+            name='MinorCaseIncomingEvent',
             fields=[
-                (
-                    "id",
-                    models.AutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name="ID",
-                    ),
-                ),
-                (
-                    "timestamp",
-                    models.DateTimeField(verbose_name="Event creation datetime"),
-                ),
-                (
-                    "expiration",
-                    models.DateTimeField(verbose_name="Expiration datetime"),
-                ),
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('timestamp', models.DateTimeField(verbose_name='Event creation datetime')),
+                ('expiration', models.DateTimeField(verbose_name='Expiration datetime')),
             ],
             options={
-                "verbose_name": "minor case incoming event",
-                "verbose_name_plural": "minor cases incoming events",
+                'verbose_name': 'minor case incoming event',
+                'verbose_name_plural': 'minor cases incoming events',
             },
         ),
         migrations.CreateModel(
-            name="MinorCaseVote",
+            name='MinorCaseVote',
             fields=[
-                (
-                    "id",
-                    models.AutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name="ID",
-                    ),
-                ),
-                ("num_votes", models.IntegerField(verbose_name="Number of votes")),
-                (
-                    "minor_case",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE,
-                        to="puzzles.round",
-                        verbose_name="minor case",
-                    ),
-                ),
-                (
-                    "team",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE,
-                        to="puzzles.team",
-                        verbose_name="team",
-                    ),
-                ),
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('num_votes', models.IntegerField(verbose_name='Number of votes')),
+                ('minor_case', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='puzzles.round', verbose_name='minor case')),
+                ('team', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='puzzles.team', verbose_name='team')),
             ],
         ),
         migrations.CreateModel(
-            name="MinorCaseVoteEvent",
+            name='MinorCaseVoteEvent',
             fields=[
-                (
-                    "id",
-                    models.AutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name="ID",
-                    ),
-                ),
-                (
-                    "timestamp",
-                    models.DateTimeField(verbose_name="Event creation datetime"),
-                ),
-                (
-                    "final_votes",
-                    models.ManyToManyField(
-                        to="puzzles.MinorCaseVote", verbose_name="Final votes"
-                    ),
-                ),
-                (
-                    "incoming_event",
-                    models.OneToOneField(
-                        on_delete=django.db.models.deletion.CASCADE,
-                        to="puzzles.minorcaseincomingevent",
-                        verbose_name="Incoming cases event",
-                    ),
-                ),
-                (
-                    "selected_case",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE,
-                        to="puzzles.round",
-                        verbose_name="Selected minor case",
-                    ),
-                ),
-                (
-                    "team",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE,
-                        to="puzzles.team",
-                        verbose_name="team",
-                    ),
-                ),
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('timestamp', models.DateTimeField(verbose_name='Event creation datetime')),
+                ('final_votes', models.ManyToManyField(to='puzzles.MinorCaseVote', verbose_name='Final votes')),
+                ('incoming_event', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='puzzles.minorcaseincomingevent', verbose_name='Incoming cases event')),
+                ('selected_case', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='puzzles.round', verbose_name='Selected minor case')),
+                ('team', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='puzzles.team', verbose_name='team')),
             ],
         ),
-        migrations.AddField(
-            model_name="minorcaseincomingevent",
-            name="final_vote",
-            field=models.OneToOneField(
-                on_delete=django.db.models.deletion.CASCADE,
-                to="puzzles.minorcasevoteevent",
-                verbose_name="Final vote",
-            ),
+        migrations.DeleteModel(
+            name='MinorCaseIncoming',
         ),
         migrations.AddField(
-            model_name="minorcaseincomingevent",
-            name="team",
-            field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE,
-                to="puzzles.team",
-                verbose_name="team",
-            ),
+            model_name='minorcaseincomingevent',
+            name='final_vote',
+            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='puzzles.minorcasevoteevent', verbose_name='Final vote'),
         ),
         migrations.AddField(
-            model_name="minorcaseincomingevent",
-            name="votes",
-            field=models.ManyToManyField(
-                to="puzzles.MinorCaseVote", verbose_name="Votes"
-            ),
+            model_name='minorcaseincomingevent',
+            name='team',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='puzzles.team', verbose_name='team'),
+        ),
+        migrations.AddField(
+            model_name='minorcaseincomingevent',
+            name='votes',
+            field=models.ManyToManyField(to='puzzles.MinorCaseVote', verbose_name='Votes'),
         ),
     ]

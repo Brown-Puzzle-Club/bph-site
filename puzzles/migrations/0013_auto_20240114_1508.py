@@ -7,61 +7,34 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("puzzles", "0012_auto_20240104_0121"),
+        ('puzzles', '0012_auto_20240104_0121'),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name="minorcaseactive",
-            options={
-                "verbose_name": "minor case active",
-                "verbose_name_plural": "minor cases active",
-            },
+            name='minorcaseactive',
+            options={'verbose_name': 'minor case active', 'verbose_name_plural': 'minor cases active'},
         ),
         migrations.AlterModelOptions(
-            name="round",
-            options={
-                "verbose_name": "round (minor case)",
-                "verbose_name_plural": "rounds (minor cases)",
-            },
+            name='minorcaseincoming',
+            options={'verbose_name': 'minor case incoming', 'verbose_name_plural': 'minor cases incoming'},
+        ),
+        migrations.AlterModelOptions(
+            name='round',
+            options={'verbose_name': 'round (minor case)', 'verbose_name_plural': 'rounds (minor cases)'},
         ),
         migrations.CreateModel(
-            name="MinorCaseCompleted",
+            name='MinorCaseCompleted',
             fields=[
-                (
-                    "id",
-                    models.AutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name="ID",
-                    ),
-                ),
-                (
-                    "completed_datetime",
-                    models.DateTimeField(verbose_name="Completed datetime"),
-                ),
-                (
-                    "minor_case_round",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE,
-                        to="puzzles.round",
-                        verbose_name="minor case round",
-                    ),
-                ),
-                (
-                    "team",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE,
-                        to="puzzles.team",
-                        verbose_name="team",
-                    ),
-                ),
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('completed_datetime', models.DateTimeField(verbose_name='Completed datetime')),
+                ('minor_case_round', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='puzzles.round', verbose_name='minor case round')),
+                ('team', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='puzzles.team', verbose_name='team')),
             ],
             options={
-                "verbose_name": "minor case completed",
-                "verbose_name_plural": "minor cases completed",
-                "unique_together": {("team", "minor_case_round")},
+                'verbose_name': 'minor case completed',
+                'verbose_name_plural': 'minor cases completed',
+                'unique_together': {('team', 'minor_case_round')},
             },
         ),
     ]
