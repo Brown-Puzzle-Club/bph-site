@@ -113,24 +113,26 @@ const router = createBrowserRouter([
           <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<MarkdownTest />} />
         ),
       },
-      {
-        path: "/eventpage",
-        element: (
-          <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<EventPage />} />
-        ),
-      },
-      {
-        path: "/minorcase/:slug",
-        element: (
-          <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<MinorCasePage />} />
-        ),
-      },
-      {
-        path: "/puzzle/:slug",
-        element: (
-          <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<PuzzlePage />} />
-        ),
-      },
+      // HIDDEN PAGES:
+      // for now, comment these back in when developing for them. Nick will add re-routing shortly.
+      // {
+      //   path: "/eventpage",
+      //   element: (
+      //     <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<EventPage />} />
+      //   ),
+      // },
+      // {
+      //   path: "/minorcase/:slug",
+      //   element: (
+      //     <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<MinorCasePage />} />
+      //   ),
+      // },
+      // {
+      //   path: "/puzzle/:slug",
+      //   element: (
+      //     <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<PuzzlePage />} />
+      //   ),
+      // },
     ],
   },
 ]);
