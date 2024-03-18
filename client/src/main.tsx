@@ -8,6 +8,7 @@ import { AuthContextProvider } from "./hooks/useAuth";
 import { DjangoContextProvider } from "./hooks/useDjangoContext";
 import Archive from "./routes/Archive";
 import Club from "./routes/Club";
+import Connections from "./routes/Connections";
 import Contact from "./routes/Contact";
 import Credits from "./routes/Credits";
 import ErrorPage from "./routes/ErrorPage";
@@ -39,16 +40,6 @@ const router = createBrowserRouter([
       <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<ErrorPage />} />
     ),
     children: [
-      {
-        path: "/social-deduction",
-        element: (
-          <PageWrapper
-            bg_color={"#1c160d"}
-            navbar_color={"#1c110d96"}
-            route={<SocialDeduction />}
-          />
-        ),
-      },
       {
         path: "/",
         element: (
@@ -131,6 +122,22 @@ const router = createBrowserRouter([
       //   path: "/puzzle/:slug",
       //   element: (
       //     <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<PuzzlePage />} />
+      //   ),
+      // },
+      // {
+      //   path: "/connections",
+      //   element: (
+      //     <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<Connections />} />
+      //   ),
+      // },
+      // {
+      //   path: "/social-deduction",
+      //   element: (
+      //     <PageWrapper
+      //       bg_color={"#1c160d"}
+      //       navbar_color={"#1c110d96"}
+      //       route={<SocialDeduction />}
+      //     />
       //   ),
       // },
     ],
