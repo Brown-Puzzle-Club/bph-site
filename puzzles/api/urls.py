@@ -12,6 +12,8 @@ router.register(r"my-team", api_views.TeamViewSet, basename="team")
 router.register(r"teams", api_views.BasicTeamViewSet, basename="team")
 router.register(r"team-members", api_views.TeamMemberViewSet, basename="team-member")
 router.register(r"errata", api_views.ErrataViewSet, basename="erratum")
+router.register(r"rounds", api_views.RoundsViewSet, basename="rounds")
+router.register(r"puzzles", api_views.PuzzleViewSet, basename="puzzles")
 
 
 urlpatterns = [
@@ -28,5 +30,5 @@ urlpatterns = [
         api_views.team_members,
         name="get-team-members",
     ),
-
+    path("create_vote_event", api_actions.create_vote_event, name="create-vote-event"),
 ]

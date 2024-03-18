@@ -60,6 +60,33 @@ class ErrataViewSet(viewsets.ModelViewSet):
         return models.Erratum.get_visible_errata(self.request._request.context)
 
 
+class RoundsViewSet(viewsets.ModelViewSet):
+    serializer_class = RoundSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = Round.objects.all()
+
+    def get_queryset(self):
+        return models.Round.get_unlocked_rounds(self.request._request.context)
+
+
+class MinorCaseActiveViewSet(viewsets.ModelViewSet):
+    queryset = MinorCaseActive.objects.all()
+    serializer_class = MinorCaseActiveSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return MinorCaseActive.objects.filter(team=self.request._request.context.team)
+
+
+class PuzzleViewSet(viewsets.ModelViewSet):
+    queryset = Puzzle.objects.all()
+    serializer_class = PuzzleBasicSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return self.request._request.context.team.unlocks.values()
+
+
 @api_view(["GET"])
 def context(request: Request) -> Response:
     serializer = ContextSerializer(data=request._request.context)
@@ -80,3 +107,15 @@ def team_members(request: Request, team_id: int) -> Response:
         return Response(serializer.data)
     except Team.DoesNotExist:
         return Response({"error": "Team not found"}, status=404)
+
+
+@api_view(["GET"])
+def get_puzzle(request: Request, puzzle_slug: str) -> Response:
+    # gets a puzzle if the team has access to it
+    try:
+        team_unlocks = request._request.context.team.unlocks
+        puzzle = team_unlocks.get(puzzle_slug)
+        serializer = PuzzleBasicSerializer(puzzle)
+        return Response(serializer.data)
+    except Puzzle.DoesNotExist:
+        return Response({"error": "Puzzle not found"}, status=404)

@@ -6,7 +6,9 @@ from puzzles.models import (
     Hint,
     MajorCase,
     MinorCaseActive,
-    MinorCaseIncoming,
+    MinorCaseCompleted,
+    MinorCaseIncomingEvent,
+    MinorCaseVoteEvent,
     Puzzle,
     PuzzleMessage,
     PuzzleUnlock,
@@ -32,6 +34,8 @@ class MajorCaseSerializer(serializers.ModelSerializer):
 
 
 class RoundSerializer(serializers.ModelSerializer):
+    major_case = MajorCaseSerializer()
+
     class Meta:
         model = Round
         fields = "__all__"
@@ -48,7 +52,7 @@ class PuzzleBasicSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Puzzle
-        fields = ["name", "slug", "round", "order", "is_meta"]
+        fields = ["id", "name", "slug", "round", "order", "is_meta", "body"]
 
 
 class TeamMemberSerializer(serializers.ModelSerializer):
@@ -85,12 +89,16 @@ class PuzzleUnlockSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class MinorCaseIncomingSerializer(serializers.ModelSerializer):
-    minor_case_round = RoundSerializer()
-
+class MinorCaseIncomingEventSerializer(serializers.ModelSerializer):
     class Meta:
-        model = MinorCaseIncoming
-        fields = ["id", "incoming_datetime", "minor_case_round"]
+        model = MinorCaseIncomingEvent
+        fields = "__all__"
+
+
+class VoteEventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MinorCaseVoteEvent
+        fields = ["selected_case", "incoming_event"]
 
 
 class MinorCaseActiveSerializer(serializers.ModelSerializer):
@@ -99,6 +107,14 @@ class MinorCaseActiveSerializer(serializers.ModelSerializer):
     class Meta:
         model = MinorCaseActive
         fields = ["id", "active_datetime", "minor_case_round"]
+
+
+class MinorCaseCompletedSerializer(serializers.ModelSerializer):
+    minor_case_round = RoundSerializer()
+
+    class Meta:
+        model = MinorCaseCompleted
+        fields = ["id", "completed_datetime", "minor_case_round"]
 
 
 class AnswerSubmissionSerializer(serializers.ModelSerializer):
@@ -171,9 +187,9 @@ class TeamPuzzleContextSerializer(serializers.Serializer):
     minor_case_solves = serializers.DictField(
         child=serializers.DictField(child=AnswerSubmissionSerializer())
     )
-    minor_case_incoming = MinorCaseIncomingSerializer(many=True)
     minor_case_active = MinorCaseActiveSerializer(many=True)
-    unlocks = serializers.DictField(child=serializers.DateTimeField())
+    minor_case_completed = MinorCaseCompletedSerializer(many=True)
+    unlocks = serializers.DictField(child=PuzzleBasicSerializer())  # TODO: change here
 
 
 class HuntContextSerializer(serializers.Serializer):

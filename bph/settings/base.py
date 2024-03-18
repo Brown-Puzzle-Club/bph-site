@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "mathfilters",
     "puzzles",
     "channels",
+    "bph.apps.CustomRoomsConfig",
     "rest_framework",
     "rest_framework.authtoken",
 ]

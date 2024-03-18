@@ -70,7 +70,7 @@ class Command(BaseCommand):
             Puzzle(
                 name=title,
                 slug=slug,
-                body_template=slug + ".html",
+                body=slug,
                 answer=answer,
                 round=round,
                 order=puzzle_order,

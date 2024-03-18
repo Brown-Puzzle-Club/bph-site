@@ -1,4 +1,12 @@
-import { DjangoContext, Team, TeamMember, User, UserTeam } from "@/utils/django_types";
+import {
+  DjangoContext,
+  MinorCase,
+  Puzzle,
+  Team,
+  TeamMember,
+  User,
+  UserTeam,
+} from "@/utils/django_types";
 import axios from "axios";
 import { createContext, useCallback, useContext } from "react";
 
@@ -9,6 +17,8 @@ type DjangoContextType = {
   FetchTeamMembers: () => Promise<TeamMember[]>;
   FetchTeams: () => Promise<Team[]>;
   FetchContext: () => Promise<DjangoContext>;
+  FetchCase: (round_id: number) => Promise<MinorCase>;
+  FetchPuzzle: (puzzle_slug: string) => Promise<Puzzle>;
 };
 
 const DjangoContext = createContext<DjangoContextType>({
@@ -26,6 +36,12 @@ const DjangoContext = createContext<DjangoContextType>({
   },
   FetchContext: async () => {
     return {} as DjangoContext;
+  },
+  FetchCase: async () => {
+    return {} as MinorCase;
+  },
+  FetchPuzzle: async () => {
+    return {} as Puzzle;
   },
 });
 
@@ -57,9 +73,29 @@ export const DjangoContextProvider = ({ children }: { children: React.ReactNode 
     return data as DjangoContext;
   }, []);
 
+  const FetchCase = useCallback(async (round_id: number) => {
+    const response = await fetch(`/api/rounds/${round_id}`);
+    const data = await response.json();
+    return data as MinorCase;
+  }, []);
+
+  const FetchPuzzle = useCallback(async (puzzle_slug: string) => {
+    const response = await fetch(`/api/puzzle/${puzzle_slug}`);
+    const data = await response.json();
+    return data as Puzzle;
+  }, []);
+
   return (
     <DjangoContext.Provider
-      value={{ FetchUser, FetchTeam, FetchTeamMembers, FetchTeams, FetchContext }}
+      value={{
+        FetchUser,
+        FetchTeam,
+        FetchTeamMembers,
+        FetchTeams,
+        FetchContext,
+        FetchCase,
+        FetchPuzzle,
+      }}
     >
       {children}
     </DjangoContext.Provider>
