@@ -11,12 +11,15 @@ import Club from "./routes/Club";
 import Contact from "./routes/Contact";
 import Credits from "./routes/Credits";
 import ErrorPage from "./routes/ErrorPage";
+import EventPage from "./routes/EventPage";
 import InfoPage from "./routes/InfoPage";
 import Landing from "./routes/Landing";
 import Leaderboard from "./routes/Leaderboard";
 import SocialDeduction from "./routes/major_cases/SocialDeduction";
 import MarkdownTest from "./routes/MarkdownTest";
+import MinorCasePage from "./routes/MinorCasePage";
 import MyTeamPage from "./routes/MyTeamPage";
+import PuzzlePage from "./routes/PuzzlePage";
 import RegisterForm from "./routes/Register";
 import TeamPage from "./routes/TeamPage";
 import "./styles/index.css";
@@ -110,6 +113,26 @@ const router = createBrowserRouter([
           <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<MarkdownTest />} />
         ),
       },
+      // HIDDEN PAGES:
+      // for now, comment these back in when developing for them. Nick will add re-routing shortly.
+      // {
+      //   path: "/eventpage",
+      //   element: (
+      //     <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<EventPage />} />
+      //   ),
+      // },
+      // {
+      //   path: "/minorcase/:slug",
+      //   element: (
+      //     <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<MinorCasePage />} />
+      //   ),
+      // },
+      // {
+      //   path: "/puzzle/:slug",
+      //   element: (
+      //     <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<PuzzlePage />} />
+      //   ),
+      // },
     ],
   },
 ]);
@@ -121,5 +144,5 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <RouterProvider router={router} />
       </AuthContextProvider>
     </DjangoContextProvider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

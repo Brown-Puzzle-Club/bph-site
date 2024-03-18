@@ -12,7 +12,7 @@ export const PageWrapper = ({
 }) => {
   return (
     <div
-      className={`react-page`}
+      className={`react-page text-white`}
       style={{
         backgroundColor: bg_color,
       }}

@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import reverse
 from django import forms
-
+from channels_presence.models import Room, Presence
 from puzzles.models import (
     MajorCase,
     Round,
@@ -10,7 +10,9 @@ from puzzles.models import (
     TeamMember,
     PuzzleUnlock,
     MinorCaseActive,
-    MinorCaseIncoming,
+    MinorCaseIncomingEvent,
+    MinorCaseVoteEvent,
+    MinorCaseCompleted,
     AnswerSubmission,
     ExtraGuessGrant,
     PuzzleMessage,
@@ -30,8 +32,16 @@ class RoundAdmin(admin.ModelAdmin):
 
     ordering = ("order",)
 
-    list_display = ("name", "slug", "major_case", "meta_answer", "order")
+    ordering = ('order',)
 
+    list_display = ('name', 'slug', 'major_case', 'meta_answer', 'order')
+
+class RoomAdmin(admin.ModelAdmin):
+    list_display = ('channel_name',)
+
+class PresenceAdmin(admin.ModelAdmin):
+    list_display = ('room', 'channel_name', 'user', 'last_seen')
+    list_filter = ('room', 'user')
 
 class PuzzleMessageInline(admin.TabularInline):
     model = PuzzleMessage
@@ -91,15 +101,26 @@ class PuzzleUnlockAdmin(admin.ModelAdmin):
     list_filter = ("puzzle", "puzzle__round", "team")
 
 
-class MinorCaseIncomingAdmin(admin.ModelAdmin):
-    list_display = ("team", "minor_case_round", "incoming_datetime")
-    list_filter = ("minor_case_round", "minor_case_round__major_case", "team")
+class MinorCaseIncomingEventAdmin(admin.ModelAdmin):
+    list_display = ('team', 'timestamp', 'expiration', 'final_vote')
+    list_filter = ('team', 'timestamp', 'expiration', 'final_vote')
 
+class MinorCaseVoteEventAdmin(admin.ModelAdmin):
+    list_display = ('team', 'timestamp', 'selected_case')
+    list_filter = ('team', 'timestamp', 'selected_case')
 
 class MinorCaseActiveAdmin(admin.ModelAdmin):
     list_display = ("team", "minor_case_round", "active_datetime")
     list_filter = ("minor_case_round", "minor_case_round__major_case", "team")
 
+
+class MinorCaseCompletedAdmin(admin.ModelAdmin):
+    list_display = ('team', 'minor_case_round', 'completed_datetime')
+    list_filter = ('minor_case_round', 'minor_case_round__major_case', 'team')
+
+class MinorCaseCompletedAdmin(admin.ModelAdmin):
+    list_display = ('team', 'minor_case_round', 'completed_datetime')
+    list_filter = ('minor_case_round', 'minor_case_round__major_case', 'team')
 
 class AnswerSubmissionAdmin(admin.ModelAdmin):
     list_display = (
@@ -153,10 +174,16 @@ admin.site.register(Puzzle, PuzzleAdmin)
 admin.site.register(Team, TeamAdmin)
 admin.site.register(TeamMember, TeamMemberAdmin)
 admin.site.register(PuzzleUnlock, PuzzleUnlockAdmin)
-admin.site.register(MinorCaseIncoming, MinorCaseIncomingAdmin)
+
+admin.site.register(MinorCaseIncomingEvent, MinorCaseIncomingEventAdmin)
+admin.site.register(MinorCaseVoteEvent, MinorCaseVoteEventAdmin)
 admin.site.register(MinorCaseActive, MinorCaseActiveAdmin)
+admin.site.register(MinorCaseCompleted, MinorCaseCompletedAdmin)
+
 admin.site.register(AnswerSubmission, AnswerSubmissionAdmin)
 admin.site.register(ExtraGuessGrant, ExtraGuessGrantAdmin)
 admin.site.register(Erratum, ErratumAdmin)
 admin.site.register(Survey, SurveyAdmin)
 admin.site.register(Hint, HintAdmin)
+admin.site.register(Room, RoomAdmin)
+admin.site.register(Presence, PresenceAdmin)

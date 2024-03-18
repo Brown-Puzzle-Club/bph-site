@@ -118,6 +118,11 @@ class Round(models.Model):
     def meta_answer(self):
         return self.meta.answer if self.meta else None
 
+    @staticmethod
+    def get_unlocked_rounds(context):
+        # TODO: query unlocked rounds model to make sure that this only sends rounds that are unlocked to the user.
+        return Round.objects.all()
+
     def __str__(self):
         return self.name
 
@@ -140,17 +145,13 @@ class Puzzle(models.Model):
         help_text=_("Slug used in URLs to identify this puzzle (must be unique)"),
     )
 
-    # As in the comment above, although we replace blank values with the
-    # default in clean(), a blank body template could sneak in anyway, but it
-    # seems less likely to be harmful here.
-    body_template = models.CharField(
-        max_length=255,
+    body = models.TextField(
+        default="",
         blank=True,
-        verbose_name=_("Body template"),
+        verbose_name=_("Puzzle Body"),
+        null=True,
         help_text=_(
-            """Path of a Markdown file (including .md) under puzzlemarkdown containing the puzzle and
-        solution content, respectively. Defaults to <major-case-slug>/<minor-case-slug>/<puzzle-slug> + ".md" if not
-        specified. All paths are relative to the puzzlemarkdown/ directory as a root."""
+            "Markdown-compliant body of the puzzle. This is the main text that will be displayed to the user."
         ),
     )
 
@@ -202,12 +203,6 @@ class Puzzle(models.Model):
         verbose_name = _("puzzle")
         verbose_name_plural = _("puzzles")
 
-    def clean(self):
-        if not self.body_template:
-            self.body_template = (
-                f"{self.round.major_case.slug}/{self.round.slug}/{self.slug}.md"
-            )
-
     def __str__(self):
         return self.name
 
@@ -217,6 +212,8 @@ class Puzzle(models.Model):
         last_alpha = False
         for c in self.name:
             if c.isalpha():
+                if not last_alpha:
+                    ret.append(c)
                 if not last_alpha:
                     ret.append(c)
                 last_alpha = True
@@ -376,6 +373,7 @@ class Team(models.Model):
         verbose_name_plural = _("teams")
 
     def __str__(self):
+        return self.team_name  # possibly return JSON of all safe fields?
         return self.team_name  # possibly return JSON of all safe fields?
 
     def get_emails(self, with_names=False):
@@ -671,6 +669,14 @@ class Team(models.Model):
             if submission.is_correct
         }
 
+    def unlocks(self):
+        return {
+            unlock.puzzle.slug: unlock.puzzle
+            for unlock in self.puzzleunlock_set.select_related(
+                "puzzle", "puzzle__round"
+            )
+        }
+
     def solves_by_case(self):
         out = {}
         # major_case : minor_case : puzzle : {puzzle, solve_time, answer}
@@ -706,18 +712,18 @@ class Team(models.Model):
                 ] = submit
         return out
 
-    def db_minor_case_incoming(self):
-        return [
-            incoming
-            for incoming in self.minorcaseincoming_set.select_related(
-                "minor_case_round"
-            )
-        ]
-
     def db_minor_case_active(self):
         return [
             active
             for active in self.minorcaseactive_set.select_related("minor_case_round")
+        ]
+
+    def db_minor_case_completed(self):
+        return [
+            completed
+            for completed in self.minorcasecompleted_set.select_related(
+                "minor_case_round"
+            )
         ]
 
     def db_unlocks(self):
@@ -751,6 +757,8 @@ class Team(models.Model):
                 if puzzle.id in context.team.solves:
                     # print("META SOLVED:", puzzle)
                     metas_solved.append(puzzle)
+                    # print("META SOLVED:", puzzle)
+                    metas_solved.append(puzzle)
         # print("META SOLVED CNT:", len(metas_solved))
 
         for puzzle in context.all_puzzles:
@@ -770,9 +778,8 @@ class Team(models.Model):
                 unlocked_at = context.start_time
             elif context.team and context.hunt_has_started:
                 (global_solves, local_solves) = context.team.main_round_solves
-                if (
-                    0 <= puzzle.unlock_global <= global_solves
-                ):  # and (global_solves or any(metas_solved)):
+                # and (global_solves or any(metas_solved)):
+                if 0 <= puzzle.unlock_global <= global_solves:
                     unlocked_at = context.now
                 if 0 <= puzzle.unlock_local <= local_solves[puzzle.round.slug]:
                     unlocked_at = context.now
@@ -799,6 +806,32 @@ class Team(models.Model):
 
         if unlocked_at == context.now:
             show_unlock_notification(context, unlock)
+        return unlock
+
+    @staticmethod
+    def unlock_case(team, minor_case, unlock_datetime):
+        print(
+            f"EVENT: unlocking case {minor_case} for team {team} at {unlock_datetime}"
+        )
+
+        try:
+            unlock = MinorCaseActive.objects.get_or_create(
+                team=team, minor_case_round=minor_case, active_datetime=unlock_datetime
+            )
+        except:
+            print(f"Case {minor_case} already set active for team {team}.")
+            pass
+
+        # unlock all puzzles in the minor case
+        for puzzle in Puzzle.objects.filter(round=minor_case):
+            try:
+                PuzzleUnlock.objects.get_or_create(
+                    team=team, puzzle=puzzle, unlock_datetime=unlock_datetime
+                )
+            except:
+                print(f"Puzzle {puzzle} already unlocked for team {team}. Skipping.")
+                pass
+
         return unlock
 
 
@@ -856,27 +889,100 @@ class PuzzleUnlock(models.Model):
         verbose_name_plural = _("puzzle unlocks")
 
 
-class MinorCaseIncoming(models.Model):
-    """Represents a team having a minor case incoming."""
+class MinorCaseVote(models.Model):
+    """Represents a team voting on a minor case puzzle."""
 
     team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_("team"))
-    minor_case_round = models.ForeignKey(
-        Round, on_delete=models.CASCADE, verbose_name=_("minor case round")
+    minor_case = models.ForeignKey(
+        Round, on_delete=models.CASCADE, verbose_name=_("minor case")
+    )
+    num_votes = models.IntegerField(verbose_name=_("Number of votes"))
+
+
+class MinorCaseIncomingEvent(models.Model):
+
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_("team"))
+    timestamp = models.DateTimeField(verbose_name=_("Event creation datetime"))
+    votes = models.ManyToManyField(MinorCaseVote, verbose_name=_("Votes"), blank=True)
+    expiration = models.DateTimeField(
+        verbose_name=_("Expiration datetime"), null=True, blank=True
+    )
+    final_vote = models.OneToOneField(
+        "MinorCaseVoteEvent",
+        on_delete=models.CASCADE,
+        verbose_name=_("Final vote"),
+        null=True,
+        blank=True,
     )
 
-    incoming_datetime = models.DateTimeField(verbose_name=_("Incoming datetime"))
-
     def __str__(self):
-        return "%s -> %s @ %s" % (
-            self.team,
-            self.minor_case_round,
-            self.incoming_datetime,
-        )
+        return "%s -> %s @ %s" % (self.team, self.timestamp, self.votes)
 
     class Meta:
-        unique_together = ("team", "minor_case_round")
-        verbose_name = _("minor case incoming")
-        verbose_name_plural = _("minor cases incoming")
+        verbose_name = _("minor case incoming event")
+        verbose_name_plural = _("minor cases incoming events")
+
+    def cases(self):
+        return [vote.minor_case for vote in self.votes.all()]
+
+    def finalize_vote(self):
+        """Finalizes the vote for the incoming event, and creates a MinorCaseVoteEvent"""
+
+        most_voted_case = max(
+            self.votes.all(), key=lambda vote: vote.num_votes
+        ).minor_case
+        current_time = timezone.now()
+
+        vote_event = MinorCaseVoteEvent.objects.create(
+            team=self.team,
+            timestamp=current_time,
+            selected_case=most_voted_case,
+            incoming_event=self,
+            final_votes=self.votes,
+        )
+
+        self.final_vote = vote_event
+        self.expiration = current_time
+        self.save()
+        return vote_event
+
+    @staticmethod
+    def get_current_incoming_event(context):
+        """gets the current incoming event for the team, if there is one active, else returns None"""
+        most_recent_case = (
+            MinorCaseIncomingEvent.objects.filter(team=context.team)
+            .order_by("-timestamp")
+            .first()
+        )
+        if most_recent_case and not most_recent_case.final_vote:
+            return most_recent_case
+        return None
+
+
+class MinorCaseVoteEvent(models.Model):
+    """Represents a finalized team vote on a single puzzle"""
+
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_("team"))
+    timestamp = models.DateTimeField(verbose_name=_("Event creation datetime"))
+    # the selected case from the vote.
+    selected_case = models.ForeignKey(
+        Round, on_delete=models.CASCADE, verbose_name=_("Selected minor case")
+    )
+    # the incomingEvent that caused the vote to occur
+    incoming_event = models.OneToOneField(
+        "MinorCaseIncomingEvent",
+        on_delete=models.CASCADE,
+        verbose_name=_("Incoming cases event"),
+    )
+    # what the votes looked like at the time of the selection
+    final_votes = models.ManyToManyField(
+        MinorCaseVote, verbose_name=_("Final votes"), blank=True
+    )
+
+    def save(self, *args, **kwargs):
+        super(MinorCaseVoteEvent, self).save(*args, **kwargs)
+        # on creation of the vote event, sets the case for the team as an active case.
+        Team.unlock_case(self.team, self.selected_case, self.timestamp)
 
 
 class MinorCaseActive(models.Model):
@@ -900,6 +1006,29 @@ class MinorCaseActive(models.Model):
         unique_together = ("team", "minor_case_round")
         verbose_name = _("minor case active")
         verbose_name_plural = _("minor cases active")
+
+
+class MinorCaseCompleted(models.Model):
+    """Represents a team completing a minor case."""
+
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_("team"))
+    minor_case_round = models.ForeignKey(
+        Round, on_delete=models.CASCADE, verbose_name=_("minor case round")
+    )
+
+    completed_datetime = models.DateTimeField(verbose_name=_("Completed datetime"))
+
+    def __str__(self):
+        return "%s -> %s @ %s" % (
+            self.team,
+            self.minor_case_round,
+            self.completed_datetime,
+        )
+
+    class Meta:
+        unique_together = ("team", "minor_case_round")
+        verbose_name = _("minor case completed")
+        verbose_name_plural = _("minor cases completed")
 
 
 class AnswerSubmission(models.Model):
@@ -1088,7 +1217,7 @@ class Erratum(models.Model):
         blank=True,
         verbose_name=_("Updates text"),
         help_text=_(
-            """
+            '''
         Text to show on the Updates (errata) page. If blank, it will not appear there.
         Use $PUZZLE to refer to the puzzle. The text will be prefixed with "On
         (date)," when displayed, so you should capitalize it the way it would
@@ -1104,7 +1233,7 @@ class Erratum(models.Model):
         Text to show on the puzzle page. If blank, it will not appear there.
         The text will be prefixed with "On (date)," when displayed, so you
         should capitalize it the way it would appear mid-sentence. HTML is ok.
-    """
+    '''
         ),
     )
     timestamp = models.DateTimeField(default=timezone.now, verbose_name=_("Timestamp"))

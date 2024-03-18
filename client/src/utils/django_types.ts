@@ -61,15 +61,36 @@ const AnswerSubmissionSchema = z.object({
 });
 type AnswerSubmission = z.infer<typeof AnswerSubmissionSchema>;
 
-const RoundSchema = z.object({
+const MajorCaseSchema = z.object({
+  id: z.number(),
   name: z.string(),
   order: z.number(),
-  major_case: z.string().nullable(),
+  slug: z.string(),
+});
+type MajorCase = z.infer<typeof MajorCaseSchema>;
+
+const RoundSchema = z.object({
+  id: z.number(),
+  slug: z.string(),
+  name: z.string(),
+  order: z.number(),
+  major_case: MajorCaseSchema,
   description: z.string(),
   unlock_global_minor: z.number(),
   unlock_local_major: z.number(),
 });
 type Round = z.infer<typeof RoundSchema>;
+
+const PuzzleSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  slug: z.string(),
+  order: z.number(),
+  is_meta: z.boolean(),
+  round: RoundSchema,
+  body: z.string(),
+});
+type Puzzle = z.infer<typeof PuzzleSchema>;
 
 const MinorCaseIncomingSchema = z.object({
   id: z.number(),
@@ -85,6 +106,13 @@ const MinorCaseActiveSchema = z.object({
 });
 type MinorCaseActive = z.infer<typeof MinorCaseActiveSchema>;
 
+const MinorCaseCompletedSchema = z.object({
+  id: z.number(),
+  active_datetime: z.date(),
+  minor_case_round: RoundSchema,
+});
+type MinorCaseCompleted = z.infer<typeof MinorCaseCompletedSchema>;
+
 const TeamPuzzleContextSchema = z.object({
   is_admin: z.boolean(),
   is_superuser: z.boolean(),
@@ -94,7 +122,8 @@ const TeamPuzzleContextSchema = z.object({
   minor_case_solves: z.record(z.record(AnswerSubmissionSchema)),
   minor_case_incoming: z.array(MinorCaseIncomingSchema),
   minor_case_active: z.array(MinorCaseActiveSchema),
-  unlocks: z.record(z.date()),
+  minor_case_completed: z.array(MinorCaseCompletedSchema),
+  unlocks: z.record(PuzzleSchema),
 });
 
 const HuntContextSchema = z.object({
@@ -116,11 +145,23 @@ const ContextSchema = z.object({
 });
 type DjangoContext = z.infer<typeof ContextSchema>;
 
+const MinorCaseSchema = z.object({
+  name: z.string(),
+  description: z.string(),
+  slug: z.string(),
+  //
+});
+type MinorCase = z.infer<typeof MinorCaseSchema>;
+
 export type {
   AnswerSubmission,
   DjangoContext,
+  MajorCase,
+  MinorCase,
   MinorCaseActive,
+  MinorCaseCompleted,
   MinorCaseIncoming,
+  Puzzle,
   Round,
   Team,
   TeamMember,

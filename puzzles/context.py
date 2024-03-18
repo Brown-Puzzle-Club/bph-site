@@ -191,7 +191,8 @@ class Context:
         return self.team.num_free_answers_remaining if self.team else 0
 
     def unlocks(self):
-        return models.Team.compute_unlocks(self)
+        # return models.Team.compute_unlocks(self)
+        return self.team.unlocks
 
     #
     # def completed_hunt(self):
@@ -256,18 +257,20 @@ class Context:
         return False
 
     # BPH 2024 context
-
     def solves_by_case(self):
         return self.team.solves_by_case if self.team else {}
 
     def minor_case_solves(self):
         return self.team.minor_case_solves if self.team else {}
 
-    def minor_case_incoming(self):
-        return self.team.db_minor_case_incoming if self.team else {}
+    def current_incoming_event(self):
+        return models.MinorCaseIncomingEvent.get_current_incoming_event(self)
 
     def minor_case_active(self):
         return self.team.db_minor_case_active if self.team else {}
+
+    def minor_case_completed(self):
+        return self.team.db_minor_case_completed if self.team else {}
 
     # The purpose of this logic is to keep archive links current. For example,
     # https://2019.galacticpuzzlehunt.com/archive is a page that exists but only

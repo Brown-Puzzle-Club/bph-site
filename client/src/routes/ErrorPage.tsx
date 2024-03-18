@@ -15,22 +15,32 @@ const Error404 = ({ error }: { error: ErrorResponse }) => {
 
 const DefaultError = ({ error }: { error: ErrorResponse }) => {
   return (
-    <div>
-      <h1>Something went wrong</h1>
-      <p>{error.statusText}</p>
+    <div className="h-[90vh] flex items-center justify-center">
+      <div className="text-center text-muted-foreground text-5xl">
+        <h1 className="text-[10rem] pb-20">🔎 ?</h1>
+        <h2>
+          <b>Something went wrong:</b> {error.statusText}
+        </h2>
+      </div>
     </div>
   );
 };
 
 const UnknownError = () => {
   return (
-    <div>
-      <h1>An unknown error has occured</h1>
+    <div className="h-[90vh] flex items-center justify-center">
+      <div className="text-center text-muted-foreground text-5xl">
+        <h1 className="text-[10rem] pb-20">🔎 ?</h1>
+        <h2>
+          <b>Unknown Error</b>
+        </h2>
+      </div>
     </div>
   );
 };
 
 export default function ErrorPage() {
+  // RouteError comes from react router. It labels error pages as 404 etc.
   const error = useRouteError();
   if (!isRouteErrorResponse(error)) {
     return <UnknownError />;
