@@ -9,6 +9,7 @@ const TestArt = () => {
 
 const CASE_ART_COMPONENT: { [key: string]: JSX.Element } = {
   "sd-mc-1": <TestArt />,
+  
 };
 
 export default function CasePageArt({ case_slug }: { case_slug: string }) {

@@ -8,7 +8,7 @@ import { Puzzle } from "@/utils/django_types";
 
 function PuzzleWrapper({ puzzle_slug }: { puzzle_slug: string }) {
   const [puzzle, setPuzzle] = useState({} as Puzzle);
-  
+
   const [puzzleContent, setPuzzleContent] = useState("");
 
   const { FetchPuzzle } = useDjangoContext();
@@ -30,8 +30,18 @@ function PuzzleWrapper({ puzzle_slug }: { puzzle_slug: string }) {
     <div className="puzzle-page">
       {ADMIN_BYPASS && (
         <div>
-          <button className="p-2 m-2 bg-slate-600 hover:bg-slate-800 text-white" onClick={() => setPuzzleContent(puzzle.body)}>Body</button>
-          <button className="p-2 m-2 bg-slate-600 hover:bg-slate-800 text-white" onClick={() => setPuzzleContent(puzzle.body_remote)}>Body Remote</button>
+          <button
+            className="p-2 m-2 bg-slate-600 hover:bg-slate-800 text-white"
+            onClick={() => setPuzzleContent(puzzle.body)}
+          >
+            Body
+          </button>
+          <button
+            className="p-2 m-2 bg-slate-600 hover:bg-slate-800 text-white"
+            onClick={() => setPuzzleContent(puzzle.body_remote)}
+          >
+            Body Remote
+          </button>
         </div>
       )}
       {ALT_PUZZLE_ROUTES[puzzle_slug] ? (

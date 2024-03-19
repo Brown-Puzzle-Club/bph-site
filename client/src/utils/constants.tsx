@@ -43,7 +43,7 @@ export enum PuzzleStyle {
 
 export const toPuzzleStyle = (major_case_slug: string) => {
   switch (major_case_slug) {
-    case "red-thread":
+    case "colored-thread":
       return PuzzleStyle.RED_THREAD;
     case "social-deduction":
       return PuzzleStyle.SOCIAL_DEDUCTION;

@@ -115,6 +115,12 @@ def get_puzzle(request: Request, puzzle_slug: str) -> Response:
     try:
         context = request._request.context
         puzzle = context.team.unlocks.get(puzzle_slug)
+
+        if puzzle is None and context.is_admin:
+            puzzle = Puzzle.objects.get(slug=puzzle_slug)
+        else:
+            raise Puzzle.DoesNotExist
+
         serializer = PuzzleBasicSerializer(puzzle)
 
         # Send the puzzler only the body that they are supposed to see
