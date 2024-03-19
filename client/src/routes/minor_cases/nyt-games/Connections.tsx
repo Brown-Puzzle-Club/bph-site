@@ -42,7 +42,7 @@ function Connections() {
         setUnfilteredWords(data["Words"]);
 
         const filteredWords = data["Words"].filter(
-          (word: string, index: number) => !usedWordIndices.includes(index),
+          (_word: string, index: number) => !usedWordIndices.includes(index),
         );
         setWords(filteredWords);
       })
