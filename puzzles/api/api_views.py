@@ -113,9 +113,26 @@ def team_members(request: Request, team_id: int) -> Response:
 def get_puzzle(request: Request, puzzle_slug: str) -> Response:
     # gets a puzzle if the team has access to it
     try:
-        team_unlocks = request._request.context.team.unlocks
-        puzzle = team_unlocks.get(puzzle_slug)
+        context = request._request.context
+        puzzle = context.team.unlocks.get(puzzle_slug)
         serializer = PuzzleBasicSerializer(puzzle)
-        return Response(serializer.data)
+
+        # Send the puzzler only the body that they are supposed to see
+        # (remote if it exists and they are a remote team, in-person otherwise, unless admin)
+        additional_fields = {}
+
+        if context.is_admin:
+            additional_fields["body"] = puzzle.body
+            additional_fields["body_remote"] = puzzle.body_remote
+        else:
+            additional_fields["body"] = (
+                puzzle.body
+                if context.team.in_person or puzzle.body_remote == ""
+                else puzzle.body_remote
+            )
+
+        complete_puzzle_data = {**serializer.data, **additional_fields}
+
+        return Response(complete_puzzle_data)
     except Puzzle.DoesNotExist:
         return Response({"error": "Puzzle not found"}, status=404)

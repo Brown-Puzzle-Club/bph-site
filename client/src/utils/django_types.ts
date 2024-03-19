@@ -89,6 +89,7 @@ const PuzzleSchema = z.object({
   is_meta: z.boolean(),
   round: RoundSchema,
   body: z.string(),
+  body_remote: z.string(),
 });
 type Puzzle = z.infer<typeof PuzzleSchema>;
 

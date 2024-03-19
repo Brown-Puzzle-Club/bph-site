@@ -52,7 +52,14 @@ class PuzzleBasicSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Puzzle
-        fields = ["id", "name", "slug", "round", "order", "is_meta", "body"]
+        fields = [
+            "id",
+            "name",
+            "slug",
+            "round",
+            "order",
+            "is_meta",
+        ]
 
 
 class TeamMemberSerializer(serializers.ModelSerializer):
@@ -189,7 +196,7 @@ class TeamPuzzleContextSerializer(serializers.Serializer):
     )
     minor_case_active = MinorCaseActiveSerializer(many=True)
     minor_case_completed = MinorCaseCompletedSerializer(many=True)
-    unlocks = serializers.DictField(child=PuzzleBasicSerializer())  # TODO: change here
+    unlocks = serializers.DictField(child=PuzzleBasicSerializer())
 
 
 class HuntContextSerializer(serializers.Serializer):

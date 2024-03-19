@@ -155,6 +155,16 @@ class Puzzle(models.Model):
         ),
     )
 
+    body_remote = models.TextField(
+        default="",
+        blank=True,
+        verbose_name=_("Remote Puzzle Body"),
+        null=True,
+        help_text=_(
+            "This is the main text that will be displayed to the user if they are a remote team. (if blank, all users will get regular body.) "
+        ),
+    )
+
     answer = models.CharField(
         max_length=255,
         verbose_name=_("Answer"),
