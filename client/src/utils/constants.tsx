@@ -34,11 +34,16 @@ export const PFP_COLOR_CHOICES = [
 
 export const [MEMBER_COUNT_MIN, MEMBER_COUNT_MAX] = [1, 12];
 
+export enum MajorCaseEnum {
+  COLORED_THREAD = "colored-thread",
+  SOCIAL_DEDUCTION = "social-deduction",
+  DATA = "data",
+}
+
 export enum PuzzleStyle {
   RED_THREAD = "puzzle-red-thread",
   SOCIAL_DEDUCTION = "puzzle-soc-deduction",
   DATA = "puzzle-data",
-  //... TODO: add more for major case styling vibes (socded, data, etc.)
 }
 
 export const toPuzzleStyle = (major_case_slug: string) => {

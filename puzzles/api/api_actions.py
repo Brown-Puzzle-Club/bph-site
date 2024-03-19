@@ -169,3 +169,64 @@ def create_vote_event(request: Request) -> Response:
         return Response(serializer.data)
     else:
         return Response(serializer.errors, status=400)
+
+
+@api_view(["POST"])
+def submit_answer(request: Request, puzzle_slug: str) -> Response:
+    try:
+        context = request._request.context
+        # answer is a query parameter:
+        answer = request.query_params.get("answer")
+        print(
+            f"submitting for puzzle: {puzzle_slug} with answer: {answer} for team: {context.team}"
+        )
+
+        puzzle = context.team.unlocks.get(puzzle_slug)
+
+        sanitized_answer = "".join(
+            [char for char in puzzle.answer if char.isalpha()]
+        ).upper()
+
+        correct = answer.upper() == sanitized_answer
+        if correct:
+            print(f"Correct answer! ({sanitized_answer})")
+        else:
+            print("incorrect.")
+
+        try:
+            submission = AnswerSubmission.objects.create(
+                team=context.team,
+                puzzle=puzzle,
+                submitted_answer=answer,
+                is_correct=correct,
+                used_free_answer=False,
+            )
+            submission.save()
+        except Exception as e:
+            return Response(
+                {"error": "Answer submission failed", "error_body": str(e)}, status=500
+            )
+
+        # if this submission solves the minor case:
+        if correct:
+            if not request.context.hunt_is_over:
+                context.team.last_solve_time = request.context.now
+                context.team.save()
+
+            if puzzle.is_meta:
+                print("Solved the minor case!")
+                minor_case = puzzle.round
+                completed = MinorCaseCompleted.objects.create(
+                    team=context.team,
+                    minor_case_round=minor_case,
+                    completed_datetime=request.context.now,
+                )
+                completed.save()
+
+        return Response({"status": "correct" if correct else "incorrect"}, status=200)
+        # TODO:
+        # - puzzle messages
+        # - guess limit
+
+    except Puzzle.DoesNotExist:
+        return Response({"error": "Puzzle not found"}, status=404)

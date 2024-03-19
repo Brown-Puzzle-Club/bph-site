@@ -3,8 +3,9 @@ import { useEffect, useMemo, useState } from "react";
 import MarkdownWrapper from "@/components/puzzle/MarkdownWrapper";
 import { useDjangoContext } from "@/hooks/useDjangoContext";
 import AltPuzzleRoute, { ALT_PUZZLE_ROUTES } from "@/routes/minor_cases/AltPuzzleRoute";
-import { toPuzzleStyle } from "@/utils/constants";
+import { MajorCaseEnum, toPuzzleStyle } from "@/utils/constants";
 import { Puzzle } from "@/utils/django_types";
+import AnswerSubmit from "./AnswerSubmission";
 
 function PuzzleWrapper({ puzzle_slug }: { puzzle_slug: string }) {
   const [puzzle, setPuzzle] = useState({} as Puzzle);
@@ -44,6 +45,10 @@ function PuzzleWrapper({ puzzle_slug }: { puzzle_slug: string }) {
           </button>
         </div>
       )}
+      <AnswerSubmit
+        puzzle_slug={puzzle_slug}
+        major_case={puzzle?.round?.major_case.slug as MajorCaseEnum}
+      />
       {ALT_PUZZLE_ROUTES[puzzle_slug] ? (
         <AltPuzzleRoute puzzle_slug={puzzle_slug} />
       ) : (
