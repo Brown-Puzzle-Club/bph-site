@@ -18,10 +18,12 @@ import MarkdownTest from "./routes/MarkdownTest";
 import MyTeamPage from "./routes/MyTeamPage";
 import RegisterForm from "./routes/Register";
 import TeamPage from "./routes/TeamPage";
+import SocialDeduction from "./routes/major_cases/SocialDeduction";
 import "./styles/index.css";
 import "./styles/puzzlestyle-data.css";
 import "./styles/puzzlestyle-red-thread.css";
 import "./styles/puzzlestyle-soc-deduction.css";
+import ColoredThread from "./routes/major_cases/ColoredThread";
 
 try {
   axios.defaults.headers.common["X-CSRFToken"] = Cookies.get("csrftoken");
@@ -135,6 +137,12 @@ const router = createBrowserRouter([
       //     />
       //   ),
       // },
+      {
+        path: "/colored-thread",
+        element: (
+          <PageWrapper bg_color={"#1c160d"} navbar_color={"#1c110d96"} route={<ColoredThread />} />
+        ),
+      },
     ],
   },
 ]);
