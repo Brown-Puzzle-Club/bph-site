@@ -115,7 +115,7 @@ def get_puzzle(request: Request, puzzle_slug: str) -> Response:
     try:
         context = request._request.context
         puzzle = context.team.unlocks.get(puzzle_slug)
-        print(puzzle)
+        # print(puzzle)
 
         if puzzle is None:
             if context.is_admin:
@@ -129,6 +129,14 @@ def get_puzzle(request: Request, puzzle_slug: str) -> Response:
         # (remote if it exists and they are a remote team, in-person otherwise, unless admin)
         additional_fields = {}
 
+        # answer history
+        submissions = context.team.puzzle_submissions(puzzle)
+
+        additional_fields["submissions"] = AnswerSubmissionSerializer(
+            submissions, many=True
+        ).data
+
+        # puzzle body
         if context.is_admin:
             additional_fields["body"] = puzzle.body
             additional_fields["body_remote"] = puzzle.body_remote

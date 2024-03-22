@@ -1,4 +1,8 @@
-export default function AlexGame() {
+import { PuzzleParams } from "@/utils/interface";
+
+export default function AlexGame({ puzzle, context }: PuzzleParams) {
+  console.log(puzzle, context);
+
   return (
     <div>
       <h1>Alex's Game</h1>

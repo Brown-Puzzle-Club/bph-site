@@ -4,23 +4,36 @@ import MarkdownWrapper from "@/components/puzzle/MarkdownWrapper";
 import { useDjangoContext } from "@/hooks/useDjangoContext";
 import AltPuzzleRoute, { ALT_PUZZLE_ROUTES } from "@/routes/minor_cases/AltPuzzleRoute";
 import { MajorCaseEnum, toPuzzleStyle } from "@/utils/constants";
-import { Puzzle } from "@/utils/django_types";
+import { DjangoContext, Puzzle } from "@/utils/django_types";
 import AnswerSubmit from "./AnswerSubmission";
 
 function PuzzleWrapper({ puzzle_slug }: { puzzle_slug: string }) {
   const [puzzle, setPuzzle] = useState({} as Puzzle);
+  const [context, setContext] = useState({} as DjangoContext);
 
   const [puzzleContent, setPuzzleContent] = useState("");
 
-  const { FetchPuzzle } = useDjangoContext();
+  const { FetchPuzzle, FetchContext } = useDjangoContext();
 
   useEffect(() => {
-    FetchPuzzle(puzzle_slug).then((puzzle) => {
-      setPuzzle(puzzle);
-      console.log(puzzle);
-      setPuzzleContent(puzzle.body);
-    });
-  }, [FetchPuzzle, puzzle_slug]);
+    if (puzzle == null) {
+      FetchPuzzle(puzzle_slug).then((puzzle) => {
+        setPuzzle(puzzle);
+        console.log(puzzle);
+        setPuzzleContent(puzzle.body);
+      });
+    }
+  }, [puzzle, FetchPuzzle, puzzle_slug]);
+
+  useEffect(() => {
+    console.log(context);
+    if (context == null || context.team_context == null) {
+      FetchContext().then((context) => {
+        setContext(context);
+        console.log(context);
+      });
+    }
+  }, [context, FetchContext]);
 
   const ADMIN_BYPASS = useMemo(() => {
     // if the body_remote exists in the fetch, this means that the user has admin access. This saves a query :P
@@ -45,12 +58,9 @@ function PuzzleWrapper({ puzzle_slug }: { puzzle_slug: string }) {
           </button>
         </div>
       )}
-      <AnswerSubmit
-        puzzle_slug={puzzle_slug}
-        major_case={puzzle?.round?.major_case.slug as MajorCaseEnum}
-      />
-      {ALT_PUZZLE_ROUTES[puzzle_slug] ? (
-        <AltPuzzleRoute puzzle_slug={puzzle_slug} />
+      <AnswerSubmit puzzle={puzzle} major_case={puzzle?.round?.major_case.slug as MajorCaseEnum} />
+      {ALT_PUZZLE_ROUTES({ puzzle, context })[puzzle_slug] ? (
+        <AltPuzzleRoute puzzle={puzzle} context={context} />
       ) : (
         <MarkdownWrapper
           markdown={puzzleContent}
