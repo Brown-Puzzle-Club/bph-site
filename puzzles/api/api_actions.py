@@ -234,7 +234,7 @@ def submit_answer(request: Request, puzzle_slug: str) -> Response:
         return Response({"error": "Puzzle not found"}, status=404)
 
 
-TESTSOLVE_TEAM = "prerelease"
+TESTSOLVE_TEAM = "remotesolvesquad"
 
 
 @api_view(["POST"])
