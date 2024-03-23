@@ -692,7 +692,7 @@ class Team(models.Model):
         # major_case : minor_case : puzzle : {puzzle, solve_time, answer}
         # DOES NOT INCLUDE EVENT PUZZLES, RUNAROUND.
         for submit in self.submissions:
-            if not submit.puzzle.round.major_case:
+            if not submit.is_correct:
                 continue
             if submit.puzzle.round.major_case.slug not in out:
                 out[submit.puzzle.round.major_case.slug] = {}
@@ -712,7 +712,7 @@ class Team(models.Model):
     def minor_case_solves(self):
         out = {}
         for submit in self.submissions:
-            if not submit.puzzle.round.major_case:
+            if not submit.is_correct:
                 continue
             if submit.puzzle.round.major_case.slug not in out:
                 out[submit.puzzle.round.major_case.slug] = {}
@@ -1074,91 +1074,93 @@ class AnswerSubmission(models.Model):
 
 @receiver(post_save, sender=AnswerSubmission)
 def notify_on_answer_submission(sender, instance, created, **kwargs):
-    if created:
-        now = timezone.localtime()
+    # TODO: reimplement
+    return
+    # if created:
+    #     now = timezone.localtime()
 
-        def format_time_ago(timestamp):
-            if not timestamp:
-                return ""
-            diff = now - timestamp
-            parts = ["", "", "", ""]
-            if diff.days > 0:
-                parts[0] = _("%dd") % diff.days
-            seconds = diff.seconds
-            parts[3] = _("%02ds") % (seconds % 60)
-            minutes = seconds // 60
-            if minutes:
-                parts[2] = _("%02dm") % (minutes % 60)
-                hours = minutes // 60
-                if hours:
-                    parts[1] = _("%dh") % hours
-            return _(" {} ago").format("".join(parts))
+    #     def format_time_ago(timestamp):
+    #         if not timestamp:
+    #             return ""
+    #         diff = now - timestamp
+    #         parts = ["", "", "", ""]
+    #         if diff.days > 0:
+    #             parts[0] = _("%dd") % diff.days
+    #         seconds = diff.seconds
+    #         parts[3] = _("%02ds") % (seconds % 60)
+    #         minutes = seconds // 60
+    #         if minutes:
+    #             parts[2] = _("%02dm") % (minutes % 60)
+    #             hours = minutes // 60
+    #             if hours:
+    #                 parts[1] = _("%dh") % hours
+    #         return _(" {} ago").format("".join(parts))
 
-        hints = Hint.objects.filter(team=instance.team, puzzle=instance.puzzle)
-        hint_line = ""
-        if len(hints):
-            hint_line = _("\nHints:") + ",".join(
-                "%s (%s%s)"
-                % (
-                    format_time_ago(hint.submitted_datetime),
-                    hint.get_status_display(),
-                    format_time_ago(hint.answered_datetime),
-                )
-                for hint in hints
-            )
-        if instance.used_free_answer:
-            dispatch_free_answer_alert(
-                _(":question: {} Team {} used a free answer on {}!{}").format(
-                    instance.puzzle.emoji, instance.team, instance.puzzle, hint_line
-                )
-            )
-        else:
-            submitted_teams = (
-                AnswerSubmission.objects.filter(
-                    puzzle=instance.puzzle,
-                    submitted_answer=instance.submitted_answer,
-                    used_free_answer=False,
-                    team__is_hidden=False,
-                )
-                .values_list("team_id", flat=True)
-                .distinct()
-                .count()
-            )
-            sigil = ":x:"
-            if instance.is_correct:
-                sigil = {
-                    1: ":first_place:",
-                    2: ":second_place:",
-                    3: ":third_place:",
-                }.get(submitted_teams, ":white_check_mark:")
-            elif submitted_teams > 1:
-                sigil = ":skull_crossbones:"
-            dispatch_submission_alert(
-                _("{} {} Team {} submitted `{}` for {}: {}{}").format(
-                    sigil,
-                    instance.puzzle.emoji,
-                    instance.team,
-                    instance.submitted_answer,
-                    instance.puzzle,
-                    _("Correct!") if instance.is_correct else _("Incorrect."),
-                    hint_line,
-                ),
-                correct=instance.is_correct,
-            )
-        if not instance.is_correct:
-            return
-        show_solve_notification(instance)
-        obsoleted_hints = Hint.objects.filter(
-            team=instance.team,
-            puzzle=instance.puzzle,
-            status=Hint.NO_RESPONSE,
-        )
-        # Do this instead of obsoleted_hints.update(status=Hint.OBSOLETE,
-        # answered_datetime=now) to trigger post_save.
-        for hint in obsoleted_hints:
-            hint.status = Hint.OBSOLETE
-            hint.answered_datetime = now
-            hint.save()
+    #     hints = Hint.objects.filter(team=instance.team, puzzle=instance.puzzle)
+    #     hint_line = ""
+    #     if len(hints):
+    #         hint_line = _("\nHints:") + ",".join(
+    #             "%s (%s%s)"
+    #             % (
+    #                 format_time_ago(hint.submitted_datetime),
+    #                 hint.get_status_display(),
+    #                 format_time_ago(hint.answered_datetime),
+    #             )
+    #             for hint in hints
+    #         )
+    #     if instance.used_free_answer:
+    #         dispatch_free_answer_alert(
+    #             _(":question: {} Team {} used a free answer on {}!{}").format(
+    #                 instance.puzzle.emoji, instance.team, instance.puzzle, hint_line
+    #             )
+    #         )
+    #     else:
+    #         submitted_teams = (
+    #             AnswerSubmission.objects.filter(
+    #                 puzzle=instance.puzzle,
+    #                 submitted_answer=instance.submitted_answer,
+    #                 used_free_answer=False,
+    #                 team__is_hidden=False,
+    #             )
+    #             .values_list("team_id", flat=True)
+    #             .distinct()
+    #             .count()
+    #         )
+    #         sigil = ":x:"
+    #         if instance.is_correct:
+    #             sigil = {
+    #                 1: ":first_place:",
+    #                 2: ":second_place:",
+    #                 3: ":third_place:",
+    #             }.get(submitted_teams, ":white_check_mark:")
+    #         elif submitted_teams > 1:
+    #             sigil = ":skull_crossbones:"
+    #         dispatch_submission_alert(
+    #             _("{} {} Team {} submitted `{}` for {}: {}{}").format(
+    #                 sigil,
+    #                 instance.puzzle.emoji,
+    #                 instance.team,
+    #                 instance.submitted_answer,
+    #                 instance.puzzle,
+    #                 _("Correct!") if instance.is_correct else _("Incorrect."),
+    #                 hint_line,
+    #             ),
+    #             correct=instance.is_correct,
+    #         )
+    #     if not instance.is_correct:
+    #         return
+    #     show_solve_notification(instance)
+    #     obsoleted_hints = Hint.objects.filter(
+    #         team=instance.team,
+    #         puzzle=instance.puzzle,
+    #         status=Hint.NO_RESPONSE,
+    #     )
+    #     # Do this instead of obsoleted_hints.update(status=Hint.OBSOLETE,
+    #     # answered_datetime=now) to trigger post_save.
+    #     for hint in obsoleted_hints:
+    #         hint.status = Hint.OBSOLETE
+    #         hint.answered_datetime = now
+    #         hint.save()
 
 
 class ExtraGuessGrant(models.Model):

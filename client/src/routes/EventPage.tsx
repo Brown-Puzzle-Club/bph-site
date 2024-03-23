@@ -1,11 +1,10 @@
-import { useEffect, useState } from "react";
 import MinorCase from "@/components/MinorCase";
+import { useState } from "react";
 
 // import MinorCase from '../components/MinorCase';
 
 import MinorCaseModal from "@/components/MinorCaseModal";
 // import { MinorCaseStatus, context } from "../context";
-import { getCookie } from "../utils/api";
 import { useDjangoContext } from "@/hooks/useDjangoContext";
 import {
   DjangoContext,
@@ -13,6 +12,7 @@ import {
   MinorCaseCompleted,
   MinorCaseIncoming,
 } from "@/utils/django_types";
+import { getCookie } from "../utils/api";
 
 function renderActiveCases(
   casesRecord: (MinorCaseActive | MinorCaseIncoming | MinorCaseCompleted)[],
@@ -56,15 +56,7 @@ function EventPage() {
 
   const [selectedCase, setSelectedCase] = useState<number>(-1); //TODO: fix -1
   const [output, setOutput] = useState<string>("");
-  const { FetchContext } = useDjangoContext();
-  const [context, setContext] = useState<DjangoContext>();
-
-  useEffect(() => {
-    FetchContext().then((context) => {
-      console.log(context);
-      setContext(context);
-    });
-  }, [FetchContext]);
+  const { context } = useDjangoContext();
 
   const submit = async (caseID: number) => {
     const csrftoken = getCookie("csrftoken");

@@ -1,6 +1,6 @@
 import { ErrorResponse, isRouteErrorResponse, useRouteError } from "react-router-dom";
 
-const Error404 = ({ error }: { error: ErrorResponse }) => {
+export const Error404 = ({ error }: { error: ErrorResponse }) => {
   return (
     <div className="h-[90vh] flex items-center justify-center">
       <div className="text-center text-muted-foreground text-5xl">

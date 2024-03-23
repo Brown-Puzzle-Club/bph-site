@@ -51,7 +51,7 @@ export const registerFormSchema = z
         email: z.string().email({
           message: "Invalid email address.",
         }),
-      })
+      }),
     ),
     in_person: z.boolean(),
     num_brown_members: z.number().optional(),
@@ -68,7 +68,7 @@ export const registerFormSchema = z
     {
       message: "Passwords do not match.",
       path: ["retype_password"],
-    }
+    },
   )
   .refine(
     (data) => {
@@ -83,7 +83,7 @@ export const registerFormSchema = z
     {
       message: "Valid US phone number required.",
       path: ["phone_number"],
-    }
+    },
   )
   .refine(
     (data) => {
@@ -95,7 +95,7 @@ export const registerFormSchema = z
     {
       message: "Required for in person teams that don't need a room reserved.",
       path: ["where_to_find"],
-    }
+    },
   );
 
 export default function RegisterForm() {

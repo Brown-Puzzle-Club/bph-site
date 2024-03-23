@@ -12,17 +12,16 @@
   /* background-color: #e7d5b0; */
   background-image: url("../assets/main_page/pinkpaper.png");
   background-size: cover;
-  padding-top: 4rem;
+  padding-top: 5rem;
   color: hsl(0, 0%, 20%);
-  width: 450px;
-  height: 555px;
+  width: 630px;
+  height: 780px;
   display: flex;
-  transform: translateX(30%);
 
   .puzzle-data {
     margin-left: 4rem;
-    width: 70%;
-    max-height: 95%;
+    width: 78%;
+    max-height: 92%;
     overflow-y: scroll;
     overflow-x: auto;
   }
