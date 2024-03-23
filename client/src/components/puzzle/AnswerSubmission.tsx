@@ -5,8 +5,9 @@ import { Button } from "../ui/button";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "../ui/form";
 
 import { AnswerSubmission, Puzzle } from "@/utils/django_types";
+import { cn } from "@/utils/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BeatLoader } from "react-spinners";
 import { z } from "zod";
 import { Input } from "../ui/input";
@@ -122,27 +123,34 @@ const AnswerSubmitRegular = ({
   });
 
   const submit_answer = async (values: z.infer<typeof answerSchema>) => {
-    setSubmitting(true);
     const answer = sanitize_answer(values.answer);
-
     const submitUrl = `/api/puzzle/${puzzle_slug}/submit?answer=${answer}`;
     console.log(`submitting answer to ${submitUrl}`);
-    const response = await axios.post(submitUrl);
-    console.log(response);
-    if (response.data.status === "correct") {
-      alert("Correct answer!");
-    }
-    const new_submission: AnswerSubmission = {
-      id: 0,
-      submitted_answer: answer,
-      is_correct: response.data.status === "correct",
-      submitted_datetime: new Date(),
-      used_free_answer: false,
-    };
-    setSubmissions((submissions) => [new_submission, ...submissions]);
-
-    setSubmitting(false);
-    return response;
+    setSubmitting(true);
+    axios
+      .post(submitUrl)
+      .then((response) => {
+        console.log(response);
+        if (response.data.status === "correct") {
+          alert("Correct answer!");
+        }
+        const new_submission: AnswerSubmission = {
+          id: 0,
+          submitted_answer: answer,
+          is_correct: response.data.status === "correct",
+          submitted_datetime: new Date(),
+          used_free_answer: false,
+        };
+        setSubmissions((submissions) => [new_submission, ...submissions]);
+        return response;
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(() => {
+        setSubmitting(false);
+      });
+    return Response;
   };
 
   return (
@@ -176,17 +184,22 @@ const SubmissionHistory = ({ submissions }: { submissions: AnswerSubmission[] })
   if (!submissions || submissions.length == 0) return null;
 
   return (
-    <div>
-      <table className="table-auto">
+    <div className="flex justify-center">
+      <table className="table-auto border border-collapse border-slate-500">
         <tbody>
-          {submissions.map((submission) => {
-            return (
-              <tr>
-                <td>{submission.submitted_answer}</td>
-                <td>{submission.is_correct}</td>
-              </tr>
-            );
-          })}
+          {submissions.map((submission, i) => (
+            <tr key={`submission-${i}`}>
+              <td className="border border-slate-500 px-4 py-2">{submission.submitted_answer}</td>
+              <td
+                className={cn(
+                  "border border-slate-500 px-4 py-2 font-mono text-sm",
+                  submission.is_correct ? "text-green-100" : "text-red-100",
+                )}
+              >
+                {submission.is_correct ? "CORRECT" : "INCORRECT"}
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>
@@ -201,6 +214,10 @@ export default function AnswerSubmit({
   major_case: MajorCaseEnum;
 }) {
   const [submissions, setSubmissions] = useState(puzzle.submissions);
+
+  useEffect(() => {
+    setSubmissions(puzzle.submissions);
+  }, [puzzle]);
 
   return (
     <div>

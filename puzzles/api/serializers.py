@@ -214,25 +214,28 @@ class HuntContextSerializer(serializers.Serializer):
 
 class ContextSerializer(serializers.Serializer):
     def to_internal_value(self, data):
+        # TODO: get to work without getattr, using data.__dict__ instead.
+        # right now, the dict object is wrapped in an ASGI response, so will need to find way to escape it :P
+
         team_context_data = {}
         hunt_context_data = {}
 
-        team_serializer = TeamPuzzleContextSerializer(data=data)
-        hunt_serializer = HuntContextSerializer(data=data)
+        team_serializer = TeamPuzzleContextSerializer()
+        hunt_serializer = HuntContextSerializer()
 
-        team_context_fields = [
-            field.source for field in team_serializer.fields.values()
-        ]
-        hunt_context_fields = [
-            field.source for field in hunt_serializer.fields.values()
-        ]
+        team_context_fields = set(
+            [field.source for field in team_serializer.fields.values()]
+        )
+        hunt_context_fields = set(
+            [field.source for field in hunt_serializer.fields.values()]
+        )
 
         context_fields = dir(data)
         for ctx in context_fields:
             if ctx in hunt_context_fields:
-                hunt_context_data[ctx] = hunt_serializer.fields[ctx].get_attribute(data)
+                hunt_context_data[ctx] = getattr(data, ctx)
             elif ctx in team_context_fields:
-                team_context_data[ctx] = team_serializer.fields[ctx].get_attribute(data)
+                team_context_data[ctx] = getattr(data, ctx)
 
         return {
             "team_context": TeamPuzzleContextSerializer(team_context_data).data,

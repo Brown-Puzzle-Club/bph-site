@@ -8,7 +8,7 @@ import {
   UserTeam,
 } from "@/utils/django_types";
 import axios from "axios";
-import { createContext, useCallback, useContext } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 
 // prolly doesn't need to be a context... TODO: make hooks for these all with useQuery??
 type DjangoContextType = {
@@ -16,9 +16,10 @@ type DjangoContextType = {
   FetchTeam: () => Promise<UserTeam>;
   FetchTeamMembers: () => Promise<TeamMember[]>;
   FetchTeams: () => Promise<Team[]>;
-  FetchContext: () => Promise<DjangoContext>;
   FetchCase: (round_id: number) => Promise<MinorCase>;
   FetchPuzzle: (puzzle_slug: string) => Promise<Puzzle>;
+  // context on load is stored
+  context?: DjangoContext;
 };
 
 const DjangoContext = createContext<DjangoContextType>({
@@ -34,18 +35,31 @@ const DjangoContext = createContext<DjangoContextType>({
   FetchTeams: async () => {
     return [] as Team[];
   },
-  FetchContext: async () => {
-    return {} as DjangoContext;
-  },
   FetchCase: async () => {
     return {} as MinorCase;
   },
   FetchPuzzle: async () => {
     return {} as Puzzle;
   },
+  context: undefined,
 });
 
 export const DjangoContextProvider = ({ children }: { children: React.ReactNode }) => {
+  const [context, setContext] = useState({} as DjangoContext);
+
+  const FetchContext = useCallback(async () => {
+    const response = await fetch("/api/context");
+    const context = (await response.json()) as DjangoContext;
+    setContext(context);
+    console.log(context);
+    return context;
+  }, []);
+  useEffect(() => {
+    if (!context.team_context) {
+      FetchContext();
+    }
+  }, [context, FetchContext]);
+
   const FetchUser = useCallback(async () => {
     const response = axios.get("/api/user");
     return (await response).data[0] as User;
@@ -67,12 +81,6 @@ export const DjangoContextProvider = ({ children }: { children: React.ReactNode 
     return data as Team[];
   }, []);
 
-  const FetchContext = useCallback(async () => {
-    const response = await fetch("/api/context");
-    const data = await response.json();
-    return data as DjangoContext;
-  }, []);
-
   const FetchCase = useCallback(async (round_id: number) => {
     const response = await fetch(`/api/rounds/${round_id}`);
     const data = await response.json();
@@ -92,7 +100,7 @@ export const DjangoContextProvider = ({ children }: { children: React.ReactNode 
         FetchTeam,
         FetchTeamMembers,
         FetchTeams,
-        FetchContext,
+        context,
         FetchCase,
         FetchPuzzle,
       }}

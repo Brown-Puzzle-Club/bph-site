@@ -1,7 +1,7 @@
-import { PuzzleParams } from "@/utils/interface";
+import { Puzzle } from "@/utils/django_types";
 
-export default function AlexGame({ puzzle, context }: PuzzleParams) {
-  console.log(puzzle, context);
+export default function AlexGame({ puzzle }: { puzzle: Puzzle }) {
+  console.log(puzzle);
 
   return (
     <div>

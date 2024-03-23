@@ -4,19 +4,18 @@ import MarkdownWrapper from "@/components/puzzle/MarkdownWrapper";
 import { useDjangoContext } from "@/hooks/useDjangoContext";
 import AltPuzzleRoute, { ALT_PUZZLE_ROUTES } from "@/routes/minor_cases/AltPuzzleRoute";
 import { MajorCaseEnum, toPuzzleStyle } from "@/utils/constants";
-import { DjangoContext, Puzzle } from "@/utils/django_types";
+import { Puzzle } from "@/utils/django_types";
 import AnswerSubmit from "./AnswerSubmission";
 
 function PuzzleWrapper({ puzzle_slug }: { puzzle_slug: string }) {
-  const [puzzle, setPuzzle] = useState({} as Puzzle);
-  const [context, setContext] = useState({} as DjangoContext);
+  const [puzzle, setPuzzle] = useState<Puzzle>({} as Puzzle);
 
   const [puzzleContent, setPuzzleContent] = useState("");
 
-  const { FetchPuzzle, FetchContext } = useDjangoContext();
+  const { FetchPuzzle } = useDjangoContext();
 
   useEffect(() => {
-    if (puzzle == null) {
+    if (puzzle == null || puzzle.body == null) {
       FetchPuzzle(puzzle_slug).then((puzzle) => {
         setPuzzle(puzzle);
         console.log(puzzle);
@@ -24,16 +23,6 @@ function PuzzleWrapper({ puzzle_slug }: { puzzle_slug: string }) {
       });
     }
   }, [puzzle, FetchPuzzle, puzzle_slug]);
-
-  useEffect(() => {
-    console.log(context);
-    if (context == null || context.team_context == null) {
-      FetchContext().then((context) => {
-        setContext(context);
-        console.log(context);
-      });
-    }
-  }, [context, FetchContext]);
 
   const ADMIN_BYPASS = useMemo(() => {
     // if the body_remote exists in the fetch, this means that the user has admin access. This saves a query :P
@@ -59,8 +48,8 @@ function PuzzleWrapper({ puzzle_slug }: { puzzle_slug: string }) {
         </div>
       )}
       <AnswerSubmit puzzle={puzzle} major_case={puzzle?.round?.major_case.slug as MajorCaseEnum} />
-      {ALT_PUZZLE_ROUTES({ puzzle, context })[puzzle_slug] ? (
-        <AltPuzzleRoute puzzle={puzzle} context={context} />
+      {ALT_PUZZLE_ROUTES(puzzle)[puzzle_slug] ? (
+        <AltPuzzleRoute puzzle={puzzle} />
       ) : (
         <MarkdownWrapper
           markdown={puzzleContent}
