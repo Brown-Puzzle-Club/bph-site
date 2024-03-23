@@ -30,4 +30,5 @@ urlpatterns = [
         nyt_games_api.index,
         name="nyt_connections_guess",
     ),
+    
 ]

@@ -1,24 +1,15 @@
+import { IS_MINOR_CASE_UNLOCKED } from "@/components/LockedContent";
 import CasePageArt from "@/components/minor_cases/CasePageArt";
 import { useDjangoContext } from "@/hooks/useDjangoContext";
-import { DjangoContext } from "@/utils/django_types";
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import ErrorPage from "./ErrorPage";
+import { useParams } from "react-router-dom";
+import { Error404 } from "./ErrorPage";
 
 function MinorCasePage() {
-  const MINOR_CASE_SLUG = window.location.pathname.split("/").pop();
-  const { FetchContext } = useDjangoContext();
-  const [context, setContext] = useState<DjangoContext>();
+  const { MINOR_CASE_SLUG } = useParams();
+  const { context } = useDjangoContext();
 
-  useEffect(() => {
-    FetchContext().then((context) => {
-      console.log(context);
-      setContext(context);
-    });
-  }, [FetchContext]);
-
-  if (!MINOR_CASE_SLUG) {
-    return <ErrorPage />;
+  if (!MINOR_CASE_SLUG || !context || IS_MINOR_CASE_UNLOCKED(MINOR_CASE_SLUG)(context) === false) {
+    return <Error404 />;
   }
 
   return (
@@ -28,7 +19,8 @@ function MinorCasePage() {
       {context && context.team_context.unlocks && (
         <div>
           <h2>Puzzles Unlocked</h2>
-          <ul>
+          {/* TODO: reimplement */}
+          {/* <ul>
             {Object.entries(context.team_context.unlocks).map(([slug, puzzle]) =>
               puzzle.round.slug === MINOR_CASE_SLUG ? (
                 <li key={slug}>
@@ -38,7 +30,7 @@ function MinorCasePage() {
                 </li>
               ) : null,
             )}
-          </ul>
+          </ul> */}
         </div>
       )}
     </div>

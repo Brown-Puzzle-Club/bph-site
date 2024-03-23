@@ -38,15 +38,7 @@ function PuzzleWrapper({ puzzle_slug }: { puzzle_slug: string }) {
   }, [puzzle]);
 
   return (
-    (errorPage && (
-      <Error404
-        error={{
-          status: 404,
-          statusText: "Not Found",
-          data: {},
-        }}
-      />
-    )) || (
+    (errorPage && <Error404 />) || (
       <div className="puzzle-page">
         {ADMIN_BYPASS && (
           <div>

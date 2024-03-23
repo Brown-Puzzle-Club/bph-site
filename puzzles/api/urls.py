@@ -42,4 +42,5 @@ urlpatterns = [
         nyt_games_api.check,
         name="nyt_connections_guess",
     ),
+    path("unlock-case/<str:round_slug>", api_actions.unlock_case, name="unlock-case"),
 ]
