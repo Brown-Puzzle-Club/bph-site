@@ -27,6 +27,7 @@ import "./styles/index.css";
 import "./styles/puzzlestyle-data.css";
 import "./styles/puzzlestyle-red-thread.css";
 import "./styles/puzzlestyle-soc-deduction.css";
+import LetterBoxed from "./routes/minor_cases/nyt-games/LetterBoxed";
 
 try {
   axios.defaults.headers.common["X-CSRFToken"] = Cookies.get("csrftoken");
@@ -140,6 +141,24 @@ const router = createBrowserRouter([
       //     />
       //   ),
       // },
+      {
+        path: "/letterboxed-1",
+        element: (
+          <PageWrapper bg_color={"#faa6a4"} navbar_color={"#000000"} route={<LetterBoxed puzzleNum={1} />} />
+        )
+      },
+      {
+        path: "/letterboxed-2",
+        element: (
+          <PageWrapper bg_color={"#faa6a4"} navbar_color={"#000000"} route={<LetterBoxed puzzleNum={2} />} />
+        )
+      },
+      {
+        path: "/letterboxed-3",
+        element: (
+          <PageWrapper bg_color={"#faa6a4"} navbar_color={"#000000"} route={<LetterBoxed puzzleNum={3} />} />
+        )
+      }
     ],
   },
 ]);
