@@ -50,6 +50,8 @@ export const toPuzzleStyle = (major_case_slug: string) => {
   switch (major_case_slug) {
     case "colored-thread":
       return PuzzleStyle.RED_THREAD;
+    case "red-thread":
+      return PuzzleStyle.RED_THREAD;
     case "social-deduction":
       return PuzzleStyle.SOCIAL_DEDUCTION;
     case "data":
