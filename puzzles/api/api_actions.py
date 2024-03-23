@@ -182,6 +182,8 @@ def submit_answer(request: Request, puzzle_slug: str) -> Response:
         )
 
         puzzle = context.team.unlocks.get(puzzle_slug)
+        if not puzzle:
+            return Response({"error": "Puzzle not unlocked"}, status=403)
 
         sanitized_answer = "".join(
             [char for char in puzzle.answer if char.isalpha()]

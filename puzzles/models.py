@@ -692,7 +692,7 @@ class Team(models.Model):
         # major_case : minor_case : puzzle : {puzzle, solve_time, answer}
         # DOES NOT INCLUDE EVENT PUZZLES, RUNAROUND.
         for submit in self.submissions:
-            if not submit.puzzle.round.major_case:
+            if not submit.is_correct:
                 continue
             if submit.puzzle.round.major_case.slug not in out:
                 out[submit.puzzle.round.major_case.slug] = {}
@@ -712,7 +712,7 @@ class Team(models.Model):
     def minor_case_solves(self):
         out = {}
         for submit in self.submissions:
-            if not submit.puzzle.round.major_case:
+            if not submit.is_correct:
                 continue
             if submit.puzzle.round.major_case.slug not in out:
                 out[submit.puzzle.round.major_case.slug] = {}
