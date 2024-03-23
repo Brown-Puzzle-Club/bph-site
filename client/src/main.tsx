@@ -106,40 +106,40 @@ const router = createBrowserRouter([
       },
       // HIDDEN PAGES:
       // for now, comment these back in when developing for them. Nick will add re-routing shortly.
-      {
-        path: "/eventpage",
-        element: (
-          <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<EventPage />} />
-        ),
-      },
-      {
-        path: "/minorcase/:slug",
-        element: (
-          <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<MinorCasePage />} />
-        ),
-      },
-      {
-        path: "/puzzle/:slug",
-        element: (
-          <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<PuzzlePage />} />
-        ),
-      },
-      {
-        path: "/connections",
-        element: (
-          <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<Connections />} />
-        ),
-      },
-      {
-        path: "/social-deduction",
-        element: (
-          <PageWrapper
-            bg_color={"#1c160d"}
-            navbar_color={"#1c110d96"}
-            route={<SocialDeduction />}
-          />
-        ),
-      },
+      // {
+      //   path: "/eventpage",
+      //   element: (
+      //     <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<EventPage />} />
+      //   ),
+      // },
+      // {
+      //   path: "/minorcase/:slug",
+      //   element: (
+      //     <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<MinorCasePage />} />
+      //   ),
+      // },
+      // {
+      //   path: "/puzzle/:slug",
+      //   element: (
+      //     <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<PuzzlePage />} />
+      //   ),
+      // },
+      // {
+      //   path: "/connections",
+      //   element: (
+      //     <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<Connections />} />
+      //   ),
+      // },
+      // {
+      //   path: "/social-deduction",
+      //   element: (
+      //     <PageWrapper
+      //       bg_color={"#1c160d"}
+      //       navbar_color={"#1c110d96"}
+      //       route={<SocialDeduction />}
+      //     />
+      //   ),
+      // },
     ],
   },
 ]);
