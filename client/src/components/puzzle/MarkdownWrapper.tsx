@@ -15,6 +15,14 @@ const parseStyle = (style: string) => {
   return styleObject;
 };
 
+const formatGDriveImageUrl = (url: string) => {
+  if (url.includes("1h3")) return url;
+
+  const splitUrl = url.split("/");
+  const fileId = splitUrl[splitUrl.indexOf("d") + 1];
+  return `https://lh3.googleusercontent.com/d/${fileId}`;
+};
+
 const MarkdownComponents: object = {
   // TODO: figure out this typing.. documentation is poor
   //https://github.com/remarkjs/react-markdown?tab=readme-ov-file#components
@@ -32,10 +40,14 @@ const MarkdownComponents: object = {
       const height = metaHeight ? metaHeight[1] : "432";
       const hasCaption = metastring?.toLowerCase().includes("{caption:");
       const caption = metastring?.match(/{caption: (.*?)}/)?.pop();
-
       return (
         <div className="postImgWrapper">
-          <img src={image.properties.src} width={width} height={height} alt={alt}></img>
+          <img
+            src={formatGDriveImageUrl(image.properties.src)}
+            width={width}
+            height={height}
+            alt={alt}
+          ></img>
           {hasCaption ? (
             <div className="caption" aria-label={caption}>
               {caption}
@@ -47,7 +59,6 @@ const MarkdownComponents: object = {
     return <p>{paragraph.children}</p>;
   },
   a: (props: { href: string; children: string }) => {
-    console.log("PROPS:", props);
     if (["youtube", "embed"].every((el) => props.href.includes(el))) {
       return (
         <div className="videoWrapper">
