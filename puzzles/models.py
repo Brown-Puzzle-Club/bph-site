@@ -731,7 +731,14 @@ class Team(models.Model):
     def minor_case_solves(self):
         out = {}
         for submit in self.submissions:
-            if not submit.is_correct or not submit.puzzle:
+            # brute check of all possible unhappy paths
+            if (
+                not submit.is_correct
+                or not submit.puzzle
+                or not submit.puzzle.round
+                or not submit.puzzle.round.meta
+                or not submit.puzzle.round.major_case
+            ):
                 continue
             if submit.puzzle.round.major_case.slug not in out:
                 out[submit.puzzle.round.major_case.slug] = {}
