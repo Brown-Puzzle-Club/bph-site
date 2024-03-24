@@ -697,7 +697,6 @@ class Team(models.Model):
     def unlocks_by_case(self):
         out = {}
         for unlock in self.puzzleunlock_set.select_related("puzzle", "puzzle__round"):
-            if 
             if unlock.puzzle.round.major_case.slug not in out:
                 out[unlock.puzzle.round.major_case.slug] = {}
             if unlock.puzzle.round.slug not in out[unlock.puzzle.round.major_case.slug]:
