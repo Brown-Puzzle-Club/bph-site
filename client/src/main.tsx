@@ -3,7 +3,12 @@ import Cookies from "js-cookie";
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { HUNT_HAS_STARTED, IS_ADMIN, Locked } from "./components/LockedContent";
+import {
+  HUNT_HAS_STARTED,
+  IS_ADMIN,
+  IS_MAJOR_CASE_UNLOCKED,
+  Locked,
+} from "./components/LockedContent";
 import { PageWrapper } from "./components/PageWrapper";
 import { AuthContextProvider } from "./hooks/useAuth";
 import { DjangoContextProvider } from "./hooks/useDjangoContext";
@@ -28,6 +33,7 @@ import "./styles/index.css";
 import "./styles/puzzlestyle-data.css";
 import "./styles/puzzlestyle-red-thread.css";
 import "./styles/puzzlestyle-soc-deduction.css";
+import { MajorCaseEnum } from "./utils/constants";
 
 try {
   axios.defaults.headers.common["X-CSRFToken"] = Cookies.get("csrftoken");
@@ -159,7 +165,11 @@ const router = createBrowserRouter([
           <PageWrapper
             bg_color={"#1c160d"}
             navbar_color={"#1c110d96"}
-            route={<SocialDeduction />}
+            route={
+              <Locked condition={IS_MAJOR_CASE_UNLOCKED(MajorCaseEnum.SOCIAL_DEDUCTION)}>
+                <SocialDeduction />
+              </Locked>
+            }
           />
         ),
       },
