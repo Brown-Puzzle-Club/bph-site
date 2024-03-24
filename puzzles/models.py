@@ -697,6 +697,7 @@ class Team(models.Model):
     def unlocks_by_case(self):
         out = {}
         for unlock in self.puzzleunlock_set.select_related("puzzle", "puzzle__round"):
+            if 
             if unlock.puzzle.round.major_case.slug not in out:
                 out[unlock.puzzle.round.major_case.slug] = {}
             if unlock.puzzle.round.slug not in out[unlock.puzzle.round.major_case.slug]:
@@ -711,7 +712,13 @@ class Team(models.Model):
         # major_case : minor_case : puzzle : {puzzle, solve_time, answer}
         # DOES NOT INCLUDE EVENT PUZZLES, RUNAROUND.
         for submit in self.submissions:
-            if not submit.is_correct:
+            if (
+                not submit.is_correct
+                or not submit.puzzle
+                or not submit.puzzle.round
+                or not submit.puzzle.round.meta
+                or not submit.puzzle.round.major_case
+            ):
                 continue
             if submit.puzzle.round.major_case.slug not in out:
                 out[submit.puzzle.round.major_case.slug] = {}
