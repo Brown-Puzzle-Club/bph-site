@@ -154,3 +154,25 @@ def get_puzzle(request: Request, puzzle_slug: str) -> Response:
         return Response(complete_puzzle_data)
     except Puzzle.DoesNotExist:
         return Response({"error": "Puzzle not found"}, status=404)
+
+
+@api_view(["GET"])
+def major_case(request: Request, major_case_slug: str) -> Response:
+    try:
+        context = request._request.context
+
+        major_case = MajorCase.objects.get(slug=major_case_slug)
+        serializer = MajorCaseSerializer(major_case)
+
+        additional_fields = {}
+        submissions = context.team.puzzle_submissions(major_case.puzzle)
+
+        additional_fields["submissions"] = AnswerSubmissionSerializer(
+            submissions, many=True
+        ).data
+
+        complete_puzzle_data = {**serializer.data, **additional_fields}
+
+        return Response(complete_puzzle_data)
+    except MajorCase.DoesNotExist:
+        return Response({"error": "MajorCase not found"}, status=404)

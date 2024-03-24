@@ -66,6 +66,13 @@ const MajorCaseSchema = z.object({
   name: z.string(),
   order: z.number(),
   slug: z.string(),
+  puzzle: z.object({
+    // TODO: don't know how to type this yet. import cycle with other schemas, so shallow typing quick solution.
+    name: z.string(),
+    slug: z.string(),
+    submissions: z.array(AnswerSubmissionSchema),
+  }),
+  submissions: z.array(AnswerSubmissionSchema),
 });
 type MajorCase = z.infer<typeof MajorCaseSchema>;
 
@@ -87,6 +94,7 @@ const PuzzleSchema = z.object({
   slug: z.string(),
   order: z.number(),
   is_meta: z.boolean(),
+  is_major_meta: z.boolean(),
   round: RoundSchema,
   body: z.string(),
   body_remote: z.string(),

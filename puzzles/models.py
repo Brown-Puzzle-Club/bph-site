@@ -66,6 +66,14 @@ class MajorCase(models.Model):
     name = models.CharField(max_length=255, verbose_name=_("Name"))
     slug = models.SlugField(max_length=255, unique=True, verbose_name=_("Slug"))
     order = models.IntegerField(default=0, verbose_name=_("Order"))
+    puzzle = models.ForeignKey(
+        "Puzzle",
+        limit_choices_to={"is_major_meta": True},
+        on_delete=models.SET_NULL,
+        verbose_name=_("puzzle"),
+        blank=True,
+        null=True,
+    )
 
     class Meta:
         verbose_name = _("major case")
@@ -178,9 +186,13 @@ class Puzzle(models.Model):
         help_text=_("Answer (fine if unnormalized)"),
     )
 
-    round = models.ForeignKey(Round, on_delete=models.CASCADE, verbose_name=_("round"))
+    # round is only required if the puzzle is not a major meta
+    round = models.ForeignKey(
+        Round, null=True, blank=True, on_delete=models.CASCADE, verbose_name=_("round")
+    )
     order = models.IntegerField(default=0, verbose_name=_("Order"))
     is_meta = models.BooleanField(default=False, verbose_name=_("Is meta"))
+    is_major_meta = models.BooleanField(default=False, verbose_name=_("Is major meta"))
 
     # For unlocking purposes, a "main round solve" is a solve that is not a
     # meta or in the intro round.
@@ -697,6 +709,13 @@ class Team(models.Model):
     def unlocks_by_case(self):
         out = {}
         for unlock in self.puzzleunlock_set.select_related("puzzle", "puzzle__round"):
+            if (
+                not unlock
+                or not unlock.puzzle
+                or not unlock.puzzle.round
+                or not unlock.puzzle.round.major_case
+            ):
+                continue
             if unlock.puzzle.round.major_case.slug not in out:
                 out[unlock.puzzle.round.major_case.slug] = {}
             if unlock.puzzle.round.slug not in out[unlock.puzzle.round.major_case.slug]:

@@ -32,17 +32,17 @@ function titleCase(s: string): string {
 // TODO: update with actual puzzle slugs
 // puzzle slugs are techincally safe for anyone to see, but we should still keep them secret
 const NUM_TO_SLUG: { [key: number]: string } = {
-  0: "sd-mc-1",
-  1: "sd-mc-2",
-  2: "sd-mc-3",
-  3: "sd-mc-4",
-  4: "sd-mc-5",
+  0: "nomenclept",
+  1: "twiqh",
+  2: "god-of-the-labyrinth",
+  3: "nyt",
+  4: "exile",
 };
 
 export function fetchMinorCaseCharacterName(context: DjangoContext | undefined, n: number): string {
   return titleCase(
     context?.team_context?.minor_case_solves?.["social-deduction"]?.[NUM_TO_SLUG[n]]
-      ?.submitted_answer ?? MISS_TEXT
+      ?.submitted_answer ?? MISS_TEXT,
   );
 }
 
@@ -78,7 +78,7 @@ export enum InternalCharacter {
 }
 
 export const CHAR_NAME = (
-  context: DjangoContext | undefined
+  context: DjangoContext | undefined,
 ): { [key in InternalCharacter]: string } => ({
   NONE: "",
   INVISIGUY: "Ghoulsby",

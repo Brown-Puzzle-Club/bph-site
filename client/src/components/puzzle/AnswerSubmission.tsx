@@ -236,7 +236,7 @@ export default function AnswerSubmit({
   major_case,
 }: {
   puzzle: Puzzle;
-  major_case: MajorCaseEnum;
+  major_case?: MajorCaseEnum;
 }) {
   const [submissions, setSubmissions] = useState(puzzle.submissions);
 

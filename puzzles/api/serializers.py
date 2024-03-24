@@ -27,7 +27,15 @@ class UserSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class PuzzleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Puzzle
+        fields = "__all__"
+
+
 class MajorCaseSerializer(serializers.ModelSerializer):
+    puzzle = PuzzleSerializer()
+
     class Meta:
         model = MajorCase
         fields = "__all__"
@@ -41,25 +49,12 @@ class RoundSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class PuzzleSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Puzzle
-        fields = "__all__"
-
-
 class PuzzleBasicSerializer(serializers.ModelSerializer):
     round = RoundSerializer()
 
     class Meta:
         model = Puzzle
-        fields = [
-            "id",
-            "name",
-            "slug",
-            "round",
-            "order",
-            "is_meta",
-        ]
+        fields = ["id", "name", "slug", "round", "order", "is_meta", "is_major_meta"]
 
 
 class TeamMemberSerializer(serializers.ModelSerializer):

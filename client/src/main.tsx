@@ -9,6 +9,7 @@ import {
   IS_MAJOR_CASE_UNLOCKED,
   Locked,
 } from "./components/LockedContent";
+import MajorCaseWrapper from "./components/major_cases/MajorCaseWrapper";
 import { PageWrapper } from "./components/PageWrapper";
 import { AuthContextProvider } from "./hooks/useAuth";
 import { DjangoContextProvider } from "./hooks/useDjangoContext";
@@ -167,7 +168,9 @@ const router = createBrowserRouter([
             navbar_color={"#1c110d96"}
             route={
               <Locked condition={IS_MAJOR_CASE_UNLOCKED(MajorCaseEnum.SOCIAL_DEDUCTION)}>
-                <SocialDeduction />
+                <MajorCaseWrapper>
+                  <SocialDeduction />
+                </MajorCaseWrapper>
               </Locked>
             }
           />
