@@ -1,5 +1,5 @@
+import { LetterState, Puzzle } from "../../../../utils/minor_cases/nyt/LetterBoxedTypes";
 import Letter from "./Letter";
-import { LetterState, Puzzle } from "./LetterBoxedTypes";
 
 export default function LetterBox({
   puzzle,
@@ -46,7 +46,7 @@ export default function LetterBox({
 
   function getLetterCoordinates(
     puzzle: Puzzle,
-    scale: number = 200
+    scale: number = 200,
   ): Map<number, { x: number; y: number; angle: number }> {
     // Get the number of sides in puzzle
     const sides = puzzle.letters.length;
@@ -136,7 +136,7 @@ export default function LetterBox({
                 .length
             }
             state={getLetterState(idx, solutionArr)}
-          />
+          />,
         );
       }
     }
@@ -165,7 +165,7 @@ export default function LetterBox({
               strokeWidth="5"
               key={i * 100 + j}
               strokeDasharray={i == words.length - 1 ? "15,10" : "0"}
-            />
+            />,
           );
         }
       }

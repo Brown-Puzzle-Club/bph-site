@@ -1,4 +1,4 @@
-import { Puzzle } from "./LetterBoxedTypes";
+import { Puzzle } from "../../../../utils/minor_cases/nyt/LetterBoxedTypes";
 
 export default function InputBox(props: { puzzle: Puzzle; solutionArr: number[][] }) {
   function convertSolutionToWordsIdx(solution: number[][], puzzle: Puzzle): number[][] {
@@ -18,10 +18,18 @@ export default function InputBox(props: { puzzle: Puzzle; solutionArr: number[][
   const solution = convertSolutionToWordsIdx(props.solutionArr, props.puzzle);
   const letterDict = props.puzzle.getLetterDict();
 
-  const currentWord = solution[solution.length - 1].map((idx) => letterDict.get(idx)!.letter);
-  const pastWords = solution
-    .slice(0, solution.length - 1)
-    .map((word) => word.map((idx) => letterDict.get(idx)!.letter).join(""));
+  const currentWord = solution[solution.length - 1].map((idx) => {
+    const letter = letterDict.get(idx);
+    return letter ? letter.letter : "";
+  });
+  const pastWords = solution.slice(0, solution.length - 1).map((word) =>
+    word
+      .map((idx) => {
+        const letter = letterDict.get(idx);
+        return letter ? letter.letter : "";
+      })
+      .join(""),
+  );
   const pastWordsDisplay = pastWords.map((word) => word.toUpperCase()).join("-");
   return (
     <>

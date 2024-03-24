@@ -1,4 +1,4 @@
-import ConnectionsBox from "@/components/puzzle/nyt-games/ConnectionsBox";
+import ConnectionsBox from "@/components/puzzle/nyt-games/connections/ConnectionsBox";
 import axios from "axios";
 import { useEffect, useState } from "react";
 

@@ -1,9 +1,10 @@
 import InputBox from "@/components/puzzle/nyt-games/letterboxed/InputBox";
 import LetterBox from "@/components/puzzle/nyt-games/letterboxed/LetterBox";
-import { Puzzle, Solution } from "@/components/puzzle/nyt-games/letterboxed/LetterBoxedTypes";
+import { Button } from "@/components/ui/button";
+import { Puzzle, Solution } from "@/utils/minor_cases/nyt/LetterBoxedTypes";
 import { useEffect, useState } from "react";
 
-export default function LetterBoxed({ puzzleNum }: { puzzleNum: 1 | 2 | 3 }) {
+function LetterBoxed({ puzzleNum }: { puzzleNum: 1 | 2 | 3 }) {
   const puzzles = {
     1: new Puzzle(
       [
@@ -183,5 +184,24 @@ export default function LetterBoxed({ puzzleNum }: { puzzleNum: 1 | 2 | 3 }) {
         </div>
       </div>
     </>
+  );
+}
+
+export default function LetterBoxedPuzzle() {
+  const [puzzleNum, setPuzzleNum] = useState<1 | 2 | 3>(1);
+
+  return (
+    <div className="flex flex-col items-center bg-[#fc716b]">
+      <div className="flex flex-col items-center">
+        <h1 className="text-4xl text-white">LetterBoxed</h1>
+        <div className="text-white">Choose a puzzle:</div>
+        <div className="flex space-x-4">
+          <Button onClick={() => setPuzzleNum(1)}>Puzzle 1</Button>
+          <Button onClick={() => setPuzzleNum(2)}>Puzzle 2</Button>
+          <Button onClick={() => setPuzzleNum(3)}>Puzzle 3</Button>
+        </div>
+      </div>
+      <LetterBoxed puzzleNum={puzzleNum} />
+    </div>
   );
 }

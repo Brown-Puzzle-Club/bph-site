@@ -249,7 +249,7 @@ export default function AnswerSubmit({
     setSubmissions(puzzle.submissions);
   }, [puzzle]);
 
-  return puzzle.body ? (
+  return puzzle.name ? (
     <div>
       {PUZZLE_ANSWER != "" ? (
         <div className="text-white dark text-center">

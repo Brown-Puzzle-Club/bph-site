@@ -1,5 +1,3 @@
-import axios from "axios";
-
 export interface Letter {
   sides: number[];
   // Unique index of a letter in the puzzle!

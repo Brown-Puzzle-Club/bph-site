@@ -20,7 +20,7 @@ function PuzzleWrapper({ puzzle_slug }: { puzzle_slug: string }) {
   useEffect(() => {
     if (puzzle == null || puzzle.body == null) {
       FetchPuzzle(puzzle_slug).then((puzzle) => {
-        if (puzzle.body) {
+        if (puzzle.name) {
           setPuzzle(puzzle);
           console.log(puzzle);
           setPuzzleContent(puzzle.body);

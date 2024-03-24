@@ -118,7 +118,6 @@ def get_puzzle(request: Request, puzzle_slug: str) -> Response:
     try:
         context = request._request.context
         puzzle = context.team.unlocks.get(puzzle_slug)
-        # print(puzzle)
 
         if puzzle is None:
             if context.is_admin:
