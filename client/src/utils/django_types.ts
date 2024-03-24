@@ -118,14 +118,15 @@ type MinorCaseCompleted = z.infer<typeof MinorCaseCompletedSchema>;
 const TeamPuzzleContextSchema = z.object({
   is_admin: z.boolean(),
   is_superuser: z.boolean(),
+  is_prerelease_testsolver: z.boolean(),
   num_hints_remaining: z.number(),
   num_free_answers_remaining: z.number(),
-  solves_by_case: z.record(z.record(z.record(AnswerSubmissionSchema))),
   minor_case_solves: z.record(z.record(AnswerSubmissionSchema)),
   minor_case_incoming: z.array(MinorCaseIncomingSchema),
   minor_case_active: z.array(MinorCaseActiveSchema),
   minor_case_completed: z.array(MinorCaseCompletedSchema),
-  unlocks: z.record(PuzzleSchema),
+  solves_by_case: z.record(z.record(z.record(AnswerSubmissionSchema))), // major_case -> case_id -> puzzle_id -> answer submission
+  unlocks: z.record(z.record(z.record(PuzzleSchema))), // major_case_id -> case_id -> puzzle_id -> puzzle
 });
 
 const HuntContextSchema = z.object({

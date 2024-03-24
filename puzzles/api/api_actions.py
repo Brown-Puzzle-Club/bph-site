@@ -232,3 +232,22 @@ def submit_answer(request: Request, puzzle_slug: str) -> Response:
 
     except Puzzle.DoesNotExist:
         return Response({"error": "Puzzle not found"}, status=404)
+
+
+TESTSOLVE_TEAM = "shhh"
+
+
+@api_view(["POST"])
+def unlock_case(request: Request, round_slug: str) -> Response:
+    try:
+        context = request._request.context
+
+        case = Round.objects.get(slug=round_slug)
+        team = Team.objects.get(team_name=TESTSOLVE_TEAM)
+
+        Team.unlock_case(team, case, context.now)
+
+        return Response({"status": "success"})
+    except Exception as e:
+        print(e)
+        return Response({"error": "Could not unlock"}, status=404)

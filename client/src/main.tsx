@@ -3,23 +3,24 @@ import Cookies from "js-cookie";
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { HUNT_HAS_STARTED, IS_ADMIN, Locked } from "./components/LockedContent";
 import { PageWrapper } from "./components/PageWrapper";
 import { AuthContextProvider } from "./hooks/useAuth";
 import { DjangoContextProvider } from "./hooks/useDjangoContext";
+import AdminPanel from "./routes/Admin";
 import Archive from "./routes/Archive";
 import Club from "./routes/Club";
 import Contact from "./routes/Contact";
 import Credits from "./routes/Credits";
 import ErrorPage from "./routes/ErrorPage";
-import EventPage from "./routes/EventPage";
 import InfoPage from "./routes/InfoPage";
 import Landing from "./routes/Landing";
 import Leaderboard from "./routes/Leaderboard";
 import SocialDeduction from "./routes/major_cases/SocialDeduction";
 import MarkdownTest from "./routes/MarkdownTest";
-import Connections from "./routes/minor_cases/nyt-games/Connections";
 import MinorCasePage from "./routes/MinorCasePage";
 import MyTeamPage from "./routes/MyTeamPage";
+import PuzzleList from "./routes/PuzzleList";
 import PuzzlePage from "./routes/PuzzlePage";
 import RegisterForm from "./routes/Register";
 import TeamPage from "./routes/TeamPage";
@@ -105,6 +106,20 @@ const router = createBrowserRouter([
           <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<MarkdownTest />} />
         ),
       },
+      {
+        path: "/puzzles",
+        element: (
+          <PageWrapper
+            bg_color={"#02031d"}
+            navbar_color={"#0f0d2e82"}
+            route={
+              <Locked condition={HUNT_HAS_STARTED}>
+                <PuzzleList />
+              </Locked>
+            }
+          />
+        ),
+      },
       // HIDDEN PAGES:
       // for now, comment these back in when developing for them. Nick will add re-routing shortly.
       // {
@@ -113,52 +128,42 @@ const router = createBrowserRouter([
       //     <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<EventPage />} />
       //   ),
       // },
-      // {
-      //   path: "/minorcase/:slug",
-      //   element: (
-      //     <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<MinorCasePage />} />
-      //   ),
-      // },
-      // {
-      //   path: "/puzzle/:slug",
-      //   element: (
-      //     <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<PuzzlePage />} />
-      //   ),
-      // },
-      // {
-      //   path: "/connections",
-      //   element: (
-      //     <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<Connections />} />
-      //   ),
-      // },
-      // {
-      //   path: "/social-deduction",
-      //   element: (
-      //     <PageWrapper
-      //       bg_color={"#1c160d"}
-      //       navbar_color={"#1c110d96"}
-      //       route={<SocialDeduction />}
-      //     />
-      //   ),
-      // },
       {
-        path: "/letterboxed-1",
+        path: "/minorcase/:slug",
         element: (
-          <PageWrapper bg_color={"#faa6a4"} navbar_color={"#000000"} route={<LetterBoxed puzzleNum={1} />} />
-        )
+          <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<MinorCasePage />} />
+        ),
       },
       {
-        path: "/letterboxed-2",
+        path: "/puzzle/:slug",
         element: (
-          <PageWrapper bg_color={"#faa6a4"} navbar_color={"#000000"} route={<LetterBoxed puzzleNum={2} />} />
-        )
+          <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<PuzzlePage />} />
+        ),
       },
       {
-        path: "/letterboxed-3",
+        path: "/solveadmin",
         element: (
-          <PageWrapper bg_color={"#faa6a4"} navbar_color={"#000000"} route={<LetterBoxed puzzleNum={3} />} />
-        )
-      }
+          <PageWrapper
+            bg_color={"#02031d"}
+            navbar_color={"#0f0d2e82"}
+            route={
+              <Locked condition={IS_ADMIN}>
+                <AdminPanel />
+              </Locked>
+            }
+          />
+        ),
+      },
+      {
+        path: "/majorcase/social-deduction",
+        element: (
+          <PageWrapper
+            bg_color={"#1c160d"}
+            navbar_color={"#1c110d96"}
+            route={<SocialDeduction />}
+          />
+        ),
+      },
     ],
   },
 ]);

@@ -186,17 +186,21 @@ class TeamPuzzleContextSerializer(serializers.Serializer):
     is_superuser = serializers.BooleanField()
     num_hints_remaining = serializers.IntegerField()
     num_free_answers_remaining = serializers.IntegerField()
-    solves_by_case = serializers.DictField(
-        child=serializers.DictField(
-            child=serializers.DictField(child=AnswerSubmissionSerializer())
-        )
-    )
     minor_case_solves = serializers.DictField(
         child=serializers.DictField(child=AnswerSubmissionSerializer())
     )
     minor_case_active = MinorCaseActiveSerializer(many=True)
     minor_case_completed = MinorCaseCompletedSerializer(many=True)
-    unlocks = serializers.DictField(child=PuzzleBasicSerializer())
+    solves_by_case = serializers.DictField(
+        child=serializers.DictField(
+            child=serializers.DictField(child=AnswerSubmissionSerializer())
+        )
+    )
+    unlocks = serializers.DictField(
+        child=serializers.DictField(
+            child=serializers.DictField(child=PuzzleBasicSerializer())
+        )
+    )
 
 
 class HuntContextSerializer(serializers.Serializer):

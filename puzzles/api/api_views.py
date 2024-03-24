@@ -84,6 +84,9 @@ class PuzzleViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
+        if self.request._request.context.is_admin:
+            return Puzzle.objects.all()
+
         return self.request._request.context.team.unlocks.values()
 
 
