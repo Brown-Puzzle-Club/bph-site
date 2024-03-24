@@ -731,12 +731,9 @@ class Team(models.Model):
     def minor_case_solves(self):
         out = {}
         for submit in self.submissions:
-            if not submit.is_correct:
+            if not submit.is_correct or not submit.puzzle:
                 continue
-            if (
-                submit.puzzle.round.major_case
-                and submit.puzzle.round.major_case.slug not in out
-            ):
+            if submit.puzzle.round.major_case.slug not in out:
                 out[submit.puzzle.round.major_case.slug] = {}
             if submit.puzzle.slug == submit.puzzle.round.meta.slug:
                 out[submit.puzzle.round.major_case.slug][
