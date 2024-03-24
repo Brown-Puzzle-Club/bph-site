@@ -25,6 +25,8 @@ export default function PuzzleList() {
                           </a>
                           {puzzle.is_meta && <span> (META)</span>}
                           {puzzle.round.major_case.slug in context.team_context.solves_by_case &&
+                            puzzle.round.slug in
+                              context.team_context.solves_by_case[puzzle.round.major_case.slug] &&
                             puzzle.slug in
                               context.team_context.solves_by_case[puzzle.round.major_case.slug][
                                 puzzle.round.slug
