@@ -17,7 +17,7 @@ def search_voice_recordings(request: Request) -> Response:
         return Response({"error": "Please enter a valid search query."}, status=400)
     results = (
         VoiceRecording.objects.annotate(
-            search=SearchVector("transcript"),
+            search=SearchVector("search_text"),
         )
         .filter(search=query)
         .order_by("hour")[:5]
