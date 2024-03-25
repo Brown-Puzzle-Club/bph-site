@@ -30,6 +30,9 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext as _
 
+import uuid
+
+from django.contrib.postgres.indexes import GinIndex
 from puzzles.context import context_cache
 
 from puzzles.messaging import (
@@ -1516,6 +1519,37 @@ class Hint(models.Model):
             settings.DOMAIN + "solution/" + self.puzzle.slug,
             settings.DOMAIN + "hints?puzzle=%s" % self.puzzle_id,
         )
+
+
+class VoiceRecording(models.Model):
+    """A component of an interactive "database puzzle" consisting of many chat transcripts."""
+
+    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    transcript = models.TextField(
+        verbose_name=_("Transcript"),
+    )
+    search_text = models.TextField(
+        verbose_name=_("Search Text"),
+        help_text=_(
+            "Text used for search indexing. Excludes characters named and sound effects"
+        ),
+    )
+    hour = models.IntegerField(verbose_name=_("Recording Hour"))
+    # timestamp = models.IntegerField(verbose_name=_("Recording Hour"))
+    audio_url = models.URLField(verbose_name=_("Audio URL"), null=True, blank=True)
+    characters = models.TextField(verbose_name=_("Characters"))
+
+    def to_dict(self):
+        return {field.name: getattr(self, field.name) for field in self._meta.fields}
+
+    class Meta:
+        indexes = [
+            GinIndex(
+                fields=["transcript"],
+                opclasses=["gin_trgm_ops"],
+                name="transcript_trgm_idx",
+            )
+        ]
 
 
 @receiver(post_save, sender=Hint)

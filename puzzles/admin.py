@@ -19,6 +19,7 @@ from puzzles.models import (
     Erratum,
     Survey,
     Hint,
+    VoiceRecording,
 )
 
 
@@ -32,16 +33,19 @@ class RoundAdmin(admin.ModelAdmin):
 
     ordering = ("order",)
 
-    ordering = ('order',)
+    ordering = ("order",)
 
-    list_display = ('name', 'slug', 'major_case', 'meta_answer', 'order')
+    list_display = ("name", "slug", "major_case", "meta_answer", "order")
+
 
 class RoomAdmin(admin.ModelAdmin):
-    list_display = ('channel_name',)
+    list_display = ("channel_name",)
+
 
 class PresenceAdmin(admin.ModelAdmin):
-    list_display = ('room', 'channel_name', 'user', 'last_seen')
-    list_filter = ('room', 'user')
+    list_display = ("room", "channel_name", "user", "last_seen")
+    list_filter = ("room", "user")
+
 
 class PuzzleMessageInline(admin.TabularInline):
     model = PuzzleMessage
@@ -102,12 +106,14 @@ class PuzzleUnlockAdmin(admin.ModelAdmin):
 
 
 class MinorCaseIncomingEventAdmin(admin.ModelAdmin):
-    list_display = ('team', 'timestamp', 'expiration', 'final_vote')
-    list_filter = ('team', 'timestamp', 'expiration', 'final_vote')
+    list_display = ("team", "timestamp", "expiration", "final_vote")
+    list_filter = ("team", "timestamp", "expiration", "final_vote")
+
 
 class MinorCaseVoteEventAdmin(admin.ModelAdmin):
-    list_display = ('team', 'timestamp', 'selected_case')
-    list_filter = ('team', 'timestamp', 'selected_case')
+    list_display = ("team", "timestamp", "selected_case")
+    list_filter = ("team", "timestamp", "selected_case")
+
 
 class MinorCaseActiveAdmin(admin.ModelAdmin):
     list_display = ("team", "minor_case_round", "active_datetime")
@@ -115,12 +121,14 @@ class MinorCaseActiveAdmin(admin.ModelAdmin):
 
 
 class MinorCaseCompletedAdmin(admin.ModelAdmin):
-    list_display = ('team', 'minor_case_round', 'completed_datetime')
-    list_filter = ('minor_case_round', 'minor_case_round__major_case', 'team')
+    list_display = ("team", "minor_case_round", "completed_datetime")
+    list_filter = ("minor_case_round", "minor_case_round__major_case", "team")
+
 
 class MinorCaseCompletedAdmin(admin.ModelAdmin):
-    list_display = ('team', 'minor_case_round', 'completed_datetime')
-    list_filter = ('minor_case_round', 'minor_case_round__major_case', 'team')
+    list_display = ("team", "minor_case_round", "completed_datetime")
+    list_filter = ("minor_case_round", "minor_case_round__major_case", "team")
+
 
 class AnswerSubmissionAdmin(admin.ModelAdmin):
     list_display = (
@@ -168,6 +176,12 @@ class HintAdmin(admin.ModelAdmin):
     search_fields = ("hint_question", "response")
 
 
+class VoiceRecordingAdmin(admin.ModelAdmin):
+    list_display = ("transcript", "hour", "characters")
+    list_filter = ("hour",)
+    search_fields = ("transcript", "characters")
+
+
 admin.site.register(MajorCase, MajorCaseAdmin)
 admin.site.register(Round, RoundAdmin)
 admin.site.register(Puzzle, PuzzleAdmin)
@@ -187,3 +201,4 @@ admin.site.register(Survey, SurveyAdmin)
 admin.site.register(Hint, HintAdmin)
 admin.site.register(Room, RoomAdmin)
 admin.site.register(Presence, PresenceAdmin)
+admin.site.register(VoiceRecording, VoiceRecordingAdmin)

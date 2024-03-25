@@ -6,6 +6,7 @@ from rest_framework.decorators import api_view
 from puzzles.api import api_views, api_actions
 
 from . import nyt_games_api
+from . import data_mc_api
 
 
 @api_view(["GET"])
@@ -30,5 +31,14 @@ urlpatterns = [
         nyt_games_api.index,
         name="nyt_connections_guess",
     ),
-    
+    path(
+        "data/search/",
+        data_mc_api.search_voice_recordings,
+        name="search_voice_recordings",
+    ),
+    path(
+        "data/fill_data",
+        data_mc_api.admin_create_voice_recordings,
+        name="admin_create_voice_recordings",
+    ),
 ]

@@ -22,6 +22,7 @@ import ErrorPage from "./routes/ErrorPage";
 import InfoPage from "./routes/InfoPage";
 import Landing from "./routes/Landing";
 import Leaderboard from "./routes/Leaderboard";
+import Data from "./routes/major_cases/Data";
 import SocialDeduction from "./routes/major_cases/SocialDeduction";
 import MarkdownTest from "./routes/MarkdownTest";
 import MinorCasePage from "./routes/MinorCasePage";
@@ -170,6 +171,22 @@ const router = createBrowserRouter([
               <Locked condition={IS_MAJOR_CASE_UNLOCKED(MajorCaseEnum.SOCIAL_DEDUCTION)}>
                 <MajorCaseWrapper>
                   <SocialDeduction />
+                </MajorCaseWrapper>
+              </Locked>
+            }
+          />
+        ),
+      },
+      {
+        path: "/majorcase/data",
+        element: (
+          <PageWrapper
+            bg_color={"#02031d"}
+            navbar_color={"#0f0d2e82"}
+            route={
+              <Locked condition={IS_MAJOR_CASE_UNLOCKED(MajorCaseEnum.DATA)}>
+                <MajorCaseWrapper>
+                  <Data />
                 </MajorCaseWrapper>
               </Locked>
             }
