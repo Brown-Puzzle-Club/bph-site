@@ -10,6 +10,7 @@ from puzzles.api.form_serializers import (
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.decorators import api_view
+from rest_framework.authtoken.models import Token
 
 from .serializers import *
 
@@ -19,6 +20,7 @@ def login_action(request: Request) -> Response:
     username = request.data.get("username")
     password = request.data.get("password")
     user = authenticate(request, username=username, password=password)
+    Token.objects.get_or_create(user=user)
 
     if user is not None:
         login(request._request, user)

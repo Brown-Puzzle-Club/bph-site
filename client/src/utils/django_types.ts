@@ -33,6 +33,7 @@ const UserTeamSchema = z.object({
   user: z.number(),
   emoji_choice: z.string(),
   color_choice: z.string(),
+  auth_token: z.string(),
 });
 type UserTeam = z.infer<typeof UserTeamSchema>;
 

@@ -33,8 +33,14 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
     setCheckingLoginStatus(true);
     let out = undefined;
     try {
-      const team_response = axios.get("/api/my-team");
-      out = (await team_response).data[0] as UserTeam;
+      // const team_response = axios.get("/api/my-team");
+      // const token_response = axios.get("/api/my-token");
+      const [team_response, token_response] = await Promise.all([
+        axios.get("/api/my-team"),
+        axios.get("/api/my-token"),
+      ]);
+      out = team_response.data[0] as UserTeam;
+      out = { ...out, auth_token: token_response.data[0].key };
     } catch (error) {
       const e = error as Error;
       console.error(e.message);
