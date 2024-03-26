@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { z } from "zod";
+import { useAuth } from "./useAuth";
 interface SocketCallbacks {
   onMessage?: (event: MessageEvent) => void;
   onOpen?: (event: Event) => void;
@@ -49,64 +50,65 @@ const useSocket = (path: string, callbacks: SocketCallbacks | undefined = undefi
     cases: {},
     expiration_time: null,
   });
+  const { team } = useAuth();
 
   useEffect(() => {
-    // const url = `${location.protocol === "https:" ? "wss://" : "ws://"}${location.host}/${path}`;
-    const url = path;
-    console.log(url);
+    if (team) {
+      const authToken = team.auth_token;
+      const url = `${path}?token=${authToken}`;
+      const socket = new WebSocket(url);
 
-    const socket = new WebSocket(url);
+      // TODO: It would be nice if this was only in dev mode or something
+      const openEventCallback = onOpen ?? console.log;
+      const closeEventCallback = onClose ?? console.log;
+      const errorEventCallback = onError ?? console.error;
+      const messageEventCallback = (e: MessageEvent) => {
+        if (socket.readyState === WebSocket.OPEN) {
+          const data = JSON.parse(e.data);
 
-    // TODO: It would be nice if this was only in dev mode or something
-    const openEventCallback = onOpen ?? console.log;
-    const closeEventCallback = onClose ?? console.log;
-    const errorEventCallback = onError ?? console.error;
-    const messageEventCallback = (e: MessageEvent) => {
-      if (socket.readyState === WebSocket.OPEN) {
-        const data = JSON.parse(e.data);
-
-        if (data.type === "presence") {
-          const typechecked_data = PresenceInfoSchema.safeParse(data.data);
-          if (typechecked_data.success) {
-            setPresenceInfo(typechecked_data.data);
-          } else {
-            console.error(typechecked_data.error);
+          if (data.type === "presence") {
+            const typechecked_data = PresenceInfoSchema.safeParse(data.data);
+            if (typechecked_data.success) {
+              setPresenceInfo(typechecked_data.data);
+            } else {
+              console.error(typechecked_data.error);
+            }
+          } else if (data.type === "vote") {
+            const typechecked_data = VotingInfoSchema.safeParse(data.data);
+            if (typechecked_data.success) {
+              setVotingInfo(typechecked_data.data);
+            } else {
+              console.error(typechecked_data.error);
+            }
           }
-        } else if (data.type === "vote") {
-          const typechecked_data = VotingInfoSchema.safeParse(data.data);
-          if (typechecked_data.success) {
-            setVotingInfo(typechecked_data.data);
-          } else {
-            console.error(typechecked_data.error);
-          }
+
+          if (onMessage) onMessage(e);
         }
+      };
 
-        if (onMessage) onMessage(e);
-      }
-    };
+      socket.addEventListener("open", openEventCallback);
+      socket.addEventListener("close", closeEventCallback);
+      socket.addEventListener("error", errorEventCallback);
+      socket.addEventListener("message", messageEventCallback);
 
-    socket.addEventListener("open", openEventCallback);
-    socket.addEventListener("close", closeEventCallback);
-    socket.addEventListener("error", errorEventCallback);
-    socket.addEventListener("message", messageEventCallback);
+      const heartbeatInterval = setInterval(() => {
+        if (socket.readyState === WebSocket.OPEN) {
+          socket.send(JSON.stringify("heartbeat"));
+        }
+      }, 50 * 1000);
 
-    const heartbeatInterval = setInterval(() => {
-      if (socket.readyState === WebSocket.OPEN) {
-        socket.send(JSON.stringify("heartbeat"));
-      }
-    }, 50 * 1000);
+      setSocket(socket);
 
-    setSocket(socket);
-
-    return () => {
-      socket.removeEventListener("open", openEventCallback);
-      socket.removeEventListener("close", closeEventCallback);
-      socket.removeEventListener("error", errorEventCallback);
-      socket.removeEventListener("message", messageEventCallback);
-      clearInterval(heartbeatInterval);
-      socket.close();
-    };
-  }, []);
+      return () => {
+        socket.removeEventListener("open", openEventCallback);
+        socket.removeEventListener("close", closeEventCallback);
+        socket.removeEventListener("error", errorEventCallback);
+        socket.removeEventListener("message", messageEventCallback);
+        clearInterval(heartbeatInterval);
+        socket.close();
+      };
+    }
+  }, [team]);
 
   return { socket, presenceInfo, votingInfo };
 };

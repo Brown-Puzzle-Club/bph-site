@@ -8,7 +8,7 @@ import datetime
 import traceback
 
 from asgiref.sync import async_to_sync
-from channels.generic.websocket import WebsocketConsumer
+from channels.generic.websocket import WebsocketConsumer, JsonWebsocketConsumer
 from channels_presence.models import Room
 from channels_presence.decorators import touch_presence
 from channels_presence.signals import presence_changed
@@ -431,38 +431,39 @@ class VotingConsumer(WebsocketConsumer):
 
     @touch_presence
     def receive(self, text_data):
-        client_room = Room.objects.get(channel_name=self.get_room())
-        data = json.loads(text_data)
+        # client_room = Room.objects.get(channel_name=self.get_room())
+        # data = json.loads(text_data)
 
-        if data['type'] == 'vote':
-            data = data['data']
-            MinorCaseIncomingEvent = apps.get_model('puzzles', 'MinorCaseIncomingEvent')
-            incoming_event = MinorCaseIncomingEvent.get_current_incoming_event(self.scope.get('user')) # type: ignore
-            incoming_event.vote(data['oldVote'], data['newVote'])
+        # if data['type'] == 'vote':
+        #     data = data['data']
+        #     MinorCaseIncomingEvent = apps.get_model('puzzles', 'MinorCaseIncomingEvent')
+        #     incoming_event = MinorCaseIncomingEvent.get_current_incoming_event(self.scope.get('user')) # type: ignore
+        #     incoming_event.vote(data['oldVote'], data['newVote'])
 
-            response = {
-                "type": 'vote',
-                "data": {
-                    "cases": incoming_event.get_votes(),
-                    "expiration_time": incoming_event.get_expiration_time().isoformat() if incoming_event.get_expiration_time() else None,
-                }
-            }
+        #     response = {
+        #         "type": 'vote',
+        #         "data": {
+        #             "cases": incoming_event.get_votes(),
+        #             "expiration_time": incoming_event.get_expiration_time().isoformat() if incoming_event.get_expiration_time() else None,
+        #         }
+        #     }
 
-            # self.send(json.dumps(response))
-            channel = get_channel_layer()
-            if channel is not None:
-                async_to_sync(channel.group_send)(client_room.channel_name, json.dumps(response))
+        #     # self.send(json.dumps(response))
+        #     channel = get_channel_layer()
+        #     if channel is not None:
+        #         async_to_sync(channel.group_send)(client_room.channel_name, json.dumps(response))
 
-        elif data['type'] == 'finalizeVote':
-            MinorCaseIncomingEvent = apps.get_model('puzzles', 'MinorCaseIncomingEvent')
-            incoming_event = MinorCaseIncomingEvent.get_current_incoming_event(self.scope.get('user')) # type: ignore
+        # elif data['type'] == 'finalizeVote':
+        #     MinorCaseIncomingEvent = apps.get_model('puzzles', 'MinorCaseIncomingEvent')
+        #     incoming_event = MinorCaseIncomingEvent.get_current_incoming_event(self.scope.get('user')) # type: ignore
 
-            response = {
-                "type": 'finalizeVote',
-                "data":  {
-                    "chosenCase": incoming_event.finalize_vote()
-                }
-            }
+        #     response = {
+        #         "type": 'finalizeVote',
+        #         "data":  {
+        #             "chosenCase": incoming_event.finalize_vote()
+        #         }
+        #     }
+        pass
 
     def forward_message(self, event):
         self.send(text_data=event['data'])
