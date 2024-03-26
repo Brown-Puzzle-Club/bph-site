@@ -7,6 +7,7 @@ from puzzles.api import api_views, api_actions
 
 from . import nyt_games_api
 from . import data_mc_api
+from . import soc_ded_api
 
 
 @api_view(["GET"])
@@ -40,5 +41,10 @@ urlpatterns = [
         "data/fill_data",
         data_mc_api.admin_create_voice_recordings,
         name="admin_create_voice_recordings",
+    ),
+    path(
+        "social-deduction/verdict_guess",
+        soc_ded_api.verdict_guess,
+        name="social_deduction_verdict_guess",
     ),
 ]
