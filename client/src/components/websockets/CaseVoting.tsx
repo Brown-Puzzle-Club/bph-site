@@ -16,11 +16,7 @@ const CaseVoting = ({ path }: CaseVotingProps) => {
   ) : (
     <>
       <PresenceCounter presenceInfo={presenceInfo} />
-      <VotingModal
-        socket={socket}
-        presenceInfo={presenceInfo}
-        votingInfo={votingInfo}
-      />
+      <VotingModal socket={socket} presenceInfo={presenceInfo} votingInfo={votingInfo} />
     </>
   );
 };

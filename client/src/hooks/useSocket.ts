@@ -15,7 +15,7 @@ export interface PresenceInfo {
 }
 
 export interface Vote {
-  desc: string,
+  desc: string;
   voteCount: number;
 }
 export interface VotingInfo {
@@ -31,10 +31,12 @@ const PresenceInfoSchema = z.object({
 });
 
 const VotingInfoSchema = z.object({
-  cases: z.record(z.object({
-    desc: z.string(),
-    voteCount: z.number().nonnegative()
-  })),
+  cases: z.record(
+    z.object({
+      desc: z.string(),
+      voteCount: z.number().nonnegative(),
+    }),
+  ),
   expiration_time: z.string().nullable(),
 });
 
@@ -49,7 +51,9 @@ const useSocket = (path: string, callbacks: SocketCallbacks | undefined = undefi
   });
 
   useEffect(() => {
-    const url = `${location.protocol === "https:" ? "wss://" : "ws://"}${location.host}/${path}`;
+    // const url = `${location.protocol === "https:" ? "wss://" : "ws://"}${location.host}/${path}`;
+    const url = path;
+    console.log(url);
 
     const socket = new WebSocket(url);
 
@@ -102,7 +106,7 @@ const useSocket = (path: string, callbacks: SocketCallbacks | undefined = undefi
       clearInterval(heartbeatInterval);
       socket.close();
     };
-  }, [path, onMessage, onOpen, onClose, onError]);
+  }, []);
 
   return { socket, presenceInfo, votingInfo };
 };
