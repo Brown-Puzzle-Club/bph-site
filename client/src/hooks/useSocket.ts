@@ -85,8 +85,9 @@ const useSocket = (path: string, callbacks: SocketCallbacks | undefined = undefi
         setPresenceInfo(presenceInfo);
         break;
       }
-      case "voting": {
+      case "vote": {
         const votingInfo = VotingInfoSchema.parse(parsedMessage.data);
+        console.log(votingInfo);
         setVotingInfo(votingInfo);
         break;
       }

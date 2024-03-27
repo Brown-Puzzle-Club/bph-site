@@ -930,6 +930,19 @@ class MinorCaseIncomingEvent(models.Model):
         verbose_name = _("minor case incoming event")
         verbose_name_plural = _("minor cases incoming events")
 
+    def initialize(self):
+        if self.is_initialized:
+            return
+
+        potential_cases = Round.objects.all() # TODO: Fix this
+        for case in potential_cases:
+            vote = MinorCaseVote.objects.create(team=self.team, minor_case=case, num_votes=0)
+            vote.save()
+            self.votes.add(vote)
+
+        self.is_initialized = True
+        self.save()
+
     def cases(self):
         return [vote.minor_case.name for vote in self.votes.all()]
 
@@ -988,8 +1001,8 @@ class MinorCaseIncomingEvent(models.Model):
             timestamp=current_time,
             selected_case=most_voted_case,
             incoming_event=self,
-            final_votes=self.votes,
         )
+        vote_event.final_votes.set(self.votes.all())
 
         self.final_vote = vote_event
         self.expiration = current_time
@@ -1004,6 +1017,7 @@ class MinorCaseIncomingEvent(models.Model):
             .order_by("-timestamp")
             .first()
         )
+
         if most_recent_case and not most_recent_case.final_vote:
             return most_recent_case
 
