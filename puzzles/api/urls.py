@@ -32,5 +32,5 @@ urlpatterns = [
         name="get-team-members",
     ),
     path("create_vote_event", api_actions.create_vote_event, name="create-vote-event"),
-    path("token-auth", obtain_auth_token, name='api_token_auth')
+    path("token-auth", obtain_auth_token, name="api_token_auth"),
 ]

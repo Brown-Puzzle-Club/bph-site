@@ -42,7 +42,7 @@ const NUM_TO_SLUG: { [key: number]: string } = {
 export function fetchMinorCaseCharacterName(context: DjangoContext | undefined, n: number): string {
   return titleCase(
     context?.team_context?.minor_case_solves?.["social-deduction"]?.[NUM_TO_SLUG[n]]
-      ?.submitted_answer ?? MISS_TEXT
+      ?.submitted_answer ?? MISS_TEXT,
   );
 }
 
@@ -78,7 +78,7 @@ export enum InternalCharacter {
 }
 
 export const CHAR_NAME = (
-  context: DjangoContext | undefined
+  context: DjangoContext | undefined,
 ): { [key in InternalCharacter]: string } => ({
   NONE: "",
   INVISIGUY: "Ghoulsby",

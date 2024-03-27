@@ -33,6 +33,7 @@ class TeamViewSet(
     def get_queryset(self):
         return Team.objects.filter(user=self.request.user)
 
+
 class TokenViewSet(
     mixins.RetrieveModelMixin,
     mixins.UpdateModelMixin,
@@ -44,6 +45,7 @@ class TokenViewSet(
 
     def get_queryset(self):
         return Token.objects.filter(user=self.request.user)
+
 
 class BasicTeamViewSet(
     mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet

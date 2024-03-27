@@ -812,7 +812,9 @@ class Team(models.Model):
 
     @staticmethod
     def unlock_case(team, minor_case, unlock_datetime):
-        print(f"EVENT: unlocking case {minor_case} for team {team} at {unlock_datetime}")
+        print(
+            f"EVENT: unlocking case {minor_case} for team {team} at {unlock_datetime}"
+        )
 
         try:
             unlock = MinorCaseActive.objects.get_or_create(
@@ -901,13 +903,25 @@ class MinorCaseVote(models.Model):
 
 class MinorCaseIncomingEvent(models.Model):
 
-    team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_('team'))
-    timestamp = models.DateTimeField(verbose_name=_('Event creation datetime'))
-    votes = models.ManyToManyField(MinorCaseVote, verbose_name=_('Votes'), blank=True)
-    expiration = models.DateTimeField(verbose_name=_('Expiration datetime'), null=True, blank=True)
-    final_vote = models.OneToOneField('MinorCaseVoteEvent', on_delete=models.CASCADE, verbose_name=_('Final vote'), null=True, blank=True)
-    is_initialized = models.BooleanField(verbose_name=_('Is initialized'), default=False)
-    total_user_votes = models.IntegerField(verbose_name=_('Total user votes'), default=0)
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_("team"))
+    timestamp = models.DateTimeField(verbose_name=_("Event creation datetime"))
+    votes = models.ManyToManyField(MinorCaseVote, verbose_name=_("Votes"), blank=True)
+    expiration = models.DateTimeField(
+        verbose_name=_("Expiration datetime"), null=True, blank=True
+    )
+    final_vote = models.OneToOneField(
+        "MinorCaseVoteEvent",
+        on_delete=models.CASCADE,
+        verbose_name=_("Final vote"),
+        null=True,
+        blank=True,
+    )
+    is_initialized = models.BooleanField(
+        verbose_name=_("Is initialized"), default=False
+    )
+    total_user_votes = models.IntegerField(
+        verbose_name=_("Total user votes"), default=0
+    )
 
     def __str__(self):
         return "%s -> %s @ %s" % (self.team, self.timestamp, self.votes)
@@ -923,8 +937,8 @@ class MinorCaseIncomingEvent(models.Model):
         return {
             vote.minor_case.name: {
                 "desc": vote.minor_case.description,
-                "voteCount": vote.num_votes
-                }
+                "voteCount": vote.num_votes,
+            }
             for vote in self.votes.all()
         }
 
@@ -964,7 +978,9 @@ class MinorCaseIncomingEvent(models.Model):
         if self.final_vote:
             return self.final_vote.selected_case.name
 
-        most_voted_case = max(self.votes.all(), key=lambda vote: vote.num_votes).minor_case
+        most_voted_case = max(
+            self.votes.all(), key=lambda vote: vote.num_votes
+        ).minor_case
         current_time = timezone.now()
 
         vote_event = MinorCaseVoteEvent.objects.create(
@@ -992,7 +1008,9 @@ class MinorCaseIncomingEvent(models.Model):
             return most_recent_case
 
         if most_recent_case is None:
-            incoming_event = MinorCaseIncomingEvent.objects.create(team=context.team, timestamp=timezone.now())
+            incoming_event = MinorCaseIncomingEvent.objects.create(
+                team=context.team, timestamp=timezone.now()
+            )
             incoming_event.initialize()
             return incoming_event
 

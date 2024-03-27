@@ -33,16 +33,19 @@ class RoundAdmin(admin.ModelAdmin):
 
     ordering = ("order",)
 
-    ordering = ('order',)
+    ordering = ("order",)
 
-    list_display = ('name', 'slug', 'major_case', 'meta_answer', 'order')
+    list_display = ("name", "slug", "major_case", "meta_answer", "order")
+
 
 class RoomAdmin(admin.ModelAdmin):
-    list_display = ('channel_name',)
+    list_display = ("channel_name",)
+
 
 class PresenceAdmin(admin.ModelAdmin):
-    list_display = ('room', 'channel_name', 'user', 'last_seen')
-    list_filter = ('room', 'user')
+    list_display = ("room", "channel_name", "user", "last_seen")
+    list_filter = ("room", "user")
+
 
 class PuzzleMessageInline(admin.TabularInline):
     model = PuzzleMessage
@@ -103,16 +106,19 @@ class PuzzleUnlockAdmin(admin.ModelAdmin):
 
 
 class MinorCaseIncomingEventAdmin(admin.ModelAdmin):
-    list_display = ('team', 'timestamp', 'expiration', 'final_vote')
-    list_filter = ('team', 'timestamp', 'expiration', 'final_vote')
+    list_display = ("team", "timestamp", "expiration", "final_vote")
+    list_filter = ("team", "timestamp", "expiration", "final_vote")
+
 
 class MinorCaseVoteAdmin(admin.ModelAdmin):
-    list_display = ('team', 'minor_case', 'num_votes')
-    list_filter = ('minor_case', 'team')
+    list_display = ("team", "minor_case", "num_votes")
+    list_filter = ("minor_case", "team")
+
 
 class MinorCaseVoteEventAdmin(admin.ModelAdmin):
-    list_display = ('team', 'timestamp', 'selected_case')
-    list_filter = ('team', 'timestamp', 'selected_case')
+    list_display = ("team", "timestamp", "selected_case")
+    list_filter = ("team", "timestamp", "selected_case")
+
 
 class MinorCaseActiveAdmin(admin.ModelAdmin):
     list_display = ("team", "minor_case_round", "active_datetime")
@@ -120,12 +126,14 @@ class MinorCaseActiveAdmin(admin.ModelAdmin):
 
 
 class MinorCaseCompletedAdmin(admin.ModelAdmin):
-    list_display = ('team', 'minor_case_round', 'completed_datetime')
-    list_filter = ('minor_case_round', 'minor_case_round__major_case', 'team')
+    list_display = ("team", "minor_case_round", "completed_datetime")
+    list_filter = ("minor_case_round", "minor_case_round__major_case", "team")
+
 
 class MinorCaseCompletedAdmin(admin.ModelAdmin):
-    list_display = ('team', 'minor_case_round', 'completed_datetime')
-    list_filter = ('minor_case_round', 'minor_case_round__major_case', 'team')
+    list_display = ("team", "minor_case_round", "completed_datetime")
+    list_filter = ("minor_case_round", "minor_case_round__major_case", "team")
+
 
 class AnswerSubmissionAdmin(admin.ModelAdmin):
     list_display = (

@@ -15,7 +15,7 @@ export default function Chronology({
 }) {
   function collectObscured(
     roles: [InternalCharacter, string][],
-    combineMisses: boolean
+    combineMisses: boolean,
   ): JSX.Element {
     const miss: JSX.Element = <span>{MISS_TEXT}</span>;
     const acc: JSX.Element[] = [];
@@ -26,7 +26,7 @@ export default function Chronology({
         acc.unshift(
           <span>
             <CharacterRoleTooltip char_role={role} CHAR_NAMES={CHAR_NAMES} /> {action}
-          </span>
+          </span>,
         );
       } else if (acc[acc.length - 1] != miss || !combineMisses) {
         acc.push(miss);
@@ -111,7 +111,7 @@ export default function Chronology({
                   [InternalCharacter.ANXIOUS_GHOST, "dies"],
                   [InternalCharacter.SLEEPY_GHOST, "dies"],
                 ],
-                true
+                true,
               )}
             </td>
           </tr>
@@ -146,7 +146,7 @@ export default function Chronology({
                       [InternalCharacter.INVISIGUY, " 1"],
                       [InternalCharacter.HAPPY_GHOST, " 8"],
                     ],
-                    false
+                    false,
                   )}
                 </div>
                 <div className="px-4 py-2">
@@ -232,7 +232,7 @@ export default function Chronology({
                       [InternalCharacter.INVISIGUY, " 1"],
                       [InternalCharacter.HEART_GHOST, " 4"],
                     ],
-                    false
+                    false,
                   )}
                 </div>
                 <div className="px-4 py-2">

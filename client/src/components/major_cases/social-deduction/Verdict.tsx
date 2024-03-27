@@ -37,7 +37,7 @@ export default function Verdict({
   // remove the role from the assignments if it is already assigned
   const handleRemoveAssignment = (role: Role) => {
     const character = Object.keys(assignments).find(
-      (key) => assignments[key as keyof typeof assignments] === role
+      (key) => assignments[key as keyof typeof assignments] === role,
     );
     if (character) {
       setAssignments((prevAssignments) => {
@@ -104,7 +104,7 @@ export default function Verdict({
     });
     const assigned_character: boolean =
       Object.keys(assignments).find(
-        (key) => assignments[key as keyof typeof assignments] === role
+        (key) => assignments[key as keyof typeof assignments] === role,
       ) !== undefined;
     return assigned_character && !assigned ? (
       <></>
