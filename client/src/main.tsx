@@ -25,6 +25,7 @@ import "./styles/puzzlestyle-data.css";
 import "./styles/puzzlestyle-red-thread.css";
 import "./styles/puzzlestyle-soc-deduction.css";
 import WebsocketDemo from "./routes/WebsocketDemo";
+import Wordle from "./routes/Wordle";
 
 try {
   axios.defaults.headers.common["X-CSRFToken"] = Cookies.get("csrftoken");
@@ -123,6 +124,10 @@ const router = createBrowserRouter([
         element: (
           <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<WebsocketDemo />} />
         ),
+      },
+      {
+        path: "/wordle",
+        element: <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<Wordle />} />,
       },
     ],
   },
