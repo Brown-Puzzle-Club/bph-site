@@ -64,6 +64,7 @@ const useSocket = (path: string, callbacks: SocketCallbacks | undefined = undefi
       message: JSON.stringify("heartbeat"),
       interval: 50 * 1000,
     },
+    retryOnError: true,
   });
   const { team } = useAuth();
 
