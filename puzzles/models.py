@@ -974,7 +974,7 @@ class MinorCaseIncomingEvent(models.Model):
                 vote.save()
 
         if self.expiration is None and self.total_user_votes > 0:
-            self.expiration = timezone.now() + timezone.timedelta(seconds=60)
+            self.expiration = timezone.now() + timezone.timedelta(seconds=30)
         elif self.expiration and old_vote is None and new_vote is not None:
             self.expiration = timezone.now() - timezone.timedelta(seconds=5)
         elif self.expiration and old_vote is not None and new_vote is None:
@@ -1007,7 +1007,7 @@ class MinorCaseIncomingEvent(models.Model):
         self.final_vote = vote_event
         self.expiration = current_time
         self.save()
-        return vote_event
+        return {"name": vote_event.selected_case.name, "desc": vote_event.selected_case.description}
 
     @staticmethod
     def get_current_incoming_event(context):
@@ -1021,14 +1021,15 @@ class MinorCaseIncomingEvent(models.Model):
         if most_recent_case and not most_recent_case.final_vote:
             return most_recent_case
 
-        if most_recent_case is None:
-            incoming_event = MinorCaseIncomingEvent.objects.create(
-                team=context.team, timestamp=timezone.now()
-            )
-            incoming_event.initialize()
-            return incoming_event
-
         return None
+
+    @staticmethod
+    def create_incoming_event(context):
+        incoming_event = MinorCaseIncomingEvent.objects.create(
+            team=context.team, timestamp=timezone.now()
+        )
+        incoming_event.initialize()
+        return incoming_event
 
 
 class MinorCaseVoteEvent(models.Model):

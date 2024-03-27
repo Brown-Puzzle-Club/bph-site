@@ -461,21 +461,22 @@ class VotingConsumer(WebsocketConsumer):
             data = content["data"]
             MinorCaseIncomingEvent = apps.get_model("puzzles", "MinorCaseIncomingEvent")
             incoming_event = MinorCaseIncomingEvent.get_current_incoming_event(self.scope.get("user"))  # type: ignore
+            if not incoming_event:
+                incoming_event = MinorCaseIncomingEvent.create_incoming_event(self.scope.get("user"))  # type: ignore
 
-            if incoming_event:
-                incoming_event.vote(data["oldVote"], data["newVote"])
-                response = {
-                    "type": "vote",
-                    "data": {
-                        "cases": incoming_event.get_votes(),
-                        "expiration_time": (
-                            incoming_event.get_expiration_time().isoformat()
-                            if incoming_event.get_expiration_time()
-                            else None
+            incoming_event.vote(data["oldVote"], data["newVote"])
+            response = {
+                "type": "vote",
+                "data": {
+                    "cases": incoming_event.get_votes(),
+                    "expiration_time": (
+                        incoming_event.get_expiration_time().isoformat()
+                        if incoming_event.get_expiration_time()
+                        else None
                         ),
                     },
                 }
-                self.send_to_all(client_room, response)
+            self.send_to_all(client_room, response)
 
         elif content["type"] == "finalizeVote":
             MinorCaseIncomingEvent = apps.get_model("puzzles", "MinorCaseIncomingEvent")
