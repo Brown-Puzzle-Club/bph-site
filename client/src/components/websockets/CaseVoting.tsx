@@ -9,14 +9,14 @@ interface CaseVotingProps {
 }
 
 const CaseVoting = ({ path }: CaseVotingProps) => {
-  const { socket, presenceInfo, votingInfo } = useSocket(path, { onMessage: console.log });
+  const { sendMessage, readyState, presenceInfo, votingInfo } = useSocket(path);
 
-  return !socket || socket.readyState != WebSocket.OPEN ? (
+  return readyState != WebSocket.OPEN ? (
     <Loader />
   ) : (
     <>
       <PresenceCounter presenceInfo={presenceInfo} />
-      <VotingModal socket={socket} presenceInfo={presenceInfo} votingInfo={votingInfo} />
+      <VotingModal sendMessage={sendMessage} presenceInfo={presenceInfo} votingInfo={votingInfo} />
     </>
   );
 };

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { z } from "zod";
+import useWebSocket from "react-use-websocket";
 import { useAuth } from "./useAuth";
+
 interface SocketCallbacks {
   onMessage?: (event: MessageEvent) => void;
   onOpen?: (event: Event) => void;
@@ -41,76 +43,59 @@ const VotingInfoSchema = z.object({
   expiration_time: z.string().nullable(),
 });
 
-const useSocket = (path: string, callbacks: SocketCallbacks | undefined = undefined) => {
-  const { onMessage, onOpen, onClose, onError } = callbacks ?? {};
+const ResponseSchema = z.object({
+  type: z.string(),
+  data: z.any(),
+});
 
-  const [socket, setSocket] = useState<WebSocket | null>(null);
+const useSocket = (path: string, callbacks: SocketCallbacks | undefined = undefined) => {
   const [presenceInfo, setPresenceInfo] = useState<PresenceInfo | null>(null);
   const [votingInfo, setVotingInfo] = useState<VotingInfo>({
     cases: {},
     expiration_time: null,
   });
+  const [socketUrl, setSocketUrl] = useState<string | null>(null);
+  const { sendMessage, lastJsonMessage, readyState } = useWebSocket(socketUrl, {
+    onMessage: callbacks?.onMessage,
+    onOpen: callbacks?.onOpen,
+    onClose: callbacks?.onClose,
+    onError: callbacks?.onError,
+    heartbeat: {
+      message: JSON.stringify("heartbeat"),
+      interval: 50 * 1000,
+    },
+  });
   const { team } = useAuth();
 
   useEffect(() => {
     if (team) {
-      const authToken = team.auth_token;
-      const url = `${path}?token=${authToken}`;
-      const socket = new WebSocket(url);
-
-      // TODO: It would be nice if this was only in dev mode or something
-      const openEventCallback = onOpen ?? console.log;
-      const closeEventCallback = onClose ?? console.log;
-      const errorEventCallback = onError ?? console.error;
-      const messageEventCallback = (e: MessageEvent) => {
-        if (socket.readyState === WebSocket.OPEN) {
-          const data = JSON.parse(e.data);
-
-          if (data.type === "presence") {
-            const typechecked_data = PresenceInfoSchema.safeParse(data.data);
-            if (typechecked_data.success) {
-              setPresenceInfo(typechecked_data.data);
-            } else {
-              console.error(typechecked_data.error);
-            }
-          } else if (data.type === "vote") {
-            const typechecked_data = VotingInfoSchema.safeParse(data.data);
-            if (typechecked_data.success) {
-              setVotingInfo(typechecked_data.data);
-            } else {
-              console.error(typechecked_data.error);
-            }
-          }
-
-          if (onMessage) onMessage(e);
-        }
-      };
-
-      socket.addEventListener("open", openEventCallback);
-      socket.addEventListener("close", closeEventCallback);
-      socket.addEventListener("error", errorEventCallback);
-      socket.addEventListener("message", messageEventCallback);
-
-      const heartbeatInterval = setInterval(() => {
-        if (socket.readyState === WebSocket.OPEN) {
-          socket.send(JSON.stringify("heartbeat"));
-        }
-      }, 50 * 1000);
-
-      setSocket(socket);
-
-      return () => {
-        socket.removeEventListener("open", openEventCallback);
-        socket.removeEventListener("close", closeEventCallback);
-        socket.removeEventListener("error", errorEventCallback);
-        socket.removeEventListener("message", messageEventCallback);
-        clearInterval(heartbeatInterval);
-        socket.close();
-      };
+      console.log(team.auth_token);
+      setSocketUrl(`${path}?token=${team.auth_token}`);
     }
-  }, [team]);
+  }, [team, path, setSocketUrl]);
 
-  return { socket, presenceInfo, votingInfo };
+  useEffect(() => {
+    if (!lastJsonMessage) return;
+    console.log(lastJsonMessage);
+
+    const parsedMessage = ResponseSchema.parse(lastJsonMessage);
+    switch (parsedMessage.type) {
+      case "presence": {
+        const presenceInfo = PresenceInfoSchema.parse(parsedMessage.data);
+        setPresenceInfo(presenceInfo);
+        break;
+      }
+      case "voting": {
+        const votingInfo = VotingInfoSchema.parse(parsedMessage.data);
+        setVotingInfo(votingInfo);
+        break;
+      }
+      default:
+        break;
+    }
+  }, [lastJsonMessage]);
+
+  return { sendMessage, readyState, presenceInfo, votingInfo };
 };
 
 export default useSocket;

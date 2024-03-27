@@ -919,6 +919,18 @@ class MinorCaseIncomingEvent(models.Model):
     def cases(self):
         return [vote.minor_case.name for vote in self.votes.all()]
 
+    def get_votes(self):
+        return {
+            vote.minor_case.name: {
+                "desc": vote.minor_case.description,
+                "voteCount": vote.num_votes
+                }
+            for vote in self.votes.all()
+        }
+
+    def get_expiration_time(self):
+        return self.expiration
+
     def vote(self, old_vote: None | str, new_vote: None | str):
         if old_vote:
             vote = self.votes.get(minor_case__name=old_vote)

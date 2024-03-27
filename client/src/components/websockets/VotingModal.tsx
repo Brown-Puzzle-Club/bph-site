@@ -12,34 +12,23 @@ import { PresenceInfo, VotingInfo } from "@/hooks/useSocket";
 import { cn } from "@/utils/utils";
 import { useEffect, useState } from "react";
 import { useTimer } from "react-timer-hook";
+import { SendMessage } from "react-use-websocket";
 
 interface VotingModalProps {
   presenceInfo: PresenceInfo | null;
   votingInfo: VotingInfo | null;
-  socket: WebSocket;
+  sendMessage: SendMessage;
 }
 
-const VotingModal = ({ socket, votingInfo, presenceInfo }: VotingModalProps) => {
+const VotingModal = ({ sendMessage, votingInfo, presenceInfo }: VotingModalProps) => {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const { seconds, isRunning, restart, pause } = useTimer({
     expiryTimestamp: new Date(),
     onExpire: () => {
-      socket.send(JSON.stringify({ type: "finalizeVote" }));
+      sendMessage(JSON.stringify({ type: "finalizeVote" }));
     },
     autoStart: false,
   });
-
-  useEffect(() => {
-    socket.send(
-      JSON.stringify({
-        type: "vote",
-        data: {
-          oldVote: null,
-          newVote: null,
-        },
-      }),
-    );
-  }, [socket]);
 
   useEffect(() => {
     if (votingInfo !== null && votingInfo.expiration_time !== null) {
@@ -50,10 +39,22 @@ const VotingModal = ({ socket, votingInfo, presenceInfo }: VotingModalProps) => 
     }
   }, [votingInfo, pause, restart]);
 
+  useEffect(() => {
+    sendMessage(
+      JSON.stringify({
+        type: "vote",
+        data: {
+          oldVote: null,
+          newVote: null,
+        },
+      }),
+    );
+  }, [sendMessage]);
+
   const setVote = (option: string) => {
     setSelectedOption((currOption) => {
       const newVote = currOption === option ? null : option;
-      socket.send(
+      sendMessage(
         JSON.stringify({
           type: "vote",
           data: {
