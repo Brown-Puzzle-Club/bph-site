@@ -3,6 +3,7 @@ import Tile from "./Tile";
 import {
   GameMode,
   Row,
+  generateAnswers,
   getLastTile,
   getNextNonEmptyTile,
   getPreviousTile,
@@ -23,13 +24,28 @@ const HangmanWordle = ({ setGameMode }: HangmanWordleProps) => {
   const [board, setBoard] = useState(new Array(13).fill(""));
   const [selectedRow, setSelectedRow] = useState<Row>(Row.None);
   const [activeTile, setActiveTile] = useState<number>(-1);
+  const [solved, setSolved] = useState<[boolean, boolean, boolean]>([false, false, false]);
+  const [answers, setAnswers] = useState<[string, string, string]>(["", "", ""]);
 
   useEffect(() => {
-    console.log("change to final wordle");
-    if (selectedRow === Row.Bottom && activeTile === -2) {
+    setAnswers((prev) => {
+      if (prev[0] === "" && prev[1] === "" && prev[2] === "") {
+        return generateAnswers();
+      }
+      return prev;
+    });
+  }, [setAnswers]);
+
+  useEffect(() => {
+    console.log(answers);
+  }, [answers]);
+
+  useEffect(() => {
+    console.log(solved);
+    if (solved.every((s) => s)) {
       setGameMode(GameMode.FinalWordle);
     }
-  }, [setGameMode, selectedRow, activeTile]);
+  }, [setGameMode, solved]);
 
   useEffect(() => {
     switch (selectedRow) {
@@ -84,9 +100,14 @@ const HangmanWordle = ({ setGameMode }: HangmanWordleProps) => {
       });
     } else if (e.key === "Enter") {
       const enteredWord = getRowString(selectedRow, board);
-      if (enteredWord.length === 5) {
-        console.log("entered word", enteredWord);
-        // Verify the word
+      if (selectedRow != Row.None && enteredWord.length === 5) {
+        if (enteredWord.toLowerCase() == answers[selectedRow]) {
+          setSolved((prev) => {
+            const newSolved = [...prev] satisfies [boolean, boolean, boolean];
+            newSolved[selectedRow] = true;
+            return newSolved;
+          });
+        }
       } else {
         console.error("not long enough");
       }

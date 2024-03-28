@@ -1,8 +1,10 @@
+import { possibleWords } from "./wordList";
+
 export enum Row {
-  None = 0,
-  Top = 1,
-  Middle = 2,
-  Bottom = 3,
+  None = -1,
+  Top = 0,
+  Middle = 1,
+  Bottom = 2,
 }
 
 export enum GameMode {
@@ -110,4 +112,24 @@ export const getRowString = (row: Row, board: string[]) => {
       return "";
     }
   }
+};
+
+export const generateAnswers = (): [string, string, string] => {
+  const answers = [possibleWords[Math.floor(Math.random() * possibleWords.length)]];
+
+  while (answers.length < 2) {
+    const newWord = possibleWords[Math.floor(Math.random() * possibleWords.length)];
+    if (!answers.includes(newWord) && newWord[0] === answers[0][4]) {
+      answers.push(newWord);
+    }
+  }
+
+  while (answers.length < 3) {
+    const newWord = possibleWords[Math.floor(Math.random() * possibleWords.length)];
+    if (!answers.includes(newWord) && newWord[2] === answers[1][4]) {
+      answers.push(newWord);
+    }
+  }
+
+  return answers as [string, string, string];
 };
