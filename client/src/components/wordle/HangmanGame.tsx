@@ -28,6 +28,7 @@ const HangmanWordle = ({ setGameMode, setGuesses }: HangmanWordleProps) => {
   const [activeTile, setActiveTile] = useState<number>(-1);
   const [solved, setSolved] = useState<[boolean, boolean, boolean]>([false, false, false]);
   const [answers, setAnswers] = useState<[string, string, string]>(["", "", ""]);
+  const [prevGuesses, setPrevGuesses] = useState<string[]>([]);
 
   useEffect(() => {
     setAnswers((prev) => {
@@ -113,6 +114,7 @@ const HangmanWordle = ({ setGameMode, setGuesses }: HangmanWordleProps) => {
           setBoard((prev) => clearRow(selectedRow, prev));
           setGuesses((prev) => prev - 1);
           setSelectedRow(Row.None);
+          setPrevGuesses((prev) => [...prev, enteredWord]);
         }
       } else {
         console.error("not long enough");
@@ -121,23 +123,33 @@ const HangmanWordle = ({ setGameMode, setGuesses }: HangmanWordleProps) => {
   };
 
   return (
-    <div
-      tabIndex={0}
-      className="max-w-max gap-2 grid"
-      style={{ gridTemplateAreas: hangmanTemplateAreas }}
-      onKeyDown={keyPressHandler}
-    >
-      {board.map((letter, i) => (
-        <Tile
-          key={i}
-          id={i}
-          letter={letter}
-          gridArea={String.fromCharCode(97 + i)}
-          selectedRow={selectedRow}
-          setSelectedRow={setSelectedRow}
-          activeTile={activeTile}
-        />
-      ))}
+    <div className="flex gap-10">
+      <div
+        tabIndex={0}
+        className="max-w-max gap-2 grid"
+        style={{ gridTemplateAreas: hangmanTemplateAreas }}
+        onKeyDown={keyPressHandler}
+      >
+        {board.map((letter, i) => (
+          <Tile
+            key={i}
+            id={i}
+            letter={letter}
+            gridArea={String.fromCharCode(97 + i)}
+            selectedRow={selectedRow}
+            setSelectedRow={setSelectedRow}
+            activeTile={activeTile}
+          />
+        ))}
+      </div>
+      <div>
+        <p>Previous Guesses</p>
+        <ul>
+          {prevGuesses.map((guess, i) => (
+            <li key={i}>{guess}</li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };
