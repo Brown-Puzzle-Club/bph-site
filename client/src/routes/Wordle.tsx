@@ -5,24 +5,26 @@ import { useState } from "react";
 const Wordle = () => {
   const [gameMode, setGameMode] = useState(GameMode.Hangman);
   const [remountCounter, setRemountCounter] = useState(0);
-  // const [chances, setChances] = useState(7);
+  const [guesses, setGuesses] = useState(7);
 
   return (
     <div className="text-white">
       <h1>Wordle!</h1>
       <div className="grid place-items-center">
         {gameMode === GameMode.Hangman ? (
-          <HangmanWordle key={remountCounter} setGameMode={setGameMode} />
+          <HangmanWordle key={remountCounter} setGameMode={setGameMode} setGuesses={setGuesses} />
         ) : null}
       </div>
       <button
         onClick={() => {
           setGameMode(GameMode.Hangman);
+          setGuesses(7);
           setRemountCounter((counter) => counter + 1);
         }}
       >
         Reset
       </button>
+      <p>Remaining Guesses: {guesses}</p>
     </div>
   );
 };

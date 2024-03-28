@@ -3,6 +3,7 @@ import Tile from "./Tile";
 import {
   GameMode,
   Row,
+  clearRow,
   generateAnswers,
   getLastTile,
   getNextNonEmptyTile,
@@ -18,9 +19,10 @@ const hangmanTemplateAreas = `'a b c d e . .'
 
 interface HangmanWordleProps {
   setGameMode: React.Dispatch<React.SetStateAction<GameMode>>;
+  setGuesses: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const HangmanWordle = ({ setGameMode }: HangmanWordleProps) => {
+const HangmanWordle = ({ setGameMode, setGuesses }: HangmanWordleProps) => {
   const [board, setBoard] = useState(new Array(13).fill(""));
   const [selectedRow, setSelectedRow] = useState<Row>(Row.None);
   const [activeTile, setActiveTile] = useState<number>(-1);
@@ -107,6 +109,10 @@ const HangmanWordle = ({ setGameMode }: HangmanWordleProps) => {
             newSolved[selectedRow] = true;
             return newSolved;
           });
+        } else {
+          setBoard((prev) => clearRow(selectedRow, prev));
+          setGuesses((prev) => prev - 1);
+          setSelectedRow(Row.None);
         }
       } else {
         console.error("not long enough");

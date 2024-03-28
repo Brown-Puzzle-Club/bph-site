@@ -133,3 +133,13 @@ export const generateAnswers = (): [string, string, string] => {
 
   return answers as [string, string, string];
 };
+
+export const clearRow = (selectedRow: Row, board: string[]) => {
+  const newBoard = [...board];
+  newBoard.forEach((_, i) => {
+    if (idToRow(i).includes(selectedRow)) {
+      newBoard[i] = "";
+    }
+  });
+  return newBoard;
+};
