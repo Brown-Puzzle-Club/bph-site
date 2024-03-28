@@ -94,3 +94,20 @@ export const getLastTile = (selectedRow: Row) => {
     }
   }
 };
+
+export const getRowString = (row: Row, board: string[]) => {
+  switch (row) {
+    case Row.Top: {
+      return board.slice(0, 5).join("");
+    }
+    case Row.Middle: {
+      return board.slice(4, 9).join("");
+    }
+    case Row.Bottom: {
+      return board[9] + board[10] + board[8] + board[11] + board[12];
+    }
+    default: {
+      return "";
+    }
+  }
+};

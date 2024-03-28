@@ -1,6 +1,13 @@
 import { useEffect, useState } from "react";
 import Tile from "./Tile";
-import { GameMode, Row, getLastTile, getNextNonEmptyTile, getPreviousTile } from "./utils";
+import {
+  GameMode,
+  Row,
+  getLastTile,
+  getNextNonEmptyTile,
+  getPreviousTile,
+  getRowString,
+} from "./utils";
 
 const hangmanTemplateAreas = `'a b c d e . .'
                               '. . . . f . .'
@@ -25,7 +32,6 @@ const HangmanWordle = ({ setGameMode }: HangmanWordleProps) => {
   }, [setGameMode, selectedRow, activeTile]);
 
   useEffect(() => {
-    console.log("select row");
     switch (selectedRow) {
       case Row.None: {
         setActiveTile(-1);
@@ -76,6 +82,14 @@ const HangmanWordle = ({ setGameMode }: HangmanWordleProps) => {
         }
         return newBoard;
       });
+    } else if (e.key === "Enter") {
+      const enteredWord = getRowString(selectedRow, board);
+      if (enteredWord.length === 5) {
+        console.log("entered word", enteredWord);
+        // Verify the word
+      } else {
+        console.error("not long enough");
+      }
     }
   };
 
