@@ -67,7 +67,7 @@ function LetterBoxed({ puzzleNum }: { puzzleNum: 1 | 2 | 3 }) {
           null,
           { sides: [1], index: 4, letter: "r", uses: 2 },
           null,
-          { sides: [1], index: 5, letter: "i", uses: 1 },
+          { sides: [1], index: 5, letter: "i", uses: 2 },
           null,
         ],
         [
@@ -107,7 +107,7 @@ function LetterBoxed({ puzzleNum }: { puzzleNum: 1 | 2 | 3 }) {
         ],
         [
           null,
-          { sides: [2], index: 8, letter: "n", uses: 2 },
+          { sides: [2], index: 8, letter: "n", uses: 3 },
           { sides: [2], index: 9, letter: "c", uses: 2 },
           { sides: [2], index: 10, letter: "m", uses: 1 },
           { sides: [2, 3], index: 11, letter: "e", uses: 1 },

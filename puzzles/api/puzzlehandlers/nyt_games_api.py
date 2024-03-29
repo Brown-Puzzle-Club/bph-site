@@ -54,7 +54,7 @@ WORDS_ROUND2 = [
 CONNECTIONS_ROUND2 = {
     "Three-Letter Music Genres": ["POP", "EMO", "RAP", "DUB"],
     "Words Followed By 'Up'": ["BEAT", "POP", "CHIN", "CAME"],
-    "Synonyms for 'Punch'": ["BEAT", "POP", "NAIL", "RAP"],
+    "Synonyms for 'Punch'": ["BEAT", "POP", "NAIL", "RAP", "HOOK"],
     "Music Terms": ["HOOK", "TREBLE", "BEAT", "DISC", "POP", "EMO", "RAP", "DUB"],
     "Symbols": ["O", "CARET", "TREBLE", "DISC"],
 }
