@@ -12,6 +12,29 @@ export enum GameMode {
   FinalWordle,
 }
 
+export enum VerificationState {
+  Correct,
+  SameMiss,
+  DiffCorrect,
+  DiffMiss,
+  Incorrect,
+  Unverified,
+}
+
+export interface Character {
+  letter: string;
+  verified: VerificationState;
+}
+
+export type Board = Character[];
+export type WordVerification = [
+  VerificationState,
+  VerificationState,
+  VerificationState,
+  VerificationState,
+  VerificationState,
+];
+
 export const idToRow = (id: number) => {
   if (id == 4) {
     return [Row.Top, Row.Middle];
@@ -50,9 +73,13 @@ export const getNextTile = (currTile: number, selectedRow: Row) => {
   return -1;
 };
 
-export const getNextNonEmptyTile = (currTile: number, selectedRow: Row, board: string[]) => {
+export const getNextNonEmptyTile = (currTile: number, selectedRow: Row, board: Board) => {
   let tile;
-  for (tile = currTile; board[tile] !== "" && tile != -1; tile = getNextTile(tile, selectedRow));
+  for (
+    tile = currTile;
+    tile != -1 && board[tile].letter !== "";
+    tile = getNextTile(tile, selectedRow)
+  );
   return tile;
 };
 
@@ -97,16 +124,17 @@ export const getLastTile = (selectedRow: Row) => {
   }
 };
 
-export const getRowString = (row: Row, board: string[]) => {
+export const getRowString = (row: Row, board: Board) => {
+  const boardLetter = board.map((character) => character.letter);
   switch (row) {
     case Row.Top: {
-      return board.slice(0, 5).join("");
+      return boardLetter.slice(0, 5).join("");
     }
     case Row.Middle: {
-      return board.slice(4, 9).join("");
+      return boardLetter.slice(4, 9).join("");
     }
     case Row.Bottom: {
-      return board[9] + board[10] + board[8] + board[11] + board[12];
+      return boardLetter[9] + boardLetter[10] + boardLetter[8] + boardLetter[11] + boardLetter[12];
     }
     default: {
       return "";
@@ -134,12 +162,53 @@ export const generateAnswers = (): [string, string, string] => {
   return answers as [string, string, string];
 };
 
-export const clearRow = (selectedRow: Row, board: string[]) => {
+export const clearRow = (selectedRow: Row, board: Board, verificationGuess: WordVerification) => {
   const newBoard = [...board];
-  newBoard.forEach((_, i) => {
-    if (idToRow(i).includes(selectedRow)) {
-      newBoard[i] = "";
+  newBoard.forEach((character, i) => {
+    if (idToRow(i).includes(selectedRow) && verificationGuess[i] !== VerificationState.Correct) {
+      newBoard[i] = { letter: "", verified: VerificationState.Unverified };
+    } else if (idToRow(i).includes(selectedRow)) {
+      newBoard[i].verified = VerificationState.Correct;
     }
   });
   return newBoard;
+};
+
+// TODO: handle repeat letters correcty!
+export const verifyGuess = (
+  guess: string,
+  answers: [string, string, string],
+  selectedRow: Omit<Row, Row.None>,
+): [
+  VerificationState,
+  VerificationState,
+  VerificationState,
+  VerificationState,
+  VerificationState,
+] => {
+  const verificationArray = [];
+  const correctAnswer = answers[selectedRow as keyof typeof answers] as string;
+  const otherAnswers = answers.filter((_, i) => i !== selectedRow);
+
+  for (let i = 0; i < 5; i++) {
+    if (correctAnswer[i] === guess[i]) {
+      verificationArray.push(VerificationState.Correct);
+    } else if (correctAnswer.includes(guess[i])) {
+      verificationArray.push(VerificationState.SameMiss);
+    } else if (otherAnswers.some((answer) => answer[i] == guess[i])) {
+      verificationArray.push(VerificationState.DiffCorrect);
+    } else if (otherAnswers.some((answer) => answer.includes(guess[i]))) {
+      verificationArray.push(VerificationState.DiffMiss);
+    } else {
+      verificationArray.push(VerificationState.Incorrect);
+    }
+  }
+
+  return verificationArray as [
+    VerificationState,
+    VerificationState,
+    VerificationState,
+    VerificationState,
+    VerificationState,
+  ];
 };

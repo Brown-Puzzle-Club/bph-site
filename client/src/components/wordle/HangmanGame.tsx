@@ -1,21 +1,26 @@
 import { useEffect, useState } from "react";
 import Tile from "./Tile";
 import {
+  Board,
+  Character,
   GameMode,
   Row,
+  VerificationState,
   clearRow,
   generateAnswers,
   getLastTile,
   getNextNonEmptyTile,
   getPreviousTile,
   getRowString,
+  verifyGuess,
 } from "./utils";
 
-const hangmanTemplateAreas = `'a b c d e . .'
-                              '. . . . f . .'
-                              '. . . . g . .'
-                              '. . . . h . .'
-                              '. . j k i l m'`;
+const hangmanTemplateAreas = `'a b c d e 1 . .'
+                              '. . . . f . . .'
+                              '. . . . g . . .'
+                              '. . . . h . . .'
+                              '. . j k i l m 3'
+                              '. . . . 2 . . .'`;
 
 interface HangmanWordleProps {
   setGameMode: React.Dispatch<React.SetStateAction<GameMode>>;
@@ -23,12 +28,16 @@ interface HangmanWordleProps {
 }
 
 const HangmanWordle = ({ setGameMode, setGuesses }: HangmanWordleProps) => {
-  const [board, setBoard] = useState(new Array(13).fill(""));
+  const [board, setBoard] = useState<Board>(
+    new Array(13).fill({ letter: "", verified: VerificationState.Unverified }),
+  );
   const [selectedRow, setSelectedRow] = useState<Row>(Row.None);
   const [activeTile, setActiveTile] = useState<number>(-1);
   const [solved, setSolved] = useState<[boolean, boolean, boolean]>([false, false, false]);
   const [answers, setAnswers] = useState<[string, string, string]>(["", "", ""]);
-  const [prevGuesses, setPrevGuesses] = useState<string[]>([]);
+  const [prevGuesses, setPrevGuesses] = useState<
+    [Character, Character, Character, Character, Character][]
+  >([]);
 
   useEffect(() => {
     setAnswers((prev) => {
@@ -77,8 +86,11 @@ const HangmanWordle = ({ setGameMode, setGuesses }: HangmanWordleProps) => {
     if ("a" <= e.key && e.key <= "z") {
       setBoard((prev) => {
         const newBoard = [...prev];
-        if (newBoard[activeTile] == "") {
-          newBoard[activeTile] = e.key.toUpperCase();
+        if (newBoard[activeTile].letter == "") {
+          newBoard[activeTile] = {
+            letter: e.key.toUpperCase() as string,
+            verified: VerificationState.Unverified,
+          };
         }
         setActiveTile((prev) => getNextNonEmptyTile(prev, selectedRow, newBoard));
 
@@ -89,32 +101,42 @@ const HangmanWordle = ({ setGameMode, setGuesses }: HangmanWordleProps) => {
         const newBoard = [...prev];
         if (activeTile === -1) {
           const lastTile = getLastTile(selectedRow);
-          newBoard[lastTile] = "";
-          setActiveTile(lastTile);
+          if (newBoard[lastTile].verified != VerificationState.Correct) {
+            newBoard[lastTile].letter = "";
+            setActiveTile(lastTile);
+          }
         }
-        if (newBoard[activeTile] == "") {
+        if (newBoard[activeTile].letter == "") {
           const lastTile = getPreviousTile(activeTile, selectedRow);
-          newBoard[lastTile] = "";
+          newBoard[lastTile].letter = "";
           setActiveTile(lastTile);
-        } else {
-          newBoard[activeTile] = "";
+        } else if (newBoard[activeTile].verified != VerificationState.Correct) {
+          newBoard[activeTile].letter = "";
         }
         return newBoard;
       });
     } else if (e.key === "Enter") {
-      const enteredWord = getRowString(selectedRow, board);
+      const enteredWord = getRowString(selectedRow, board).toLowerCase();
       if (selectedRow != Row.None && enteredWord.length === 5) {
-        if (enteredWord.toLowerCase() == answers[selectedRow]) {
+        const guessVerification = verifyGuess(enteredWord, answers, selectedRow);
+        const letters = enteredWord.split("");
+        const characters = letters.map((letter, i) => {
+          return { letter: letter, verified: guessVerification[i] };
+        }) as [Character, Character, Character, Character, Character];
+
+        if (guessVerification.every((v) => v === VerificationState.Correct)) {
+          setBoard((prev) => clearRow(selectedRow, prev, guessVerification));
+          setSelectedRow(Row.None);
           setSolved((prev) => {
             const newSolved = [...prev] satisfies [boolean, boolean, boolean];
             newSolved[selectedRow] = true;
             return newSolved;
           });
         } else {
-          setBoard((prev) => clearRow(selectedRow, prev));
+          setBoard((prev) => clearRow(selectedRow, prev, guessVerification));
           setGuesses((prev) => prev - 1);
           setSelectedRow(Row.None);
-          setPrevGuesses((prev) => [...prev, enteredWord]);
+          setPrevGuesses((prev) => [...prev, characters]);
         }
       } else {
         console.error("not long enough");
@@ -126,19 +148,20 @@ const HangmanWordle = ({ setGameMode, setGuesses }: HangmanWordleProps) => {
     <div className="flex gap-10">
       <div
         tabIndex={0}
-        className="max-w-max gap-2 grid"
+        className="focus:outline-none max-w-max gap-2 grid"
         style={{ gridTemplateAreas: hangmanTemplateAreas }}
         onKeyDown={keyPressHandler}
       >
-        {board.map((letter, i) => (
+        {board.map((character, i) => (
           <Tile
             key={i}
             id={i}
-            letter={letter}
+            character={character}
             gridArea={String.fromCharCode(97 + i)}
             selectedRow={selectedRow}
             setSelectedRow={setSelectedRow}
             activeTile={activeTile}
+            solved={solved}
           />
         ))}
       </div>
@@ -146,7 +169,7 @@ const HangmanWordle = ({ setGameMode, setGuesses }: HangmanWordleProps) => {
         <p>Previous Guesses</p>
         <ul>
           {prevGuesses.map((guess, i) => (
-            <li key={i}>{guess}</li>
+            <li key={i}>{guess.map((x) => x.letter).reduce((prev, x) => prev + x, "")}</li>
           ))}
         </ul>
       </div>
