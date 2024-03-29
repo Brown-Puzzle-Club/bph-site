@@ -127,7 +127,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/wordle",
-        element: <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<Wordle />} />,
+        element: <PageWrapper bg_color={"#ffffff"} navbar_color={"#0f0d2e82"} route={<Wordle />} />,
       },
     ],
   },

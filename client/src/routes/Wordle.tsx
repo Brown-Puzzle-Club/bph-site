@@ -1,23 +1,21 @@
 import HangmanWordle from "@/components/wordle/HangmanGame";
-import { GameMode } from "@/components/wordle/utils";
+import { GameMode, GameState } from "@/components/wordle/utils";
 import { useEffect, useState } from "react";
 
 const Wordle = () => {
   const [gameMode, setGameMode] = useState(GameMode.Hangman);
-  const [gameOver, setGameOver] = useState(false);
+  const [gameState, setGameState] = useState<GameState>(GameState.InProgress);
   const [remountCounter, setRemountCounter] = useState(0);
   const [guesses, setGuesses] = useState(7);
 
   useEffect(() => {
     if (guesses <= 0) {
-      setGameOver(true);
-    } else {
-      setGameOver(false);
+      setGameState(GameState.Lose);
     }
   }, [guesses]);
 
   return (
-    <div className="text-white" style={{ fontFamily: "" }}>
+    <div className="text-black" style={{ fontFamily: "" }}>
       <h1>Wordle!</h1>
 
       <div className="grid place-items-center">
@@ -26,13 +24,14 @@ const Wordle = () => {
             key={remountCounter}
             setGameMode={setGameMode}
             setGuesses={setGuesses}
-            gameOver={gameOver}
+            gameState={gameState}
           />
         ) : null}
       </div>
       <button
         onClick={() => {
           setGameMode(GameMode.Hangman);
+          setGameState(GameState.InProgress);
           setGuesses(7);
           setRemountCounter((counter) => counter + 1);
         }}

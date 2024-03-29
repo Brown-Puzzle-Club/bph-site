@@ -1,9 +1,9 @@
 import { cva } from "class-variance-authority";
-import { Row } from "./utils";
+import { GameState, Row } from "./utils";
 
 interface NumberTileProps {
   rowNumber: 1 | 2 | 3;
-  gameOver: boolean;
+  gameState: GameState;
   solved?: [boolean, boolean, boolean];
   setSelectedRow?: React.Dispatch<React.SetStateAction<Row>>;
   mini?: boolean;
@@ -12,8 +12,8 @@ interface NumberTileProps {
 const numberTile = cva(
   [
     "rounded-full",
-    "bg-white",
-    "text-black",
+    "bg-black",
+    "text-white",
     "font-bold",
     "flex",
     "justify-center",
@@ -30,13 +30,13 @@ const numberTile = cva(
   },
 );
 
-const NumberTile = ({ rowNumber, solved, setSelectedRow, mini, gameOver }: NumberTileProps) => {
+const NumberTile = ({ rowNumber, solved, setSelectedRow, mini, gameState }: NumberTileProps) => {
   return (
     <div
       style={{ gridArea: String.fromCharCode(64 + rowNumber) }}
       className={numberTile({ mini: mini })}
       onClick={() => {
-        if (solved && setSelectedRow && !gameOver) {
+        if (solved && setSelectedRow && gameState === GameState.InProgress) {
           if (!solved[rowNumber - 1]) {
             setSelectedRow(rowNumber - 1);
           }

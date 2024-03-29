@@ -12,6 +12,12 @@ export enum GameMode {
   FinalWordle,
 }
 
+export enum GameState {
+  InProgress,
+  Win,
+  Lose,
+}
+
 export enum VerificationState {
   Correct,
   SameMiss,

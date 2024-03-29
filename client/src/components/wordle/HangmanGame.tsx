@@ -4,6 +4,7 @@ import {
   Board,
   Character,
   GameMode,
+  GameState,
   Guess,
   Row,
   VerificationState,
@@ -18,6 +19,7 @@ import {
 import NumberTile from "./NumberTile";
 import { possibleWords } from "./wordList";
 import { GuessTile } from "./GuessTile";
+import { useToast } from "../ui/use-toast";
 
 const hangmanTemplateAreas = `'a b c d e A . .'
                               '. . . . f . . .'
@@ -29,10 +31,10 @@ const hangmanTemplateAreas = `'a b c d e A . .'
 interface HangmanWordleProps {
   setGameMode: React.Dispatch<React.SetStateAction<GameMode>>;
   setGuesses: React.Dispatch<React.SetStateAction<number>>;
-  gameOver: boolean;
+  gameState: GameState;
 }
 
-const HangmanWordle = ({ setGameMode, setGuesses, gameOver }: HangmanWordleProps) => {
+const HangmanWordle = ({ setGameMode, setGuesses, gameState }: HangmanWordleProps) => {
   const [board, setBoard] = useState<Board>(
     new Array(13).fill({ letter: "", verified: VerificationState.Unverified }),
   );
@@ -41,6 +43,7 @@ const HangmanWordle = ({ setGameMode, setGuesses, gameOver }: HangmanWordleProps
   const [solved, setSolved] = useState<[boolean, boolean, boolean]>([false, false, false]);
   const [answers, setAnswers] = useState<[string, string, string]>(["", "", ""]);
   const [prevGuesses, setPrevGuesses] = useState<Guess[]>([]);
+  const { toast } = useToast();
 
   useEffect(() => {
     console.log(answers);
@@ -62,7 +65,7 @@ const HangmanWordle = ({ setGameMode, setGuesses, gameOver }: HangmanWordleProps
   }, [setGameMode, solved]);
 
   useEffect(() => {
-    if (!gameOver) {
+    if (gameState === GameState.InProgress) {
       switch (selectedRow) {
         case Row.None: {
           setActiveTile(-1);
@@ -82,10 +85,10 @@ const HangmanWordle = ({ setGameMode, setGuesses, gameOver }: HangmanWordleProps
         }
       }
     }
-  }, [selectedRow, board, gameOver]);
+  }, [selectedRow, board, gameState]);
 
   const keyPressHandler = (e: React.KeyboardEvent) => {
-    if (gameOver) {
+    if (gameState != GameState.InProgress || selectedRow === Row.None) {
       return;
     }
 
@@ -129,7 +132,7 @@ const HangmanWordle = ({ setGameMode, setGuesses, gameOver }: HangmanWordleProps
       });
     } else if (e.key === "Enter") {
       const enteredWord = getRowString(selectedRow, board).toLowerCase();
-      if (selectedRow != Row.None && enteredWord.length === 5) {
+      if (enteredWord.length === 5) {
         if (possibleWords.includes(enteredWord)) {
           const guessVerification = verifyGuess(enteredWord, answers, selectedRow);
           const letters = enteredWord.split("");
@@ -151,10 +154,20 @@ const HangmanWordle = ({ setGameMode, setGuesses, gameOver }: HangmanWordleProps
             setPrevGuesses((prev) => [...prev, { guess: characters, row: selectedRow }]);
           }
         } else {
-          console.error("not in word list");
+          const { dismiss } = toast({
+            title: "Not in word list",
+            variant: "wordle",
+          });
+
+          setTimeout(dismiss, 2000);
         }
       } else {
-        console.error("not long enough");
+        const { dismiss } = toast({
+          title: "Not enough letters",
+          variant: "wordle",
+        });
+
+        setTimeout(dismiss, 2000);
       }
     }
   };
@@ -177,26 +190,26 @@ const HangmanWordle = ({ setGameMode, setGuesses, gameOver }: HangmanWordleProps
             setSelectedRow={setSelectedRow}
             activeTile={activeTile}
             solved={solved}
-            gameOver={gameOver}
+            gameState={gameState}
           />
         ))}
         <NumberTile
           rowNumber={1}
           solved={solved}
           setSelectedRow={setSelectedRow}
-          gameOver={gameOver}
+          gameState={gameState}
         />
         <NumberTile
           rowNumber={2}
           solved={solved}
           setSelectedRow={setSelectedRow}
-          gameOver={gameOver}
+          gameState={gameState}
         />
         <NumberTile
           rowNumber={3}
           solved={solved}
           setSelectedRow={setSelectedRow}
-          gameOver={gameOver}
+          gameState={gameState}
         />
       </div>
       <div>

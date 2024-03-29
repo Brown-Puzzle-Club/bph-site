@@ -1,4 +1,4 @@
-import { Character, Row, VerificationState, idToRow } from "./utils";
+import { Character, GameState, Row, VerificationState, idToRow } from "./utils";
 import { cva } from "class-variance-authority";
 
 interface TileProps {
@@ -10,7 +10,7 @@ interface TileProps {
   activeTile?: number;
   solved?: [boolean, boolean, boolean];
   mini?: boolean;
-  gameOver: boolean;
+  gameState: GameState;
 }
 
 const tile = cva(
@@ -23,6 +23,7 @@ const tile = cva(
     "justify-center",
     "items-center",
     "uppercase",
+    "border-2",
   ],
   {
     variants: {
@@ -82,7 +83,7 @@ const Tile = ({
   activeTile,
   solved,
   mini,
-  gameOver,
+  gameState,
 }: TileProps) => {
   return (
     <div
@@ -92,7 +93,7 @@ const Tile = ({
       })}
       style={{ gridArea: gridArea }}
       onClick={() => {
-        if (id != undefined && setSelectedRow && solved && !gameOver) {
+        if (id != undefined && setSelectedRow && solved && gameState === GameState.InProgress) {
           const possibleRows = idToRow(id);
 
           let newRow = Row.None;
