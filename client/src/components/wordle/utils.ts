@@ -26,6 +26,11 @@ export interface Character {
   verified: VerificationState;
 }
 
+export interface Guess {
+  guess: [Character, Character, Character, Character, Character];
+  row: Omit<Row, Row.None>;
+}
+
 export type Board = Character[];
 export type WordVerification = [
   VerificationState,
@@ -87,24 +92,38 @@ export const getPreviousTile = (currTile: number, selectedRow: Row) => {
   switch (selectedRow) {
     case Row.Top: {
       if (0 <= currTile && currTile <= 4) {
-        return currTile == 0 ? currTile : currTile - 1;
+        return currTile == -1 ? currTile : currTile - 1;
       }
       break;
     }
     case Row.Middle: {
       if (4 <= currTile && currTile <= 8) {
-        return currTile == 4 ? currTile : currTile - 1;
+        return currTile == -1 ? currTile : currTile - 1;
       }
       break;
     }
     case Row.Bottom: {
       if (8 <= currTile && currTile <= 12) {
-        const nextTile = { 9: 9, 10: 9, 8: 10, 11: 8, 12: 11 } as const;
+        const nextTile = { 9: -1, 10: 9, 8: 10, 11: 8, 12: 11 } as const;
         return nextTile[currTile as keyof typeof nextTile];
       }
     }
   }
   return -1;
+};
+
+export const getPreviousFilledNotCorrectTile = (
+  currTile: number,
+  selectedRow: Row,
+  board: Board,
+) => {
+  let tile;
+  for (
+    tile = currTile;
+    tile != -1 && (board[tile].letter === "" || board[tile].verified === VerificationState.Correct);
+    tile = getPreviousTile(tile, selectedRow)
+  );
+  return tile;
 };
 
 export const getLastTile = (selectedRow: Row) => {

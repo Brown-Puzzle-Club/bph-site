@@ -2,17 +2,27 @@ import { Character, Row, VerificationState, idToRow } from "./utils";
 import { cva } from "class-variance-authority";
 
 interface TileProps {
-  id: number;
   character: Character;
-  gridArea: string;
-  selectedRow: Row;
-  setSelectedRow: React.Dispatch<React.SetStateAction<Row>>;
-  activeTile: number;
-  solved: [boolean, boolean, boolean];
+  id?: number;
+  gridArea?: string;
+  selectedRow?: Row;
+  setSelectedRow?: React.Dispatch<React.SetStateAction<Row>>;
+  activeTile?: number;
+  solved?: [boolean, boolean, boolean];
+  mini?: boolean;
 }
 
 const tile = cva(
-  ["text-black", "w-16", "h-16", "border-[#CED1D5]", "flex", "justify-center", "items-center"],
+  [
+    "text-black",
+    "w-16",
+    "h-16",
+    "border-[#CED1D5]",
+    "flex",
+    "justify-center",
+    "items-center",
+    "uppercase",
+  ],
   {
     variants: {
       intent: {
@@ -25,16 +35,16 @@ const tile = cva(
         diffMiss: ["bg-[#BECF06]"],
         incorrect: ["bg-[#787C7E]"],
       },
+      mini: {
+        true: ["w-8", "h-8"],
+      },
     },
   },
 );
 
-const getVariant = (character: Character, id: number, selectedRow: Row, activeTile: number) => {
-  if (activeTile == id) {
+const getVariant = (character: Character, id?: number, selectedRow?: Row, activeTile?: number) => {
+  if (activeTile != undefined && activeTile == id) {
     return "active";
-  }
-  if (idToRow(id).includes(selectedRow)) {
-    return "selected";
   }
 
   switch (character.verified) {
@@ -55,6 +65,10 @@ const getVariant = (character: Character, id: number, selectedRow: Row, activeTi
     }
   }
 
+  if (id != undefined && selectedRow && idToRow(id).includes(selectedRow)) {
+    return "selected";
+  }
+
   return "default";
 };
 
@@ -66,26 +80,30 @@ const Tile = ({
   setSelectedRow,
   activeTile,
   solved,
+  mini,
 }: TileProps) => {
   return (
     <div
       className={tile({
         intent: getVariant(character, id, selectedRow, activeTile),
+        mini: mini,
       })}
       style={{ gridArea: gridArea }}
       onClick={() => {
-        const possibleRows = idToRow(id);
-        let newRow;
-        // TODO: update all of this logic to just pick the first row that isn't solved and isn't the active row
-        if (possibleRows.length == 1) {
-          newRow = possibleRows[0];
-        } else if (selectedRow != possibleRows[0]) {
-          newRow = possibleRows[0];
-        } else {
-          newRow = possibleRows[1];
-        }
-        if (newRow == Row.None || !solved[newRow]) {
-          setSelectedRow(newRow);
+        if (id != undefined && setSelectedRow && solved) {
+          const possibleRows = idToRow(id);
+          let newRow;
+          // TODO: update all of this logic to just pick the first row that isn't solved and isn't the active row
+          if (possibleRows.length == 1) {
+            newRow = possibleRows[0];
+          } else if (selectedRow != possibleRows[0]) {
+            newRow = possibleRows[0];
+          } else {
+            newRow = possibleRows[1];
+          }
+          if (newRow == Row.None || !solved[newRow]) {
+            setSelectedRow(newRow);
+          }
         }
       }}
     >

@@ -1,20 +1,44 @@
+import { cva } from "class-variance-authority";
 import { Row } from "./utils";
 
 interface NumberTileProps {
   rowNumber: 1 | 2 | 3;
-  solved: [boolean, boolean, boolean];
-  setSelectedRow: React.Dispatch<React.SetStateAction<Row>>;
+  solved?: [boolean, boolean, boolean];
+  setSelectedRow?: React.Dispatch<React.SetStateAction<Row>>;
+  mini?: boolean;
 }
 
-const NumberTile = ({ rowNumber, solved, setSelectedRow }: NumberTileProps) => {
+const numberTile = cva(
+  [
+    "rounded-full",
+    "bg-white",
+    "text-black",
+    "font-bold",
+    "flex",
+    "justify-center",
+    "items-center",
+    "w-16",
+    "h-16",
+  ],
+  {
+    variants: {
+      mini: {
+        true: ["w-8", "h-8"],
+      },
+    },
+  },
+);
+
+const NumberTile = ({ rowNumber, solved, setSelectedRow, mini }: NumberTileProps) => {
   return (
     <div
       style={{ gridArea: String.fromCharCode(64 + rowNumber) }}
-      className="rounded-full bg-white text-black font-bold flex justify-center items-center w-16 h-16"
+      className={numberTile({ mini: mini })}
       onClick={() => {
-        console.log(solved);
-        if (!solved[rowNumber - 1]) {
-          setSelectedRow(rowNumber - 1);
+        if (solved && setSelectedRow) {
+          if (!solved[rowNumber - 1]) {
+            setSelectedRow(rowNumber - 1);
+          }
         }
       }}
     >
