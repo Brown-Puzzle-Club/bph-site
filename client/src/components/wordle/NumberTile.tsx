@@ -3,6 +3,7 @@ import { Row } from "./utils";
 
 interface NumberTileProps {
   rowNumber: 1 | 2 | 3;
+  gameOver: boolean;
   solved?: [boolean, boolean, boolean];
   setSelectedRow?: React.Dispatch<React.SetStateAction<Row>>;
   mini?: boolean;
@@ -29,13 +30,13 @@ const numberTile = cva(
   },
 );
 
-const NumberTile = ({ rowNumber, solved, setSelectedRow, mini }: NumberTileProps) => {
+const NumberTile = ({ rowNumber, solved, setSelectedRow, mini, gameOver }: NumberTileProps) => {
   return (
     <div
       style={{ gridArea: String.fromCharCode(64 + rowNumber) }}
       className={numberTile({ mini: mini })}
       onClick={() => {
-        if (solved && setSelectedRow) {
+        if (solved && setSelectedRow && !gameOver) {
           if (!solved[rowNumber - 1]) {
             setSelectedRow(rowNumber - 1);
           }

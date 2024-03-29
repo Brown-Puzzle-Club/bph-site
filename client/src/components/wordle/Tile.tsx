@@ -10,6 +10,7 @@ interface TileProps {
   activeTile?: number;
   solved?: [boolean, boolean, boolean];
   mini?: boolean;
+  gameOver: boolean;
 }
 
 const tile = cva(
@@ -81,6 +82,7 @@ const Tile = ({
   activeTile,
   solved,
   mini,
+  gameOver,
 }: TileProps) => {
   return (
     <div
@@ -90,7 +92,7 @@ const Tile = ({
       })}
       style={{ gridArea: gridArea }}
       onClick={() => {
-        if (id != undefined && setSelectedRow && solved) {
+        if (id != undefined && setSelectedRow && solved && !gameOver) {
           const possibleRows = idToRow(id);
           let newRow;
           // TODO: update all of this logic to just pick the first row that isn't solved and isn't the active row

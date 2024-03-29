@@ -12,7 +12,6 @@ import {
   getLastTile,
   getNextNonEmptyTile,
   getPreviousFilledNotCorrectTile,
-  getPreviousTile,
   getRowString,
   verifyGuess,
 } from "./utils";
@@ -30,9 +29,10 @@ const hangmanTemplateAreas = `'a b c d e A . .'
 interface HangmanWordleProps {
   setGameMode: React.Dispatch<React.SetStateAction<GameMode>>;
   setGuesses: React.Dispatch<React.SetStateAction<number>>;
+  gameOver: boolean;
 }
 
-const HangmanWordle = ({ setGameMode, setGuesses }: HangmanWordleProps) => {
+const HangmanWordle = ({ setGameMode, setGuesses, gameOver }: HangmanWordleProps) => {
   const [board, setBoard] = useState<Board>(
     new Array(13).fill({ letter: "", verified: VerificationState.Unverified }),
   );
@@ -41,6 +41,10 @@ const HangmanWordle = ({ setGameMode, setGuesses }: HangmanWordleProps) => {
   const [solved, setSolved] = useState<[boolean, boolean, boolean]>([false, false, false]);
   const [answers, setAnswers] = useState<[string, string, string]>(["", "", ""]);
   const [prevGuesses, setPrevGuesses] = useState<Guess[]>([]);
+
+  useEffect(() => {
+    console.log(answers);
+  }, [answers]);
 
   useEffect(() => {
     setAnswers((prev) => {
@@ -52,40 +56,39 @@ const HangmanWordle = ({ setGameMode, setGuesses }: HangmanWordleProps) => {
   }, [setAnswers]);
 
   useEffect(() => {
-    console.log(answers);
-  }, [answers]);
-
-  useEffect(() => {
-    console.log(solved);
     if (solved.every((s) => s)) {
       setGameMode(GameMode.FinalWordle);
     }
   }, [setGameMode, solved]);
 
   useEffect(() => {
-    switch (selectedRow) {
-      case Row.None: {
-        setActiveTile(-1);
-        break;
-      }
-      case Row.Top: {
-        setActiveTile(getNextNonEmptyTile(0, selectedRow, board));
-        break;
-      }
-      case Row.Middle: {
-        setActiveTile(getNextNonEmptyTile(4, selectedRow, board));
-        break;
-      }
-      case Row.Bottom: {
-        setActiveTile(getNextNonEmptyTile(9, selectedRow, board));
-        break;
+    if (!gameOver) {
+      switch (selectedRow) {
+        case Row.None: {
+          setActiveTile(-1);
+          break;
+        }
+        case Row.Top: {
+          setActiveTile(getNextNonEmptyTile(0, selectedRow, board));
+          break;
+        }
+        case Row.Middle: {
+          setActiveTile(getNextNonEmptyTile(4, selectedRow, board));
+          break;
+        }
+        case Row.Bottom: {
+          setActiveTile(getNextNonEmptyTile(9, selectedRow, board));
+          break;
+        }
       }
     }
-  }, [selectedRow, board]);
+  }, [selectedRow, board, gameOver]);
 
   const keyPressHandler = (e: React.KeyboardEvent) => {
-    e.preventDefault();
-    console.log("key", e.key);
+    if (gameOver) {
+      return;
+    }
+
     if ("a" <= e.key && e.key <= "z") {
       setBoard((prev) => {
         const newBoard = [...prev];
@@ -174,11 +177,27 @@ const HangmanWordle = ({ setGameMode, setGuesses }: HangmanWordleProps) => {
             setSelectedRow={setSelectedRow}
             activeTile={activeTile}
             solved={solved}
+            gameOver={gameOver}
           />
         ))}
-        <NumberTile rowNumber={1} solved={solved} setSelectedRow={setSelectedRow} />
-        <NumberTile rowNumber={2} solved={solved} setSelectedRow={setSelectedRow} />
-        <NumberTile rowNumber={3} solved={solved} setSelectedRow={setSelectedRow} />
+        <NumberTile
+          rowNumber={1}
+          solved={solved}
+          setSelectedRow={setSelectedRow}
+          gameOver={gameOver}
+        />
+        <NumberTile
+          rowNumber={2}
+          solved={solved}
+          setSelectedRow={setSelectedRow}
+          gameOver={gameOver}
+        />
+        <NumberTile
+          rowNumber={3}
+          solved={solved}
+          setSelectedRow={setSelectedRow}
+          gameOver={gameOver}
+        />
       </div>
       <div>
         <p>Previous Guesses</p>
