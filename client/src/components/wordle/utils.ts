@@ -181,10 +181,31 @@ export const generateAnswers = (): [string, string, string] => {
   return answers as [string, string, string];
 };
 
+const boardIndexToWordIndex = (index: number, selectedRow: Row) => {
+  switch (selectedRow) {
+    case Row.Top: {
+      return index;
+    }
+    case Row.Middle: {
+      return index - 4;
+    }
+    case Row.Bottom: {
+      const map = { 9: 0, 10: 1, 8: 2, 11: 3, 12: 4 };
+      return map[index as keyof typeof map];
+    }
+    default: {
+      return -1;
+    }
+  }
+};
+
 export const clearRow = (selectedRow: Row, board: Board, verificationGuess: WordVerification) => {
   const newBoard = [...board];
   newBoard.forEach((_character, i) => {
-    if (idToRow(i).includes(selectedRow) && verificationGuess[i] !== VerificationState.Correct) {
+    if (
+      idToRow(i).includes(selectedRow) &&
+      verificationGuess[boardIndexToWordIndex(i, selectedRow)] !== VerificationState.Correct
+    ) {
       newBoard[i] = { letter: "", verified: VerificationState.Unverified };
     } else if (idToRow(i).includes(selectedRow)) {
       newBoard[i].verified = VerificationState.Correct;
