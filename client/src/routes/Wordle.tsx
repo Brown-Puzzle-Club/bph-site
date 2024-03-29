@@ -8,7 +8,7 @@ const Wordle = () => {
   const [guesses, setGuesses] = useState(7);
 
   return (
-    <div className="text-white">
+    <div className="text-white" style={{ fontFamily: "" }}>
       <h1>Wordle!</h1>
       <div className="grid place-items-center">
         {gameMode === GameMode.Hangman ? (

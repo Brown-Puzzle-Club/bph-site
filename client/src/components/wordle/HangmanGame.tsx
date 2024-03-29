@@ -87,7 +87,7 @@ const HangmanWordle = ({ setGameMode, setGuesses }: HangmanWordleProps) => {
     if ("a" <= e.key && e.key <= "z") {
       setBoard((prev) => {
         const newBoard = [...prev];
-        if (newBoard[activeTile].letter == "") {
+        if (activeTile != -1 && newBoard[activeTile].letter == "") {
           newBoard[activeTile] = {
             letter: e.key.toUpperCase() as string,
             verified: VerificationState.Unverified,
@@ -107,11 +107,11 @@ const HangmanWordle = ({ setGameMode, setGuesses }: HangmanWordleProps) => {
             setActiveTile(lastTile);
           }
         }
-        if (newBoard[activeTile].letter == "") {
+        if (activeTile != -1 && newBoard[activeTile].letter == "") {
           const lastTile = getPreviousTile(activeTile, selectedRow);
           newBoard[lastTile].letter = "";
           setActiveTile(lastTile);
-        } else if (newBoard[activeTile].verified != VerificationState.Correct) {
+        } else if (activeTile != -1 && newBoard[activeTile].verified != VerificationState.Correct) {
           newBoard[activeTile].letter = "";
         }
         return newBoard;

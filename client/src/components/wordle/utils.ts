@@ -164,7 +164,7 @@ export const generateAnswers = (): [string, string, string] => {
 
 export const clearRow = (selectedRow: Row, board: Board, verificationGuess: WordVerification) => {
   const newBoard = [...board];
-  newBoard.forEach((character, i) => {
+  newBoard.forEach((_character, i) => {
     if (idToRow(i).includes(selectedRow) && verificationGuess[i] !== VerificationState.Correct) {
       newBoard[i] = { letter: "", verified: VerificationState.Unverified };
     } else if (idToRow(i).includes(selectedRow)) {
