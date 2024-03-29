@@ -66,7 +66,7 @@ const getVariant = (character: Character, id?: number, selectedRow?: Row, active
     }
   }
 
-  if (id != undefined && selectedRow && idToRow(id).includes(selectedRow)) {
+  if (id != undefined && selectedRow != undefined && idToRow(id).includes(selectedRow)) {
     return "selected";
   }
 
@@ -94,18 +94,16 @@ const Tile = ({
       onClick={() => {
         if (id != undefined && setSelectedRow && solved && !gameOver) {
           const possibleRows = idToRow(id);
-          let newRow;
-          // TODO: update all of this logic to just pick the first row that isn't solved and isn't the active row
-          if (possibleRows.length == 1) {
-            newRow = possibleRows[0];
-          } else if (selectedRow != possibleRows[0]) {
-            newRow = possibleRows[0];
-          } else {
-            newRow = possibleRows[1];
+
+          let newRow = Row.None;
+          for (const row of possibleRows) {
+            if (row != Row.None && row != selectedRow && !solved[row]) {
+              newRow = row;
+              break;
+            }
           }
-          if (newRow == Row.None || !solved[newRow]) {
-            setSelectedRow(newRow);
-          }
+
+          setSelectedRow(newRow);
         }
       }}
     >
