@@ -201,10 +201,13 @@ const boardIndexToWordIndex = (index: number, selectedRow: Row) => {
 
 export const clearRow = (selectedRow: Row, board: Board, verificationGuess: WordVerification) => {
   const newBoard = [...board];
+  const removeCorrectLetters = verificationGuess.some((v) => v !== VerificationState.Correct);
+
   newBoard.forEach((_character, i) => {
     if (
       idToRow(i).includes(selectedRow) &&
-      verificationGuess[boardIndexToWordIndex(i, selectedRow)] !== VerificationState.Correct
+      (removeCorrectLetters ||
+        verificationGuess[boardIndexToWordIndex(i, selectedRow)] !== VerificationState.Correct)
     ) {
       newBoard[i] = { letter: "", verified: VerificationState.Unverified };
     } else if (idToRow(i).includes(selectedRow)) {
