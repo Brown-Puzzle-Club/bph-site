@@ -15,6 +15,7 @@ import {
   verifyGuess,
 } from "./utils";
 import NumberTile from "./NumberTile";
+import { possibleWords } from "./wordList";
 
 const hangmanTemplateAreas = `'a b c d e A . .'
                               '. . . . f . . .'
@@ -119,25 +120,28 @@ const HangmanWordle = ({ setGameMode, setGuesses }: HangmanWordleProps) => {
     } else if (e.key === "Enter") {
       const enteredWord = getRowString(selectedRow, board).toLowerCase();
       if (selectedRow != Row.None && enteredWord.length === 5) {
-        const guessVerification = verifyGuess(enteredWord, answers, selectedRow);
-        const letters = enteredWord.split("");
-        const characters = letters.map((letter, i) => {
-          return { letter: letter, verified: guessVerification[i] };
-        }) as [Character, Character, Character, Character, Character];
-
-        if (guessVerification.every((v) => v === VerificationState.Correct)) {
-          setBoard((prev) => clearRow(selectedRow, prev, guessVerification));
-          setSelectedRow(Row.None);
-          setSolved((prev) => {
-            const newSolved = [...prev] satisfies [boolean, boolean, boolean];
-            newSolved[selectedRow] = true;
-            return newSolved;
-          });
+        if (possibleWords.includes(enteredWord)) {
+          const guessVerification = verifyGuess(enteredWord, answers, selectedRow);
+          const letters = enteredWord.split("");
+          const characters = letters.map((letter, i) => {
+            return { letter: letter, verified: guessVerification[i] };
+          }) as [Character, Character, Character, Character, Character];
+          if (guessVerification.every((v) => v === VerificationState.Correct)) {
+            setBoard((prev) => clearRow(selectedRow, prev, guessVerification));
+            setSelectedRow(Row.None);
+            setSolved((prev) => {
+              const newSolved = [...prev] satisfies [boolean, boolean, boolean];
+              newSolved[selectedRow] = true;
+              return newSolved;
+            });
+          } else {
+            setBoard((prev) => clearRow(selectedRow, prev, guessVerification));
+            setGuesses((prev) => prev - 1);
+            setSelectedRow(Row.None);
+            setPrevGuesses((prev) => [...prev, characters]);
+          }
         } else {
-          setBoard((prev) => clearRow(selectedRow, prev, guessVerification));
-          setGuesses((prev) => prev - 1);
-          setSelectedRow(Row.None);
-          setPrevGuesses((prev) => [...prev, characters]);
+          console.error("not in word list");
         }
       } else {
         console.error("not long enough");
