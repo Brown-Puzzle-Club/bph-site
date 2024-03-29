@@ -14,13 +14,14 @@ import {
   getRowString,
   verifyGuess,
 } from "./utils";
+import NumberTile from "./NumberTile";
 
-const hangmanTemplateAreas = `'a b c d e 1 . .'
+const hangmanTemplateAreas = `'a b c d e A . .'
                               '. . . . f . . .'
                               '. . . . g . . .'
                               '. . . . h . . .'
-                              '. . j k i l m 3'
-                              '. . . . 2 . . .'`;
+                              '. . j k i l m C'
+                              '. . . . B . . .'`;
 
 interface HangmanWordleProps {
   setGameMode: React.Dispatch<React.SetStateAction<GameMode>>;
@@ -148,7 +149,7 @@ const HangmanWordle = ({ setGameMode, setGuesses }: HangmanWordleProps) => {
     <div className="flex gap-10">
       <div
         tabIndex={0}
-        className="focus:outline-none max-w-max gap-2 grid"
+        className="focus:outline-none gap-2 grid"
         style={{ gridTemplateAreas: hangmanTemplateAreas }}
         onKeyDown={keyPressHandler}
       >
@@ -164,6 +165,9 @@ const HangmanWordle = ({ setGameMode, setGuesses }: HangmanWordleProps) => {
             solved={solved}
           />
         ))}
+        <NumberTile rowNumber={1} solved={solved} setSelectedRow={setSelectedRow} />
+        <NumberTile rowNumber={2} solved={solved} setSelectedRow={setSelectedRow} />
+        <NumberTile rowNumber={3} solved={solved} setSelectedRow={setSelectedRow} />
       </div>
       <div>
         <p>Previous Guesses</p>
