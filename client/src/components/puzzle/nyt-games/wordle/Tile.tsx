@@ -1,5 +1,5 @@
-import { Character, GameState, Row, VerificationState, idToRow } from "./utils";
 import { cva } from "class-variance-authority";
+import { Character, GameState, Row, VerificationState, idToRow } from "./utils";
 
 interface TileProps {
   character: Character;
@@ -33,8 +33,8 @@ const tile = cva(
         selected: ["bg-[#A7D8FF]"],
         correct: ["bg-[#6AAA64]"],
         sameMiss: ["bg-[#C9B458]"],
-        diffCorrect: ["bg-[#A511F5]"],
-        diffMiss: ["bg-[#BECF06]"],
+        diffCorrect: ["bg-[#5baed8]"],
+        diffMiss: ["bg-[#b478d5]"],
         incorrect: ["bg-[#787C7E]"],
       },
       mini: {

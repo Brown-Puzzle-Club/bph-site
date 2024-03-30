@@ -242,35 +242,88 @@ export const verifyGuess = (
   VerificationState,
   VerificationState,
 ] => {
-  const verificationArray = [];
+  const verificationArray = [
+    VerificationState.Unverified,
+    VerificationState.Unverified,
+    VerificationState.Unverified,
+    VerificationState.Unverified,
+    VerificationState.Unverified,
+  ];
   const correctAnswer = answers[selectedRow as keyof typeof answers] as string;
   const correctAnswerLetters = correctAnswer.split("");
   const otherAnswers = answers.filter((_, i) => i !== selectedRow);
   const otherAnswersLetters = otherAnswers.map((answer) => answer.split(""));
 
+  const answerLetterOccurences = correctAnswer
+    .split("")
+    .reduce((acc: { [key: string]: number }, letter) => {
+      acc[letter] = (acc[letter] || 0) + 1;
+      return acc;
+    }, {});
+
+  const guessLetterOccurences: { [key: string]: number } = {};
+
+  // exact match
   for (let i = 0; i < 5; i++) {
     if (correctAnswer[i] === guess[i]) {
-      verificationArray.push(VerificationState.Correct);
+      verificationArray[i] = VerificationState.Correct;
       correctAnswerLetters.splice(correctAnswerLetters.indexOf(guess[i]), 1);
-    } else if (correctAnswerLetters.includes(guess[i])) {
-      verificationArray.push(VerificationState.SameMiss);
+      guessLetterOccurences[guess[i]] = (guessLetterOccurences[guess[i]] || 0) + 1;
+    }
+  }
+
+  console.log(guessLetterOccurences, answerLetterOccurences);
+
+  // same letter, different position
+  for (let i = 0; i < 5; i++) {
+    if (verificationArray[i] != VerificationState.Unverified) {
+      continue;
+    }
+
+    console.log(i, guessLetterOccurences[guess[i]]);
+    if (
+      correctAnswerLetters.includes(guess[i]) &&
+      (guessLetterOccurences[guess[i]] || 0) < answerLetterOccurences[guess[i]]
+    ) {
+      verificationArray[i] = VerificationState.SameMiss;
       correctAnswerLetters.splice(correctAnswerLetters.indexOf(guess[i]), 1);
-    } else if (otherAnswers.some((answer) => answer[i] === guess[i])) {
-      verificationArray.push(VerificationState.DiffCorrect);
+      guessLetterOccurences[guess[i]] = (guessLetterOccurences[guess[i]] || 0) + 1;
+    }
+  }
+
+  // different letter, different position
+  for (let i = 0; i < 5; i++) {
+    if (verificationArray[i] != VerificationState.Unverified) {
+      continue;
+    }
+
+    if (otherAnswers.some((answer) => answer[i] === guess[i])) {
+      verificationArray[i] = VerificationState.DiffCorrect;
       otherAnswersLetters.forEach((answer) => {
         if (answer[i] === guess[i]) {
           answer.splice(answer.indexOf(guess[i]), 1);
         }
       });
-    } else if (otherAnswersLetters.some((letters) => letters.includes(guess[i]))) {
-      verificationArray.push(VerificationState.DiffMiss);
+    }
+  }
+
+  // different letter, same position
+  for (let i = 0; i < 5; i++) {
+    if (verificationArray[i] != VerificationState.Unverified) {
+      continue;
+    }
+
+    if (otherAnswersLetters.some((letters) => letters.includes(guess[i]))) {
+      verificationArray[i] = VerificationState.DiffMiss;
       otherAnswersLetters.forEach((letters) => {
         if (letters.includes(guess[i])) {
           letters.splice(letters.indexOf(guess[i]), 1);
         }
       });
-    } else {
-      verificationArray.push(VerificationState.Incorrect);
+    }
+
+    if (verificationArray[i] === VerificationState.Unverified) {
+      verificationArray[i] = VerificationState.Incorrect;
     }
   }
 

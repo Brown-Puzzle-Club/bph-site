@@ -25,6 +25,7 @@ import Leaderboard from "./routes/Leaderboard";
 import Data from "./routes/major_cases/Data";
 import SocialDeduction from "./routes/major_cases/SocialDeduction";
 import MarkdownTest from "./routes/MarkdownTest";
+import Wordle from "./routes/minor_cases/nyt-games/Wordle";
 import MinorCasePage from "./routes/MinorCasePage";
 import MyTeamPage from "./routes/MyTeamPage";
 import PuzzleList from "./routes/PuzzleList";
@@ -36,7 +37,6 @@ import "./styles/puzzlestyle-data.css";
 import "./styles/puzzlestyle-red-thread.css";
 import "./styles/puzzlestyle-soc-deduction.css";
 import { MajorCaseEnum } from "./utils/constants";
-import Wordle from "./routes/Wordle";
 
 try {
   axios.defaults.headers.common["X-CSRFToken"] = Cookies.get("csrftoken");
