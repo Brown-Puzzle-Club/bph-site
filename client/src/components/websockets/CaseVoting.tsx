@@ -7,7 +7,11 @@ interface CaseVotingProps {
 }
 
 const CaseVoting = ({ path }: CaseVotingProps) => {
-  const { sendMessage, readyState, presenceInfo, votingInfo } = useSocket(path);
+  const { sendMessage, readyState, presenceInfo, votingInfo } = useSocket(path, {
+    onOpen: () => {
+      console.log("Connected to websocket! yay!");
+    },
+  });
 
   if (!presenceInfo || !votingInfo) return null;
 
