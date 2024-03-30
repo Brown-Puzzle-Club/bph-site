@@ -8,15 +8,15 @@ import { useEffect, useState } from "react";
 const Wordle = () => {
   const [gameMode, setGameMode] = useState(GameMode.Hangman);
   const [gameState, setGameState] = useState<GameState>(GameState.InProgress);
-  const [guesses, setGuesses] = useState(7);
+  const [guesses, setGuesses] = useState(9);
   const [answers, setAnswers] = useState(["", "", "", ""]);
   const [numRows, setNumRows] = useState<number | null>(null);
   const [remountCounter, setRemountCounter] = useState(0);
   const { toast } = useToast();
 
-  useEffect(() => {
-    console.log(answers);
-  }, [answers]);
+  // useEffect(() => {
+  //   console.log(answers);
+  // }, [answers]);
 
   useEffect(() => {
     if (gameState === GameState.Win) {

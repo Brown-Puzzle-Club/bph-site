@@ -272,7 +272,7 @@ export const verifyGuess = (
     }
   }
 
-  console.log(guessLetterOccurences, answerLetterOccurences);
+  // console.log(guessLetterOccurences, answerLetterOccurences);
 
   // same letter, different position
   for (let i = 0; i < 5; i++) {
@@ -280,7 +280,7 @@ export const verifyGuess = (
       continue;
     }
 
-    console.log(i, guessLetterOccurences[guess[i]]);
+    // console.log(i, guessLetterOccurences[guess[i]]);
     if (
       correctAnswerLetters.includes(guess[i]) &&
       (guessLetterOccurences[guess[i]] || 0) < answerLetterOccurences[guess[i]]
