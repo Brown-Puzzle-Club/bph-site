@@ -30,8 +30,9 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext as _
 
+from channels_presence.models import Room
 from puzzles.context import context_cache
-
+from puzzles.signals import create_minor_case_incoming_event
 from puzzles.messaging import (
     dispatch_general_alert,
     dispatch_free_answer_alert,
@@ -1102,6 +1103,15 @@ class MinorCaseCompleted(models.Model):
         unique_together = ("team", "minor_case_round")
         verbose_name = _("minor case completed")
         verbose_name_plural = _("minor cases completed")
+
+    def save(self, *args, **kwargs):
+        super(MinorCaseCompleted, self).save(*args, **kwargs)
+
+        incoming_case_event = MinorCaseIncomingEvent.create_incoming_event(self.team)
+        if incoming_case_event:
+            room = Room.objects.get(channel_name=f"puzzles-{self.team.team_name}") # TODO: need to ensure that this is synced with the consumer
+            create_minor_case_incoming_event.send(None, cases=incoming_case_event.get_votes(), room=room)
+            incoming_case_event.save()
 
 
 class AnswerSubmission(models.Model):
