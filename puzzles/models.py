@@ -1012,6 +1012,10 @@ class MinorCaseIncomingEvent(models.Model):
             or case.slug not in unlocked_cases[case.major_case.slug]
         ]
         m = min(m, len(potential_cases))
+
+        if (m <= 0):
+            return None
+
         incoming_cases = potential_cases[: m - 1]
         incoming_cases.append(random.choice(potential_cases[m - 1 : m + 1]))
 
@@ -1217,7 +1221,7 @@ class MinorCaseCompleted(models.Model):
         incoming_case_event = MinorCaseIncomingEvent.create_incoming_event(self.team)
         if incoming_case_event:
             room = Room.objects.get(
-                channel_name=f"websocket-demo-{self.team.team_name}"
+                channel_name=f"puzzles-{self.team.team_name}"
             )  # TODO: need to ensure that this is synced with the consumer
             create_minor_case_incoming_event.send(
                 None, cases=incoming_case_event.get_votes(), room=room

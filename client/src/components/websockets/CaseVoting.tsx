@@ -9,6 +9,8 @@ interface CaseVotingProps {
 const CaseVoting = ({ path }: CaseVotingProps) => {
   const { sendMessage, readyState, presenceInfo, votingInfo } = useSocket(path);
 
+  if (!presenceInfo || !votingInfo) return null;
+
   return readyState != WebSocket.OPEN ? (
     <Loader />
   ) : (

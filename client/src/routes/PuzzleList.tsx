@@ -1,3 +1,4 @@
+import CaseVoting from "@/components/websockets/CaseVoting";
 import { useDjangoContext } from "@/hooks/useDjangoContext";
 
 export default function PuzzleList() {
@@ -50,6 +51,7 @@ export default function PuzzleList() {
           ))}
         </ul>
       )}
+      <CaseVoting path="ws/puzzles" />
     </div>
   );
 }

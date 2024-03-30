@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import { useTimer } from "react-timer-hook";
 import { SendMessage } from "react-use-websocket";
 import PresenceCounter from "./PresenceCounter";
+import DescriptionModal from "./DescriptionModal";
 
 interface VotingModalProps {
   presenceInfo: PresenceInfo | null;
@@ -90,15 +91,15 @@ const VotingModal = ({ sendMessage, votingInfo, presenceInfo }: VotingModalProps
               .sort()
               .map((option) => (
                 <div className="flex items-center gap-4 text-black" key={option}>
+                  <DescriptionModal caseName={option} desc={votingInfo.cases[option].desc} />
                   <Button
-                    variant="secondary"
-                    className={cn(selectedOption == option && "ring-2", "flex-1")}
+                    variant="destructive"
+                    className={cn(selectedOption == option && "ring-2", "flex basis-1/4")}
                     onClick={() => {
-                      console.log("clicked");
                       setVote(option);
                     }}
                   >
-                    {option}
+                    Set Vote!
                   </Button>
                   <p>
                     {votingInfo.cases[option].voteCount}/{presenceInfo?.num_connected}
