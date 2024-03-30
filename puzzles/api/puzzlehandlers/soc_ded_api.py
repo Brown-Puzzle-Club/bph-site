@@ -15,9 +15,11 @@ ROLE_SOLUTION = {
     "SLEEPY_GHOST": "Lover",
 }
 
-CORRECT_CONTENT = """great work! now see if you can extract 1 thing more to uncover the author behind this monstrous mess:
+CORRECT_CONTENT = """Great work! Now see if you can extract 1 more thing to uncover the author behind this monstrous mess:
  
-![](https://lh3.googleusercontent.com/d/1GEHESvXpehovLxUezfrvJlOmdKkU6NXf)"""
+![](https://lh3.googleusercontent.com/d/1GEHESvXpehovLxUezfrvJlOmdKkU6NXf)
+ 
+![](https://drive.google.com/file/d/1Np-72UGn_ihPP6J3EP2jnRhnZ0J4gnNR/view?usp=sharing)"""
 INCORRECT_CONTENT = "Try again!"
 
 

@@ -79,8 +79,9 @@ export default function Roles() {
           that plague the halls of Hotel Ghoulsby. As a member of the villager team,{" "}
           <i>
             they have the ability to learn that a certain role is played by one of two players at
-            the beginning of the game.
+            the beginning of the game
           </i>
+          . They do not get to pick which role they learn about.
         </li>
         <TextBreak />
         <li>
@@ -94,7 +95,7 @@ export default function Roles() {
         <li>
           <RoleDisplay role={Role.INVESTIGATOR} /> Ever the observer, the Investigator was brought
           into the game to help the villagers crack the case… or die trying.{" "}
-          <i>Each night, they learn whether any two players are on the same team</i> (ie{" "}
+          <i>Each night, they learn whether any two players are on the same team</i> (i.e.{" "}
           <b style={{ color: GOOD_TEXT_COLOR }}>Village</b>,{" "}
           <b style={{ color: EVIL_TEXT_COLOR }}>Evil</b>, or{" "}
           <b style={{ color: SOLO_TEXT_COLOR }}>Solo</b>). They do not learn which team the players
@@ -121,8 +122,9 @@ export default function Roles() {
           </span>
           <br></br> An indecisive villager with a serial killer gene. The Resurrected{" "}
           <i>
-            acts as a villager until they are killed by the Assassin, at which point they join the
-            evil team.
+            acts and reads as a member of the <b style={{ color: GOOD_TEXT_COLOR }}>Village</b> team, 
+            until they are killed by the Assassin, at which point they join the{" "}
+            <b style={{ color: EVIL_TEXT_COLOR }}>Evil</b> team.
           </i>
         </li>
         <TextBreak />
@@ -137,7 +139,7 @@ export default function Roles() {
         <TextBreak />
         <li>
           <RoleDisplay role={Role.TELEPATH} /> Not as hot as Edward Cullen, but just as talented at
-          reading minds. The Telepath <i>can view the aura of one player each night</i> (ie{" "}
+          reading minds. The Telepath <i>can view the aura of one player each night</i> (i.e.{" "}
           <b style={{ color: GOOD_TEXT_COLOR }}>Village</b>,{" "}
           <b style={{ color: EVIL_TEXT_COLOR }}>Evil</b>,{" "}
           <b style={{ color: SOLO_TEXT_COLOR }}>Solo</b>). Watch out for the Enchanter, as this may
