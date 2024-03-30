@@ -9,7 +9,6 @@ import {
   Row,
   VerificationState,
   clearRow,
-  generateAnswers,
   getLastTile,
   getNextNonEmptyTile,
   getPreviousFilledNotCorrectTile,
@@ -32,31 +31,18 @@ interface HangmanWordleProps {
   setGameMode: React.Dispatch<React.SetStateAction<GameMode>>;
   setGuesses: React.Dispatch<React.SetStateAction<number>>;
   gameState: GameState;
+  answers: [string, string, string];
 }
 
-const HangmanWordle = ({ setGameMode, setGuesses, gameState }: HangmanWordleProps) => {
+const HangmanWordle = ({ setGameMode, setGuesses, gameState, answers }: HangmanWordleProps) => {
   const [board, setBoard] = useState<Board>(
     new Array(13).fill({ letter: "", verified: VerificationState.Unverified }),
   );
   const [selectedRow, setSelectedRow] = useState<Row>(Row.None);
   const [activeTile, setActiveTile] = useState<number>(-1);
   const [solved, setSolved] = useState<[boolean, boolean, boolean]>([false, false, false]);
-  const [answers, setAnswers] = useState<[string, string, string]>(["", "", ""]);
   const [prevGuesses, setPrevGuesses] = useState<Guess[]>([]);
   const { toast } = useToast();
-
-  useEffect(() => {
-    console.log(answers);
-  }, [answers]);
-
-  useEffect(() => {
-    setAnswers((prev) => {
-      if (prev[0] === "" && prev[1] === "" && prev[2] === "") {
-        return generateAnswers();
-      }
-      return prev;
-    });
-  }, [setAnswers]);
 
   useEffect(() => {
     if (solved.every((s) => s)) {
@@ -88,7 +74,7 @@ const HangmanWordle = ({ setGameMode, setGuesses, gameState }: HangmanWordleProp
   }, [selectedRow, board, gameState]);
 
   const keyPressHandler = (e: React.KeyboardEvent) => {
-    if (gameState != GameState.InProgress || selectedRow === Row.None) {
+    if (gameState !== GameState.InProgress || selectedRow === Row.None) {
       return;
     }
 

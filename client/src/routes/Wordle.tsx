@@ -1,12 +1,36 @@
+import FinalWordle from "@/components/wordle/FinalWordle";
 import HangmanWordle from "@/components/wordle/HangmanGame";
-import { GameMode, GameState } from "@/components/wordle/utils";
+import { GameMode, GameState, generateAnswers } from "@/components/wordle/utils";
 import { useEffect, useState } from "react";
 
 const Wordle = () => {
   const [gameMode, setGameMode] = useState(GameMode.Hangman);
   const [gameState, setGameState] = useState<GameState>(GameState.InProgress);
-  const [remountCounter, setRemountCounter] = useState(0);
   const [guesses, setGuesses] = useState(7);
+  const [answers, setAnswers] = useState(["", "", "", ""]);
+  const [numRows, setNumRows] = useState<number | null>(null);
+  const [remountCounter, setRemountCounter] = useState(0);
+
+  useEffect(() => {
+    console.log(answers);
+  }, [answers]);
+
+  useEffect(() => {
+    setAnswers((prev) => {
+      if (prev[0] === "" && prev[1] === "" && prev[2] === "") {
+        return generateAnswers();
+      }
+      return prev;
+    });
+  }, [setAnswers]);
+
+  useEffect(() => {
+    console.log("gameMode: ", gameMode);
+    if (gameMode === GameMode.FinalWordle) {
+      setNumRows((prev) => (prev === null ? guesses : prev));
+      setRemountCounter((counter) => counter + 1);
+    }
+  }, [gameMode, setNumRows, guesses]);
 
   useEffect(() => {
     if (guesses <= 0) {
@@ -15,7 +39,7 @@ const Wordle = () => {
   }, [guesses]);
 
   return (
-    <div className="text-black" style={{ fontFamily: "" }}>
+    <div className="text-black">
       <h1>Wordle!</h1>
 
       <div className="grid place-items-center">
@@ -25,14 +49,26 @@ const Wordle = () => {
             setGameMode={setGameMode}
             setGuesses={setGuesses}
             gameState={gameState}
+            answers={answers.slice(0, 3) as [string, string, string]}
           />
-        ) : null}
+        ) : (
+          <FinalWordle
+            key={remountCounter}
+            answer={answers[3]}
+            gameState={gameState}
+            setGameState={setGameState}
+            setGuesses={setGuesses}
+            numRows={numRows!}
+          />
+        )}
       </div>
       <button
         onClick={() => {
           setGameMode(GameMode.Hangman);
           setGameState(GameState.InProgress);
           setGuesses(7);
+          setAnswers(generateAnswers());
+          setNumRows(null);
           setRemountCounter((counter) => counter + 1);
         }}
       >

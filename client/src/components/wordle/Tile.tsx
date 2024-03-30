@@ -10,7 +10,7 @@ interface TileProps {
   activeTile?: number;
   solved?: [boolean, boolean, boolean];
   mini?: boolean;
-  gameState: GameState;
+  gameState?: GameState;
 }
 
 const tile = cva(

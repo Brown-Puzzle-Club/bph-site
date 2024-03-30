@@ -167,7 +167,7 @@ export const getRowString = (row: Row, board: Board) => {
   }
 };
 
-export const generateAnswers = (): [string, string, string] => {
+export const generateAnswers = (): [string, string, string, string] => {
   const answers = [possibleWords[Math.floor(Math.random() * possibleWords.length)]];
 
   while (answers.length < 2) {
@@ -184,7 +184,14 @@ export const generateAnswers = (): [string, string, string] => {
     }
   }
 
-  return answers as [string, string, string];
+  while (answers.length < 4) {
+    const newWord = possibleWords[Math.floor(Math.random() * possibleWords.length)];
+    if (!answers.includes(newWord)) {
+      answers.push(newWord);
+    }
+  }
+
+  return answers as [string, string, string, string];
 };
 
 const boardIndexToWordIndex = (index: number, selectedRow: Row) => {
@@ -226,7 +233,7 @@ export const clearRow = (selectedRow: Row, board: Board, verificationGuess: Word
 // TODO: handle repeat letters correcty!
 export const verifyGuess = (
   guess: string,
-  answers: [string, string, string],
+  answers: string[],
   selectedRow: Omit<Row, Row.None>,
 ): [
   VerificationState,
