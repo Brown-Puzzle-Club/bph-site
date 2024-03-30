@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Character, GameState, Row, VerificationState, verifyGuess } from "./utils";
 import Tile from "./Tile";
 import { useToast } from "../ui/use-toast";
@@ -40,22 +40,16 @@ const FinalWordle = ({
   });
   const { toast } = useToast();
 
-  useEffect(() => {
-    console.log(activeTile);
-  }, [activeTile]);
-
   const keyPressHandler = (e: React.KeyboardEvent) => {
     if (gameState !== GameState.InProgress) {
       return;
     }
 
-    console.log(e.key);
-
     if ("a" <= e.key && e.key <= "z") {
       setWordleGameState((prev) => {
         const newBoard = prev.board.map((arr) => [...arr]);
-        if (newBoard[currentRow][activeTile].letter === "") {
-          newBoard[currentRow][activeTile] = {
+        if (newBoard[prev.currentRow][prev.activeTile].letter === "") {
+          newBoard[prev.currentRow][prev.activeTile] = {
             letter: e.key.toUpperCase(),
             verified: VerificationState.Unverified,
           };
@@ -71,10 +65,13 @@ const FinalWordle = ({
       // Update the board
       setWordleGameState((prev) => {
         const newBoard = prev.board.map((arr) => [...arr]);
-        if (newBoard[currentRow][activeTile].letter !== "") {
-          newBoard[currentRow][activeTile] = { letter: "", verified: VerificationState.Unverified };
+        if (newBoard[prev.currentRow][prev.activeTile].letter !== "") {
+          newBoard[prev.currentRow][prev.activeTile] = {
+            letter: "",
+            verified: VerificationState.Unverified,
+          };
         } else if (activeTile > 0) {
-          newBoard[currentRow][activeTile - 1] = {
+          newBoard[currentRow][prev.activeTile - 1] = {
             letter: "",
             verified: VerificationState.Unverified,
           };
@@ -82,11 +79,10 @@ const FinalWordle = ({
         return {
           ...prev,
           board: newBoard,
-          activeTile: activeTile > 0 ? activeTile - 1 : 0,
+          activeTile: prev.activeTile > 0 ? prev.activeTile - 1 : 0,
         };
       });
     } else if (e.key === "Enter") {
-      // Check the answer
       const enteredWord = board[currentRow]
         .map((char) => char.letter)
         .join("")
@@ -94,36 +90,25 @@ const FinalWordle = ({
       if (enteredWord.length === 5) {
         if (possibleWords.includes(enteredWord)) {
           const guessVerification = verifyGuess(enteredWord, [answer], Row.Top);
+
           if (guessVerification.every((v) => v === VerificationState.Correct)) {
             setGameState(GameState.Win);
           } else {
             setGuesses((prev) => prev - 1);
-            setWordleGameState((prev) => {
-              const newBoard = prev.board.map((arr) => [...arr]);
-              newBoard[currentRow] = newBoard[currentRow].map((char, i) => {
-                return { letter: char.letter, verified: guessVerification[i] };
-              });
-              return {
-                ...prev,
-                board: newBoard,
-              };
-            });
-            if (currentRow + 1 === numRows) {
-              setGameState(GameState.Lose);
-            } else {
-              setWordleGameState((prev) => {
-                const newBoard = prev.board.map((arr) => [...arr]);
-                newBoard[currentRow] = newBoard[currentRow].map((char, i) => {
-                  return { letter: char.letter, verified: guessVerification[i] };
-                });
-                return {
-                  board: newBoard,
-                  currentRow: currentRow + 1,
-                  activeTile: 0,
-                };
-              });
-            }
           }
+
+          setWordleGameState((prev) => {
+            const newBoard = prev.board.map((arr) => [...arr]);
+            newBoard[prev.currentRow] = newBoard[prev.currentRow].map((char, i) => {
+              return { letter: char.letter, verified: guessVerification[i] };
+            });
+            return {
+              ...prev,
+              board: newBoard,
+              currentRow: prev.currentRow + 1,
+              activeTile: 0,
+            };
+          });
         } else {
           const { dismiss } = toast({
             title: "Not a valid word",

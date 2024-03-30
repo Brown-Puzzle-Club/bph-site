@@ -1,3 +1,4 @@
+import { useToast } from "@/components/ui/use-toast";
 import FinalWordle from "@/components/wordle/FinalWordle";
 import HangmanWordle from "@/components/wordle/HangmanGame";
 import { GameMode, GameState, generateAnswers } from "@/components/wordle/utils";
@@ -10,10 +11,25 @@ const Wordle = () => {
   const [answers, setAnswers] = useState(["", "", "", ""]);
   const [numRows, setNumRows] = useState<number | null>(null);
   const [remountCounter, setRemountCounter] = useState(0);
+  const { toast } = useToast();
 
   useEffect(() => {
     console.log(answers);
   }, [answers]);
+
+  useEffect(() => {
+    if (gameState === GameState.Win) {
+      toast({
+        variant: "wordle",
+        title: "You win!",
+      });
+    } else if (gameState === GameState.Lose) {
+      toast({
+        variant: "wordle",
+        title: "You lose!",
+      });
+    }
+  }, [gameState, toast]);
 
   useEffect(() => {
     setAnswers((prev) => {
@@ -25,12 +41,11 @@ const Wordle = () => {
   }, [setAnswers]);
 
   useEffect(() => {
-    console.log("gameMode: ", gameMode);
-    if (gameMode === GameMode.FinalWordle) {
+    if (gameMode === GameMode.FinalWordle && numRows === null) {
       setNumRows((prev) => (prev === null ? guesses : prev));
       setRemountCounter((counter) => counter + 1);
     }
-  }, [gameMode, setNumRows, guesses]);
+  }, [gameMode, setNumRows, guesses, numRows]);
 
   useEffect(() => {
     if (guesses <= 0) {
