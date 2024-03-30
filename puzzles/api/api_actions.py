@@ -170,6 +170,7 @@ def create_vote_event(request: Request) -> Response:
             incoming_event=serializer.validated_data.get("incoming_event"),
         )
         vote_event.save()
+
         return Response(serializer.data)
     else:
         return Response(serializer.errors, status=400)

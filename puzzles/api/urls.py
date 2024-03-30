@@ -3,7 +3,6 @@ from django.urls import include, path
 from . import api_views
 from . import api_actions
 from .puzzlehandlers import urls as puzzle_handlers_urls
-from .puzzlehandlers import nyt_games_api
 
 from rest_framework.authtoken.views import obtain_auth_token
 

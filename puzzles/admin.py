@@ -111,6 +111,11 @@ class MinorCaseIncomingEventAdmin(admin.ModelAdmin):
     list_filter = ("team", "timestamp", "expiration", "final_vote")
 
 
+class MinorCaseVoteAdmin(admin.ModelAdmin):
+    list_display = ("team", "minor_case", "num_votes")
+    list_filter = ("minor_case", "team")
+
+
 class MinorCaseVoteEventAdmin(admin.ModelAdmin):
     list_display = ("team", "timestamp", "selected_case")
     list_filter = ("team", "timestamp", "selected_case")
