@@ -248,7 +248,6 @@ def submit_answer(request: Request, puzzle_slug: str) -> Response:
 TESTSOLVE_TEAM = "shhh2"
 
 
-@require_admin
 @api_view(["POST"])
 def unlock_case(request: Request, round_slug: str) -> Response:
     try:
