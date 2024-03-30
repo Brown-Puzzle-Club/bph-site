@@ -7,8 +7,12 @@ import requests
 import datetime
 import traceback
 
-from asgiref.sync import async_to_sync
-from channels.generic.websocket import WebsocketConsumer
+from asgiref.sync import async_to_sync, sync_to_async
+from channels.generic.websocket import (
+    WebsocketConsumer,
+    AsyncJsonWebsocketConsumer,
+    JsonWebsocketConsumer,
+)
 from channels_presence.models import Room
 from channels_presence.decorators import touch_presence
 from channels_presence.signals import presence_changed
@@ -23,6 +27,7 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext as _
+from django.apps import apps
 
 from puzzles.context import Context
 from puzzles.hunt_config import (
@@ -32,6 +37,7 @@ from puzzles.hunt_config import (
     MESSAGING_SENDER_EMAIL,
     RUNAROUND_SLUG,
 )
+from puzzles.signals import create_minor_case_incoming_event
 
 logger = logging.getLogger("puzzles.messaging")
 
@@ -181,7 +187,7 @@ class DiscordInterface:
             self.avatars = {}
             if self.client is not None:
                 members = [
-                    discord.Member(data=data, guild=None, state=self.client._connection) # type: ignore
+                    discord.Member(data=data, guild=None, state=self.client._connection)  # type: ignore
                     for data in self.client.loop.run_until_complete(
                         self.client.http.get_members(self.GUILD, limit=1000, after=None)
                     )
@@ -222,16 +228,16 @@ class DiscordInterface:
         embed = collections.defaultdict(lambda: collections.defaultdict(dict))
         embed["author"]["url"] = hint.full_url()
         if hint.claimed_datetime:
-            embed['color'] = 0xdddddd # type: ignore
-            embed['timestamp'] = hint.claimed_datetime.isoformat()
-            embed['author']['name'] = _('Claimed by {}').format(hint.claimer) # type: ignore
+            embed["color"] = 0xDDDDDD  # type: ignore
+            embed["timestamp"] = hint.claimed_datetime.isoformat()
+            embed["author"]["name"] = _("Claimed by {}").format(hint.claimer)  # type: ignore
             avatar = self.get_avatar(hint.claimer)
             if avatar:
                 embed["author"]["icon_url"] = avatar
             debug = _("claimed by {}").format(hint.claimer)
         else:
-            embed['color'] = 0xff00ff # type: ignore
-            embed['author']['name'] = _('U N C L A I M E D') # type: ignore
+            embed["color"] = 0xFF00FF  # type: ignore
+            embed["author"]["name"] = _("U N C L A I M E D")  # type: ignore
             claim_url = hint.full_url(claim=True)
             embed["title"] = _("Claim: ") + claim_url
             embed["url"] = claim_url
@@ -255,8 +261,11 @@ class DiscordInterface:
         else:
             message = hint.long_discord_message()
             try:
-                discord_id = self.client.loop.run_until_complete(self.client.http.send_message(
-                    self.HINT_CHANNEL, message, embeds=[embed]))['id'] # type: ignore
+                discord_id = self.client.loop.run_until_complete(
+                    self.client.http.send_message(
+                        self.HINT_CHANNEL, message, embeds=[embed]  # type: ignore
+                    )
+                )["id"]
             except Exception:
                 dispatch_general_alert(
                     _("Discord API failure: create\n{}").format(traceback.format_exc())
@@ -275,14 +284,14 @@ class DiscordInterface:
 
             embed = collections.defaultdict(lambda: collections.defaultdict(dict))
             if hint.status == hint.ANSWERED:
-                embed['color'] = 0xaaffaa # type: ignore
+                embed["color"] = 0xAAFFAA  # type: ignore
             elif hint.status == hint.REFUNDED:
-                embed['color'] = 0xcc6600 # type: ignore
+                embed["color"] = 0xCC6600  # type: ignore
             # nothing for obsolete
 
-            embed['author']['name'] = _('{} by {}').format(hint.get_status_display(), hint.claimer) # type: ignore
-            embed['author']['url'] = hint.full_url()
-            embed['description'] = hint.response[:250]
+            embed["author"]["name"] = _("{} by {}").format(hint.get_status_display(), hint.claimer)  # type: ignore
+            embed["author"]["url"] = hint.full_url()
+            embed["description"] = hint.response[:250]
             avatar = self.get_avatar(hint.claimer)
             if avatar:
                 embed["author"]["icon_url"] = avatar
@@ -328,7 +337,9 @@ class BroadcastWebsocketConsumer(ABC, WebsocketConsumer):
         if self.is_ok():
             self.group = self.get_group()
             if self.channel_layer is not None:
-                async_to_sync(self.channel_layer.group_add)(self.group, self.channel_name)
+                async_to_sync(self.channel_layer.group_add)(
+                    self.group, self.channel_name
+                )
         # If not is_ok, still accept the connection to stop the client from
         # repeatedly retrying. But consider modifying the client to not open a
         # socket at all in this case since it's probably pointless to do so.
@@ -336,7 +347,9 @@ class BroadcastWebsocketConsumer(ABC, WebsocketConsumer):
 
     def disconnect(self, close_code):
         if self.is_ok() and self.channel_layer is not None:
-            async_to_sync(self.channel_layer.group_discard)(self.group, self.channel_name)
+            async_to_sync(self.channel_layer.group_discard)(
+                self.group, self.channel_name
+            )
 
     def channel_receive_broadcast(self, event):
         try:
@@ -351,6 +364,7 @@ class BroadcastWebsocketConsumer(ABC, WebsocketConsumer):
     @abstractmethod
     def get_group(self):
         pass
+
 
 class TeamWebsocketConsumer(BroadcastWebsocketConsumer):
     group_id = None
@@ -368,8 +382,9 @@ class TeamWebsocketConsumer(BroadcastWebsocketConsumer):
         if channel_layer is None:
             return
         async_to_sync(channel_layer.group_send)(
-            cls.group_id,
-            {'type': 'channel.receive_broadcast', 'data': text_data})
+            cls.group_id, {"type": "channel.receive_broadcast", "data": text_data}
+        )
+
 
 class TeamNotificationsConsumer(TeamWebsocketConsumer):
     group_id = "team"
@@ -391,8 +406,9 @@ class AdminWebsocketConsumer(BroadcastWebsocketConsumer):
         if channel_layer is None:
             return
         async_to_sync(channel_layer.group_send)(
-            cls.group_id,
-            {'type': 'channel.receive_broadcast', 'data': text_data})
+            cls.group_id, {"type": "channel.receive_broadcast", "data": text_data}
+        )
+
 
 @receiver(presence_changed)
 def broadcast_presence(sender, room, **kwargs):
@@ -406,14 +422,27 @@ def broadcast_presence(sender, room, **kwargs):
                 "members": [user.serialize() for user in room.get_users()],
                 "anons": room.get_anonymous_count(),
                 "num_connected": room.get_users().count() + room.get_anonymous_count(),
-            }
+            },
         }
-        channel_layer_message = {
-            "type": "forward.message",
-            "data": json.dumps(message)
-        }
+        channel_layer_message = {"type": "forward.message", "data": json.dumps(message)}
 
         async_to_sync(channel.group_send)(room.channel_name, channel_layer_message)
+
+
+@receiver(create_minor_case_incoming_event)
+def broadcast_minor_case_incoming_event(sender, cases, room, **kwargs):
+    print(f"broadcasting minor case incoming event to {room}")
+    channel = get_channel_layer()
+    if channel is not None:
+        message = {
+            "type": "vote",
+            "data": {"cases": cases, "expiration_time": None},
+        }
+        channel_layer_message = {"type": "forward.message", "data": json.dumps(message)}
+
+        async_to_sync(channel.group_send)(room.channel_name, channel_layer_message)
+
+
 class VotingConsumer(WebsocketConsumer):
     def get_room(self):
         return f"{self.scope['path'].split('/')[-1]}-{self.scope['user'].team}"
@@ -421,39 +450,60 @@ class VotingConsumer(WebsocketConsumer):
     def connect(self):
         print(f"connected a new user: {self.scope['user']} {self.channel_name=}")
         self.accept()
-        Room.objects.add(self.get_room(), self.channel_name) # type: ignore
+        Room.objects.add(self.get_room(), self.channel_name)  # type: ignore
 
     def disconnect(self, close_code):
-        print("disconnected a user")
-        Room.objects.remove(self.get_room(), self.channel_name) # type: ignore
+        Room.objects.remove(self.get_room(), self.channel_name)  # type: ignore
+
+    def send_to_all(self, client_room, response):
+        channel = get_channel_layer()
+        if channel is not None:
+            response = {"type": "forward.message", "data": json.dumps(response)}
+            async_to_sync(channel.group_send)(client_room.channel_name, response)
 
     @touch_presence
     def receive(self, text_data):
         client_room = Room.objects.get(channel_name=self.get_room())
-        data = json.loads(text_data)
-        print(data)
+        content = json.loads(text_data)
 
-        if data['type'] == 'vote':
-            data = data['data']
-            if data['oldVote'] is not None:
-                pass
+        print(content)
+        if content == "heartbeat":
+            return
 
-            if data['newVote'] is not None:
-                pass
+        if content["type"] == "vote":
+            data = content["data"]
+            MinorCaseIncomingEvent = apps.get_model("puzzles", "MinorCaseIncomingEvent")
+            incoming_event = MinorCaseIncomingEvent.get_current_incoming_event(self.scope.get("user"))  # type: ignore
+            if not incoming_event:
+                incoming_event = MinorCaseIncomingEvent.create_incoming_event(self.scope.get("user"))  # type: ignore
 
+            incoming_event.vote(data["oldVote"], data["newVote"])
             response = {
-                "type": 'vote',
+                "type": "vote",
                 "data": {
-                    "vote_counts": [0 for _ in range(data["numOptions"])],
-                    "expiration_time": datetime.datetime.now().isoformat()
-                }
+                    "cases": incoming_event.get_votes(),
+                    "expiration_time": (
+                        incoming_event.get_expiration_time().isoformat()
+                        if incoming_event.get_expiration_time()
+                        else None
+                    ),
+                },
             }
+            self.send_to_all(client_room, response)
 
-            self.send(json.dumps(response));
-
+        elif content["type"] == "finalizeVote":
+            MinorCaseIncomingEvent = apps.get_model("puzzles", "MinorCaseIncomingEvent")
+            incoming_event = MinorCaseIncomingEvent.get_current_incoming_event(self.scope.get("user"))  # type: ignore
+            if incoming_event:
+                response = {
+                    "type": "finalizeVote",
+                    "data": {"chosenCase": incoming_event.finalize_vote()},
+                }
+                self.send_to_all(client_room, response)
 
     def forward_message(self, event):
-        self.send(text_data=event['data'])
+        self.send(text_data=event["data"])
+
 
 class HintsConsumer(AdminWebsocketConsumer):
     group_id = "hints"
@@ -473,6 +523,7 @@ def show_unlock_notification(context, unlock):
     messages.info(context.request, data)
     TeamNotificationsConsumer.send_to_all(data)
 
+
 def show_solve_notification(submission):
     if not submission.puzzle.is_meta or submission.puzzle.slug == RUNAROUND_SLUG:
         return
@@ -487,19 +538,24 @@ def show_solve_notification(submission):
     # [ANSWER is correct!] notification.
     TeamNotificationsConsumer.send_to_all(data)
 
+
 def show_victory_notification(context):
-    data = json.dumps({
-        'title': 'Congratulations!',
-        'text': _('You’ve finished the %s!') % HUNT_TITLE,
-        'link': reverse('victory'),
-    })
+    data = json.dumps(
+        {
+            "title": "Congratulations!",
+            "text": _("You’ve finished the %s!") % HUNT_TITLE,
+            "link": reverse("victory"),
+        }
+    )
     TeamNotificationsConsumer.send_to_all(data)
 
 
 def show_hint_notification(hint):
-    data = json.dumps({
-        'title': str(hint.puzzle),
-        'text': _('Hint answered!'),
-        'link': reverse('hints', args=(hint.puzzle.slug,)),
-    })
+    data = json.dumps(
+        {
+            "title": str(hint.puzzle),
+            "text": _("Hint answered!"),
+            "link": reverse("hints", args=(hint.puzzle.slug,)),
+        }
+    )
     TeamNotificationsConsumer.send_to_all(data)

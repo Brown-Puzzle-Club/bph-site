@@ -133,6 +133,11 @@ function LetterBoxed({ puzzleNum }: { puzzleNum: 1 | 2 | 3 }) {
   const [solution, setSolution] = useState<number[][]>([[]]);
   const solutionObj = new Solution(puzzles[puzzleNum], solution);
 
+  useEffect(() => {
+    // resets solution on puzzle change
+    setSolution([[]]);
+  }, [puzzleNum]);
+
   /**
    * Attempts to push a new letter into the solution, checking that the solution is valid before doing so.
    * @param idx Index of new letter in solution

@@ -1,22 +1,13 @@
 import { useEffect, useState } from "react";
+import useWebSocket from "react-use-websocket";
 import { z } from "zod";
+import { useAuth } from "./useAuth";
+
 interface SocketCallbacks {
   onMessage?: (event: MessageEvent) => void;
   onOpen?: (event: Event) => void;
   onClose?: (event: CloseEvent) => void;
   onError?: (event: Event) => void;
-}
-
-export interface PresenceInfo {
-  channel_name: string;
-  members: string[];
-  anons: number;
-  num_connected: number;
-}
-
-export interface VotingInfo {
-  vote_counts: number[];
-  expiration_time: string | null;
 }
 
 const PresenceInfoSchema = z.object({
@@ -25,79 +16,75 @@ const PresenceInfoSchema = z.object({
   anons: z.number().nonnegative(),
   num_connected: z.number().nonnegative(),
 });
+export interface PresenceInfo extends z.infer<typeof PresenceInfoSchema> {}
+
+const VoteSchema = z.object({
+  desc: z.string(),
+  voteCount: z.number(),
+});
+export interface Vote extends z.infer<typeof VoteSchema> {}
 
 const VotingInfoSchema = z.object({
-  vote_counts: z.array(z.number().nonnegative()),
+  cases: z.record(VoteSchema),
   expiration_time: z.string().nullable(),
+});
+export interface VotingInfo extends z.infer<typeof VotingInfoSchema> {}
+
+const ResponseSchema = z.object({
+  type: z.string(),
+  data: z.any(),
 });
 
 const useSocket = (path: string, callbacks: SocketCallbacks | undefined = undefined) => {
-  const { onMessage, onOpen, onClose, onError } = callbacks ?? {};
-
-  const [socket, setSocket] = useState<WebSocket | null>(null);
   const [presenceInfo, setPresenceInfo] = useState<PresenceInfo | null>(null);
   const [votingInfo, setVotingInfo] = useState<VotingInfo>({
-    vote_counts: [0, 0, 0, 0, 0, 0],
+    cases: {},
     expiration_time: null,
   });
+  const [socketUrl, setSocketUrl] = useState<string | null>(null);
+  const { sendMessage, lastJsonMessage, readyState } = useWebSocket(socketUrl, {
+    onMessage: callbacks?.onMessage,
+    onOpen: callbacks?.onOpen,
+    onClose: callbacks?.onClose,
+    onError: callbacks?.onError,
+    heartbeat: {
+      message: JSON.stringify("heartbeat"),
+      interval: 50 * 1000,
+    },
+    retryOnError: true,
+  });
+  const { team } = useAuth();
 
   useEffect(() => {
-    const url = `${location.protocol === "https:" ? "wss://" : "ws://"}${location.host}/${path}`;
+    if (team) {
+      console.log(team.auth_token);
+      setSocketUrl(`${path}?token=${team.auth_token}`);
+    }
+  }, [team, path, setSocketUrl]);
 
-    const socket = new WebSocket(url);
+  useEffect(() => {
+    if (!lastJsonMessage) return;
+    console.log(lastJsonMessage);
 
-    // TODO: It would be nice if this was only in dev mode or something
-    const openEventCallback = onOpen ?? console.log;
-    const closeEventCallback = onClose ?? console.log;
-    const errorEventCallback = onError ?? console.error;
-    const messageEventCallback = (e: MessageEvent) => {
-      if (socket.readyState === WebSocket.OPEN) {
-        const data = JSON.parse(e.data);
-
-        if (data.type === "presence") {
-          const typechecked_data = PresenceInfoSchema.safeParse(data.data);
-          if (typechecked_data.success) {
-            setPresenceInfo(typechecked_data.data);
-          } else {
-            console.error(typechecked_data.error);
-          }
-        } else if (data.type === "vote") {
-          const typechecked_data = VotingInfoSchema.safeParse(data.data);
-          if (typechecked_data.success) {
-            setVotingInfo(typechecked_data.data);
-          } else {
-            console.error(typechecked_data.error);
-          }
-        }
-
-        if (onMessage) onMessage(e);
+    const parsedMessage = ResponseSchema.parse(lastJsonMessage);
+    switch (parsedMessage.type) {
+      case "presence": {
+        const presenceInfo = PresenceInfoSchema.parse(parsedMessage.data);
+        setPresenceInfo(presenceInfo);
+        break;
       }
-    };
-
-    socket.addEventListener("open", openEventCallback);
-    socket.addEventListener("close", closeEventCallback);
-    socket.addEventListener("error", errorEventCallback);
-    socket.addEventListener("message", messageEventCallback);
-
-    const heartbeatInterval = setInterval(() => {
-      if (socket.readyState === WebSocket.OPEN) {
-        socket.send(JSON.stringify("heartbeat"));
+      case "vote": {
+        const votingInfo = VotingInfoSchema.parse(parsedMessage.data);
+        console.log(votingInfo);
+        setVotingInfo(votingInfo);
+        break;
       }
-    }, 50 * 1000);
+      default:
+        break;
+    }
+  }, [lastJsonMessage]);
 
-    setSocket(socket);
-
-    return () => {
-      socket.removeEventListener("open", openEventCallback);
-      socket.removeEventListener("close", closeEventCallback);
-      socket.removeEventListener("error", errorEventCallback);
-      socket.removeEventListener("message", messageEventCallback);
-      clearInterval(heartbeatInterval);
-      socket.close();
-    };
-  }, [path, onMessage, onOpen, onClose, onError]);
-
-  return { socket, presenceInfo, votingInfo };
+  return { sendMessage, readyState, presenceInfo, votingInfo };
 };
 
 export default useSocket;

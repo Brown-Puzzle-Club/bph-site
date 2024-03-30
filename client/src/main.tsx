@@ -31,6 +31,7 @@ import PuzzleList from "./routes/PuzzleList";
 import PuzzlePage from "./routes/PuzzlePage";
 import RegisterForm from "./routes/Register";
 import TeamPage from "./routes/TeamPage";
+import WebsocketDemo from "./routes/WebsocketDemo";
 import "./styles/index.css";
 import "./styles/puzzlestyle-data.css";
 import "./styles/puzzlestyle-red-thread.css";
@@ -188,6 +189,20 @@ const router = createBrowserRouter([
                 <MajorCaseWrapper>
                   <Data />
                 </MajorCaseWrapper>
+              </Locked>
+            }
+          />
+        ),
+      },
+      {
+        path: "/websocket-demo",
+        element: (
+          <PageWrapper
+            bg_color={"#02031d"}
+            navbar_color={"#0f0d2e82"}
+            route={
+              <Locked condition={IS_ADMIN}>
+                <WebsocketDemo />
               </Locked>
             }
           />

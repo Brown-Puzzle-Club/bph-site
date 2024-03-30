@@ -31,10 +31,12 @@ from django.utils import timezone
 from django.utils.translation import gettext as _
 
 import uuid
+import random
 
 from django.contrib.postgres.indexes import GinIndex
+from channels_presence.models import Room
 from puzzles.context import context_cache
-
+from puzzles.signals import create_minor_case_incoming_event
 from puzzles.messaging import (
     dispatch_general_alert,
     dispatch_free_answer_alert,
@@ -884,7 +886,7 @@ class Team(models.Model):
             )
         except:
             print(f"Case {minor_case} already set active for team {team}.")
-            pass
+            return None
 
         # unlock all puzzles in the minor case
         for puzzle in Puzzle.objects.filter(round=minor_case):
@@ -967,6 +969,12 @@ class MinorCaseIncomingEvent(models.Model):
 
     team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_("team"))
     timestamp = models.DateTimeField(verbose_name=_("Event creation datetime"))
+    incoming_cases = models.ManyToManyField(
+        Round, verbose_name=_("Cases"), blank=True, related_name="cases"
+    )
+    num_votes_allowed = models.IntegerField(
+        verbose_name=_("Number of votes allowed"), default=1
+    )
     votes = models.ManyToManyField(MinorCaseVote, verbose_name=_("Votes"), blank=True)
     expiration = models.DateTimeField(
         verbose_name=_("Expiration datetime"), null=True, blank=True
@@ -978,6 +986,12 @@ class MinorCaseIncomingEvent(models.Model):
         null=True,
         blank=True,
     )
+    is_initialized = models.BooleanField(
+        verbose_name=_("Is initialized"), default=False
+    )
+    total_user_votes = models.IntegerField(
+        verbose_name=_("Total user votes"), default=0
+    )
 
     def __str__(self):
         return "%s -> %s @ %s" % (self.team, self.timestamp, self.votes)
@@ -986,11 +1000,91 @@ class MinorCaseIncomingEvent(models.Model):
         verbose_name = _("minor case incoming event")
         verbose_name_plural = _("minor cases incoming events")
 
+    def generate_incoming_cases(team, m):
+        unlocked_cases = team.unlocks_by_case()
+        all_cases = Round.objects.all().order_by("order")
+        potential_cases = []
+        skipped_already = False
+        for case in all_cases:
+            if case.slug not in unlocked_cases[case.major_case.slug]:
+                if (
+                    len(potential_cases) < m - 1
+                    or skipped_already
+                    or random.randrange(2) == 1  # 50/50 chance
+                ):
+                    potential_cases.append(case)
+                else:
+                    skipped_already = True
+
+        return potential_cases
+
+    def initialize(self):
+        if self.is_initialized:
+            return
+
+        team_incoming_events = MinorCaseIncomingEvent.objects.filter(team=self.team)
+        number_of_cases = 4 if len(team_incoming_events) <= 2 else 3
+        self.num_votes_allowed = 2 if number_of_cases == 4 else 1
+
+        potential_cases = self.generate_incoming_cases(self.team, number_of_cases)
+        self.incoming_cases = potential_cases
+        for case in potential_cases:
+            vote = MinorCaseVote.objects.create(
+                team=self.team, minor_case=case, num_votes=0
+            )
+            vote.save()
+            self.votes.add(vote)
+
+        self.is_initialized = True
+        self.save()
+
     def cases(self):
-        return [vote.minor_case for vote in self.votes.all()]
+        return [vote.minor_case.name for vote in self.votes.all()]
+
+    def get_votes(self):
+        return {
+            vote.minor_case.name: {
+                "desc": vote.minor_case.description,
+                "voteCount": vote.num_votes,
+            }
+            for vote in self.votes.all()
+        }
+
+    def get_expiration_time(self):
+        return self.expiration
+
+    def vote(self, old_vote: None | str, new_vote: None | str):
+        if old_vote:
+            vote = self.votes.get(minor_case__name=old_vote)
+            if vote:
+                vote.num_votes -= 1
+                self.total_user_votes -= 1
+                vote.save()
+
+        if new_vote:
+            vote = self.votes.get(minor_case__name=new_vote)
+            if vote:
+                vote.num_votes += 1
+                self.total_user_votes += 1
+                vote.save()
+
+        if self.expiration is None and self.total_user_votes > 0:
+            self.expiration = timezone.now() + timezone.timedelta(seconds=30)
+        elif self.expiration and old_vote is None and new_vote is not None:
+            self.expiration = timezone.now() - timezone.timedelta(seconds=5)
+        elif self.expiration and old_vote is not None and new_vote is None:
+            self.expiration = timezone.now() + timezone.timedelta(seconds=5)
+
+        if self.total_user_votes == 0:
+            self.expiration = None
+
+        self.save()
 
     def finalize_vote(self):
         """Finalizes the vote for the incoming event, and creates a MinorCaseVoteEvent"""
+
+        if self.final_vote:
+            return self.final_vote.selected_case.name
 
         most_voted_case = max(
             self.votes.all(), key=lambda vote: vote.num_votes
@@ -1002,13 +1096,16 @@ class MinorCaseIncomingEvent(models.Model):
             timestamp=current_time,
             selected_case=most_voted_case,
             incoming_event=self,
-            final_votes=self.votes,
         )
+        vote_event.final_votes.set(self.votes.all())
 
         self.final_vote = vote_event
         self.expiration = current_time
         self.save()
-        return vote_event
+        return {
+            "name": vote_event.selected_case.name,
+            "desc": vote_event.selected_case.description,
+        }
 
     @staticmethod
     def get_current_incoming_event(context):
@@ -1018,9 +1115,19 @@ class MinorCaseIncomingEvent(models.Model):
             .order_by("-timestamp")
             .first()
         )
+
         if most_recent_case and not most_recent_case.final_vote:
             return most_recent_case
+
         return None
+
+    @staticmethod
+    def create_incoming_event(context):
+        incoming_event = MinorCaseIncomingEvent.objects.create(
+            team=context.team, timestamp=timezone.now()
+        )
+        incoming_event.initialize()
+        return incoming_event
 
 
 class MinorCaseVoteEvent(models.Model):
@@ -1093,6 +1200,19 @@ class MinorCaseCompleted(models.Model):
         unique_together = ("team", "minor_case_round")
         verbose_name = _("minor case completed")
         verbose_name_plural = _("minor cases completed")
+
+    def save(self, *args, **kwargs):
+        super(MinorCaseCompleted, self).save(*args, **kwargs)
+
+        incoming_case_event = MinorCaseIncomingEvent.create_incoming_event(self.team)
+        if incoming_case_event:
+            room = Room.objects.get(
+                channel_name=f"puzzles-{self.team.team_name}"
+            )  # TODO: need to ensure that this is synced with the consumer
+            create_minor_case_incoming_event.send(
+                None, cases=incoming_case_event.get_votes(), room=room
+            )
+            incoming_case_event.save()
 
 
 class AnswerSubmission(models.Model):

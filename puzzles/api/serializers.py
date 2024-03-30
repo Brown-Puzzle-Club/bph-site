@@ -19,6 +19,7 @@ from puzzles.models import (
     TeamMember,
 )
 from rest_framework import serializers
+from rest_framework.authtoken.models import Token
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -70,6 +71,14 @@ class TeamSerializer(serializers.ModelSerializer):
         model = Team
         fields = "__all__"
         read_only_fields = ("id", "team_name", "is_hidden", "is_prerelease_testsolver")
+
+
+class TokenSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Token
+        fields = "__all__"
+        read_only_feilds = "key"
 
 
 class TeamBasicSerializer(serializers.ModelSerializer):
