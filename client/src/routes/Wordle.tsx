@@ -79,7 +79,9 @@ const Wordle = () => {
         )}
       </div>
       <div className="flex justify-center items-center flex-col pt-4">
-        <p className="text-xl py-3"><b>Remaining Guesses</b>: {guesses}</p>
+        <p className="text-xl py-3">
+          <b>Remaining Guesses</b>: {guesses}
+        </p>
         <Button
           onClick={() => {
             setGameMode(GameMode.Hangman);
@@ -92,7 +94,6 @@ const Wordle = () => {
         >
           Reset
         </Button>
-        
       </div>
     </div>
   );

@@ -36,6 +36,7 @@ import "./styles/puzzlestyle-data.css";
 import "./styles/puzzlestyle-red-thread.css";
 import "./styles/puzzlestyle-soc-deduction.css";
 import { MajorCaseEnum } from "./utils/constants";
+import Wordle from "./routes/Wordle";
 
 try {
   axios.defaults.headers.common["X-CSRFToken"] = Cookies.get("csrftoken");
@@ -135,6 +136,10 @@ const router = createBrowserRouter([
       //     <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<EventPage />} />
       //   ),
       // },
+      {
+        path: "/wordle",
+        element: <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<Wordle />} />,
+      },
       {
         path: "/minorcase/:slug",
         element: (

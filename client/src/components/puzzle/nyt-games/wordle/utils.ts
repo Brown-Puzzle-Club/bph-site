@@ -244,17 +244,31 @@ export const verifyGuess = (
 ] => {
   const verificationArray = [];
   const correctAnswer = answers[selectedRow as keyof typeof answers] as string;
+  const correctAnswerLetters = correctAnswer.split("");
   const otherAnswers = answers.filter((_, i) => i !== selectedRow);
+  const otherAnswersLetters = otherAnswers.map((answer) => answer.split(""));
 
   for (let i = 0; i < 5; i++) {
     if (correctAnswer[i] === guess[i]) {
       verificationArray.push(VerificationState.Correct);
-    } else if (correctAnswer.includes(guess[i])) {
+      correctAnswerLetters.splice(correctAnswerLetters.indexOf(guess[i]), 1);
+    } else if (correctAnswerLetters.includes(guess[i])) {
       verificationArray.push(VerificationState.SameMiss);
-    } else if (otherAnswers.some((answer) => answer[i] == guess[i])) {
+      correctAnswerLetters.splice(correctAnswerLetters.indexOf(guess[i]), 1);
+    } else if (otherAnswers.some((answer) => answer[i] === guess[i])) {
       verificationArray.push(VerificationState.DiffCorrect);
-    } else if (otherAnswers.some((answer) => answer.includes(guess[i]))) {
+      otherAnswersLetters.forEach((answer) => {
+        if (answer[i] === guess[i]) {
+          answer.splice(answer.indexOf(guess[i]), 1);
+        }
+      });
+    } else if (otherAnswersLetters.some((letters) => letters.includes(guess[i]))) {
       verificationArray.push(VerificationState.DiffMiss);
+      otherAnswersLetters.forEach((letters) => {
+        if (letters.includes(guess[i])) {
+          letters.splice(letters.indexOf(guess[i]), 1);
+        }
+      });
     } else {
       verificationArray.push(VerificationState.Incorrect);
     }
