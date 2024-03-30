@@ -57,7 +57,8 @@ const useSocket = (path: string, callbacks: SocketCallbacks | undefined = undefi
 
   useEffect(() => {
     if (team) {
-      setSocketUrl(`${path}?token=${team.auth_token}`);
+      console.log(`ws://${window.location.host}/${path}?token=${team.auth_token}`);
+      setSocketUrl(`ws://${window.location.host}/${path}?token=${team.auth_token}`);
     }
   }, [team, path, setSocketUrl]);
 

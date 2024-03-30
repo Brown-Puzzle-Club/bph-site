@@ -6,7 +6,7 @@ const WebsocketDemo = () => {
       <h1>Websocket Demo!</h1>
       <h2>Presence Info</h2>
 
-      <CaseVoting path="ws://localhost:5173/ws/websocket-demo" />
+      <CaseVoting path="ws/websocket-demo" />
     </div>
   );
 };
