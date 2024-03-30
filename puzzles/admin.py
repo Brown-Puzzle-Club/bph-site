@@ -11,6 +11,7 @@ from puzzles.models import (
     PuzzleUnlock,
     MinorCaseActive,
     MinorCaseIncomingEvent,
+    MinorCaseVote,
     MinorCaseVoteEvent,
     MinorCaseCompleted,
     AnswerSubmission,

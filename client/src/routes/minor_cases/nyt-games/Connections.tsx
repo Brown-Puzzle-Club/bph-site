@@ -38,7 +38,7 @@ function Connections() {
     }
     // Fetch connections data for the current round from the endpoint using axios
     axios
-      .get(`/api/nyt/get-round-words/${currRound}/`)
+      .get(`/api/puzzle/nyt/get-round-words/${currRound}/`)
       .then((response) => {
         const data = response.data;
 
@@ -71,7 +71,7 @@ function Connections() {
     console.log(sanitizedWords);
     setSubmitting(true);
     axios
-      .get(`/api/nyt/connections-guess/${currRound}/${sanitizedWords.join(",")}`)
+      .get(`/api/puzzle/nyt/connections-guess/${currRound}/${sanitizedWords.join(",")}`)
       .then((response) => {
         const data = response.data;
         if (data.Category) {

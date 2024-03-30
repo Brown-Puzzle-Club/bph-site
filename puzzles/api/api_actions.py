@@ -2,6 +2,7 @@ from datetime import datetime
 from django.contrib.auth import authenticate, login, logout
 from puzzles import models
 
+from puzzles.api.api_guards import require_admin
 from puzzles.api.form_serializers import (
     TeamUpdateSerializer,
     UserRegistrationSerializer,
@@ -10,6 +11,7 @@ from puzzles.api.form_serializers import (
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.decorators import api_view
+from rest_framework.authtoken.models import Token
 
 from .serializers import *
 
@@ -19,6 +21,7 @@ def login_action(request: Request) -> Response:
     username = request.data.get("username")
     password = request.data.get("password")
     user = authenticate(request, username=username, password=password)
+    Token.objects.get_or_create(user=user)
 
     if user is not None:
         login(request._request, user)
@@ -153,6 +156,7 @@ def move_minor_case(request: Request, round_id):
     return Response({"success": "Move operation successful"}, status=200)
 
 
+@require_admin
 @api_view(["POST"])
 def create_vote_event(request: Request) -> Response:
     serializer = VoteEventSerializer(data=request.data)
@@ -243,7 +247,7 @@ def submit_answer(request: Request, puzzle_slug: str) -> Response:
 
 TESTSOLVE_TEAM = "shhh"
 
-
+@require_admin
 @api_view(["POST"])
 def unlock_case(request: Request, round_slug: str) -> Response:
     try:

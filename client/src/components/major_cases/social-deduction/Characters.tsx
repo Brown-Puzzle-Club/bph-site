@@ -32,7 +32,7 @@ export default function InternalCharacters({
   CHAR_NAMES: { [key in InternalCharacter]: string };
 }) {
   const [selectedInternalCharacter, setSelectedInternalCharacter] = useState<InternalCharacter>(
-    InternalCharacter.ANXIOUS_GHOST
+    InternalCharacter.ANXIOUS_GHOST,
   );
 
   useEffect(() => {

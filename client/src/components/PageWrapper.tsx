@@ -1,5 +1,6 @@
 import Footer from "@/components/Footer";
 import Navbar from "@/components/navbar/Navbar";
+import { Toaster } from "./ui/toaster";
 
 export const PageWrapper = ({
   bg_color,
@@ -19,6 +20,7 @@ export const PageWrapper = ({
     >
       <Navbar navbarColor={navbar_color} />
       <div className="content min-h-[90vh]">{route}</div>
+      <Toaster />
       <Footer />
     </div>
   );

@@ -978,6 +978,12 @@ class MinorCaseIncomingEvent(models.Model):
         null=True,
         blank=True,
     )
+    is_initialized = models.BooleanField(
+        verbose_name=_("Is initialized"), default=False
+    )
+    total_user_votes = models.IntegerField(
+        verbose_name=_("Total user votes"), default=0
+    )
 
     def __str__(self):
         return "%s -> %s @ %s" % (self.team, self.timestamp, self.votes)
@@ -986,11 +992,66 @@ class MinorCaseIncomingEvent(models.Model):
         verbose_name = _("minor case incoming event")
         verbose_name_plural = _("minor cases incoming events")
 
+    def initialize(self):
+        if self.is_initialized:
+            return
+
+        potential_cases = Round.objects.all() # TODO: Fix this
+        for case in potential_cases:
+            vote = MinorCaseVote.objects.create(team=self.team, minor_case=case, num_votes=0)
+            vote.save()
+            self.votes.add(vote)
+
+        self.is_initialized = True
+        self.save()
+
     def cases(self):
-        return [vote.minor_case for vote in self.votes.all()]
+        return [vote.minor_case.name for vote in self.votes.all()]
+
+    def get_votes(self):
+        return {
+            vote.minor_case.name: {
+                "desc": vote.minor_case.description,
+                "voteCount": vote.num_votes,
+            }
+            for vote in self.votes.all()
+        }
+
+    def get_expiration_time(self):
+        return self.expiration
+
+    def vote(self, old_vote: None | str, new_vote: None | str):
+        if old_vote:
+            vote = self.votes.get(minor_case__name=old_vote)
+            if vote:
+                vote.num_votes -= 1
+                self.total_user_votes -= 1
+                vote.save()
+
+        if new_vote:
+            vote = self.votes.get(minor_case__name=new_vote)
+            if vote:
+                vote.num_votes += 1
+                self.total_user_votes += 1
+                vote.save()
+
+        if self.expiration is None and self.total_user_votes > 0:
+            self.expiration = timezone.now() + timezone.timedelta(seconds=30)
+        elif self.expiration and old_vote is None and new_vote is not None:
+            self.expiration = timezone.now() - timezone.timedelta(seconds=5)
+        elif self.expiration and old_vote is not None and new_vote is None:
+            self.expiration = timezone.now() + timezone.timedelta(seconds=5)
+
+        if self.total_user_votes == 0:
+            self.expiration = None
+
+        self.save()
 
     def finalize_vote(self):
         """Finalizes the vote for the incoming event, and creates a MinorCaseVoteEvent"""
+
+        if self.final_vote:
+            return self.final_vote.selected_case.name
 
         most_voted_case = max(
             self.votes.all(), key=lambda vote: vote.num_votes
@@ -1002,13 +1063,13 @@ class MinorCaseIncomingEvent(models.Model):
             timestamp=current_time,
             selected_case=most_voted_case,
             incoming_event=self,
-            final_votes=self.votes,
         )
+        vote_event.final_votes.set(self.votes.all())
 
         self.final_vote = vote_event
         self.expiration = current_time
         self.save()
-        return vote_event
+        return {"name": vote_event.selected_case.name, "desc": vote_event.selected_case.description}
 
     @staticmethod
     def get_current_incoming_event(context):
@@ -1018,9 +1079,19 @@ class MinorCaseIncomingEvent(models.Model):
             .order_by("-timestamp")
             .first()
         )
+
         if most_recent_case and not most_recent_case.final_vote:
             return most_recent_case
+
         return None
+
+    @staticmethod
+    def create_incoming_event(context):
+        incoming_event = MinorCaseIncomingEvent.objects.create(
+            team=context.team, timestamp=timezone.now()
+        )
+        incoming_event.initialize()
+        return incoming_event
 
 
 class MinorCaseVoteEvent(models.Model):
