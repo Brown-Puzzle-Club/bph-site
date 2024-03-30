@@ -12,6 +12,7 @@ import { cn } from "@/utils/utils";
 import { useEffect, useState } from "react";
 import { useTimer } from "react-timer-hook";
 import { SendMessage } from "react-use-websocket";
+import PresenceCounter from "./PresenceCounter";
 
 interface VotingModalProps {
   presenceInfo: PresenceInfo | null;
@@ -25,6 +26,7 @@ const VotingModal = ({ sendMessage, votingInfo, presenceInfo }: VotingModalProps
     expiryTimestamp: new Date(),
     onExpire: () => {
       sendMessage(JSON.stringify({ type: "finalizeVote" }));
+      window.location.reload();
     },
     autoStart: false,
   });
@@ -66,13 +68,18 @@ const VotingModal = ({ sendMessage, votingInfo, presenceInfo }: VotingModalProps
     });
   };
 
+  if (!votingInfo || !presenceInfo || Object.keys(votingInfo.cases).length === 0) {
+    return null;
+  }
+
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="secondary">Vote!</Button>
+        <Button variant="secondary">VOTE ON A NEW CASE</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
+          <PresenceCounter presenceInfo={presenceInfo} />
           <DialogTitle className="text-black">Select Your Option</DialogTitle>
           <DialogDescription>Select the next case you'd like to work on.</DialogDescription>
         </DialogHeader>

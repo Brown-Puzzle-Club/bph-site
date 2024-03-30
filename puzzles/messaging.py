@@ -475,7 +475,8 @@ class VotingConsumer(WebsocketConsumer):
             MinorCaseIncomingEvent = apps.get_model("puzzles", "MinorCaseIncomingEvent")
             incoming_event = MinorCaseIncomingEvent.get_current_incoming_event(self.scope.get("user"))  # type: ignore
             if not incoming_event:
-                incoming_event = MinorCaseIncomingEvent.create_incoming_event(self.scope.get("user"))  # type: ignore
+                return
+                # incoming_event = MinorCaseIncomingEvent.create_incoming_event(self.scope.get("user"))  # type: ignore
 
             incoming_event.vote(data["oldVote"], data["newVote"])
             response = {

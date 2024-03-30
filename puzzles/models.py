@@ -1000,23 +1000,22 @@ class MinorCaseIncomingEvent(models.Model):
         verbose_name = _("minor case incoming event")
         verbose_name_plural = _("minor cases incoming events")
 
+    @staticmethod
     def generate_incoming_cases(team, m):
-        unlocked_cases = team.unlocks_by_case()
-        all_cases = Round.objects.all().order_by("order")
-        potential_cases = []
-        skipped_already = False
-        for case in all_cases:
-            if case.slug not in unlocked_cases[case.major_case.slug]:
-                if (
-                    len(potential_cases) < m - 1
-                    or skipped_already
-                    or random.randrange(2) == 1  # 50/50 chance
-                ):
-                    potential_cases.append(case)
-                else:
-                    skipped_already = True
+        unlocked_cases = team.unlocks_by_case
 
-        return potential_cases
+        all_cases_list = Round.objects.all().order_by("order")
+        potential_cases = [
+            case
+            for case in all_cases_list
+            if case.major_case.slug not in unlocked_cases
+            or case.slug not in unlocked_cases[case.major_case.slug]
+        ]
+        incoming_cases = potential_cases[: m - 1]
+        incoming_cases.append(random.choice(potential_cases[m - 1 : m+1]))
+
+        print(f"EVENT: Incoming cases generated: {incoming_cases}")
+        return incoming_cases
 
     def initialize(self):
         if self.is_initialized:
@@ -1024,10 +1023,10 @@ class MinorCaseIncomingEvent(models.Model):
 
         team_incoming_events = MinorCaseIncomingEvent.objects.filter(team=self.team)
         number_of_cases = 4 if len(team_incoming_events) <= 2 else 3
-        self.num_votes_allowed = 2 if number_of_cases == 4 else 1
+        self.num_votes_allowed = 1 if number_of_cases < 4 else 2
 
         potential_cases = self.generate_incoming_cases(self.team, number_of_cases)
-        self.incoming_cases = potential_cases
+        self.incoming_cases.set(potential_cases)
         for case in potential_cases:
             vote = MinorCaseVote.objects.create(
                 team=self.team, minor_case=case, num_votes=0
@@ -1091,13 +1090,20 @@ class MinorCaseIncomingEvent(models.Model):
         ).minor_case
         current_time = timezone.now()
 
-        vote_event = MinorCaseVoteEvent.objects.create(
-            team=self.team,
-            timestamp=current_time,
-            selected_case=most_voted_case,
-            incoming_event=self,
-        )
-        vote_event.final_votes.set(self.votes.all())
+        try:
+            vote_event = MinorCaseVoteEvent.objects.create(
+                team=self.team,
+                timestamp=current_time,
+                selected_case=most_voted_case,
+                incoming_event=self,
+            )
+            vote_event.final_votes.set(self.votes.all())
+        except Exception as e:
+            print(f"ERROR: Vote Event creation failed with error {e}")
+            print("-- likely due to a vote event already existing for the team --")
+            vote_event = MinorCaseVoteEvent.objects.get(
+                team=self.team, incoming_event=self
+            )
 
         self.final_vote = vote_event
         self.expiration = current_time
@@ -1151,6 +1157,9 @@ class MinorCaseVoteEvent(models.Model):
     )
 
     def save(self, *args, **kwargs):
+        print(
+            f"EVENT:Vote finalized. Unlocking case {self.selected_case.name} for team {self.team}"
+        )
         super(MinorCaseVoteEvent, self).save(*args, **kwargs)
         # on creation of the vote event, sets the case for the team as an active case.
         Team.unlock_case(self.team, self.selected_case, self.timestamp)
