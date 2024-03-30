@@ -55,12 +55,14 @@ const useSocket = (path: string, callbacks: SocketCallbacks | undefined = undefi
   });
   const { team } = useAuth();
 
+  const protocol = window.location.protocol.includes("https") ? "wss" : "ws";
+
   useEffect(() => {
     if (team) {
-      console.log(`ws://${window.location.host}/${path}?token=${team.auth_token}`);
-      setSocketUrl(`ws://${window.location.host}/${path}?token=${team.auth_token}`);
+      console.log(`${protocol}://${window.location.host}/${path}?token=${team.auth_token}`);
+      setSocketUrl(`${protocol}://${window.location.host}/${path}?token=${team.auth_token}`);
     }
-  }, [team, path, setSocketUrl]);
+  }, [team, path, setSocketUrl, protocol]);
 
   useEffect(() => {
     if (!lastJsonMessage) return;
