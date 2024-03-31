@@ -808,8 +808,8 @@ class Team(models.Model):
                 continue
             if puzzle.round:
                 local_solves[puzzle.round.slug] += 1
-            if puzzle.round.slug == INTRO_ROUND_SLUG:
-                continue
+                if puzzle.round.slug == INTRO_ROUND_SLUG:
+                    continue
             global_solves += 1
         return (global_solves, local_solves)
 
