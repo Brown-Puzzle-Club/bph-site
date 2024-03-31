@@ -17,7 +17,7 @@ export default function PuzzleList() {
               <ul className="ml-4">
                 {Object.entries(rounds).map(([round, puzzles]) => (
                   <li key={round}>
-                    <h3>{round}</h3>
+                    <a href={`/minorcase/${round}`}>{round}</a>
                     <ul className="ml-4">
                       {Object.entries(puzzles).map(([slug, puzzle]) => (
                         <li key={slug}>
