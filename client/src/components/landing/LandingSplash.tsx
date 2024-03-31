@@ -71,7 +71,7 @@ const LandingSplash: React.FC = () => {
       style={{
         mask: "linear-gradient(to bottom, rgba(255,255,255,1) 83%, rgba(0,0,0,0) 100%)",
         WebkitMask:
-          "linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(255, 255, 255, 1) 17%, rgba(255, 255, 255, 1) 83%, rgba(255, 255, 255, 0) 100%)",
+          "linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(128, 128, 128, 1) 7%, rgba(255, 255, 255, 1) 83%, rgba(255, 255, 255, 0) 100%)",
       }}
     >
       <div className="map relative left-1/2 transform -translate-x-1/2 aspect-w-3 aspect-h-2 w-full">

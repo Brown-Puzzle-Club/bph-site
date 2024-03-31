@@ -38,6 +38,7 @@ export const IS_MAJOR_CASE_UNLOCKED = (major_case_slug: string) => (context: Dja
 };
 
 export const IS_MINOR_CASE_UNLOCKED = (case_slug: string) => (context: DjangoContext) => {
+  if (!context.team_context) return false;
   if (context.team_context.is_admin) return true;
   for (const [, case_dict] of Object.entries(context.team_context.unlocks)) {
     if (case_slug in case_dict) {

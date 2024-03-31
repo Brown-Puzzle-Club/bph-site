@@ -1,6 +1,6 @@
-import React, { CSSProperties, useState } from "react";
+import { CSSProperties, ReactNode, useState } from "react";
 
-interface AssetProps {
+export interface AssetProps {
   imageSrc: string;
   linkTo?: string;
   hoverImageSrc?: string;
@@ -8,6 +8,7 @@ interface AssetProps {
   extraClasses?: string;
   onHover?: () => void;
   onLeave?: () => void;
+  children?: ReactNode;
 }
 
 const RelativeAsset: React.FC<AssetProps> = ({
@@ -18,6 +19,7 @@ const RelativeAsset: React.FC<AssetProps> = ({
   extraClasses,
   onHover,
   onLeave,
+  children,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -41,6 +43,7 @@ const RelativeAsset: React.FC<AssetProps> = ({
       <a href={linkTo}>
         <img src={curImageSrc} alt="asset" className="w-full" />
       </a>
+      {children}
     </div>
   );
 };

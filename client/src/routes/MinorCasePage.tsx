@@ -1,14 +1,18 @@
 import { IS_MINOR_CASE_UNLOCKED } from "@/components/LockedContent";
 import CasePageArt from "@/components/minor_cases/CasePageArt";
 import { useDjangoContext } from "@/hooks/useDjangoContext";
-import { useParams } from "react-router-dom";
 import { Error404 } from "./ErrorPage";
+import { BeatLoader } from "react-spinners";
 
 function MinorCasePage() {
-  const { MINOR_CASE_SLUG } = useParams();
+  const MINOR_CASE_SLUG = window.location.pathname.split("/").pop();
   const { context } = useDjangoContext();
 
-  if (!MINOR_CASE_SLUG || !context || IS_MINOR_CASE_UNLOCKED(MINOR_CASE_SLUG)(context) === false) {
+  if (!context?.team_context) {
+    return <BeatLoader className="justify-center content-center p-4" color={"#fff"} size={12} />;
+  }
+
+  if (!MINOR_CASE_SLUG || IS_MINOR_CASE_UNLOCKED(MINOR_CASE_SLUG)(context) === false) {
     return <Error404 />;
   }
 
