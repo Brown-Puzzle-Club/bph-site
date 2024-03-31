@@ -806,7 +806,8 @@ class Team(models.Model):
         for puzzle in self.solves.values():
             if puzzle.is_meta:
                 continue
-            local_solves[puzzle.round.slug] += 1
+            if puzzle.round:
+                local_solves[puzzle.round.slug] += 1
             if puzzle.round.slug == INTRO_ROUND_SLUG:
                 continue
             global_solves += 1
@@ -1013,7 +1014,7 @@ class MinorCaseIncomingEvent(models.Model):
         ]
         m = min(m, len(potential_cases))
 
-        if (m <= 0):
+        if m <= 0:
             return None
 
         incoming_cases = potential_cases[: m - 1]
