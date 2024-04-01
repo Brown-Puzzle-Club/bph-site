@@ -1,5 +1,8 @@
-import test_img from "@/assets/minor_cases/exile/clown.png";
+import bottle from "@/assets/minor_cases/exile/bottle.png";
 import exile_bg from "@/assets/minor_cases/exile/exile_bg.png";
+import painting from "@/assets/minor_cases/exile/painting.png";
+import victrola from "@/assets/minor_cases/exile/victrola.png";
+import wine from "@/assets/minor_cases/exile/wine.png";
 import { useDjangoContext } from "@/hooks/useDjangoContext";
 import { PuzzleAnswer, cn, getUnlockedPuzzle } from "@/utils/utils";
 import { ReactNode, useMemo } from "react";
@@ -9,42 +12,42 @@ const ExileArt = () => {
   return (
     <ArtWrapper className="aspect-w-4 aspect-h-3" background_src={exile_bg}>
       <PuzzleIconWrapper
-        slug="epuzz1"
-        imageSrc={test_img}
+        slug="still-at-the-restaurant"
+        imageSrc={painting}
         extraStyles={{
           top: "14%",
-          left: "44%",
-          width: "7%",
+          left: "41%",
+          width: "13%",
           zIndex: 3,
         }}
       />
       <PuzzleIconWrapper
-        slug="epuzz1"
-        imageSrc={test_img}
+        slug="ocean-wave-blues"
+        imageSrc={bottle}
         extraStyles={{
-          top: "14%",
-          left: "85%",
-          width: "7%",
+          top: "21%",
+          left: "82%",
+          width: "13%",
           zIndex: 3,
         }}
       />
       <PuzzleIconWrapper
-        slug="epuzz1"
-        imageSrc={test_img}
+        slug="illicit-affairs"
+        imageSrc={wine}
         extraStyles={{
-          top: "34%",
-          left: "8%",
-          width: "7%",
+          top: "35%",
+          left: "7.5%",
+          width: "8.5%",
           zIndex: 3,
         }}
       />
       <PuzzleIconWrapper
-        slug="epuzz1"
-        imageSrc={test_img}
+        slug="the-day-he-died"
+        imageSrc={victrola}
         extraStyles={{
-          top: "44%",
-          left: "45%",
-          width: "14%",
+          top: "33%",
+          left: "64%",
+          width: "10%",
           zIndex: 3,
         }}
         meta
@@ -71,22 +74,26 @@ const PuzzleIconWrapper = (props: PuzzleAsset) => {
   }, [context, slug]);
 
   return (
-    <RelativeAsset
-      extraClasses={`group hover:cursor-pointer ${!props.hoverImageSrc ? "hover:drop-shadow-[0_15px_15px_rgba(255,255,255,0.2)]" : ""}`}
-      {...props}
-      linkTo={`/puzzle/${slug}`}
-    >
-      <p
-        className={` p-[0.2rem] font-bold text-center bg-slate-800 group-hover:bg-slate-600 rounded-xl ${props.meta ? "text-[1vw]" : "text-[0.65vw]"}`}
-      >
-        {puzzle_answer?.puzzle.name.toUpperCase()}
-      </p>
-      <p
-        className={`answer mt-1 p-[0.2rem] font-bold text-center text-[#98ff98] font-mono drop-shadow ${props.meta ? "text-[1vw]" : "text-[0.8vw]"}`}
-      >
-        {puzzle_answer?.answer?.toUpperCase()}
-      </p>
-    </RelativeAsset>
+    <>
+      {puzzle_answer && (
+        <RelativeAsset
+          extraClasses={`group hover:cursor-pointer ${!props.hoverImageSrc ? "hover:drop-shadow-[0_15px_15px_rgba(255,255,255,0.2)]" : ""}`}
+          {...props}
+          linkTo={`/puzzle/${slug}`}
+        >
+          <p
+            className={` p-[0.2rem] font-bold text-center bg-slate-800 group-hover:bg-slate-600 rounded-xl ${props.meta ? "text-[1vw] border-2 border-sky-200" : "text-[0.65vw]"}`}
+          >
+            {puzzle_answer?.puzzle.name.toUpperCase()}
+          </p>
+          <p
+            className={`answer mt-1 p-[0.2rem] font-bold text-center text-[#98ff98] font-mono drop-shadow ${props.meta ? "text-[1vw]" : "text-[0.8vw]"}`}
+          >
+            {puzzle_answer?.answer?.toUpperCase()}
+          </p>
+        </RelativeAsset>
+      )}
+    </>
   );
 };
 

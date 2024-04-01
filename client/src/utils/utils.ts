@@ -81,5 +81,7 @@ export function getUnlockedPuzzle(slug: string, context: DjangoContext, case_slu
     };
   }
 
-  return null;
+  return {
+    puzzle,
+  };
 }
