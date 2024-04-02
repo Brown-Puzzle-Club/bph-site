@@ -37,6 +37,7 @@ import "./styles/puzzlestyle-red-thread.css";
 import "./styles/puzzlestyle-soc-deduction.css";
 import { MajorCaseEnum } from "./utils/constants";
 import WebsocketDemo from "./routes/WebsocketDemo";
+import EventPage from "./routes/EventPage";
 
 try {
   axios.defaults.headers.common["X-CSRFToken"] = Cookies.get("csrftoken");
@@ -128,12 +129,20 @@ const router = createBrowserRouter([
           />
         ),
       },
-      // {
-      //   path: "/eventpage",
-      //   element: (
-      //     <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<EventPage />} />
-      //   ),
-      // },
+      {
+        path: "/eventpage",
+        element: (
+          <PageWrapper
+            bg_color={"#02031d"}
+            navbar_color={"#0f0d2e82"}
+            route={
+              <Locked condition={HUNT_HAS_STARTED}>
+                <EventPage />
+              </Locked>
+            }
+          />
+        ),
+      },
       {
         path: "/minorcase/:slug",
         element: (
