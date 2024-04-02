@@ -45,14 +45,13 @@ const MinorCaseModal: React.FC<ModalProps> = ({
 
   return (
     <>
-      <div className="fixed inset-0 flex items-center justify-center text-[black]">
+      <div className="fixed inset-0 flex items-center justify-center text-[black] z-10">
         <div
-          className="flex h-auto w-3/5 flex-row rounded-md p-6 pl-8"
+          className="flex h-2/3 w-3/5 flex-row rounded-md p-6 pl-8"
           style={{
             backgroundImage: `url(${manila})`,
             backgroundSize: "cover",
             backgroundPosition: "center center",
-            width: "50rem",
           }}
         >
           <div className="w-7/12">{cur_case_art}</div>

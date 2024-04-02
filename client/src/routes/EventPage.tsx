@@ -55,7 +55,7 @@ function EventPage() {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   const [selectedCase, setSelectedCase] = useState<number>(-1); //TODO: fix -1
-  const [output, setOutput] = useState<string>("");
+  const [, setOutput] = useState<string>("");
   const { FetchContext } = useDjangoContext();
   const [context, setContext] = useState<DjangoContext>();
 
@@ -132,67 +132,82 @@ function EventPage() {
       }
     }
   };
-
   return (
-    <div className="flex min-h-screen flex-col">
-      {/* <button onClick={submit(3)}>Submit test API</button> */}
-      API OUTPUT: {output}
-      {/* Top row */}
-      <div className="bg-blue-200 p-4">
-        {/* Top row content */}
-        Top Row
-      </div>
-      {/* Middle rows */}
-      <div className="flex flex-1">
-        <div className="flex w-1/4 flex-col items-center justify-center bg-gray-300">
-          {/* Left column content */}
-          <div
-            className="h-1/2 w-3/4 cursor-pointer bg-blue-200 p-4"
-            onClick={() => addBox("left")}
-          >
-            {/* Box content */}
-            Left Box
+    <div
+      className="flex min-h-screen flex-col relative"
+      style={{
+        backgroundImage: "url('/src/assets/main_page/Backdrop.PNG')",
+      }}
+    >
+      <div
+        className="flex min-h-screen flex-col relative"
+        style={{
+          backgroundImage: "url('/src/assets/main_page/Shadow.PNG')",
+        }}
+      >
+        {/* Top row
+        <div className="bg-blue-200 p-4 z-10">Top Row</div> */}
+        {/* Middle rows */}
+        <div
+          className="flex flex-1 relative"
+          style={{
+            backgroundImage: "url('/src/assets/main_page/ShadowDesk.PNG')",
+            backgroundSize: "contain",
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "center",
+          }}
+        >
+          <div className="flex w-3/4 flex-col items-center justify-center z-10">
+            {/* Left column content */}
+            <div
+              className="h-1/3 w-1/4 cursor-pointer bg-blue-200 p-4"
+              onClick={() => addBox("left")}
+            >
+              {/* Box content */}
+              Left Box
+            </div>
+          </div>
+          <div className="flex w-1/2 flex-col items-center justify-between z-10">
+            {/* Middle column content */}
+            <div className="flex w-1/2 flex-wrap items-start justify-around bg-gray-500">
+              {newCases}
+              {/* {doneCases} */}
+            </div>
+          </div>
+          <div className="flex w-3/4 flex-col items-center justify-center z-10">
+            {/* Right column content */}
+            <div
+              className="h-1/3 w-1/4 cursor-pointer bg-green-200 p-4"
+              onClick={() => addBox("right")}
+            >
+              {/* Box content */}
+              <p onClick={() => openModal(0)}>Right Box</p>
+            </div>
           </div>
         </div>
-        <div className="flex w-1/2 flex-col items-center justify-between bg-gray-500">
-          {/* Middle column content */}
-          <div className="flex w-1/2 flex-wrap items-start justify-around bg-gray-500">
-            {newCases}
-            {/* {doneCases} */}
+        {/* Shadow desk */}
+        <div className="absolute inset-0 bg-no-repeat bg-center bg-contain h-4/5" />
+        {/* Cases row */}
+        <div className="flex items-center justify-center p-2 bg-blue-200 z-10">
+          {/* Render a box for each active case */}
+          <div className="flex">
+            {context ? renderActiveCases(context.team_context.minor_case_active, openModal) : null}
           </div>
         </div>
-        <div className="flex w-1/4 flex-col items-center justify-center bg-gray-300">
-          {/* Right column content */}
-          <div
-            className="h-1/2 w-3/4 cursor-pointer bg-green-200 p-4"
-            onClick={() => addBox("right")}
-          >
-            {/* Box content */}
-            <p onClick={() => openModal(0)}>Right Box</p>
-          </div>
+        {/* Bottom row */}
+        <div className="flex flex-col items-center justify-center  p-4 z-10">
+          {/* Yellow bottom box */}
         </div>
+        {/* Modal */}
+        <MinorCaseModal
+          isOpen={modalOpen}
+          closeModal={closeModal}
+          caseID={selectedCase}
+          onSubmit={submit}
+          cur_case={findCaseFromContext(selectedCase, context)}
+        />
       </div>
-      {/* Cases row */}
-      <div className="flex items-center justify-center bg-blue-200 p-4">
-        {/* Render a box for each active case */}
-        <div className="flex">
-          {context ? renderActiveCases(context.team_context.minor_case_active, openModal) : null}
-        </div>
-      </div>
-      {/* Bottom row */}
-      <div className="flex flex-col items-center justify-center bg-blue-200 p-4">
-        {/* Yellow bottom box */}
-      </div>
-      {/* Modal */}
-      <MinorCaseModal
-        isOpen={modalOpen}
-        closeModal={closeModal}
-        caseID={selectedCase}
-        onSubmit={submit}
-        cur_case={findCaseFromContext(selectedCase, context)}
-      />
     </div>
   );
 }
-
 export default EventPage;
