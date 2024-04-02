@@ -45,7 +45,7 @@ export default function PuzzleList() {
           Data
         </button>
       </div>
-      {context?.team_context && (
+      {context?.team_context && context.team_context.unlocks && (
         <div className="text-left dark bg-gradient-to-b from-[#b3957c] to-[#a28369] pb-2 pt-2 no-underline outline-none focus:shadow-md border-4 border-[#957a62] rounded-xl relative mx-[10%] md:mx-[25%]">
           <div className="contact-content custom-scroll h-full max-h-[65dvh] overflow-y-auto">
             <ul className="ml-4">
@@ -55,33 +55,35 @@ export default function PuzzleList() {
                     {round}
                   </a>
                   <ul className="ml-4">
-                    {Object.entries(puzzles).map(([slug, puzzle]) => (
-                      <li key={slug}>
-                        <div className="team-box px-6 pt-3 pb-3 flex justify-between items-center space-x-4 text-slate-800">
-                          <div className="flex items-center space-x-4">
-                            <a
-                              href={`/puzzle/${puzzle.slug}`}
-                              className={`text-md underline ${puzzle.is_meta ? "font-bold" : ""}`}
-                            >
-                              {puzzle.name.toUpperCase()}
-                            </a>
-                          </div>
-                          <span className="pl-3 font-mono text-[#98ff98] font-bold">
-                            {puzzle.round.major_case.slug in context.team_context.solves_by_case &&
-                            puzzle.round.slug in
-                              context.team_context.solves_by_case[puzzle.round.major_case.slug] &&
-                            puzzle.slug in
-                              context.team_context.solves_by_case[puzzle.round.major_case.slug][
-                                puzzle.round.slug
-                              ]
-                              ? context.team_context.solves_by_case[puzzle.round.major_case.slug][
+                    {puzzles &&
+                      Object.entries(puzzles).map(([slug, puzzle]) => (
+                        <li key={slug}>
+                          <div className="team-box px-6 pt-3 pb-3 flex justify-between items-center space-x-4 text-slate-800">
+                            <div className="flex items-center space-x-4">
+                              <a
+                                href={`/puzzle/${puzzle.slug}`}
+                                className={`text-md underline ${puzzle.is_meta ? "font-bold" : ""}`}
+                              >
+                                {puzzle.name.toUpperCase()}
+                              </a>
+                            </div>
+                            <span className="pl-3 font-mono text-[#98ff98] font-bold">
+                              {puzzle.round.major_case.slug in
+                                context.team_context.solves_by_case &&
+                              puzzle.round.slug in
+                                context.team_context.solves_by_case[puzzle.round.major_case.slug] &&
+                              puzzle.slug in
+                                context.team_context.solves_by_case[puzzle.round.major_case.slug][
                                   puzzle.round.slug
-                                ][puzzle.slug].submitted_answer.toUpperCase()
-                              : ""}
-                          </span>
-                        </div>
-                      </li>
-                    ))}
+                                ]
+                                ? context.team_context.solves_by_case[puzzle.round.major_case.slug][
+                                    puzzle.round.slug
+                                  ][puzzle.slug].submitted_answer.toUpperCase()
+                                : ""}
+                            </span>
+                          </div>
+                        </li>
+                      ))}
                   </ul>
                 </li>
               ))}
