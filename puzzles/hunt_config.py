@@ -97,11 +97,5 @@ FREE_ANSWERS_PER_DAY = (0, 0, 0)
 FREE_ANSWER_TIME = HUNT_START_TIME + datetime.timedelta(days=6)
 TEAM_AGE_BEFORE_FREE_ANSWERS = datetime.timedelta(days=3)
 
-# These two slugs are used in a couple places to determine teams' progress
-# through the major milestones of the hunt (e.g. to determine how much story
-# they can view) and to classify puzzles as intro-round or not. They won't make
-# sense for every hunt.
-INTRO_ROUND_SLUG = "intro"
-RUNAROUND_SLUG = "final-procession"
-
-META_SLUGS = ["bring-back-blueno", "the-bear", "the-lamp", "dear-blueno-meta"]
+MAJOR_CASE_SLUGS = ["colored-thread", "social-deduction", "data"]
+MAJOR_CASE_UNLOCK_SOLVE_COUNT = [3, 4, 5]

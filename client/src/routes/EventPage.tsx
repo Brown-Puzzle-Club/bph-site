@@ -1,5 +1,5 @@
 import MinorCase from "@/components/MinorCase";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 // import MinorCase from '../components/MinorCase';
 
@@ -26,11 +26,8 @@ function renderActiveCases(
 
   return casesRecord.map((minorCase) => (
     <MinorCase
-      key={minorCase.id}
-      name={minorCase.minor_case_round.name}
-      description={minorCase.minor_case_round.description}
-      major_case_name={""}
-      major_case_slug={"#TODO: fix"}
+      minorCase={minorCase.minor_case_round}
+      majorCase={minorCase.minor_case_round.major_case}
       bgColor="pink-100"
       onClick={() => {
         openModal(minorCase.minor_case_round.id);
@@ -55,8 +52,19 @@ function EventPage() {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   const [selectedCase, setSelectedCase] = useState<number>(-1); //TODO: fix -1
-  const [output, setOutput] = useState<string>("");
+  const [, setOutput] = useState<string>("");
   const { context } = useDjangoContext();
+
+  const active_cases = useMemo(() => {
+    if (!context) return [];
+    const active_cases = context.team_context.minor_case_active;
+    const solved_cases = context.team_context.minor_case_completed;
+
+    // truly active cases are all active that are not completed (solved)
+    return active_cases.filter((ac) => {
+      return !solved_cases.some((sc) => sc.minor_case_round.slug === ac.minor_case_round.slug);
+    });
+  }, [context]);
 
   const submit = async (caseID: number) => {
     const csrftoken = getCookie("csrftoken");
@@ -124,67 +132,77 @@ function EventPage() {
       }
     }
   };
-
   return (
-    <div className="flex min-h-screen flex-col">
-      {/* <button onClick={submit(3)}>Submit test API</button> */}
-      API OUTPUT: {output}
-      {/* Top row */}
-      <div className="bg-blue-200 p-4">
-        {/* Top row content */}
-        Top Row
-      </div>
-      {/* Middle rows */}
-      <div className="flex flex-1">
-        <div className="flex w-1/4 flex-col items-center justify-center bg-gray-300">
-          {/* Left column content */}
-          <div
-            className="h-1/2 w-3/4 cursor-pointer bg-blue-200 p-4"
-            onClick={() => addBox("left")}
-          >
-            {/* Box content */}
-            Left Box
+    <div
+      className="flex min-h-screen flex-col relative"
+      style={{
+        backgroundImage: "url('/src/assets/main_page/Backdrop.PNG')",
+      }}
+    >
+      <div
+        className="flex min-h-screen flex-col relative"
+        style={{
+          backgroundImage: "url('/src/assets/main_page/Shadow.PNG')",
+        }}
+      >
+        {/* Top row
+        <div className="bg-blue-200 p-4 z-10">Top Row</div> */}
+        {/* Middle rows */}
+        <div className="flex flex-1 relative">
+          <img
+            className="w-full h-auto object-contain"
+            src=" src/assets/main_page/ShadowDesk.PNG"
+            alt=""
+          />
+          <div className="absolute inset-0 flex w-1/4 items-center justify-center z-10 object-contain">
+            {/* Left column content */}
+            <div
+              className=" w-1/2 aspect-[3/4] cursor-pointer bg-blue-200 p-4 object-contain"
+              onClick={() => addBox("left")}
+            >
+              {" "}
+              <p onClick={() => openModal(0)}></p>
+            </div>
+          </div>
+          <div className="flex w-1/2 flex-col items-center justify-between z-10">
+            {/* Middle column content */}
+            <div className="flex w-1/2 flex-wrap items-start justify-around bg-gray-500">
+              {newCases}
+              {/* {doneCases} */}
+            </div>
+          </div>
+          <div className="absolute inset-0 flex w-11/12 items-center justify-end z-10 object-contain">
+            {/* Right column content */}
+            <div
+              className=" w-1/6 aspect-[3/4] cursor-pointer bg-blue-200 p-4 object-contain"
+              onClick={() => addBox("right")}
+            >
+              {/* Box content */}
+              <p onClick={() => openModal(0)}></p>
+            </div>
           </div>
         </div>
-        <div className="flex w-1/2 flex-col items-center justify-between bg-gray-500">
-          {/* Middle column content */}
-          <div className="flex w-1/2 flex-wrap items-start justify-around bg-gray-500">
-            {newCases}
-            {/* {doneCases} */}
-          </div>
+        {/* Shadow desk */}
+        <div className="absolute inset-0 bg-no-repeat bg-center bg-contain h-4/5" />
+        {/* Cases row */}
+        <div className="flex items-center justify-center p-2 bg-blue-200 z-10">
+          {/* Render a box for each active case */}
+          <div className="flex">{context ? renderActiveCases(active_cases, openModal) : null}</div>
         </div>
-        <div className="flex w-1/4 flex-col items-center justify-center bg-gray-300">
-          {/* Right column content */}
-          <div
-            className="h-1/2 w-3/4 cursor-pointer bg-green-200 p-4"
-            onClick={() => addBox("right")}
-          >
-            {/* Box content */}
-            <p onClick={() => openModal(0)}>Right Box</p>
-          </div>
+        {/* Bottom row */}
+        <div className="flex flex-col items-center justify-center  p-4 z-10">
+          {/* Yellow bottom box */}
         </div>
+        {/* Modal */}
+        <MinorCaseModal
+          isOpen={modalOpen}
+          closeModal={closeModal}
+          caseID={selectedCase}
+          onSubmit={submit}
+          cur_case={findCaseFromContext(selectedCase, context)}
+        />
       </div>
-      {/* Cases row */}
-      <div className="flex items-center justify-center bg-blue-200 p-4">
-        {/* Render a box for each active case */}
-        <div className="flex">
-          {context ? renderActiveCases(context.team_context.minor_case_active, openModal) : null}
-        </div>
-      </div>
-      {/* Bottom row */}
-      <div className="flex flex-col items-center justify-center bg-blue-200 p-4">
-        {/* Yellow bottom box */}
-      </div>
-      {/* Modal */}
-      <MinorCaseModal
-        isOpen={modalOpen}
-        closeModal={closeModal}
-        caseID={selectedCase}
-        onSubmit={submit}
-        cur_case={findCaseFromContext(selectedCase, context)}
-      />
     </div>
   );
 }
-
 export default EventPage;

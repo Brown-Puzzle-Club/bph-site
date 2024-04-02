@@ -51,6 +51,8 @@ from puzzles.messaging import (
 from puzzles.hunt_config import (
     HUNT_END_TIME,
     HUNT_CLOSE_TIME,
+    MAJOR_CASE_SLUGS,
+    MAJOR_CASE_UNLOCK_SOLVE_COUNT,
     MAX_GUESSES_PER_PUZZLE,
     HINTS_ENABLED,
     HOURS_PER_HINT,
@@ -61,9 +63,6 @@ from puzzles.hunt_config import (
     FREE_ANSWERS_PER_DAY,
     FREE_ANSWER_TIME,
     TEAM_AGE_BEFORE_FREE_ANSWERS,
-    INTRO_ROUND_SLUG,
-    RUNAROUND_SLUG,
-    META_SLUGS,
 )
 
 
@@ -513,52 +512,52 @@ class Team(models.Model):
                 ),
             ),
             total_solves=Count("scoring_submissions"),
-            runaround_solve_time=Min(
-                Case(
-                    When(
-                        scoring_submissions__puzzle__slug=RUNAROUND_SLUG,
-                        then="scoring_submissions__submitted_datetime",
-                    )
-                    # else, null by default
-                )
-            ),
-            recent_meta_solve_time=Max(
-                Case(  # only usable when all metas are solved.. So check meta_solve_count first.
-                    When(
-                        Q(scoring_submissions__puzzle__slug__in=META_SLUGS),
-                        then="scoring_submissions__submitted_datetime",
-                    ),
-                    default=None,
-                    output_field=models.DateTimeField(),
-                )
-            ),
-            meta_solve_count=Count(
-                Case(
-                    When(
-                        Q(scoring_submissions__puzzle__slug__in=META_SLUGS),
-                        then="scoring_submissions__submitted_datetime",
-                    ),
-                    default=None,
-                    output_field=IntegerField(),
-                )
-            ),
-            all_metas_solve_time=Case(
-                When(
-                    meta_solve_count=len(META_SLUGS),
-                    then=Max(
-                        Case(
-                            When(
-                                Q(scoring_submissions__puzzle__slug__in=META_SLUGS),
-                                then="scoring_submissions__submitted_datetime",
-                            ),
-                            default=None,
-                            output_field=models.DateTimeField(),
-                        )
-                    ),
-                ),
-                default=None,
-                output_field=models.DateTimeField(),
-            ),
+            # runaround_solve_time=Min(
+            #     Case(
+            #         When(
+            #             scoring_submissions__puzzle__slug=RUNAROUND_SLUG,
+            #             then="scoring_submissions__submitted_datetime",
+            #         )
+            #         # else, null by default
+            #     )
+            # ),
+            # recent_meta_solve_time=Max(
+            #     Case(  # only usable when all metas are solved.. So check meta_solve_count first.
+            #         When(
+            #             Q(scoring_submissions__puzzle__slug__in=META_SLUGS),
+            #             then="scoring_submissions__submitted_datetime",
+            #         ),
+            #         default=None,
+            #         output_field=models.DateTimeField(),
+            #     )
+            # ),
+            # meta_solve_count=Count(
+            #     Case(
+            #         When(
+            #             Q(scoring_submissions__puzzle__slug__in=META_SLUGS),
+            #             then="scoring_submissions__submitted_datetime",
+            #         ),
+            #         default=None,
+            #         output_field=IntegerField(),
+            #     )
+            # ),
+            # all_metas_solve_time=Case(
+            #     When(
+            #         meta_solve_count=len(META_SLUGS),
+            #         then=Max(
+            #             Case(
+            #                 When(
+            #                     Q(scoring_submissions__puzzle__slug__in=META_SLUGS),
+            #                     then="scoring_submissions__submitted_datetime",
+            #                 ),
+            #                 default=None,
+            #                 output_field=models.DateTimeField(),
+            #             )
+            #         ),
+            #     ),
+            #     default=None,
+            #     output_field=models.DateTimeField(),
+            # ),
             # Coalesce(things) = the first of things that isn't null
             last_solve_or_creation_time=Coalesce("last_solve_time", "creation_time"),
             in_person=Case(
@@ -653,22 +652,6 @@ class Team(models.Model):
     def num_hints_remaining(self):
         return self.num_hints_total - self.num_hints_used
 
-    def num_intro_hints_used(self):
-        return min(
-            INTRO_HINTS,
-            sum(
-                hint.consumes_hint
-                for hint in self.asked_hints
-                if hint.puzzle.round.slug == INTRO_ROUND_SLUG
-            ),
-        )
-
-    def num_intro_hints_remaining(self):
-        return min(self.num_hints_remaining, INTRO_HINTS - self.num_intro_hints_used)
-
-    def num_nonintro_hints_remaining(self):
-        return self.num_hints_remaining - self.num_intro_hints_remaining
-
     def num_free_answers_total(self):
         if not FREE_ANSWERS_ENABLED or self.hunt_is_over:
             return 0
@@ -698,7 +681,7 @@ class Team(models.Model):
 
     def solves(self):
         return {
-            submission.puzzle_id: submission.puzzle
+            submission.puzzle.slug: submission
             for submission in self.submissions
             if submission.is_correct
         }
@@ -726,6 +709,37 @@ class Team(models.Model):
                     unlock.puzzle.round.major_case
                 )
         return unique_major_cases
+
+    def major_case_puzzles(self):
+        # first, calculate if there needs to be an unlock for any of the major case puzzles
+        solves = self.solves_by_case
+        major_case_puzzles = {}
+        current_unlocks = self.unlocks
+
+        for i, major_case_slug in enumerate(MAJOR_CASE_SLUGS):
+            if major_case_slug in current_unlocks:
+                major_case_puzzles[major_case_slug] = current_unlocks[major_case_slug]
+            else:
+                required_case_solve_count = MAJOR_CASE_UNLOCK_SOLVE_COUNT[i]
+                if (
+                    major_case_slug in solves
+                    and len(solves[major_case_slug]) >= required_case_solve_count
+                ):
+                    major_case_puzzles[major_case_slug] = Puzzle.objects.get(
+                        slug=major_case_slug
+                    )
+
+        unlocks_to_make = []
+        for puzzle in major_case_puzzles.values():
+            if puzzle.slug not in current_unlocks:
+                unlocks_to_make.append(
+                    PuzzleUnlock(team=self, puzzle=puzzle, unlock_datetime=self.now)
+                )
+
+        # TODO: make a notification for every new major case unlock.
+
+        PuzzleUnlock.objects.bulk_create(unlocks_to_make)
+        return major_case_puzzles
 
     def case_unlocks(self):
         unique_cases = {}
@@ -828,13 +842,13 @@ class Team(models.Model):
     def main_round_solves(self):
         global_solves = 0
         local_solves = collections.defaultdict(int)
-        for puzzle in self.solves.values():
-            if puzzle.is_meta:
+        for submission in self.solves.values():
+            if submission.puzzle.is_meta:
                 continue
-            if puzzle.round:
-                local_solves[puzzle.round.slug] += 1
-                if puzzle.round.slug == INTRO_ROUND_SLUG:
-                    continue
+            if submission.puzzle.round:
+                local_solves[submission.puzzle.round.slug] += 1
+                # if puzzle.round.slug == INTRO_ROUND_SLUG:
+                #     continue
             global_solves += 1
         return (global_solves, local_solves)
 
@@ -877,8 +891,8 @@ class Team(models.Model):
                     unlocked_at = context.now
                 if 0 <= puzzle.unlock_meta <= len(metas_solved):
                     unlocked_at = context.now
-                if puzzle.slug == RUNAROUND_SLUG and all(metas_solved):
-                    unlocked_at = context.now
+                # if puzzle.slug == RUNAROUND_SLUG and all(metas_solved):
+                #     unlocked_at = context.now
                 if puzzle.id in context.team.db_unlocks:
                     unlocked_at = context.team.db_unlocks[puzzle.id].unlock_datetime
                 elif unlocked_at:
