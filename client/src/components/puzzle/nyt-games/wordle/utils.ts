@@ -263,25 +263,13 @@ export const verifyGuess = (
   const otherAnswers = answers.filter((_, i) => i !== selectedRow);
   const otherAnswersLetters = otherAnswers.map((answer) => answer.split(""));
 
-  const answerLetterOccurences = correctAnswer
-    .split("")
-    .reduce((acc: { [key: string]: number }, letter) => {
-      acc[letter] = (acc[letter] || 0) + 1;
-      return acc;
-    }, {});
-
-  const guessLetterOccurences: { [key: string]: number } = {};
-
   // exact match
   for (let i = 0; i < 5; i++) {
     if (correctAnswer[i] === guess[i]) {
       verificationArray[i] = VerificationState.Correct;
       correctAnswerLetters.splice(correctAnswerLetters.indexOf(guess[i]), 1);
-      guessLetterOccurences[guess[i]] = (guessLetterOccurences[guess[i]] || 0) + 1;
     }
   }
-
-  // console.log(guessLetterOccurences, answerLetterOccurences);
 
   // same letter, different position
   for (let i = 0; i < 5; i++) {
@@ -289,14 +277,9 @@ export const verifyGuess = (
       continue;
     }
 
-    // console.log(i, guessLetterOccurences[guess[i]]);
-    if (
-      correctAnswerLetters.includes(guess[i]) &&
-      (guessLetterOccurences[guess[i]] || 0) < answerLetterOccurences[guess[i]]
-    ) {
+    if (correctAnswerLetters.includes(guess[i])) {
       verificationArray[i] = VerificationState.SameMiss;
       correctAnswerLetters.splice(correctAnswerLetters.indexOf(guess[i]), 1);
-      guessLetterOccurences[guess[i]] = (guessLetterOccurences[guess[i]] || 0) + 1;
     }
   }
 
