@@ -1,5 +1,5 @@
 import MinorCase from "@/components/MinorCase";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 // import MinorCase from '../components/MinorCase';
 
@@ -57,6 +57,17 @@ function EventPage() {
   const [selectedCase, setSelectedCase] = useState<number>(-1); //TODO: fix -1
   const [, setOutput] = useState<string>("");
   const { context } = useDjangoContext();
+
+  const active_cases = useMemo(() => {
+    if (!context) return [];
+    const active_cases = context.team_context.minor_case_active;
+    const solved_cases = context.team_context.minor_case_completed;
+
+    // truly active cases are all active that are not completed (solved)
+    return active_cases.filter((ac) => {
+      return !solved_cases.some((sc) => sc.minor_case_round.slug === ac.minor_case_round.slug);
+    });
+  }, [context]);
 
   const submit = async (caseID: number) => {
     const csrftoken = getCookie("csrftoken");
@@ -182,9 +193,7 @@ function EventPage() {
         {/* Cases row */}
         <div className="flex items-center justify-center p-2 bg-blue-200 z-10">
           {/* Render a box for each active case */}
-          <div className="flex">
-            {context ? renderActiveCases(context.team_context.minor_case_active, openModal) : null}
-          </div>
+          <div className="flex">{context ? renderActiveCases(active_cases, openModal) : null}</div>
         </div>
         {/* Bottom row */}
         <div className="flex flex-col items-center justify-center  p-4 z-10">
