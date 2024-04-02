@@ -148,23 +148,20 @@ function EventPage() {
         {/* Top row
         <div className="bg-blue-200 p-4 z-10">Top Row</div> */}
         {/* Middle rows */}
-        <div
-          className="flex flex-1 relative"
-          style={{
-            backgroundImage: "url('/src/assets/main_page/ShadowDesk.PNG')",
-            backgroundSize: "contain",
-            backgroundRepeat: "no-repeat",
-            backgroundPosition: "center",
-          }}
-        >
-          <div className="flex w-3/4 flex-col items-center justify-center z-10">
+        <div className="flex flex-1 relative">
+          <img
+            className="w-full h-auto object-contain"
+            src=" src/assets/main_page/ShadowDesk.PNG"
+            alt=""
+          />
+          <div className="absolute inset-0 flex w-1/4 items-center justify-center z-10 object-contain">
             {/* Left column content */}
             <div
-              className="h-1/3 w-1/4 cursor-pointer bg-blue-200 p-4"
+              className=" w-1/2 aspect-[3/4] cursor-pointer bg-blue-200 p-4 object-contain"
               onClick={() => addBox("left")}
             >
-              {/* Box content */}
-              Left Box
+              {" "}
+              <p onClick={() => openModal(0)}></p>
             </div>
           </div>
           <div className="flex w-1/2 flex-col items-center justify-between z-10">
@@ -174,14 +171,14 @@ function EventPage() {
               {/* {doneCases} */}
             </div>
           </div>
-          <div className="flex w-3/4 flex-col items-center justify-center z-10">
+          <div className="absolute inset-0 flex w-11/12 items-center justify-end z-10 object-contain">
             {/* Right column content */}
             <div
-              className="h-1/3 w-1/4 cursor-pointer bg-green-200 p-4"
+              className=" w-1/6 aspect-[3/4] cursor-pointer bg-blue-200 p-4 object-contain"
               onClick={() => addBox("right")}
             >
               {/* Box content */}
-              <p onClick={() => openModal(0)}>Right Box</p>
+              <p onClick={() => openModal(0)}></p>
             </div>
           </div>
         </div>
