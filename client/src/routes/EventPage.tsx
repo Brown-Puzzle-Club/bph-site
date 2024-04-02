@@ -26,11 +26,8 @@ function renderActiveCases(
 
   return casesRecord.map((minorCase) => (
     <MinorCase
-      key={minorCase.id}
-      name={minorCase.minor_case_round.name}
-      description={minorCase.minor_case_round.description}
-      major_case_name={""}
-      major_case_slug={"#TODO: fix"}
+      minorCase={minorCase.minor_case_round}
+      majorCase={minorCase.minor_case_round.major_case}
       bgColor="pink-100"
       onClick={() => {
         openModal(minorCase.minor_case_round.id);

@@ -233,9 +233,9 @@ def submit_answer(request: Request, puzzle_slug: str) -> Response:
                 )
                 completed.save()
 
-            if puzzle.is_major_meta:
+            elif puzzle.is_major_meta:
                 print("Solved the major case!")
-                # TODO: major case completion
+                # TODO: major case completion. Notification + some more
 
         return Response({"status": "correct" if correct else "incorrect"}, status=200)
         # TODO:
