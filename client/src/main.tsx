@@ -36,6 +36,7 @@ import "./styles/puzzlestyle-data.css";
 import "./styles/puzzlestyle-red-thread.css";
 import "./styles/puzzlestyle-soc-deduction.css";
 import { MajorCaseEnum } from "./utils/constants";
+import WebsocketDemo from "./routes/WebsocketDemo";
 
 try {
   axios.defaults.headers.common["X-CSRFToken"] = Cookies.get("csrftoken");
@@ -189,6 +190,12 @@ const router = createBrowserRouter([
               </Locked>
             }
           />
+        ),
+      },
+      {
+        path: "/websocket-demo",
+        element: (
+          <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<WebsocketDemo />} />
         ),
       },
     ],
