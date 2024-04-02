@@ -12,6 +12,7 @@ import {
   Row,
   VerificationState,
   clearRow,
+  generateAnswers,
   getLastTile,
   getNextNonEmptyTile,
   getPreviousFilledNotCorrectTile,
@@ -31,10 +32,9 @@ interface HangmanWordleProps {
   setGameMode: React.Dispatch<React.SetStateAction<GameMode>>;
   setGuesses: React.Dispatch<React.SetStateAction<number>>;
   gameState: GameState;
-  answers: [string, string, string];
 }
 
-const HangmanWordle = ({ setGameMode, setGuesses, gameState, answers }: HangmanWordleProps) => {
+const HangmanWordle = ({ setGameMode, setGuesses, gameState }: HangmanWordleProps) => {
   const [board, setBoard] = useState<Board>(
     new Array(13).fill({ letter: "", verified: VerificationState.Unverified }),
   );
@@ -42,7 +42,17 @@ const HangmanWordle = ({ setGameMode, setGuesses, gameState, answers }: HangmanW
   const [activeTile, setActiveTile] = useState<number>(-1);
   const [solved, setSolved] = useState<[boolean, boolean, boolean]>([false, false, false]);
   const [prevGuesses, setPrevGuesses] = useState<Guess[]>([]);
+  const [answers, setAnswers] = useState(["", "", "", ""]);
   const { toast } = useToast();
+
+  useEffect(() => {
+    setAnswers((prev) => {
+      if (prev[0] === "" && prev[1] === "" && prev[2] === "") {
+        return generateAnswers();
+      }
+      return prev;
+    });
+  }, [setAnswers]);
 
   useEffect(() => {
     console.log(answers);
