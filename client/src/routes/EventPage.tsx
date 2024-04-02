@@ -151,9 +151,9 @@ function EventPage() {
         {/* Top row
         <div className="bg-blue-200 p-4 z-10">Top Row</div> */}
         {/* Middle rows */}
-        <div className="flex flex-1 relative">
+        <div className="flex relative">
           <img
-            className="w-full h-auto object-contain"
+            className="w-auto h-full object-contain"
             src=" src/assets/main_page/ShadowDesk.PNG"
             alt=""
           />
@@ -161,6 +161,7 @@ function EventPage() {
             {/* Left column content */}
             <div
               className=" w-1/2 aspect-[3/4] cursor-pointer bg-blue-200 p-4 object-contain"
+              style={{ marginLeft: "18%" }}
               onClick={() => addBox("left")}
             >
               {" "}
@@ -174,24 +175,29 @@ function EventPage() {
               {/* {doneCases} */}
             </div>
           </div>
-          <div className="absolute inset-0 flex w-11/12 items-center justify-end z-10 object-contain">
-            {/* Right column content */}
+          <div className="absolute inset-y-0 right-0 flex w-1/4 items-center justify-end z-10">
             <div
-              className=" w-1/6 aspect-[3/4] cursor-pointer bg-blue-200 p-4 object-contain"
+              className="w-1/2 aspect-[3/4] cursor-pointer bg-blue-200 p-4 object-contain "
               onClick={() => addBox("right")}
+              style={{ marginRight: "33%" }}
             >
-              {/* Box content */}
               <p onClick={() => openModal(0)}></p>
+            </div>
+          </div>
+
+          {/* Cases row */}
+          <div
+            className="absolute  items-center align-bottom justify-end h-auto bg-blue-200 z-10 overflow-x-scroll w-full aspect-[11/2]"
+            style={{ padding: "1%", width: "100%", bottom: "-10%" }}
+          >
+            {/* Render a box for each active case */}
+            <div className="flex w-full aspect-[6/1]  ">
+              {context ? renderActiveCases(active_cases, openModal) : null}
             </div>
           </div>
         </div>
         {/* Shadow desk */}
-        <div className="absolute inset-0 bg-no-repeat bg-center bg-contain h-4/5" />
-        {/* Cases row */}
-        <div className="flex items-center justify-center p-2 bg-blue-200 z-10">
-          {/* Render a box for each active case */}
-          <div className="flex">{context ? renderActiveCases(active_cases, openModal) : null}</div>
-        </div>
+
         {/* Bottom row */}
         <div className="flex flex-col items-center justify-center  p-4 z-10">
           {/* Yellow bottom box */}

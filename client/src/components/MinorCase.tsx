@@ -11,7 +11,11 @@ interface BoxProps {
 
 const MinorCase: React.FC<BoxProps> = ({ name, onClick }) => {
   return (
-    <div className={`bg-rose-300 p-4 w-1/2 mr-2 cursor-pointer`} onClick={onClick}>
+    <div
+      className={`bg-rose-300 w-1/5 cursor-pointer `}
+      style={{ padding: "2%", marginRight: "3%" }}
+      onClick={onClick}
+    >
       {/* Box content */}
       {name}
     </div>
