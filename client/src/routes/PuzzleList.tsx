@@ -4,7 +4,7 @@ import { SetStateAction, useState } from "react";
 
 export default function PuzzleList() {
   const { context } = useDjangoContext();
-  const [curTab, setTab] = useState("colored-thread"); // Default tab
+  const [curTab, setTab] = useState("red-thread"); // Default tab
 
   const handleTabChange = (tab: SetStateAction<string>) => {
     setTab(tab);
@@ -15,9 +15,9 @@ export default function PuzzleList() {
       <CaseVoting path="ws/puzzles" />
       <div className="tabs flex items-center justify-end gap-4 mx-[10%] md:mx-[25%] pr-10 z-10 text-md sm:text-sm xs:text-xs">
         <button
-          onClick={() => handleTabChange("colored-thread")}
+          onClick={() => handleTabChange("red-thread")}
           className={`select-none rounded-t-md transition-colors py-2 px-6 hover:text-white ${
-            curTab === "colored-thread"
+            curTab === "red-thread"
               ? "bg-[#957a62] text-white font-bold"
               : "bg-[#745a45] text-[#ffffffb8]"
           }`}
@@ -49,12 +49,12 @@ export default function PuzzleList() {
         <div className="text-left dark bg-gradient-to-b from-[#b3957c] to-[#a28369] pb-2 pt-2 no-underline outline-none focus:shadow-md border-4 border-[#957a62] rounded-xl relative mx-[10%] md:mx-[25%]">
           <div className="contact-content custom-scroll h-full max-h-[65dvh] overflow-y-auto">
             <ul className="ml-4">
-              {Object.entries(context.team_context.unlocks[curTab]).map(([round]) => (
+              {Object.entries(context.team_context.unlocks[curTab]).map(([round, puzzles]) => (
                 <li key={round} className="text-[black]">
                   <a href={`/minorcase/${round}`} className="underline">
                     {round}
                   </a>
-                  {/* <ul className="ml-4">
+                  <ul className="ml-4">
                     {puzzles &&
                       Object.entries(puzzles).map(([slug, puzzle]) => (
                         <li key={slug}>
@@ -84,7 +84,7 @@ export default function PuzzleList() {
                           </div>
                         </li>
                       ))}
-                  </ul> */}
+                  </ul>
                 </li>
               ))}
             </ul>
