@@ -49,12 +49,12 @@ export default function PuzzleList() {
         <div className="text-left dark bg-gradient-to-b from-[#b3957c] to-[#a28369] pb-2 pt-2 no-underline outline-none focus:shadow-md border-4 border-[#957a62] rounded-xl relative mx-[10%] md:mx-[25%]">
           <div className="contact-content custom-scroll h-full max-h-[65dvh] overflow-y-auto">
             <ul className="ml-4">
-              {Object.entries(context.team_context.unlocks[curTab]).map(([round, puzzles]) => (
+              {Object.entries(context.team_context.unlocks[curTab]).map(([round]) => (
                 <li key={round} className="text-[black]">
                   <a href={`/minorcase/${round}`} className="underline">
                     {round}
                   </a>
-                  <ul className="ml-4">
+                  {/* <ul className="ml-4">
                     {puzzles &&
                       Object.entries(puzzles).map(([slug, puzzle]) => (
                         <li key={slug}>
@@ -84,7 +84,7 @@ export default function PuzzleList() {
                           </div>
                         </li>
                       ))}
-                  </ul>
+                  </ul> */}
                 </li>
               ))}
             </ul>
