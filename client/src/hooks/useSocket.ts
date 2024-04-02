@@ -55,7 +55,7 @@ const useSocket = (path: string, callbacks: SocketCallbacks | undefined = undefi
   });
   const { team } = useAuth();
 
-  const protocol = window.location.protocol.includes("https") ? "ws" : "ws";
+  const protocol = window.location.protocol.includes("https") ? "wss" : "ws";
 
   useEffect(() => {
     if (team) {
