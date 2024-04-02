@@ -45,6 +45,29 @@ export default function PuzzleList() {
           }}
         >
           <div className="custom-scroll h-full max-h-[65dvh] overflow-y-auto">
+            {context.team_context.major_case_puzzles[curTab] && (
+              <div
+                className="majorcase-puzzle text-center font-bold text-black font-serif pb-2"
+                style={{
+                  borderBottomColor: CASE_PALETTE[curTab].primary,
+                  borderBottomWidth: "8px",
+                }}
+              >
+                <a href={`/majorcase/${curTab}`} className="underline text-2xl">
+                  The Case of {context.team_context.major_case_unlocks[curTab].name}
+                </a>
+                {context.team_context.solves[curTab] && (
+                  <p
+                    className="font-mono pt-1"
+                    style={{
+                      color: CASE_PALETTE[curTab].answerColor,
+                    }}
+                  >
+                    {context.team_context.solves[curTab].submitted_answer}
+                  </p>
+                )}
+              </div>
+            )}
             <ul className="ml-4">
               {Object.entries(context.team_context.unlocks[curTab]).map(
                 ([round, puzzles], index, array) => (
@@ -92,7 +115,7 @@ export default function PuzzleList() {
                                   className={`text-md underline ${puzzle.is_meta ? "font-bold" : ""}`}
                                   style={{ color: CASE_PALETTE[curTab].textColor }}
                                 >
-                                  {puzzle.name  }
+                                  {puzzle.name}
                                 </a>
                               </div>
                               {/* ANSWER */}

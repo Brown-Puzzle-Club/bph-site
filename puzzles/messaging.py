@@ -35,7 +35,6 @@ from puzzles.hunt_config import (
     HUNT_ORGANIZERS,
     CONTACT_EMAIL,
     MESSAGING_SENDER_EMAIL,
-    RUNAROUND_SLUG,
 )
 from puzzles.signals import create_minor_case_incoming_event
 
@@ -526,7 +525,7 @@ def show_unlock_notification(context, unlock):
 
 
 def show_solve_notification(submission):
-    if not submission.puzzle.is_meta or submission.puzzle.slug == RUNAROUND_SLUG:
+    if not submission.puzzle.is_meta: #or submission.puzzle.slug == RUNAROUND_SLUG:
         return
     data = json.dumps(
         {
