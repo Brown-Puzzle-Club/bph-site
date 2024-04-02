@@ -1,11 +1,11 @@
-import MarkdownWrapper from "@/components/markdown/MarkdownWrapper";
+import MarkdownWrapper from "@/components/puzzle/MarkdownWrapper";
 import { PuzzleStyle } from "@/utils/constants";
 import { cn } from "@/utils/utils";
 import { useState } from "react";
 
 export default function MarkdownTest() {
   const [markdown, setMarkdown] = useState("");
-  const [puzzleStyle, setPuzzleStyle] = useState<PuzzleStyle>(PuzzleStyle.RED_THREAD);
+  const [puzzleStyle, setPuzzleStyle] = useState<PuzzleStyle>(PuzzleStyle.COLORED_THREAD);
 
   return (
     <div className="text-white">
@@ -21,16 +21,16 @@ export default function MarkdownTest() {
       </div>
       {/* HTML RESULT BOX */}
       <div className="flex justify-center pt-6">
-        <div className="w-1/2">
+        <div className="w-1/2 flex flex-col justify-around">
           <h1 className="text-3xl text-center pb-5">Markdown Result</h1>
           {/* three buttons to toggle PuzzleStyle */}
           <div className="flex justify-center pb-5">
             <button
               className={cn(
                 "p-2 bg-red-500 text-white",
-                puzzleStyle == PuzzleStyle.RED_THREAD && "border-2 border-black",
+                puzzleStyle == PuzzleStyle.COLORED_THREAD && "border-2 border-black",
               )}
-              onClick={() => setPuzzleStyle(PuzzleStyle.RED_THREAD)}
+              onClick={() => setPuzzleStyle(PuzzleStyle.COLORED_THREAD)}
             >
               Red Thread
             </button>

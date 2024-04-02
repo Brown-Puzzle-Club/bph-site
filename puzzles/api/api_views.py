@@ -91,6 +91,18 @@ class MinorCaseActiveViewSet(viewsets.ModelViewSet):
         return MinorCaseActive.objects.filter(team=self.request._request.context.team)
 
 
+class PuzzleViewSet(viewsets.ModelViewSet):
+    queryset = Puzzle.objects.all()
+    serializer_class = PuzzleBasicSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        if self.request._request.context.is_admin:
+            return Puzzle.objects.all()
+
+        return self.request._request.context.team.unlocks.values()
+
+
 @api_view(["GET"])
 def context(request: Request) -> Response:
     serializer = ContextSerializer(data=request._request.context)
@@ -111,3 +123,69 @@ def team_members(request: Request, team_id: int) -> Response:
         return Response(serializer.data)
     except Team.DoesNotExist:
         return Response({"error": "Team not found"}, status=404)
+
+
+@api_view(["GET"])
+def get_puzzle(request: Request, puzzle_slug: str) -> Response:
+    # gets a puzzle if the team has access to it
+    try:
+        context = request._request.context
+        puzzle = context.team.unlocks.get(puzzle_slug)
+
+        if puzzle is None:
+            if context.is_admin:
+                puzzle = Puzzle.objects.get(slug=puzzle_slug)
+            else:
+                raise Puzzle.DoesNotExist
+
+        serializer = PuzzleBasicSerializer(puzzle)
+
+        # Send the puzzler only the body that they are supposed to see
+        # (remote if it exists and they are a remote team, in-person otherwise, unless admin)
+        additional_fields = {}
+
+        # answer history
+        submissions = context.team.puzzle_submissions(puzzle)
+
+        additional_fields["submissions"] = AnswerSubmissionSerializer(
+            submissions, many=True
+        ).data
+
+        # puzzle body
+        if context.is_admin:
+            additional_fields["body"] = puzzle.body
+            additional_fields["body_remote"] = puzzle.body_remote
+        else:
+            additional_fields["body"] = (
+                puzzle.body
+                if context.team.in_person or puzzle.body_remote == ""
+                else puzzle.body_remote
+            )
+
+        complete_puzzle_data = {**serializer.data, **additional_fields}
+
+        return Response(complete_puzzle_data)
+    except Puzzle.DoesNotExist:
+        return Response({"error": "Puzzle not found"}, status=404)
+
+
+@api_view(["GET"])
+def major_case(request: Request, major_case_slug: str) -> Response:
+    try:
+        context = request._request.context
+
+        major_case = MajorCase.objects.get(slug=major_case_slug)
+        serializer = MajorCaseSerializer(major_case)
+
+        additional_fields = {}
+        submissions = context.team.puzzle_submissions(major_case.puzzle)
+
+        additional_fields["submissions"] = AnswerSubmissionSerializer(
+            submissions, many=True
+        ).data
+
+        complete_puzzle_data = {**serializer.data, **additional_fields}
+
+        return Response(complete_puzzle_data)
+    except MajorCase.DoesNotExist:
+        return Response({"error": "MajorCase not found"}, status=404)

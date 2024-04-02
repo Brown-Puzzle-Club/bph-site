@@ -19,7 +19,6 @@ import { BeatLoader } from "react-spinners";
 import TeamNavbar from "./TeamNavbar";
 
 import bluenoir_logo from "@/assets/navbar_logo_head.png";
-import { DjangoContext } from "@/utils/django_types";
 import { useState } from "react";
 
 const components: { title: string; href: string; description: string }[] = [
@@ -143,14 +142,7 @@ const HuntLogo = () => {
 };
 
 const NavbarLeft = () => {
-  const { FetchContext } = useDjangoContext();
-  const [context, setContext] = React.useState<DjangoContext>();
-
-  React.useEffect(() => {
-    FetchContext().then((context) => {
-      setContext(context);
-    });
-  }, [FetchContext]);
+  const { context } = useDjangoContext();
 
   return (
     <div className="left flex justify-start w-1/3">
@@ -171,11 +163,11 @@ const NavbarLeft = () => {
                     >
                       <div className="mb-2 mt-4 text-xl font-bold">The Hunt</div>
                       <p className="text-sm leading-tight text-muted-foreground">
-                        {context?.hunt_context.hunt_has_started ? (
+                        {context?.hunt_context?.hunt_has_started ? (
                           "The hunt has started! Good luck!"
                         ) : (
                           <Countdown
-                            date={context?.hunt_context.start_time}
+                            date={context?.hunt_context?.start_time}
                             renderer={hunt_start_timer}
                           />
                         )}

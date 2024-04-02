@@ -1,4 +1,4 @@
-import { TestCaseArt } from "@/components/minor_cases/minor_case_art";
+import { TestCaseArt } from "@/components/minor_cases/FolderArt";
 
 interface CaseArtByRoundSlug {
   [key: number]: JSX.Element;

@@ -20,6 +20,7 @@ from puzzles.models import (
     Erratum,
     Survey,
     Hint,
+    VoiceRecording,
 )
 
 
@@ -181,6 +182,12 @@ class HintAdmin(admin.ModelAdmin):
     search_fields = ("hint_question", "response")
 
 
+class VoiceRecordingAdmin(admin.ModelAdmin):
+    list_display = ("transcript", "hour", "characters")
+    list_filter = ("hour",)
+    search_fields = ("transcript", "characters")
+
+
 admin.site.register(MajorCase, MajorCaseAdmin)
 admin.site.register(Round, RoundAdmin)
 admin.site.register(Puzzle, PuzzleAdmin)
@@ -189,7 +196,6 @@ admin.site.register(TeamMember, TeamMemberAdmin)
 admin.site.register(PuzzleUnlock, PuzzleUnlockAdmin)
 
 admin.site.register(MinorCaseIncomingEvent, MinorCaseIncomingEventAdmin)
-admin.site.register(MinorCaseVote, MinorCaseVoteAdmin)
 admin.site.register(MinorCaseVoteEvent, MinorCaseVoteEventAdmin)
 admin.site.register(MinorCaseActive, MinorCaseActiveAdmin)
 admin.site.register(MinorCaseCompleted, MinorCaseCompletedAdmin)
@@ -201,3 +207,4 @@ admin.site.register(Survey, SurveyAdmin)
 admin.site.register(Hint, HintAdmin)
 admin.site.register(Room, RoomAdmin)
 admin.site.register(Presence, PresenceAdmin)
+admin.site.register(VoiceRecording, VoiceRecordingAdmin)

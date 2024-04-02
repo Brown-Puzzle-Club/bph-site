@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { z } from "zod";
 import useWebSocket from "react-use-websocket";
+import { z } from "zod";
 import { useAuth } from "./useAuth";
 
 interface SocketCallbacks {
@@ -10,38 +10,25 @@ interface SocketCallbacks {
   onError?: (event: Event) => void;
 }
 
-export interface PresenceInfo {
-  channel_name: string;
-  members: string[];
-  anons: number;
-  num_connected: number;
-}
-
-export interface Vote {
-  desc: string;
-  voteCount: number;
-}
-export interface VotingInfo {
-  cases: Record<string, Vote>;
-  expiration_time: string | null;
-}
-
 const PresenceInfoSchema = z.object({
   channel_name: z.string(),
   members: z.array(z.string()),
   anons: z.number().nonnegative(),
   num_connected: z.number().nonnegative(),
 });
+export interface PresenceInfo extends z.infer<typeof PresenceInfoSchema> {}
+
+const VoteSchema = z.object({
+  desc: z.string(),
+  voteCount: z.number(),
+});
+export interface Vote extends z.infer<typeof VoteSchema> {}
 
 const VotingInfoSchema = z.object({
-  cases: z.record(
-    z.object({
-      desc: z.string(),
-      voteCount: z.number().nonnegative(),
-    }),
-  ),
+  cases: z.record(VoteSchema),
   expiration_time: z.string().nullable(),
 });
+export interface VotingInfo extends z.infer<typeof VotingInfoSchema> {}
 
 const ResponseSchema = z.object({
   type: z.string(),
@@ -68,12 +55,14 @@ const useSocket = (path: string, callbacks: SocketCallbacks | undefined = undefi
   });
   const { team } = useAuth();
 
+  const protocol = window.location.protocol.includes("https") ? "wss" : "ws";
+
   useEffect(() => {
     if (team) {
-      console.log(team.auth_token);
-      setSocketUrl(`${path}?token=${team.auth_token}`);
+      console.log(`${protocol}://${window.location.host}/${path}?token=${team.auth_token}`);
+      setSocketUrl(`${protocol}://${window.location.host}/${path}?token=${team.auth_token}`);
     }
-  }, [team, path, setSocketUrl]);
+  }, [team, path, setSocketUrl, protocol]);
 
   useEffect(() => {
     if (!lastJsonMessage) return;

@@ -12,6 +12,15 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": "http://127.0.0.1:8000",
+<<<<<<< HEAD
+=======
+      "/ws": {
+        target: `ws://127.0.0.1:8000`,
+        changeOrigin: true,
+        secure: true,
+        ws: true,
+      },
+>>>>>>> 306c92251fbdff642281d568c99b7fc1724d3680
     },
   },
   resolve: {

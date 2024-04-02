@@ -62,16 +62,46 @@ const AnswerSubmissionSchema = z.object({
 });
 type AnswerSubmission = z.infer<typeof AnswerSubmissionSchema>;
 
-const RoundSchema = z.object({
+const MajorCaseSchema = z.object({
   id: z.number(),
   name: z.string(),
   order: z.number(),
-  major_case: z.string().nullable(),
+  slug: z.string(),
+  puzzle: z.object({
+    // TODO: don't know how to type this yet. import cycle with other schemas, so shallow typing quick solution.
+    name: z.string(),
+    slug: z.string(),
+    submissions: z.array(AnswerSubmissionSchema),
+  }),
+  submissions: z.array(AnswerSubmissionSchema),
+});
+type MajorCase = z.infer<typeof MajorCaseSchema>;
+
+const RoundSchema = z.object({
+  id: z.number(),
+  slug: z.string(),
+  name: z.string(),
+  order: z.number(),
+  major_case: MajorCaseSchema,
   description: z.string(),
   unlock_global_minor: z.number(),
   unlock_local_major: z.number(),
 });
 type Round = z.infer<typeof RoundSchema>;
+
+const PuzzleSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  slug: z.string(),
+  order: z.number(),
+  is_meta: z.boolean(),
+  is_major_meta: z.boolean(),
+  round: RoundSchema,
+  body: z.string(),
+  body_remote: z.string(),
+  submissions: z.array(AnswerSubmissionSchema),
+});
+type Puzzle = z.infer<typeof PuzzleSchema>;
 
 const MinorCaseIncomingSchema = z.object({
   id: z.number(),
@@ -97,14 +127,17 @@ type MinorCaseCompleted = z.infer<typeof MinorCaseCompletedSchema>;
 const TeamPuzzleContextSchema = z.object({
   is_admin: z.boolean(),
   is_superuser: z.boolean(),
+  is_prerelease_testsolver: z.boolean(),
   num_hints_remaining: z.number(),
   num_free_answers_remaining: z.number(),
-  solves_by_case: z.record(z.record(z.record(AnswerSubmissionSchema))),
   minor_case_solves: z.record(z.record(AnswerSubmissionSchema)),
   minor_case_incoming: z.array(MinorCaseIncomingSchema),
   minor_case_active: z.array(MinorCaseActiveSchema),
   minor_case_completed: z.array(MinorCaseCompletedSchema),
-  unlocks: z.record(z.date()),
+  solves_by_case: z.record(z.record(z.record(AnswerSubmissionSchema))), // major_case -> case_id -> puzzle_id -> answer submission
+  unlocks: z.record(z.record(z.record(PuzzleSchema))), // major_case_id -> case_id -> puzzle_id -> puzzle
+  case_unlocks: z.record(RoundSchema),
+  major_case_unlocks: z.record(MajorCaseSchema),
 });
 
 const HuntContextSchema = z.object({
@@ -137,10 +170,12 @@ type MinorCase = z.infer<typeof MinorCaseSchema>;
 export type {
   AnswerSubmission,
   DjangoContext,
+  MajorCase,
   MinorCase,
   MinorCaseActive,
   MinorCaseCompleted,
   MinorCaseIncoming,
+  Puzzle,
   Round,
   Team,
   TeamMember,

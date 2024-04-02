@@ -130,6 +130,15 @@ export default function Chronology({
               {" is an evil role."}
               <br></br>
               <br></br>
+              <CharacterRoleTooltip
+                char_role={InternalCharacter.HAPPY_GHOST}
+                CHAR_NAMES={CHAR_NAMES}
+              />
+              {" claims to be the "}
+              <CharacterRoleTooltip char_role={Role.DOCTOR} CHAR_NAMES={CHAR_NAMES} />
+              {"."}
+              <br></br>
+              <br></br>
               <CharacterRoleTooltip char_role={InternalCharacter.GORGON} CHAR_NAMES={CHAR_NAMES} />
               {" claims to be the "}
               <CharacterRoleTooltip char_role={Role.BODYGUARD} CHAR_NAMES={CHAR_NAMES} />
@@ -143,8 +152,8 @@ export default function Chronology({
                   </p>
                   {collectObscured(
                     [
-                      [InternalCharacter.INVISIGUY, " 1"],
-                      [InternalCharacter.HAPPY_GHOST, " 8"],
+                      [InternalCharacter.INVISIGUY, " 2"],
+                      [InternalCharacter.HAPPY_GHOST, " 7"],
                     ],
                     false,
                   )}

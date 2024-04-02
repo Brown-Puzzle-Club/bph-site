@@ -30,6 +30,10 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext as _
 
+import uuid
+import random
+
+from django.contrib.postgres.indexes import GinIndex
 from channels_presence.models import Room
 from puzzles.context import context_cache
 from puzzles.signals import create_minor_case_incoming_event
@@ -67,6 +71,14 @@ class MajorCase(models.Model):
     name = models.CharField(max_length=255, verbose_name=_("Name"))
     slug = models.SlugField(max_length=255, unique=True, verbose_name=_("Slug"))
     order = models.IntegerField(default=0, verbose_name=_("Order"))
+    puzzle = models.ForeignKey(
+        "Puzzle",
+        limit_choices_to={"is_major_meta": True},
+        on_delete=models.SET_NULL,
+        verbose_name=_("puzzle"),
+        blank=True,
+        null=True,
+    )
 
     class Meta:
         verbose_name = _("major case")
@@ -121,8 +133,15 @@ class Round(models.Model):
 
     @staticmethod
     def get_unlocked_rounds(context):
-        # TODO: query unlocked rounds model to make sure that this only sends rounds that are unlocked to the user.
-        return Round.objects.all()
+        if context.is_admin:
+            return Round.objects.all()
+
+        unlocked_round_dicts = context.team.unlocks_by_case.values()
+        unlocked_rounds = {}
+        for round_dict in unlocked_round_dicts:
+            unlocked_rounds.update(round_dict)
+
+        return Round.objects.filter(slug__in=unlocked_rounds.keys())
 
     def __str__(self):
         return self.name
@@ -146,17 +165,23 @@ class Puzzle(models.Model):
         help_text=_("Slug used in URLs to identify this puzzle (must be unique)"),
     )
 
-    # As in the comment above, although we replace blank values with the
-    # default in clean(), a blank body template could sneak in anyway, but it
-    # seems less likely to be harmful here.
-    body_template = models.CharField(
-        max_length=255,
+    body = models.TextField(
+        default="",
         blank=True,
-        verbose_name=_("Body template"),
+        verbose_name=_("Puzzle Body"),
+        null=True,
         help_text=_(
-            """Path of a Markdown file (including .md) under puzzlemarkdown containing the puzzle and
-        solution content, respectively. Defaults to <major-case-slug>/<minor-case-slug>/<puzzle-slug> + ".md" if not
-        specified. All paths are relative to the puzzlemarkdown/ directory as a root."""
+            "Markdown-compliant body of the puzzle. This is the main text that will be displayed to the user."
+        ),
+    )
+
+    body_remote = models.TextField(
+        default="",
+        blank=True,
+        verbose_name=_("Remote Puzzle Body"),
+        null=True,
+        help_text=_(
+            "This is the main text that will be displayed to the user if they are a remote team. (if blank, all users will get regular body.) "
         ),
     )
 
@@ -166,9 +191,13 @@ class Puzzle(models.Model):
         help_text=_("Answer (fine if unnormalized)"),
     )
 
-    round = models.ForeignKey(Round, on_delete=models.CASCADE, verbose_name=_("round"))
+    # round is only required if the puzzle is not a major meta
+    round = models.ForeignKey(
+        Round, null=True, blank=True, on_delete=models.CASCADE, verbose_name=_("round")
+    )
     order = models.IntegerField(default=0, verbose_name=_("Order"))
     is_meta = models.BooleanField(default=False, verbose_name=_("Is meta"))
+    is_major_meta = models.BooleanField(default=False, verbose_name=_("Is major meta"))
 
     # For unlocking purposes, a "main round solve" is a solve that is not a
     # meta or in the intro round.
@@ -207,12 +236,6 @@ class Puzzle(models.Model):
     class Meta:
         verbose_name = _("puzzle")
         verbose_name_plural = _("puzzles")
-
-    def clean(self):
-        if not self.body_template:
-            self.body_template = (
-                f"{self.round.major_case.slug}/{self.round.slug}/{self.slug}.md"
-            )
 
     def __str__(self):
         return self.name
@@ -680,12 +703,70 @@ class Team(models.Model):
             if submission.is_correct
         }
 
+    def unlocks(self):
+        return {
+            unlock.puzzle.slug: unlock.puzzle
+            for unlock in self.puzzleunlock_set.select_related(
+                "puzzle", "puzzle__round"
+            )
+        }
+
+    def major_case_unlocks(self):
+        unique_major_cases = {}
+        for unlock in self.puzzleunlock_set.select_related("puzzle", "puzzle__round"):
+            if (
+                not unlock
+                or not unlock.puzzle
+                or not unlock.puzzle.round
+                or not unlock.puzzle.round.major_case
+            ):
+                continue
+            if unlock.puzzle.round.major_case.slug not in unique_major_cases:
+                unique_major_cases[unlock.puzzle.round.major_case.slug] = (
+                    unlock.puzzle.round.major_case
+                )
+        return unique_major_cases
+
+    def case_unlocks(self):
+        unique_cases = {}
+        for unlock in self.puzzleunlock_set.select_related("puzzle", "puzzle__round"):
+            if not unlock or not unlock.puzzle or not unlock.puzzle.round:
+                continue
+            if unlock.puzzle.round.slug not in unique_cases:
+                unique_cases[unlock.puzzle.round.slug] = unlock.puzzle.round
+        return unique_cases
+
+    def unlocks_by_case(self):
+        out = {}
+        for unlock in self.puzzleunlock_set.select_related("puzzle", "puzzle__round"):
+            if (
+                not unlock
+                or not unlock.puzzle
+                or not unlock.puzzle.round
+                or not unlock.puzzle.round.major_case
+            ):
+                continue
+            if unlock.puzzle.round.major_case.slug not in out:
+                out[unlock.puzzle.round.major_case.slug] = {}
+            if unlock.puzzle.round.slug not in out[unlock.puzzle.round.major_case.slug]:
+                out[unlock.puzzle.round.major_case.slug][unlock.puzzle.round.slug] = {}
+            out[unlock.puzzle.round.major_case.slug][unlock.puzzle.round.slug][
+                unlock.puzzle.slug
+            ] = unlock.puzzle
+        return out
+
     def solves_by_case(self):
         out = {}
         # major_case : minor_case : puzzle : {puzzle, solve_time, answer}
         # DOES NOT INCLUDE EVENT PUZZLES, RUNAROUND.
         for submit in self.submissions:
-            if not submit.puzzle.round.major_case:
+            if (
+                not submit.is_correct
+                or not submit.puzzle
+                or not submit.puzzle.round
+                or not submit.puzzle.round.meta
+                or not submit.puzzle.round.major_case
+            ):
                 continue
             if submit.puzzle.round.major_case.slug not in out:
                 out[submit.puzzle.round.major_case.slug] = {}
@@ -705,7 +786,14 @@ class Team(models.Model):
     def minor_case_solves(self):
         out = {}
         for submit in self.submissions:
-            if not submit.puzzle.round.major_case:
+            # brute check of all possible unhappy paths
+            if (
+                not submit.is_correct
+                or not submit.puzzle
+                or not submit.puzzle.round
+                or not submit.puzzle.round.meta
+                or not submit.puzzle.round.major_case
+            ):
                 continue
             if submit.puzzle.round.major_case.slug not in out:
                 out[submit.puzzle.round.major_case.slug] = {}
@@ -743,9 +831,10 @@ class Team(models.Model):
         for puzzle in self.solves.values():
             if puzzle.is_meta:
                 continue
-            local_solves[puzzle.round.slug] += 1
-            if puzzle.round.slug == INTRO_ROUND_SLUG:
-                continue
+            if puzzle.round:
+                local_solves[puzzle.round.slug] += 1
+                if puzzle.round.slug == INTRO_ROUND_SLUG:
+                    continue
             global_solves += 1
         return (global_solves, local_solves)
 
@@ -823,7 +912,7 @@ class Team(models.Model):
             )
         except:
             print(f"Case {minor_case} already set active for team {team}.")
-            pass
+            return None
 
         # unlock all puzzles in the minor case
         for puzzle in Puzzle.objects.filter(round=minor_case):
@@ -906,6 +995,12 @@ class MinorCaseIncomingEvent(models.Model):
 
     team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_("team"))
     timestamp = models.DateTimeField(verbose_name=_("Event creation datetime"))
+    incoming_cases = models.ManyToManyField(
+        Round, verbose_name=_("Cases"), blank=True, related_name="cases"
+    )
+    num_votes_allowed = models.IntegerField(
+        verbose_name=_("Number of votes allowed"), default=1
+    )
     votes = models.ManyToManyField(MinorCaseVote, verbose_name=_("Votes"), blank=True)
     expiration = models.DateTimeField(
         verbose_name=_("Expiration datetime"), null=True, blank=True
@@ -931,13 +1026,42 @@ class MinorCaseIncomingEvent(models.Model):
         verbose_name = _("minor case incoming event")
         verbose_name_plural = _("minor cases incoming events")
 
+    @staticmethod
+    def generate_incoming_cases(team, m):
+        unlocked_cases = team.unlocks_by_case
+
+        all_cases_list = Round.objects.all().order_by("order")
+        potential_cases = [
+            case
+            for case in all_cases_list
+            if case.major_case.slug not in unlocked_cases
+            or case.slug not in unlocked_cases[case.major_case.slug]
+        ]
+        m = min(m, len(potential_cases))
+
+        if m <= 0:
+            return None
+
+        incoming_cases = potential_cases[: m - 1]
+        incoming_cases.append(random.choice(potential_cases[m - 1 : m + 1]))
+
+        print(f"EVENT: Incoming cases generated: {incoming_cases}")
+        return incoming_cases
+
     def initialize(self):
         if self.is_initialized:
             return
 
-        potential_cases = Round.objects.all() # TODO: Fix this
+        team_incoming_events = MinorCaseIncomingEvent.objects.filter(team=self.team)
+        number_of_cases = 4 if len(team_incoming_events) <= 2 else 3
+        self.num_votes_allowed = 1 if number_of_cases < 4 else 2
+
+        potential_cases = self.generate_incoming_cases(self.team, number_of_cases)
+        self.incoming_cases.set(potential_cases)
         for case in potential_cases:
-            vote = MinorCaseVote.objects.create(team=self.team, minor_case=case, num_votes=0)
+            vote = MinorCaseVote.objects.create(
+                team=self.team, minor_case=case, num_votes=0
+            )
             vote.save()
             self.votes.add(vote)
 
@@ -997,18 +1121,28 @@ class MinorCaseIncomingEvent(models.Model):
         ).minor_case
         current_time = timezone.now()
 
-        vote_event = MinorCaseVoteEvent.objects.create(
-            team=self.team,
-            timestamp=current_time,
-            selected_case=most_voted_case,
-            incoming_event=self,
-        )
-        vote_event.final_votes.set(self.votes.all())
+        try:
+            vote_event = MinorCaseVoteEvent.objects.create(
+                team=self.team,
+                timestamp=current_time,
+                selected_case=most_voted_case,
+                incoming_event=self,
+            )
+            vote_event.final_votes.set(self.votes.all())
+        except Exception as e:
+            print(f"ERROR: Vote Event creation failed with error {e}")
+            print("-- likely due to a vote event already existing for the team --")
+            vote_event = MinorCaseVoteEvent.objects.get(
+                team=self.team, incoming_event=self
+            )
 
         self.final_vote = vote_event
         self.expiration = current_time
         self.save()
-        return {"name": vote_event.selected_case.name, "desc": vote_event.selected_case.description}
+        return {
+            "name": vote_event.selected_case.name,
+            "desc": vote_event.selected_case.description,
+        }
 
     @staticmethod
     def get_current_incoming_event(context):
@@ -1054,6 +1188,9 @@ class MinorCaseVoteEvent(models.Model):
     )
 
     def save(self, *args, **kwargs):
+        print(
+            f"EVENT:Vote finalized. Unlocking case {self.selected_case.name} for team {self.team}"
+        )
         super(MinorCaseVoteEvent, self).save(*args, **kwargs)
         # on creation of the vote event, sets the case for the team as an active case.
         Team.unlock_case(self.team, self.selected_case, self.timestamp)
@@ -1109,8 +1246,12 @@ class MinorCaseCompleted(models.Model):
 
         incoming_case_event = MinorCaseIncomingEvent.create_incoming_event(self.team)
         if incoming_case_event:
-            room = Room.objects.get(channel_name=f"puzzles-{self.team.team_name}") # TODO: need to ensure that this is synced with the consumer
-            create_minor_case_incoming_event.send(None, cases=incoming_case_event.get_votes(), room=room)
+            room = Room.objects.get(
+                channel_name=f"puzzles-{self.team.team_name}"
+            )  # TODO: need to ensure that this is synced with the consumer
+            create_minor_case_incoming_event.send(
+                None, cases=incoming_case_event.get_votes(), room=room
+            )
             incoming_case_event.save()
 
 
@@ -1147,91 +1288,93 @@ class AnswerSubmission(models.Model):
 
 @receiver(post_save, sender=AnswerSubmission)
 def notify_on_answer_submission(sender, instance, created, **kwargs):
-    if created:
-        now = timezone.localtime()
+    # TODO: reimplement
+    return
+    # if created:
+    #     now = timezone.localtime()
 
-        def format_time_ago(timestamp):
-            if not timestamp:
-                return ""
-            diff = now - timestamp
-            parts = ["", "", "", ""]
-            if diff.days > 0:
-                parts[0] = _("%dd") % diff.days
-            seconds = diff.seconds
-            parts[3] = _("%02ds") % (seconds % 60)
-            minutes = seconds // 60
-            if minutes:
-                parts[2] = _("%02dm") % (minutes % 60)
-                hours = minutes // 60
-                if hours:
-                    parts[1] = _("%dh") % hours
-            return _(" {} ago").format("".join(parts))
+    #     def format_time_ago(timestamp):
+    #         if not timestamp:
+    #             return ""
+    #         diff = now - timestamp
+    #         parts = ["", "", "", ""]
+    #         if diff.days > 0:
+    #             parts[0] = _("%dd") % diff.days
+    #         seconds = diff.seconds
+    #         parts[3] = _("%02ds") % (seconds % 60)
+    #         minutes = seconds // 60
+    #         if minutes:
+    #             parts[2] = _("%02dm") % (minutes % 60)
+    #             hours = minutes // 60
+    #             if hours:
+    #                 parts[1] = _("%dh") % hours
+    #         return _(" {} ago").format("".join(parts))
 
-        hints = Hint.objects.filter(team=instance.team, puzzle=instance.puzzle)
-        hint_line = ""
-        if len(hints):
-            hint_line = _("\nHints:") + ",".join(
-                "%s (%s%s)"
-                % (
-                    format_time_ago(hint.submitted_datetime),
-                    hint.get_status_display(),
-                    format_time_ago(hint.answered_datetime),
-                )
-                for hint in hints
-            )
-        if instance.used_free_answer:
-            dispatch_free_answer_alert(
-                _(":question: {} Team {} used a free answer on {}!{}").format(
-                    instance.puzzle.emoji, instance.team, instance.puzzle, hint_line
-                )
-            )
-        else:
-            submitted_teams = (
-                AnswerSubmission.objects.filter(
-                    puzzle=instance.puzzle,
-                    submitted_answer=instance.submitted_answer,
-                    used_free_answer=False,
-                    team__is_hidden=False,
-                )
-                .values_list("team_id", flat=True)
-                .distinct()
-                .count()
-            )
-            sigil = ":x:"
-            if instance.is_correct:
-                sigil = {
-                    1: ":first_place:",
-                    2: ":second_place:",
-                    3: ":third_place:",
-                }.get(submitted_teams, ":white_check_mark:")
-            elif submitted_teams > 1:
-                sigil = ":skull_crossbones:"
-            dispatch_submission_alert(
-                _("{} {} Team {} submitted `{}` for {}: {}{}").format(
-                    sigil,
-                    instance.puzzle.emoji,
-                    instance.team,
-                    instance.submitted_answer,
-                    instance.puzzle,
-                    _("Correct!") if instance.is_correct else _("Incorrect."),
-                    hint_line,
-                ),
-                correct=instance.is_correct,
-            )
-        if not instance.is_correct:
-            return
-        show_solve_notification(instance)
-        obsoleted_hints = Hint.objects.filter(
-            team=instance.team,
-            puzzle=instance.puzzle,
-            status=Hint.NO_RESPONSE,
-        )
-        # Do this instead of obsoleted_hints.update(status=Hint.OBSOLETE,
-        # answered_datetime=now) to trigger post_save.
-        for hint in obsoleted_hints:
-            hint.status = Hint.OBSOLETE
-            hint.answered_datetime = now
-            hint.save()
+    #     hints = Hint.objects.filter(team=instance.team, puzzle=instance.puzzle)
+    #     hint_line = ""
+    #     if len(hints):
+    #         hint_line = _("\nHints:") + ",".join(
+    #             "%s (%s%s)"
+    #             % (
+    #                 format_time_ago(hint.submitted_datetime),
+    #                 hint.get_status_display(),
+    #                 format_time_ago(hint.answered_datetime),
+    #             )
+    #             for hint in hints
+    #         )
+    #     if instance.used_free_answer:
+    #         dispatch_free_answer_alert(
+    #             _(":question: {} Team {} used a free answer on {}!{}").format(
+    #                 instance.puzzle.emoji, instance.team, instance.puzzle, hint_line
+    #             )
+    #         )
+    #     else:
+    #         submitted_teams = (
+    #             AnswerSubmission.objects.filter(
+    #                 puzzle=instance.puzzle,
+    #                 submitted_answer=instance.submitted_answer,
+    #                 used_free_answer=False,
+    #                 team__is_hidden=False,
+    #             )
+    #             .values_list("team_id", flat=True)
+    #             .distinct()
+    #             .count()
+    #         )
+    #         sigil = ":x:"
+    #         if instance.is_correct:
+    #             sigil = {
+    #                 1: ":first_place:",
+    #                 2: ":second_place:",
+    #                 3: ":third_place:",
+    #             }.get(submitted_teams, ":white_check_mark:")
+    #         elif submitted_teams > 1:
+    #             sigil = ":skull_crossbones:"
+    #         dispatch_submission_alert(
+    #             _("{} {} Team {} submitted `{}` for {}: {}{}").format(
+    #                 sigil,
+    #                 instance.puzzle.emoji,
+    #                 instance.team,
+    #                 instance.submitted_answer,
+    #                 instance.puzzle,
+    #                 _("Correct!") if instance.is_correct else _("Incorrect."),
+    #                 hint_line,
+    #             ),
+    #             correct=instance.is_correct,
+    #         )
+    #     if not instance.is_correct:
+    #         return
+    #     show_solve_notification(instance)
+    #     obsoleted_hints = Hint.objects.filter(
+    #         team=instance.team,
+    #         puzzle=instance.puzzle,
+    #         status=Hint.NO_RESPONSE,
+    #     )
+    #     # Do this instead of obsoleted_hints.update(status=Hint.OBSOLETE,
+    #     # answered_datetime=now) to trigger post_save.
+    #     for hint in obsoleted_hints:
+    #         hint.status = Hint.OBSOLETE
+    #         hint.answered_datetime = now
+    #         hint.save()
 
 
 class ExtraGuessGrant(models.Model):
@@ -1536,6 +1679,37 @@ class Hint(models.Model):
             settings.DOMAIN + "solution/" + self.puzzle.slug,
             settings.DOMAIN + "hints?puzzle=%s" % self.puzzle_id,
         )
+
+
+class VoiceRecording(models.Model):
+    """A component of an interactive "database puzzle" consisting of many chat transcripts."""
+
+    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    transcript = models.TextField(
+        verbose_name=_("Transcript"),
+    )
+    search_text = models.TextField(
+        verbose_name=_("Search Text"),
+        help_text=_(
+            "Text used for search indexing. Excludes characters named and sound effects"
+        ),
+    )
+    hour = models.IntegerField(verbose_name=_("Recording Hour"))
+    # timestamp = models.IntegerField(verbose_name=_("Recording Hour"))
+    audio_url = models.URLField(verbose_name=_("Audio URL"), null=True, blank=True)
+    characters = models.TextField(verbose_name=_("Characters"))
+
+    def to_dict(self):
+        return {field.name: getattr(self, field.name) for field in self._meta.fields}
+
+    class Meta:
+        indexes = [
+            GinIndex(
+                fields=["transcript"],
+                opclasses=["gin_trgm_ops"],
+                name="transcript_trgm_idx",
+            )
+        ]
 
 
 @receiver(post_save, sender=Hint)

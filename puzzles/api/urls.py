@@ -3,6 +3,7 @@ from django.urls import include, path
 from . import api_views
 from . import api_actions
 from .puzzlehandlers import urls as puzzle_handlers_urls
+
 from rest_framework.authtoken.views import obtain_auth_token
 
 app_name = "puzzles-api"
@@ -15,6 +16,7 @@ router.register(r"teams", api_views.BasicTeamViewSet, basename="team")
 router.register(r"team-members", api_views.TeamMemberViewSet, basename="team-member")
 router.register(r"errata", api_views.ErrataViewSet, basename="erratum")
 router.register(r"rounds", api_views.RoundsViewSet, basename="rounds")
+router.register(r"puzzles", api_views.PuzzleViewSet, basename="puzzles")
 
 
 urlpatterns = [
@@ -32,5 +34,7 @@ urlpatterns = [
         name="get-team-members",
     ),
     path("create_vote_event", api_actions.create_vote_event, name="create-vote-event"),
+    path("unlock-case/<str:round_slug>", api_actions.unlock_case, name="unlock-case"),
+    path("major-case/<str:major_case_slug>", api_views.major_case, name="major-case"),
     path("token-auth", obtain_auth_token, name="api_token_auth"),
 ]

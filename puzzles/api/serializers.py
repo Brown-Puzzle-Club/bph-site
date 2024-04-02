@@ -28,10 +28,17 @@ class UserSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class PuzzleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Puzzle
+        fields = "__all__"
+
+
 class MajorCaseSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = MajorCase
-        fields = "__all__"
+        fields = ["id", "name", "slug", "order"]
 
 
 class RoundSerializer(serializers.ModelSerializer):
@@ -42,18 +49,12 @@ class RoundSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class PuzzleSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Puzzle
-        fields = "__all__"
-
-
 class PuzzleBasicSerializer(serializers.ModelSerializer):
     round = RoundSerializer()
 
     class Meta:
         model = Puzzle
-        fields = ["name", "slug", "round", "order", "is_meta"]
+        fields = ["id", "name", "slug", "round", "order", "is_meta", "is_major_meta"]
 
 
 class TeamMemberSerializer(serializers.ModelSerializer):
@@ -188,19 +189,23 @@ class TeamPuzzleContextSerializer(serializers.Serializer):
     is_superuser = serializers.BooleanField()
     num_hints_remaining = serializers.IntegerField()
     num_free_answers_remaining = serializers.IntegerField()
-    solves_by_case = serializers.DictField(
-        child=serializers.DictField(
-            child=serializers.DictField(child=AnswerSubmissionSerializer())
-        )
-    )
     minor_case_solves = serializers.DictField(
         child=serializers.DictField(child=AnswerSubmissionSerializer())
     )
     minor_case_active = MinorCaseActiveSerializer(many=True)
     minor_case_completed = MinorCaseCompletedSerializer(many=True)
+    solves_by_case = serializers.DictField(
+        child=serializers.DictField(
+            child=serializers.DictField(child=AnswerSubmissionSerializer())
+        )
+    )
     unlocks = serializers.DictField(
-        child=serializers.DateTimeField()
-    )  # TODO: change here
+        child=serializers.DictField(
+            child=serializers.DictField(child=PuzzleBasicSerializer())
+        )
+    )
+    case_unlocks = serializers.DictField(child=RoundSerializer())
+    major_case_unlocks = serializers.DictField(child=MajorCaseSerializer())
 
 
 class HuntContextSerializer(serializers.Serializer):
@@ -218,25 +223,28 @@ class HuntContextSerializer(serializers.Serializer):
 
 class ContextSerializer(serializers.Serializer):
     def to_internal_value(self, data):
+        # TODO: get to work without getattr, using data.__dict__ instead.
+        # right now, the dict object is wrapped in an ASGI response, so will need to find way to escape it :P
+
         team_context_data = {}
         hunt_context_data = {}
 
-        team_serializer = TeamPuzzleContextSerializer(data=data)
-        hunt_serializer = HuntContextSerializer(data=data)
+        team_serializer = TeamPuzzleContextSerializer()
+        hunt_serializer = HuntContextSerializer()
 
-        team_context_fields = [
-            field.source for field in team_serializer.fields.values()
-        ]
-        hunt_context_fields = [
-            field.source for field in hunt_serializer.fields.values()
-        ]
+        team_context_fields = set(
+            [field.source for field in team_serializer.fields.values()]
+        )
+        hunt_context_fields = set(
+            [field.source for field in hunt_serializer.fields.values()]
+        )
 
         context_fields = dir(data)
         for ctx in context_fields:
             if ctx in hunt_context_fields:
-                hunt_context_data[ctx] = hunt_serializer.fields[ctx].get_attribute(data)
+                hunt_context_data[ctx] = getattr(data, ctx)
             elif ctx in team_context_fields:
-                team_context_data[ctx] = team_serializer.fields[ctx].get_attribute(data)
+                team_context_data[ctx] = getattr(data, ctx)
 
         return {
             "team_context": TeamPuzzleContextSerializer(team_context_data).data,

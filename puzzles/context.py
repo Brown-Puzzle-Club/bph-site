@@ -178,6 +178,9 @@ class Context:
     def is_superuser(self):
         return self.request_user.is_superuser
 
+    def is_prerelease_testsolver(self):
+        return self.team.is_prerelease_testsolver if self.team else False
+
     def team(self):
         return getattr(self.request_user, "team", None)
 
@@ -191,7 +194,14 @@ class Context:
         return self.team.num_free_answers_remaining if self.team else 0
 
     def unlocks(self):
-        return models.Team.compute_unlocks(self)
+        # return models.Team.compute_unlocks(self)
+        return self.team.unlocks_by_case
+
+    def case_unlocks(self):
+        return self.team.case_unlocks
+
+    def major_case_unlocks(self):
+        return self.team.major_case_unlocks
 
     #
     # def completed_hunt(self):

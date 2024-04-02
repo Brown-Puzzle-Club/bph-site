@@ -2,6 +2,7 @@ from datetime import datetime
 from django.contrib.auth import authenticate, login, logout
 from puzzles import models
 
+from puzzles.api.api_guards import require_admin
 from puzzles.api.form_serializers import (
     TeamUpdateSerializer,
     UserRegistrationSerializer,
@@ -155,6 +156,7 @@ def move_minor_case(request: Request, round_id):
     return Response({"success": "Move operation successful"}, status=200)
 
 
+@require_admin
 @api_view(["POST"])
 def create_vote_event(request: Request) -> Response:
     serializer = VoteEventSerializer(data=request.data)
@@ -168,6 +170,96 @@ def create_vote_event(request: Request) -> Response:
             incoming_event=serializer.validated_data.get("incoming_event"),
         )
         vote_event.save()
+
         return Response(serializer.data)
     else:
         return Response(serializer.errors, status=400)
+
+
+@api_view(["POST"])
+def submit_answer(request: Request, puzzle_slug: str) -> Response:
+    try:
+        context = request._request.context
+        # answer is a query parameter:
+        answer = request.query_params.get("answer")
+        print(
+            f"submitting for puzzle: {puzzle_slug} with answer: {answer} for team: {context.team}"
+        )
+
+        puzzle = context.team.unlocks.get(puzzle_slug)
+        if not puzzle:
+            if context.is_admin:
+                puzzle = Puzzle.objects.get(slug=puzzle_slug)
+            else:
+                return Response({"error": "Puzzle not unlocked"}, status=403)
+
+        sanitized_answer = "".join(
+            [char for char in puzzle.answer if char.isalpha()]
+        ).upper()
+
+        correct = answer.upper() == sanitized_answer
+        if correct:
+            print(f"Correct answer! ({sanitized_answer})")
+        else:
+            print("incorrect.")
+
+        try:
+            submission = AnswerSubmission.objects.create(
+                team=context.team,
+                puzzle=puzzle,
+                submitted_answer=answer,
+                is_correct=correct,
+                used_free_answer=False,
+            )
+            submission.save()
+        except Exception as e:
+            return Response(
+                {"error": "Answer submission failed", "error_body": str(e)}, status=500
+            )
+
+        # if this submission solves the minor case:
+        if correct:
+            if not request.context.hunt_is_over:
+                context.team.last_solve_time = request.context.now
+                context.team.save()
+
+            if puzzle.is_meta:
+                print("Solved the minor case!")
+                minor_case = puzzle.round
+                completed = MinorCaseCompleted.objects.create(
+                    team=context.team,
+                    minor_case_round=minor_case,
+                    completed_datetime=request.context.now,
+                )
+                completed.save()
+
+            if puzzle.is_major_meta:
+                print("Solved the major case!")
+                # TODO: major case completion
+
+        return Response({"status": "correct" if correct else "incorrect"}, status=200)
+        # TODO:
+        # - puzzle messages
+        # - guess limit
+
+    except Puzzle.DoesNotExist:
+        return Response({"error": "Puzzle not found"}, status=404)
+
+
+TESTSOLVE_TEAM = "shhh2"
+
+
+@api_view(["POST"])
+def unlock_case(request: Request, round_slug: str) -> Response:
+    try:
+        context = request._request.context
+
+        case = Round.objects.get(slug=round_slug)
+        team = Team.objects.get(team_name=TESTSOLVE_TEAM)
+
+        Team.unlock_case(team, case, context.now)
+
+        return Response({"status": "success"})
+    except Exception as e:
+        print(e)
+        return Response({"error": "Could not unlock"}, status=404)

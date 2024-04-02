@@ -1,6 +1,10 @@
+import { MarkdownComponents } from "@/components/puzzle/MarkdownWrapper";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { useDrag, useDrop } from "react-dnd";
+import ReactMarkdown from "react-markdown";
 import { BeatLoader } from "react-spinners";
+import remarkGfm from "remark-gfm";
 import { InternalCharacter, Role } from "../../../utils/major_cases/social-deduction/constants";
 import CharacterRoleTooltip from "./CharacterRoleTooltip";
 
@@ -55,46 +59,19 @@ export default function Verdict({
   const submit = async () => {
     setIsSubmitting(true);
 
-    const csrftoken = getCookie("csrftoken");
-
-    try {
-      const result = await fetch("/social-deduction/submit", {
-        method: "POST",
-        body: JSON.stringify({
-          assignments,
-        }),
-        headers: { "X-CSRFToken": csrftoken || "", "Content-Type": "application/json" },
+    axios
+      .post("/api/puzzle/social-deduction/verdict_guess", {
+        assignments,
+      })
+      .then((response) => {
+        setOutput(response.data["content"]);
+      })
+      .catch((error) => {
+        setOutput(`Error: ${error}`);
+      })
+      .finally(() => {
+        setIsSubmitting(false);
       });
-
-      if (!result.ok) {
-        // HTTP response code was not 2xx. Maybe introspect more...
-        setOutput(`Error: ${result.status} ${result.statusText}`);
-      } else {
-        const res = await result.json();
-        setOutput(res["content"]);
-      }
-    } catch (e) {
-      // This error handling will be very poor.
-      setOutput(`Error: ${e}`);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const getCookie = (name: string) => {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== "") {
-      const cookies = document.cookie.split(";");
-      for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i].trim();
-        // Does this cookie string begin with the name we want?
-        if (cookie.substring(0, name.length + 1) === name + "=") {
-          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-          break;
-        }
-      }
-    }
-    return cookieValue;
   };
 
   const RoleDraggable = ({ role, assigned }: { role: Role; assigned?: boolean }) => {
@@ -190,7 +167,17 @@ export default function Verdict({
         <button onClick={() => handleResetAssignments()}>Reset</button>
       </div>
       <div className="flex justify-center space-x-2 px-10 py-5">
-        {isSubmitting ? <BeatLoader color={"#fff"} size={12} /> : <div id="output">{output}</div>}
+        {isSubmitting ? (
+          <BeatLoader color={"#fff"} size={12} />
+        ) : (
+          <div id="output">
+            {
+              <ReactMarkdown remarkPlugins={[remarkGfm]} components={MarkdownComponents}>
+                {output}
+              </ReactMarkdown>
+            }
+          </div>
+        )}
       </div>
     </div>
   );
