@@ -92,7 +92,7 @@ export default function PuzzleList() {
                                   className={`text-md underline ${puzzle.is_meta ? "font-bold" : ""}`}
                                   style={{ color: CASE_PALETTE[curTab].textColor }}
                                 >
-                                  {puzzle.name}
+                                  {puzzle.name  }
                                 </a>
                               </div>
                               {/* ANSWER */}

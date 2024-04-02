@@ -5,6 +5,7 @@ import bear_wave from "../../assets/landing/bear_wave.png";
 import layer1 from "../../assets/landing/layer_1_crop.png";
 import layer2 from "../../assets/landing/layer_2.png";
 import layer3 from "../../assets/landing/layer_3.png";
+import release from "../../assets/landing/release.png";
 
 import logo from "../../assets/landing/logo.png";
 import blimp from "../../assets/landing/register_blimp.png";
@@ -23,6 +24,7 @@ const LandingSplash: React.FC = () => {
       const layer2Element = document.querySelector(".layer-2") as HTMLElement;
       const layer3Element = document.querySelector(".layer-3") as HTMLElement;
       const layer4Element = document.querySelector(".layer-4") as HTMLElement;
+      const layer5Element = document.querySelector(".layer-5") as HTMLElement;
 
       if (layer2Element) {
         layer2Element.style.transform = `translateY(-${scrollY * 0.3}px)`;
@@ -32,6 +34,9 @@ const LandingSplash: React.FC = () => {
       }
       if (layer4Element) {
         layer4Element.style.transform = `translateY(-${scrollY * 0.4}px)`;
+      }
+      if (layer5Element) {
+        layer5Element.style.transform = `translateY(-${scrollY * 0.4}px) rotate(9deg)`;
       }
     };
 
@@ -88,7 +93,7 @@ const LandingSplash: React.FC = () => {
             src={logo}
           />
           <img
-            className="blimp art-bg-img absolute w-full z-50"
+            className="blimp art-bg-img absolute w-full z-50 hover:drop-shadow-[0_15px_15px_rgba(255,255,0,0.2)]"
             style={{
               top: `${blimpPosition}%`,
               left: "80%",
@@ -121,7 +126,6 @@ const LandingSplash: React.FC = () => {
               top: "89%",
               left: "38%",
               width: "6%",
-              transform: "translate(-50%, -50%)",
             }}
             onMouseEnter={(e) => {
               const target = e.target as HTMLImageElement;
@@ -133,6 +137,18 @@ const LandingSplash: React.FC = () => {
             }}
             src={bear_regular}
           />
+          <a href="https://www.instagram.com/p/C5Q9DwRu4wT/?img_index=2">
+            <img
+              className="layer-5 art-bg-img absolute w-full z-40 hover:drop-shadow-[0_15px_15px_rgba(255,255,255,0.2)] hover:cursor-pointer"
+              style={{
+                top: "44%",
+                left: "93%",
+                width: "6%",
+                transform: "rotate(9deg)",
+              }}
+              src={release}
+            />
+          </a>
         </div>
       </div>
     </section>
