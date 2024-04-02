@@ -711,6 +711,31 @@ class Team(models.Model):
             )
         }
 
+    def major_case_unlocks(self):
+        unique_major_cases = {}
+        for unlock in self.puzzleunlock_set.select_related("puzzle", "puzzle__round"):
+            if (
+                not unlock
+                or not unlock.puzzle
+                or not unlock.puzzle.round
+                or not unlock.puzzle.round.major_case
+            ):
+                continue
+            if unlock.puzzle.round.major_case.slug not in unique_major_cases:
+                unique_major_cases[unlock.puzzle.round.major_case.slug] = (
+                    unlock.puzzle.round.major_case
+                )
+        return unique_major_cases
+
+    def case_unlocks(self):
+        unique_cases = {}
+        for unlock in self.puzzleunlock_set.select_related("puzzle", "puzzle__round"):
+            if not unlock or not unlock.puzzle or not unlock.puzzle.round:
+                continue
+            if unlock.puzzle.round.slug not in unique_cases:
+                unique_cases[unlock.puzzle.round.slug] = unlock.puzzle.round
+        return unique_cases
+
     def unlocks_by_case(self):
         out = {}
         for unlock in self.puzzleunlock_set.select_related("puzzle", "puzzle__round"):

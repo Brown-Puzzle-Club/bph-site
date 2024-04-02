@@ -136,6 +136,8 @@ const TeamPuzzleContextSchema = z.object({
   minor_case_completed: z.array(MinorCaseCompletedSchema),
   solves_by_case: z.record(z.record(z.record(AnswerSubmissionSchema))), // major_case -> case_id -> puzzle_id -> answer submission
   unlocks: z.record(z.record(z.record(PuzzleSchema))), // major_case_id -> case_id -> puzzle_id -> puzzle
+  case_unlocks: z.record(RoundSchema),
+  major_case_unlocks: z.record(MajorCaseSchema),
 });
 
 const HuntContextSchema = z.object({

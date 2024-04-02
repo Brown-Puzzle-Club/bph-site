@@ -197,6 +197,12 @@ class Context:
         # return models.Team.compute_unlocks(self)
         return self.team.unlocks_by_case
 
+    def case_unlocks(self):
+        return self.team.case_unlocks
+
+    def major_case_unlocks(self):
+        return self.team.major_case_unlocks
+
     #
     # def completed_hunt(self):
     #     return (self.team.runaround_solve_time is not None or self.team.all_metas_solve_time is not None) if self.team else False

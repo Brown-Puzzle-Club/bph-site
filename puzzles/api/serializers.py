@@ -35,11 +35,10 @@ class PuzzleSerializer(serializers.ModelSerializer):
 
 
 class MajorCaseSerializer(serializers.ModelSerializer):
-    puzzle = PuzzleSerializer()
 
     class Meta:
         model = MajorCase
-        fields = "__all__"
+        fields = ["id", "name", "slug", "order"]
 
 
 class RoundSerializer(serializers.ModelSerializer):
@@ -205,6 +204,8 @@ class TeamPuzzleContextSerializer(serializers.Serializer):
             child=serializers.DictField(child=PuzzleBasicSerializer())
         )
     )
+    case_unlocks = serializers.DictField(child=RoundSerializer())
+    major_case_unlocks = serializers.DictField(child=MajorCaseSerializer())
 
 
 class HuntContextSerializer(serializers.Serializer):

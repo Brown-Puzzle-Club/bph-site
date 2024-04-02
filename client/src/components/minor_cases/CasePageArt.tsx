@@ -4,6 +4,7 @@ import painting from "@/assets/minor_cases/exile/painting.png";
 import victrola from "@/assets/minor_cases/exile/victrola.png";
 import wine from "@/assets/minor_cases/exile/wine.png";
 import { useDjangoContext } from "@/hooks/useDjangoContext";
+import { CASE_PALETTE, MajorCaseEnum } from "@/utils/constants";
 import { PuzzleAnswer, cn, getUnlockedPuzzle } from "@/utils/utils";
 import { ReactNode, useMemo } from "react";
 import RelativeAsset, { AssetProps } from "../RelativeAsset";
@@ -87,7 +88,12 @@ const PuzzleIconWrapper = (props: PuzzleAsset) => {
             {puzzle_answer?.puzzle.name.toUpperCase()}
           </p>
           <p
-            className={`answer mt-1 p-[0.2rem] font-bold text-center text-[#98ff98] font-mono drop-shadow ${props.meta ? "text-[1vw]" : "text-[0.8vw]"}`}
+            className={`answer mt-1 p-[0.2rem] font-bold text-center font-mono drop-shadow ${props.meta ? "text-[1vw]" : "text-[0.8vw]"}`}
+            style={{
+              color:
+                CASE_PALETTE[puzzle_answer.puzzle.round.major_case.slug as MajorCaseEnum]
+                  .answerColor,
+            }}
           >
             {puzzle_answer?.answer?.toUpperCase()}
           </p>
