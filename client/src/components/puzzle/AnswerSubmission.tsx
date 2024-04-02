@@ -255,7 +255,7 @@ export default function AnswerSubmit({
         <div className="text-white dark text-center">
           ANSWER: <span className="font-mono text-green-100">{PUZZLE_ANSWER}</span>
         </div>
-      ) : major_case === MajorCaseEnum.COLORED_THREAD ? (
+      ) : major_case === MajorCaseEnum.COLORED_THREAD && puzzle.is_meta ? (
         <AnswerSubmitRedThread puzzle_slug={puzzle.slug} setSubmissions={setSubmissions} />
       ) : (
         <AnswerSubmitRegular puzzle_slug={puzzle.slug} setSubmissions={setSubmissions} />
