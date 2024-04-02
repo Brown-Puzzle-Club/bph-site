@@ -19,6 +19,7 @@ import Club from "./routes/Club";
 import Contact from "./routes/Contact";
 import Credits from "./routes/Credits";
 import ErrorPage from "./routes/ErrorPage";
+import EventPage from "./routes/EventPage";
 import InfoPage from "./routes/InfoPage";
 import Landing from "./routes/Landing";
 import Leaderboard from "./routes/Leaderboard";
@@ -31,13 +32,12 @@ import PuzzleList from "./routes/PuzzleList";
 import PuzzlePage from "./routes/PuzzlePage";
 import RegisterForm from "./routes/Register";
 import TeamPage from "./routes/TeamPage";
+import WebsocketDemo from "./routes/WebsocketDemo";
 import "./styles/index.css";
 import "./styles/puzzlestyle-data.css";
 import "./styles/puzzlestyle-red-thread.css";
 import "./styles/puzzlestyle-soc-deduction.css";
 import { MajorCaseEnum } from "./utils/constants";
-import WebsocketDemo from "./routes/WebsocketDemo";
-import EventPage from "./routes/EventPage";
 
 try {
   axios.defaults.headers.common["X-CSRFToken"] = Cookies.get("csrftoken");
