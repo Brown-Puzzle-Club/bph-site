@@ -45,6 +45,10 @@ const HangmanWordle = ({ setGameMode, setGuesses, gameState, answers }: HangmanW
   const { toast } = useToast();
 
   useEffect(() => {
+    console.log(answers);
+  }, [answers]);
+
+  useEffect(() => {
     if (solved.every((s) => s)) {
       setGameMode(GameMode.FinalWordle);
     }
@@ -126,7 +130,7 @@ const HangmanWordle = ({ setGameMode, setGuesses, gameState, answers }: HangmanW
             return { letter: letter, verified: guessVerification[i] };
           }) as [Character, Character, Character, Character, Character];
           if (guessVerification.every((v) => v === VerificationState.Correct)) {
-            setBoard((prev) => clearRow(selectedRow, prev, guessVerification));
+            setBoard((prev) => clearRow(selectedRow, prev, guessVerification, solved));
             setSelectedRow(Row.None);
             setSolved((prev) => {
               const newSolved = [...prev] satisfies [boolean, boolean, boolean];
@@ -134,7 +138,7 @@ const HangmanWordle = ({ setGameMode, setGuesses, gameState, answers }: HangmanW
               return newSolved;
             });
           } else {
-            setBoard((prev) => clearRow(selectedRow, prev, guessVerification));
+            setBoard((prev) => clearRow(selectedRow, prev, guessVerification, solved));
             setGuesses((prev) => prev - 1);
             setSelectedRow(Row.None);
             setPrevGuesses((prev) => [...prev, { guess: characters, row: selectedRow }]);

@@ -212,25 +212,34 @@ const boardIndexToWordIndex = (index: number, selectedRow: Row) => {
   }
 };
 
-export const clearRow = (selectedRow: Row, board: Board, verificationGuess: WordVerification) => {
+export const clearRow = (
+  selectedRow: Row,
+  board: Board,
+  verificationGuess: WordVerification,
+  solved: [boolean, boolean, boolean],
+) => {
   const newBoard = [...board];
-  const removeCorrectLetters = verificationGuess.some((v) => v !== VerificationState.Correct);
+  const newSolved = [...solved];
+  newSolved[selectedRow] =
+    newSolved[selectedRow] || verificationGuess.every((v) => v === VerificationState.Correct);
+  console.log(newSolved);
 
   newBoard.forEach((_character, i) => {
-    if (
-      idToRow(i).includes(selectedRow) &&
-      (removeCorrectLetters ||
-        verificationGuess[boardIndexToWordIndex(i, selectedRow)] !== VerificationState.Correct)
-    ) {
-      newBoard[i] = { letter: "", verified: VerificationState.Unverified };
-    } else if (idToRow(i).includes(selectedRow)) {
-      newBoard[i].verified = VerificationState.Correct;
+    if (idToRow(i).includes(selectedRow)) {
+      if (
+        verificationGuess[boardIndexToWordIndex(i, selectedRow)] === VerificationState.Correct &&
+        idToRow(i).some((x) => newSolved[x as number])
+      ) {
+        newBoard[i].verified = VerificationState.Correct;
+      } else {
+        newBoard[i] = { letter: "", verified: VerificationState.Unverified };
+      }
     }
   });
+
   return newBoard;
 };
 
-// TODO: handle repeat letters correcty!
 export const verifyGuess = (
   guess: string,
   answers: string[],
