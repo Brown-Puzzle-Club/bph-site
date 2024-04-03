@@ -11,6 +11,7 @@ import {
 } from "./components/LockedContent";
 import MajorCaseWrapper from "./components/major_cases/MajorCaseWrapper";
 import { PageWrapper } from "./components/PageWrapper";
+import DragTest from "./components/threadtest/ThreadTest";
 import { AuthContextProvider } from "./hooks/useAuth";
 import { DjangoContextProvider } from "./hooks/useDjangoContext";
 import AdminPanel from "./routes/Admin";
@@ -23,7 +24,9 @@ import EventPage from "./routes/EventPage";
 import InfoPage from "./routes/InfoPage";
 import Landing from "./routes/Landing";
 import Leaderboard from "./routes/Leaderboard";
+import ColoredThread from "./routes/major_cases/ColoredThread";
 import Data from "./routes/major_cases/Data";
+import SocialDeduction from "./routes/major_cases/SocialDeduction";
 import MarkdownTest from "./routes/MarkdownTest";
 import MinorCasePage from "./routes/MinorCasePage";
 import MyTeamPage from "./routes/MyTeamPage";
@@ -32,13 +35,11 @@ import PuzzlePage from "./routes/PuzzlePage";
 import RegisterForm from "./routes/Register";
 import TeamPage from "./routes/TeamPage";
 import WebsocketDemo from "./routes/WebsocketDemo";
-import SocialDeduction from "./routes/major_cases/SocialDeduction";
 import "./styles/index.css";
 import "./styles/puzzlestyle-data.css";
 import "./styles/puzzlestyle-red-thread.css";
 import "./styles/puzzlestyle-soc-deduction.css";
 import { MajorCaseEnum } from "./utils/constants";
-import ColoredThread from "./routes/major_cases/ColoredThread";
 
 try {
   axios.defaults.headers.common["X-CSRFToken"] = Cookies.get("csrftoken");
@@ -222,6 +223,12 @@ const router = createBrowserRouter([
         path: "/websocket-demo",
         element: (
           <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<WebsocketDemo />} />
+        ),
+      },
+      {
+        path: "/threadtest",
+        element: (
+          <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<DragTest />} />
         ),
       },
     ],
