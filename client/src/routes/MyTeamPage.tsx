@@ -51,7 +51,7 @@ const editTeamFormSchema = z
       z.object({
         name: z.string().optional(),
         email: z.string().optional(),
-      })
+      }),
     ),
     in_person: z.boolean(),
     num_brown_members: z.number().optional(),
@@ -74,7 +74,7 @@ const editTeamFormSchema = z
     {
       message: "Valid US phone number required.",
       path: ["phone_number"],
-    }
+    },
   )
   .refine(
     (data) => {
@@ -86,7 +86,7 @@ const editTeamFormSchema = z
     {
       message: "Required for in person teams that don't need a room reserved.",
       path: ["where_to_find"],
-    }
+    },
   );
 
 export default function MyTeamPage() {

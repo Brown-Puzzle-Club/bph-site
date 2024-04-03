@@ -30,8 +30,13 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext as _
 
-from puzzles.context import context_cache
+import uuid
+import random
 
+from django.contrib.postgres.indexes import GinIndex
+from channels_presence.models import Room
+from puzzles.context import context_cache
+from puzzles.signals import create_minor_case_incoming_event
 from puzzles.messaging import (
     dispatch_general_alert,
     dispatch_free_answer_alert,
@@ -46,6 +51,8 @@ from puzzles.messaging import (
 from puzzles.hunt_config import (
     HUNT_END_TIME,
     HUNT_CLOSE_TIME,
+    MAJOR_CASE_SLUGS,
+    MAJOR_CASE_UNLOCK_SOLVE_COUNT,
     MAX_GUESSES_PER_PUZZLE,
     HINTS_ENABLED,
     HOURS_PER_HINT,
@@ -56,9 +63,6 @@ from puzzles.hunt_config import (
     FREE_ANSWERS_PER_DAY,
     FREE_ANSWER_TIME,
     TEAM_AGE_BEFORE_FREE_ANSWERS,
-    INTRO_ROUND_SLUG,
-    RUNAROUND_SLUG,
-    META_SLUGS,
 )
 
 
@@ -66,6 +70,14 @@ class MajorCase(models.Model):
     name = models.CharField(max_length=255, verbose_name=_("Name"))
     slug = models.SlugField(max_length=255, unique=True, verbose_name=_("Slug"))
     order = models.IntegerField(default=0, verbose_name=_("Order"))
+    puzzle = models.ForeignKey(
+        "Puzzle",
+        limit_choices_to={"is_major_meta": True},
+        on_delete=models.SET_NULL,
+        verbose_name=_("puzzle"),
+        blank=True,
+        null=True,
+    )
 
     class Meta:
         verbose_name = _("major case")
@@ -110,6 +122,11 @@ class Round(models.Model):
         verbose_name=_("Unlock local minor"),
         help_text=_("If nonnegative, round unlocks after N solves in this major case."),
     )
+    unlock_hours = models.IntegerField(
+        default=-1,
+        verbose_name=_("Unlock hours"),
+        help_text=_("If nonnegative, round unlocks N hours after the hunt starts."),
+    )
 
     class Meta:
         verbose_name = _("round (minor case)")
@@ -120,8 +137,15 @@ class Round(models.Model):
 
     @staticmethod
     def get_unlocked_rounds(context):
-        # TODO: query unlocked rounds model to make sure that this only sends rounds that are unlocked to the user.
-        return Round.objects.all()
+        if context.is_admin:
+            return Round.objects.all()
+
+        unlocked_round_dicts = context.team.unlocks_by_case.values()
+        unlocked_rounds = {}
+        for round_dict in unlocked_round_dicts:
+            unlocked_rounds.update(round_dict)
+
+        return Round.objects.filter(slug__in=unlocked_rounds.keys())
 
     def __str__(self):
         return self.name
@@ -171,9 +195,13 @@ class Puzzle(models.Model):
         help_text=_("Answer (fine if unnormalized)"),
     )
 
-    round = models.ForeignKey(Round, on_delete=models.CASCADE, verbose_name=_("round"))
+    # round is only required if the puzzle is not a major meta
+    round = models.ForeignKey(
+        Round, null=True, blank=True, on_delete=models.CASCADE, verbose_name=_("round")
+    )
     order = models.IntegerField(default=0, verbose_name=_("Order"))
     is_meta = models.BooleanField(default=False, verbose_name=_("Is meta"))
+    is_major_meta = models.BooleanField(default=False, verbose_name=_("Is major meta"))
 
     # For unlocking purposes, a "main round solve" is a solve that is not a
     # meta or in the intro round.
@@ -489,52 +517,52 @@ class Team(models.Model):
                 ),
             ),
             total_solves=Count("scoring_submissions"),
-            runaround_solve_time=Min(
-                Case(
-                    When(
-                        scoring_submissions__puzzle__slug=RUNAROUND_SLUG,
-                        then="scoring_submissions__submitted_datetime",
-                    )
-                    # else, null by default
-                )
-            ),
-            recent_meta_solve_time=Max(
-                Case(  # only usable when all metas are solved.. So check meta_solve_count first.
-                    When(
-                        Q(scoring_submissions__puzzle__slug__in=META_SLUGS),
-                        then="scoring_submissions__submitted_datetime",
-                    ),
-                    default=None,
-                    output_field=models.DateTimeField(),
-                )
-            ),
-            meta_solve_count=Count(
-                Case(
-                    When(
-                        Q(scoring_submissions__puzzle__slug__in=META_SLUGS),
-                        then="scoring_submissions__submitted_datetime",
-                    ),
-                    default=None,
-                    output_field=IntegerField(),
-                )
-            ),
-            all_metas_solve_time=Case(
-                When(
-                    meta_solve_count=len(META_SLUGS),
-                    then=Max(
-                        Case(
-                            When(
-                                Q(scoring_submissions__puzzle__slug__in=META_SLUGS),
-                                then="scoring_submissions__submitted_datetime",
-                            ),
-                            default=None,
-                            output_field=models.DateTimeField(),
-                        )
-                    ),
-                ),
-                default=None,
-                output_field=models.DateTimeField(),
-            ),
+            # runaround_solve_time=Min(
+            #     Case(
+            #         When(
+            #             scoring_submissions__puzzle__slug=RUNAROUND_SLUG,
+            #             then="scoring_submissions__submitted_datetime",
+            #         )
+            #         # else, null by default
+            #     )
+            # ),
+            # recent_meta_solve_time=Max(
+            #     Case(  # only usable when all metas are solved.. So check meta_solve_count first.
+            #         When(
+            #             Q(scoring_submissions__puzzle__slug__in=META_SLUGS),
+            #             then="scoring_submissions__submitted_datetime",
+            #         ),
+            #         default=None,
+            #         output_field=models.DateTimeField(),
+            #     )
+            # ),
+            # meta_solve_count=Count(
+            #     Case(
+            #         When(
+            #             Q(scoring_submissions__puzzle__slug__in=META_SLUGS),
+            #             then="scoring_submissions__submitted_datetime",
+            #         ),
+            #         default=None,
+            #         output_field=IntegerField(),
+            #     )
+            # ),
+            # all_metas_solve_time=Case(
+            #     When(
+            #         meta_solve_count=len(META_SLUGS),
+            #         then=Max(
+            #             Case(
+            #                 When(
+            #                     Q(scoring_submissions__puzzle__slug__in=META_SLUGS),
+            #                     then="scoring_submissions__submitted_datetime",
+            #                 ),
+            #                 default=None,
+            #                 output_field=models.DateTimeField(),
+            #             )
+            #         ),
+            #     ),
+            #     default=None,
+            #     output_field=models.DateTimeField(),
+            # ),
             # Coalesce(things) = the first of things that isn't null
             last_solve_or_creation_time=Coalesce("last_solve_time", "creation_time"),
             in_person=Case(
@@ -629,22 +657,6 @@ class Team(models.Model):
     def num_hints_remaining(self):
         return self.num_hints_total - self.num_hints_used
 
-    def num_intro_hints_used(self):
-        return min(
-            INTRO_HINTS,
-            sum(
-                hint.consumes_hint
-                for hint in self.asked_hints
-                if hint.puzzle.round.slug == INTRO_ROUND_SLUG
-            ),
-        )
-
-    def num_intro_hints_remaining(self):
-        return min(self.num_hints_remaining, INTRO_HINTS - self.num_intro_hints_used)
-
-    def num_nonintro_hints_remaining(self):
-        return self.num_hints_remaining - self.num_intro_hints_remaining
-
     def num_free_answers_total(self):
         if not FREE_ANSWERS_ENABLED or self.hunt_is_over:
             return 0
@@ -674,7 +686,7 @@ class Team(models.Model):
 
     def solves(self):
         return {
-            submission.puzzle_id: submission.puzzle
+            submission.puzzle.slug: submission
             for submission in self.submissions
             if submission.is_correct
         }
@@ -687,12 +699,93 @@ class Team(models.Model):
             )
         }
 
+    def major_case_unlocks(self):
+        unique_major_cases = {}
+        for unlock in self.puzzleunlock_set.select_related("puzzle", "puzzle__round"):
+            if (
+                not unlock
+                or not unlock.puzzle
+                or not unlock.puzzle.round
+                or not unlock.puzzle.round.major_case
+            ):
+                continue
+            if unlock.puzzle.round.major_case.slug not in unique_major_cases:
+                unique_major_cases[unlock.puzzle.round.major_case.slug] = (
+                    unlock.puzzle.round.major_case
+                )
+        return unique_major_cases
+
+    def major_case_puzzles(self):
+        # first, calculate if there needs to be an unlock for any of the major case puzzles
+        solves = self.solves_by_case
+        major_case_puzzles = {}
+        current_unlocks = self.unlocks
+
+        for i, major_case_slug in enumerate(MAJOR_CASE_SLUGS):
+            if major_case_slug in current_unlocks:
+                major_case_puzzles[major_case_slug] = current_unlocks[major_case_slug]
+            else:
+                required_case_solve_count = MAJOR_CASE_UNLOCK_SOLVE_COUNT[i]
+                if (
+                    major_case_slug in solves
+                    and len(solves[major_case_slug]) >= required_case_solve_count
+                ):
+                    major_case_puzzles[major_case_slug] = Puzzle.objects.get(
+                        slug=major_case_slug
+                    )
+
+        unlocks_to_make = []
+        for puzzle in major_case_puzzles.values():
+            if puzzle.slug not in current_unlocks:
+                unlocks_to_make.append(
+                    PuzzleUnlock(team=self, puzzle=puzzle, unlock_datetime=self.now)
+                )
+
+        # TODO: make a notification for every new major case unlock.
+
+        PuzzleUnlock.objects.bulk_create(unlocks_to_make)
+        return major_case_puzzles
+
+    def case_unlocks(self):
+        unique_cases = {}
+        for unlock in self.puzzleunlock_set.select_related("puzzle", "puzzle__round"):
+            if not unlock or not unlock.puzzle or not unlock.puzzle.round:
+                continue
+            if unlock.puzzle.round.slug not in unique_cases:
+                unique_cases[unlock.puzzle.round.slug] = unlock.puzzle.round
+        return unique_cases
+
+    def unlocks_by_case(self):
+        out = {}
+        for unlock in self.puzzleunlock_set.select_related("puzzle", "puzzle__round"):
+            if (
+                not unlock
+                or not unlock.puzzle
+                or not unlock.puzzle.round
+                or not unlock.puzzle.round.major_case
+            ):
+                continue
+            if unlock.puzzle.round.major_case.slug not in out:
+                out[unlock.puzzle.round.major_case.slug] = {}
+            if unlock.puzzle.round.slug not in out[unlock.puzzle.round.major_case.slug]:
+                out[unlock.puzzle.round.major_case.slug][unlock.puzzle.round.slug] = {}
+            out[unlock.puzzle.round.major_case.slug][unlock.puzzle.round.slug][
+                unlock.puzzle.slug
+            ] = unlock.puzzle
+        return out
+
     def solves_by_case(self):
         out = {}
         # major_case : minor_case : puzzle : {puzzle, solve_time, answer}
         # DOES NOT INCLUDE EVENT PUZZLES, RUNAROUND.
         for submit in self.submissions:
-            if not submit.puzzle.round.major_case:
+            if (
+                not submit.is_correct
+                or not submit.puzzle
+                or not submit.puzzle.round
+                or not submit.puzzle.round.meta
+                or not submit.puzzle.round.major_case
+            ):
                 continue
             if submit.puzzle.round.major_case.slug not in out:
                 out[submit.puzzle.round.major_case.slug] = {}
@@ -712,7 +805,14 @@ class Team(models.Model):
     def minor_case_solves(self):
         out = {}
         for submit in self.submissions:
-            if not submit.puzzle.round.major_case:
+            # brute check of all possible unhappy paths
+            if (
+                not submit.is_correct
+                or not submit.puzzle
+                or not submit.puzzle.round
+                or not submit.puzzle.round.meta
+                or not submit.puzzle.round.major_case
+            ):
                 continue
             if submit.puzzle.round.major_case.slug not in out:
                 out[submit.puzzle.round.major_case.slug] = {}
@@ -747,75 +847,128 @@ class Team(models.Model):
     def main_round_solves(self):
         global_solves = 0
         local_solves = collections.defaultdict(int)
-        for puzzle in self.solves.values():
-            if puzzle.is_meta:
+        for submission in self.solves.values():
+            if submission.puzzle.is_meta:
                 continue
-            local_solves[puzzle.round.slug] += 1
-            if puzzle.round.slug == INTRO_ROUND_SLUG:
-                continue
+            if submission.puzzle.round:
+                local_solves[submission.puzzle.round.slug] += 1
+                # if puzzle.round.slug == INTRO_ROUND_SLUG:
+                #     continue
             global_solves += 1
         return (global_solves, local_solves)
 
     @staticmethod
-    def compute_unlocks(context):
-        # print("SOLVES:", context.team.solves)
-        metas_solved = []
-        puzzles_unlocked = collections.OrderedDict()
-        unlocks = []
-        for puzzle in context.all_puzzles:
-            if context.team and puzzle.is_meta:
-                if puzzle.id in context.team.solves:
-                    # print("META SOLVED:", puzzle)
-                    metas_solved.append(puzzle)
-                    # print("META SOLVED:", puzzle)
-                    metas_solved.append(puzzle)
-        # print("META SOLVED CNT:", len(metas_solved))
+    def compute_unlocks(case_unlocks, context):
+        # computes extra unlocks that could happen due to time or local solve count
 
-        for puzzle in context.all_puzzles:
-            unlocked_at = None
-            if 0 <= puzzle.unlock_hours and (
-                puzzle.unlock_hours == 0
+        rounds_not_unlocked = Round.objects.order_by("order").exclude(
+            slug__in=case_unlocks.keys()
+        )
+        new_unlocks = []
+
+        for round in rounds_not_unlocked:
+            if 0 <= round.unlock_hours and (
+                round.unlock_hours == 0
                 or not context.team
                 or context.team.allow_time_unlocks
             ):
                 unlock_time = context.start_time + datetime.timedelta(
-                    hours=puzzle.unlock_hours
+                    hours=round.unlock_hours
                 )
                 if unlock_time <= context.now:
-                    unlocked_at = unlock_time
-            # TODO: REMOVE TO REENABLE PRERELEASE FULL-VISIBILITY
-            if context.is_admin or context.hunt_is_over:
-                unlocked_at = context.start_time
-            elif context.team and context.hunt_has_started:
-                (global_solves, local_solves) = context.team.main_round_solves
-                # and (global_solves or any(metas_solved)):
-                if 0 <= puzzle.unlock_global <= global_solves:
-                    unlocked_at = context.now
-                if 0 <= puzzle.unlock_local <= local_solves[puzzle.round.slug]:
-                    unlocked_at = context.now
-                if 0 <= puzzle.unlock_meta <= len(metas_solved):
-                    unlocked_at = context.now
-                if puzzle.slug == RUNAROUND_SLUG and all(metas_solved):
-                    unlocked_at = context.now
-                if puzzle.id in context.team.db_unlocks:
-                    unlocked_at = context.team.db_unlocks[puzzle.id].unlock_datetime
-                elif unlocked_at:
-                    unlocks.append(Team.unlock_puzzle(context, puzzle, unlocked_at))
-            if unlocked_at:
-                puzzles_unlocked[puzzle] = unlocked_at
-        if unlocks:
-            PuzzleUnlock.objects.bulk_create(unlocks, ignore_conflicts=True)
-        return puzzles_unlocked
+                    case_unlocks[round.slug] = round
+                    new_unlocks.append(round)
+
+        for new_unlock in new_unlocks:
+            Team.unlock_case(context.team, new_unlock, context.now)
+
+        new_puzzle_unlocks = []
+        for puzzle in context.all_puzzles:
+            if (
+                0 <= puzzle.unlock_global
+                and puzzle.round.slug in case_unlocks
+                and puzzle.unlock_global <= context.team.main_round_solves[0]
+            ):
+                unlock_time = context.now
+                Team.unlock_puzzle(context, puzzle, unlock_time)
+
+            if (
+                0 <= puzzle.unlock_local
+                and puzzle.round.slug in case_unlocks
+                and puzzle.unlock_local
+                <= context.team.main_round_solves[1][puzzle.round.slug]
+            ):
+                unlock_time = context.now
+                new_puzzle_unlocks.append(
+                    Team.unlock_puzzle(context, puzzle, unlock_time)
+                )
+
+        PuzzleUnlock.objects.bulk_create(new_puzzle_unlocks, ignore_conflicts=True)
+        return case_unlocks
+
+    # nlock_case(team, minor_case, unlock_datetime):
+
+    # for puzzle in context.all_puzzles:
+
+    # print("SOLVES:", context.team.solves)
+    # metas_solved = []
+    # puzzles_unlocked = collections.OrderedDict()
+    # unlocks = []
+    # for puzzle in context.all_puzzles:
+    #     if context.team and puzzle.is_meta:
+    #         if puzzle.id in context.team.solves:
+    #             # print("META SOLVED:", puzzle)
+    #             metas_solved.append(puzzle)
+    #             # print("META SOLVED:", puzzle)
+    #             metas_solved.append(puzzle)
+    # # print("META SOLVED CNT:", len(metas_solved))
+
+    # for puzzle in context.all_puzzles:
+    #     unlocked_at = None
+    #     if 0 <= puzzle.unlock_hours and (
+    #         puzzle.unlock_hours == 0
+    #         or not context.team
+    #         or context.team.allow_time_unlocks
+    #     ):
+    #         unlock_time = context.start_time + datetime.timedelta(
+    #             hours=puzzle.unlock_hours
+    #         )
+    #         if unlock_time <= context.now:
+    #             unlocked_at = unlock_time
+    #     # TODO: REMOVE TO REENABLE PRERELEASE FULL-VISIBILITY
+    #     if context.is_admin or context.hunt_is_over:
+    #         unlocked_at = context.start_time
+    #     elif context.team and context.hunt_has_started:
+    #         (global_solves, local_solves) = context.team.main_round_solves
+    #         # and (global_solves or any(metas_solved)):
+    #         if 0 <= puzzle.unlock_global <= global_solves:
+    #             unlocked_at = context.now
+    #         if 0 <= puzzle.unlock_local <= local_solves[puzzle.round.slug]:
+    #             unlocked_at = context.now
+    #         if 0 <= puzzle.unlock_meta <= len(metas_solved):
+    #             unlocked_at = context.now
+    #         # if puzzle.slug == RUNAROUND_SLUG and all(metas_solved):
+    #         #     unlocked_at = context.now
+    #         if puzzle.id in context.team.db_unlocks:
+    #             unlocked_at = context.team.db_unlocks[puzzle.id].unlock_datetime
+    #         elif unlocked_at:
+    #             unlocks.append(Team.unlock_puzzle(context, puzzle, unlocked_at))
+    #     if unlocked_at:
+    #         puzzles_unlocked[puzzle] = unlocked_at
+    # if unlocks:
+    #     PuzzleUnlock.objects.bulk_create(unlocks, ignore_conflicts=True)
+    # return puzzles_unlocked
 
     @staticmethod
     def unlock_puzzle(context, puzzle, unlocked_at):
         unlock = PuzzleUnlock(
             team=context.team, puzzle=puzzle, unlock_datetime=unlocked_at
         )
-        context.team.db_unlocks[puzzle.id] = unlock
+        # context.team.db_unlocks[puzzle.id] = unlock
 
-        if unlocked_at == context.now:
-            show_unlock_notification(context, unlock)
+        # TODO: reimplement unlock notification
+        # if unlocked_at == context.now:
+        #     show_unlock_notification(context, unlock)
         return unlock
 
     @staticmethod
@@ -830,19 +983,23 @@ class Team(models.Model):
             )
         except:
             print(f"Case {minor_case} already set active for team {team}.")
-            pass
+            return None
 
         # unlock all puzzles in the minor case
+        puzzle_unlocks = []
         for puzzle in Puzzle.objects.filter(round=minor_case):
             try:
-                PuzzleUnlock.objects.get_or_create(
-                    team=team, puzzle=puzzle, unlock_datetime=unlock_datetime
-                )
+                # unlock all puzzles that don't require local solves.
+                if puzzle.unlock_local < 0:
+                    PuzzleUnlock.objects.get_or_create(
+                        team=team, puzzle=puzzle, unlock_datetime=unlock_datetime
+                    )
+                    puzzle_unlocks.append(puzzle)
             except:
                 print(f"Puzzle {puzzle} already unlocked for team {team}. Skipping.")
                 pass
 
-        return unlock
+        return unlock, puzzle_unlocks
 
 
 @receiver(post_save, sender=Team)
@@ -913,6 +1070,12 @@ class MinorCaseIncomingEvent(models.Model):
 
     team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_("team"))
     timestamp = models.DateTimeField(verbose_name=_("Event creation datetime"))
+    incoming_cases = models.ManyToManyField(
+        Round, verbose_name=_("Cases"), blank=True, related_name="cases"
+    )
+    num_votes_allowed = models.IntegerField(
+        verbose_name=_("Number of votes allowed"), default=1
+    )
     votes = models.ManyToManyField(MinorCaseVote, verbose_name=_("Votes"), blank=True)
     expiration = models.DateTimeField(
         verbose_name=_("Expiration datetime"), null=True, blank=True
@@ -924,6 +1087,12 @@ class MinorCaseIncomingEvent(models.Model):
         null=True,
         blank=True,
     )
+    is_initialized = models.BooleanField(
+        verbose_name=_("Is initialized"), default=False
+    )
+    total_user_votes = models.IntegerField(
+        verbose_name=_("Total user votes"), default=0
+    )
 
     def __str__(self):
         return "%s -> %s @ %s" % (self.team, self.timestamp, self.votes)
@@ -932,29 +1101,123 @@ class MinorCaseIncomingEvent(models.Model):
         verbose_name = _("minor case incoming event")
         verbose_name_plural = _("minor cases incoming events")
 
+    @staticmethod
+    def generate_incoming_cases(team, m):
+        unlocked_cases = team.unlocks_by_case
+
+        all_cases_list = Round.objects.all().order_by("order")
+        potential_cases = [
+            case
+            for case in all_cases_list
+            if case.major_case.slug not in unlocked_cases
+            or case.slug not in unlocked_cases[case.major_case.slug]
+        ]
+        m = min(m, len(potential_cases))
+
+        if m <= 0:
+            return None
+
+        incoming_cases = potential_cases[: m - 1]
+        incoming_cases.append(random.choice(potential_cases[m - 1 : m + 1]))
+
+        print(f"EVENT: Incoming cases generated: {incoming_cases}")
+        return incoming_cases
+
+    def initialize(self):
+        if self.is_initialized:
+            return
+
+        team_incoming_events = MinorCaseIncomingEvent.objects.filter(team=self.team)
+        number_of_cases = 4 if len(team_incoming_events) <= 2 else 3
+        self.num_votes_allowed = 1 if number_of_cases < 4 else 2
+
+        potential_cases = self.generate_incoming_cases(self.team, number_of_cases)
+        self.incoming_cases.set(potential_cases)
+        for case in potential_cases:
+            vote = MinorCaseVote.objects.create(
+                team=self.team, minor_case=case, num_votes=0
+            )
+            vote.save()
+            self.votes.add(vote)
+
+        self.is_initialized = True
+        self.save()
+
     def cases(self):
-        return [vote.minor_case for vote in self.votes.all()]
+        return [vote.minor_case.name for vote in self.votes.all()]
+
+    def get_votes(self):
+        return {
+            vote.minor_case.name: {
+                "desc": vote.minor_case.description,
+                "voteCount": vote.num_votes,
+            }
+            for vote in self.votes.all()
+        }
+
+    def get_expiration_time(self):
+        return self.expiration
+
+    def vote(self, old_vote: None | str, new_vote: None | str):
+        if old_vote:
+            vote = self.votes.get(minor_case__name=old_vote)
+            if vote:
+                vote.num_votes -= 1
+                self.total_user_votes -= 1
+                vote.save()
+
+        if new_vote:
+            vote = self.votes.get(minor_case__name=new_vote)
+            if vote:
+                vote.num_votes += 1
+                self.total_user_votes += 1
+                vote.save()
+
+        if self.expiration is None and self.total_user_votes > 0:
+            self.expiration = timezone.now() + timezone.timedelta(seconds=30)
+        elif self.expiration and old_vote is None and new_vote is not None:
+            self.expiration = timezone.now() - timezone.timedelta(seconds=5)
+        elif self.expiration and old_vote is not None and new_vote is None:
+            self.expiration = timezone.now() + timezone.timedelta(seconds=5)
+
+        if self.total_user_votes == 0:
+            self.expiration = None
+
+        self.save()
 
     def finalize_vote(self):
         """Finalizes the vote for the incoming event, and creates a MinorCaseVoteEvent"""
+
+        if self.final_vote:
+            return self.final_vote.selected_case.name
 
         most_voted_case = max(
             self.votes.all(), key=lambda vote: vote.num_votes
         ).minor_case
         current_time = timezone.now()
 
-        vote_event = MinorCaseVoteEvent.objects.create(
-            team=self.team,
-            timestamp=current_time,
-            selected_case=most_voted_case,
-            incoming_event=self,
-            final_votes=self.votes,
-        )
+        try:
+            vote_event = MinorCaseVoteEvent.objects.create(
+                team=self.team,
+                timestamp=current_time,
+                selected_case=most_voted_case,
+                incoming_event=self,
+            )
+            vote_event.final_votes.set(self.votes.all())
+        except Exception as e:
+            print(f"ERROR: Vote Event creation failed with error {e}")
+            print("-- likely due to a vote event already existing for the team --")
+            vote_event = MinorCaseVoteEvent.objects.get(
+                team=self.team, incoming_event=self
+            )
 
         self.final_vote = vote_event
         self.expiration = current_time
         self.save()
-        return vote_event
+        return {
+            "name": vote_event.selected_case.name,
+            "desc": vote_event.selected_case.description,
+        }
 
     @staticmethod
     def get_current_incoming_event(context):
@@ -964,9 +1227,19 @@ class MinorCaseIncomingEvent(models.Model):
             .order_by("-timestamp")
             .first()
         )
+
         if most_recent_case and not most_recent_case.final_vote:
             return most_recent_case
+
         return None
+
+    @staticmethod
+    def create_incoming_event(context):
+        incoming_event = MinorCaseIncomingEvent.objects.create(
+            team=context.team, timestamp=timezone.now()
+        )
+        incoming_event.initialize()
+        return incoming_event
 
 
 class MinorCaseVoteEvent(models.Model):
@@ -990,6 +1263,9 @@ class MinorCaseVoteEvent(models.Model):
     )
 
     def save(self, *args, **kwargs):
+        print(
+            f"EVENT:Vote finalized. Unlocking case {self.selected_case.name} for team {self.team}"
+        )
         super(MinorCaseVoteEvent, self).save(*args, **kwargs)
         # on creation of the vote event, sets the case for the team as an active case.
         Team.unlock_case(self.team, self.selected_case, self.timestamp)
@@ -1040,6 +1316,19 @@ class MinorCaseCompleted(models.Model):
         verbose_name = _("minor case completed")
         verbose_name_plural = _("minor cases completed")
 
+    def save(self, *args, **kwargs):
+        super(MinorCaseCompleted, self).save(*args, **kwargs)
+
+        incoming_case_event = MinorCaseIncomingEvent.create_incoming_event(self.team)
+        if incoming_case_event:
+            room = Room.objects.get(
+                channel_name=f"puzzles-{self.team.team_name}"
+            )  # TODO: need to ensure that this is synced with the consumer
+            create_minor_case_incoming_event.send(
+                None, cases=incoming_case_event.get_votes(), room=room
+            )
+            incoming_case_event.save()
+
 
 class AnswerSubmission(models.Model):
     """Represents a team making a solve attempt on a puzzle (right or wrong)."""
@@ -1074,91 +1363,93 @@ class AnswerSubmission(models.Model):
 
 @receiver(post_save, sender=AnswerSubmission)
 def notify_on_answer_submission(sender, instance, created, **kwargs):
-    if created:
-        now = timezone.localtime()
+    # TODO: reimplement
+    return
+    # if created:
+    #     now = timezone.localtime()
 
-        def format_time_ago(timestamp):
-            if not timestamp:
-                return ""
-            diff = now - timestamp
-            parts = ["", "", "", ""]
-            if diff.days > 0:
-                parts[0] = _("%dd") % diff.days
-            seconds = diff.seconds
-            parts[3] = _("%02ds") % (seconds % 60)
-            minutes = seconds // 60
-            if minutes:
-                parts[2] = _("%02dm") % (minutes % 60)
-                hours = minutes // 60
-                if hours:
-                    parts[1] = _("%dh") % hours
-            return _(" {} ago").format("".join(parts))
+    #     def format_time_ago(timestamp):
+    #         if not timestamp:
+    #             return ""
+    #         diff = now - timestamp
+    #         parts = ["", "", "", ""]
+    #         if diff.days > 0:
+    #             parts[0] = _("%dd") % diff.days
+    #         seconds = diff.seconds
+    #         parts[3] = _("%02ds") % (seconds % 60)
+    #         minutes = seconds // 60
+    #         if minutes:
+    #             parts[2] = _("%02dm") % (minutes % 60)
+    #             hours = minutes // 60
+    #             if hours:
+    #                 parts[1] = _("%dh") % hours
+    #         return _(" {} ago").format("".join(parts))
 
-        hints = Hint.objects.filter(team=instance.team, puzzle=instance.puzzle)
-        hint_line = ""
-        if len(hints):
-            hint_line = _("\nHints:") + ",".join(
-                "%s (%s%s)"
-                % (
-                    format_time_ago(hint.submitted_datetime),
-                    hint.get_status_display(),
-                    format_time_ago(hint.answered_datetime),
-                )
-                for hint in hints
-            )
-        if instance.used_free_answer:
-            dispatch_free_answer_alert(
-                _(":question: {} Team {} used a free answer on {}!{}").format(
-                    instance.puzzle.emoji, instance.team, instance.puzzle, hint_line
-                )
-            )
-        else:
-            submitted_teams = (
-                AnswerSubmission.objects.filter(
-                    puzzle=instance.puzzle,
-                    submitted_answer=instance.submitted_answer,
-                    used_free_answer=False,
-                    team__is_hidden=False,
-                )
-                .values_list("team_id", flat=True)
-                .distinct()
-                .count()
-            )
-            sigil = ":x:"
-            if instance.is_correct:
-                sigil = {
-                    1: ":first_place:",
-                    2: ":second_place:",
-                    3: ":third_place:",
-                }.get(submitted_teams, ":white_check_mark:")
-            elif submitted_teams > 1:
-                sigil = ":skull_crossbones:"
-            dispatch_submission_alert(
-                _("{} {} Team {} submitted `{}` for {}: {}{}").format(
-                    sigil,
-                    instance.puzzle.emoji,
-                    instance.team,
-                    instance.submitted_answer,
-                    instance.puzzle,
-                    _("Correct!") if instance.is_correct else _("Incorrect."),
-                    hint_line,
-                ),
-                correct=instance.is_correct,
-            )
-        if not instance.is_correct:
-            return
-        show_solve_notification(instance)
-        obsoleted_hints = Hint.objects.filter(
-            team=instance.team,
-            puzzle=instance.puzzle,
-            status=Hint.NO_RESPONSE,
-        )
-        # Do this instead of obsoleted_hints.update(status=Hint.OBSOLETE,
-        # answered_datetime=now) to trigger post_save.
-        for hint in obsoleted_hints:
-            hint.status = Hint.OBSOLETE
-            hint.answered_datetime = now
-            hint.save()
+    #     hints = Hint.objects.filter(team=instance.team, puzzle=instance.puzzle)
+    #     hint_line = ""
+    #     if len(hints):
+    #         hint_line = _("\nHints:") + ",".join(
+    #             "%s (%s%s)"
+    #             % (
+    #                 format_time_ago(hint.submitted_datetime),
+    #                 hint.get_status_display(),
+    #                 format_time_ago(hint.answered_datetime),
+    #             )
+    #             for hint in hints
+    #         )
+    #     if instance.used_free_answer:
+    #         dispatch_free_answer_alert(
+    #             _(":question: {} Team {} used a free answer on {}!{}").format(
+    #                 instance.puzzle.emoji, instance.team, instance.puzzle, hint_line
+    #             )
+    #         )
+    #     else:
+    #         submitted_teams = (
+    #             AnswerSubmission.objects.filter(
+    #                 puzzle=instance.puzzle,
+    #                 submitted_answer=instance.submitted_answer,
+    #                 used_free_answer=False,
+    #                 team__is_hidden=False,
+    #             )
+    #             .values_list("team_id", flat=True)
+    #             .distinct()
+    #             .count()
+    #         )
+    #         sigil = ":x:"
+    #         if instance.is_correct:
+    #             sigil = {
+    #                 1: ":first_place:",
+    #                 2: ":second_place:",
+    #                 3: ":third_place:",
+    #             }.get(submitted_teams, ":white_check_mark:")
+    #         elif submitted_teams > 1:
+    #             sigil = ":skull_crossbones:"
+    #         dispatch_submission_alert(
+    #             _("{} {} Team {} submitted `{}` for {}: {}{}").format(
+    #                 sigil,
+    #                 instance.puzzle.emoji,
+    #                 instance.team,
+    #                 instance.submitted_answer,
+    #                 instance.puzzle,
+    #                 _("Correct!") if instance.is_correct else _("Incorrect."),
+    #                 hint_line,
+    #             ),
+    #             correct=instance.is_correct,
+    #         )
+    #     if not instance.is_correct:
+    #         return
+    #     show_solve_notification(instance)
+    #     obsoleted_hints = Hint.objects.filter(
+    #         team=instance.team,
+    #         puzzle=instance.puzzle,
+    #         status=Hint.NO_RESPONSE,
+    #     )
+    #     # Do this instead of obsoleted_hints.update(status=Hint.OBSOLETE,
+    #     # answered_datetime=now) to trigger post_save.
+    #     for hint in obsoleted_hints:
+    #         hint.status = Hint.OBSOLETE
+    #         hint.answered_datetime = now
+    #         hint.save()
 
 
 class ExtraGuessGrant(models.Model):
@@ -1463,6 +1754,37 @@ class Hint(models.Model):
             settings.DOMAIN + "solution/" + self.puzzle.slug,
             settings.DOMAIN + "hints?puzzle=%s" % self.puzzle_id,
         )
+
+
+class VoiceRecording(models.Model):
+    """A component of an interactive "database puzzle" consisting of many chat transcripts."""
+
+    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    transcript = models.TextField(
+        verbose_name=_("Transcript"),
+    )
+    search_text = models.TextField(
+        verbose_name=_("Search Text"),
+        help_text=_(
+            "Text used for search indexing. Excludes characters named and sound effects"
+        ),
+    )
+    hour = models.IntegerField(verbose_name=_("Recording Hour"))
+    # timestamp = models.IntegerField(verbose_name=_("Recording Hour"))
+    audio_url = models.URLField(verbose_name=_("Audio URL"), null=True, blank=True)
+    characters = models.TextField(verbose_name=_("Characters"))
+
+    def to_dict(self):
+        return {field.name: getattr(self, field.name) for field in self._meta.fields}
+
+    class Meta:
+        indexes = [
+            GinIndex(
+                fields=["transcript"],
+                opclasses=["gin_trgm_ops"],
+                name="transcript_trgm_idx",
+            )
+        ]
 
 
 @receiver(post_save, sender=Hint)

@@ -5,7 +5,7 @@ import { useState } from "react";
 
 export default function MarkdownTest() {
   const [markdown, setMarkdown] = useState("");
-  const [puzzleStyle, setPuzzleStyle] = useState<PuzzleStyle>(PuzzleStyle.RED_THREAD);
+  const [puzzleStyle, setPuzzleStyle] = useState<PuzzleStyle>(PuzzleStyle.COLORED_THREAD);
 
   return (
     <div className="text-white">
@@ -28,9 +28,9 @@ export default function MarkdownTest() {
             <button
               className={cn(
                 "p-2 bg-red-500 text-white",
-                puzzleStyle == PuzzleStyle.RED_THREAD && "border-2 border-black",
+                puzzleStyle == PuzzleStyle.COLORED_THREAD && "border-2 border-black",
               )}
-              onClick={() => setPuzzleStyle(PuzzleStyle.RED_THREAD)}
+              onClick={() => setPuzzleStyle(PuzzleStyle.COLORED_THREAD)}
             >
               Red Thread
             </button>

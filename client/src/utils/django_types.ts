@@ -33,6 +33,7 @@ const UserTeamSchema = z.object({
   user: z.number(),
   emoji_choice: z.string(),
   color_choice: z.string(),
+  auth_token: z.string(),
 });
 type UserTeam = z.infer<typeof UserTeamSchema>;
 
@@ -66,6 +67,13 @@ const MajorCaseSchema = z.object({
   name: z.string(),
   order: z.number(),
   slug: z.string(),
+  puzzle: z.object({
+    // TODO: don't know how to type this yet. import cycle with other schemas, so shallow typing quick solution.
+    name: z.string(),
+    slug: z.string(),
+    submissions: z.array(AnswerSubmissionSchema),
+  }),
+  submissions: z.array(AnswerSubmissionSchema),
 });
 type MajorCase = z.infer<typeof MajorCaseSchema>;
 
@@ -87,9 +95,11 @@ const PuzzleSchema = z.object({
   slug: z.string(),
   order: z.number(),
   is_meta: z.boolean(),
+  is_major_meta: z.boolean(),
   round: RoundSchema,
   body: z.string(),
   body_remote: z.string(),
+  submissions: z.array(AnswerSubmissionSchema),
 });
 type Puzzle = z.infer<typeof PuzzleSchema>;
 
@@ -117,14 +127,19 @@ type MinorCaseCompleted = z.infer<typeof MinorCaseCompletedSchema>;
 const TeamPuzzleContextSchema = z.object({
   is_admin: z.boolean(),
   is_superuser: z.boolean(),
+  is_prerelease_testsolver: z.boolean(),
   num_hints_remaining: z.number(),
   num_free_answers_remaining: z.number(),
-  solves_by_case: z.record(z.record(z.record(AnswerSubmissionSchema))),
   minor_case_solves: z.record(z.record(AnswerSubmissionSchema)),
   minor_case_incoming: z.array(MinorCaseIncomingSchema),
   minor_case_active: z.array(MinorCaseActiveSchema),
   minor_case_completed: z.array(MinorCaseCompletedSchema),
-  unlocks: z.record(PuzzleSchema),
+  solves: z.record(AnswerSubmissionSchema),
+  solves_by_case: z.record(z.record(z.record(AnswerSubmissionSchema))), // major_case -> case_id -> puzzle_id -> answer submission
+  unlocks: z.record(z.record(z.record(PuzzleSchema))), // major_case_id -> case_id -> puzzle_id -> puzzle
+  case_unlocks: z.record(RoundSchema),
+  major_case_unlocks: z.record(MajorCaseSchema),
+  major_case_puzzles: z.record(PuzzleSchema),
 });
 
 const HuntContextSchema = z.object({
