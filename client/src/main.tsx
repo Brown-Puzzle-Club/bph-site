@@ -11,7 +11,6 @@ import {
 } from "./components/LockedContent";
 import MajorCaseWrapper from "./components/major_cases/MajorCaseWrapper";
 import { PageWrapper } from "./components/PageWrapper";
-import DragTest from "./components/threadtest/ThreadTest";
 import { AuthContextProvider } from "./hooks/useAuth";
 import { DjangoContextProvider } from "./hooks/useDjangoContext";
 import AdminPanel from "./routes/Admin";
@@ -223,12 +222,6 @@ const router = createBrowserRouter([
         path: "/websocket-demo",
         element: (
           <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<WebsocketDemo />} />
-        ),
-      },
-      {
-        path: "/threadtest",
-        element: (
-          <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<DragTest />} />
         ),
       },
     ],

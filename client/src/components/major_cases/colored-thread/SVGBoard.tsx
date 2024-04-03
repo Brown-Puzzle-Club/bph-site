@@ -1,29 +1,15 @@
-import { useState } from "react";
+import { useDjangoContext } from "@/hooks/useDjangoContext";
+import { useMemo, useState } from "react";
 import background from "../../../assets/major_cases/colored-thread/background.png";
-import SVGBackground from "../../../assets/major_cases/colored-thread/background.svg";
-
-interface IThread {
-  color: string;
-  x: number;
-  y: number;
-}
-
-interface INode {
-  id: string;
-  x: number;
-  y: number;
-}
-
-interface ILink {
-  from: INode;
-  to: INode;
-  thread: IThread;
-}
+import { ILink, INode, IThread, NodeAnswer } from "./board_types";
+import { collectNodes } from "./nodes";
 
 export default function SVGBoard() {
   const [selectedThread, setSelectedThread] = useState<IThread | null>(null);
   const [selectedNode, setSelectedNode] = useState<INode | null>(null);
   const [links, setLinks] = useState<ILink[]>([]);
+
+  const { context } = useDjangoContext();
 
   /**
    * TODO: Fix this later by adding a scale factor.
@@ -31,19 +17,12 @@ export default function SVGBoard() {
   const svgWidth = 1000;
   const svgHeight = 600;
 
-  const nodes: INode[] = [
-    { id: "bear-attack", x: 335, y: 95 },
-    { id: "wasting-illness", x: 608, y: 90 },
-    { id: "sleigh-accident", x: 326, y: 235 },
-    { id: "self-immolation", x: 632, y: 245 },
-    { id: "ennui", x: 415, y: 342 },
-    { id: "hunting-accident", x: 380, y: 377 },
-    { id: "radiation-poisoning", x: 418, y: 420 },
-    { id: "run-through", x: 478, y: 435 },
-    { id: "trampled", x: 550, y: 350 },
-    { id: "sentient-energy-attack", x: 580, y: 378 },
-    { id: "high-voltage-electrocution", x: 528, y: 420 },
-  ];
+  const nodes: NodeAnswer[] = useMemo(() => {
+    if (!context) return [] as NodeAnswer[];
+    const nodes = collectNodes(context);
+    console.log(nodes);
+    return nodes;
+  }, [context]);
 
   const threads: IThread[] = [
     { color: "red", x: 576, y: 505 },
@@ -99,14 +78,14 @@ export default function SVGBoard() {
     return nodes.map((node, index) => (
       <circle
         key={index}
-        cx={node.x}
-        cy={node.y}
+        cx={node.node.x}
+        cy={node.node.y}
         r="5"
         fill="black"
         style={{
           cursor: "pointer",
         }}
-        onClick={() => handleNodeClick(node)}
+        onClick={() => handleNodeClick(node.node)}
       />
     ));
   }
