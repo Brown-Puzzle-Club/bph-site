@@ -79,9 +79,6 @@ export default function SVGBoard() {
    * Handler for when a node is clicked.
    */
   const handleNodeClick = (targetNode: INode) => {
-    console.log("Selected Node", selectedNode);
-    console.log("Selected Thread", selectedThread);
-    console.log("Target Node", targetNode);
     if (selectedThread) {
       if (!selectedNode) {
         // Select the node
@@ -97,13 +94,11 @@ export default function SVGBoard() {
             (link.from.id === targetNode.id && link.to.id === selectedNode.id),
         )
       ) {
-        console.log("INSIDE LINk");
         // Link the two nodes
         setLinks([...links, { from: selectedNode, to: targetNode, thread: selectedThread }]);
         setSelectedNode(null);
       }
     }
-    console.log(links);
   };
 
   /**
@@ -123,6 +118,14 @@ export default function SVGBoard() {
     setSolutionPinPos((position: Position) => {
       const xDiff = position.coords.x !== undefined ? position.coords.x - e.pageX : 0;
       const yDiff = position.coords.y !== undefined ? position.coords.y - e.pageY : 0;
+      if (
+        position.x - xDiff < 260 ||
+        position.x - xDiff > 715 ||
+        position.y - yDiff < 60 ||
+        position.y - yDiff > 510
+      ) {
+        return position;
+      }
       return {
         x: position.x - xDiff,
         y: position.y - yDiff,
