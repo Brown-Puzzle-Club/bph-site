@@ -104,9 +104,11 @@ export default function SVGBoard() {
   /**
    * Handler for when a link is clicked.
    */
-  const handleLinkClick = (targetNode: INode) => {
+  const handleLinkClick = (sourceNode: INode, targetNode: INode) => {
     // Remove the link
-    setLinks(links.filter((link) => link.to.id !== targetNode.id));
+    setLinks(
+      links.filter((link) => link.from.id !== sourceNode.id || link.to.id !== targetNode.id),
+    );
     setSelectedNode(null);
     setSelectedThread(null);
   };
@@ -228,7 +230,7 @@ export default function SVGBoard() {
         style={{
           cursor: "pointer",
         }}
-        onClick={() => handleLinkClick(link.to)}
+        onClick={() => handleLinkClick(link.from, link.to)}
       />
     ));
   }
