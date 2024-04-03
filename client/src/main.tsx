@@ -24,7 +24,6 @@ import InfoPage from "./routes/InfoPage";
 import Landing from "./routes/Landing";
 import Leaderboard from "./routes/Leaderboard";
 import Data from "./routes/major_cases/Data";
-import SocialDeduction from "./routes/major_cases/SocialDeduction";
 import MarkdownTest from "./routes/MarkdownTest";
 import MinorCasePage from "./routes/MinorCasePage";
 import MyTeamPage from "./routes/MyTeamPage";
@@ -191,8 +190,8 @@ const router = createBrowserRouter([
         path: "/majorcase/colored-thread",
         element: (
           <PageWrapper
-            bg_color={"#02031d"}
-            navbar_color={"#0f0d2e82"}
+            bg_color={"#1c160d"}
+            navbar_color={"#1c110d96"}
             route={
               <Locked condition={IS_MAJOR_CASE_UNLOCKED(MajorCaseEnum.COLORED_THREAD)}>
                 <MajorCaseWrapper>
