@@ -1,23 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import background from "../../../assets/major_cases/colored-thread/background.png";
-
-interface IThread {
-  color: string;
-  x: number;
-  y: number;
-}
-
-interface INode {
-  id: string;
-  x: number;
-  y: number;
-}
-
-interface ILink {
-  from: INode;
-  to: INode;
-  thread: IThread;
-}
+import { ILink, INode, IThread } from "./board_types";
 
 export default function Board() {
   const [selectedThread, setSelectedThread] = useState<IThread | null>(null);
