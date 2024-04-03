@@ -122,6 +122,11 @@ class Round(models.Model):
         verbose_name=_("Unlock local minor"),
         help_text=_("If nonnegative, round unlocks after N solves in this major case."),
     )
+    unlock_hours = models.IntegerField(
+        default=-1,
+        verbose_name=_("Unlock hours"),
+        help_text=_("If nonnegative, round unlocks N hours after the hunt starts."),
+    )
 
     class Meta:
         verbose_name = _("round (minor case)")
@@ -853,65 +858,117 @@ class Team(models.Model):
         return (global_solves, local_solves)
 
     @staticmethod
-    def compute_unlocks(context):
-        # print("SOLVES:", context.team.solves)
-        metas_solved = []
-        puzzles_unlocked = collections.OrderedDict()
-        unlocks = []
-        for puzzle in context.all_puzzles:
-            if context.team and puzzle.is_meta:
-                if puzzle.id in context.team.solves:
-                    # print("META SOLVED:", puzzle)
-                    metas_solved.append(puzzle)
-                    # print("META SOLVED:", puzzle)
-                    metas_solved.append(puzzle)
-        # print("META SOLVED CNT:", len(metas_solved))
+    def compute_unlocks(case_unlocks, context):
+        # computes extra unlocks that could happen due to time or local solve count
 
-        for puzzle in context.all_puzzles:
-            unlocked_at = None
-            if 0 <= puzzle.unlock_hours and (
-                puzzle.unlock_hours == 0
+        rounds_not_unlocked = Round.objects.order_by("order").exclude(
+            slug__in=case_unlocks.keys()
+        )
+        new_unlocks = []
+
+        for round in rounds_not_unlocked:
+            if 0 <= round.unlock_hours and (
+                round.unlock_hours == 0
                 or not context.team
                 or context.team.allow_time_unlocks
             ):
                 unlock_time = context.start_time + datetime.timedelta(
-                    hours=puzzle.unlock_hours
+                    hours=round.unlock_hours
                 )
                 if unlock_time <= context.now:
-                    unlocked_at = unlock_time
-            # TODO: REMOVE TO REENABLE PRERELEASE FULL-VISIBILITY
-            if context.is_admin or context.hunt_is_over:
-                unlocked_at = context.start_time
-            elif context.team and context.hunt_has_started:
-                (global_solves, local_solves) = context.team.main_round_solves
-                # and (global_solves or any(metas_solved)):
-                if 0 <= puzzle.unlock_global <= global_solves:
-                    unlocked_at = context.now
-                if 0 <= puzzle.unlock_local <= local_solves[puzzle.round.slug]:
-                    unlocked_at = context.now
-                if 0 <= puzzle.unlock_meta <= len(metas_solved):
-                    unlocked_at = context.now
-                # if puzzle.slug == RUNAROUND_SLUG and all(metas_solved):
-                #     unlocked_at = context.now
-                if puzzle.id in context.team.db_unlocks:
-                    unlocked_at = context.team.db_unlocks[puzzle.id].unlock_datetime
-                elif unlocked_at:
-                    unlocks.append(Team.unlock_puzzle(context, puzzle, unlocked_at))
-            if unlocked_at:
-                puzzles_unlocked[puzzle] = unlocked_at
-        if unlocks:
-            PuzzleUnlock.objects.bulk_create(unlocks, ignore_conflicts=True)
-        return puzzles_unlocked
+                    case_unlocks[round.slug] = round
+                    new_unlocks.append(round)
+
+        for new_unlock in new_unlocks:
+            Team.unlock_case(context.team, new_unlock, context.now)
+
+        new_puzzle_unlocks = []
+        for puzzle in context.all_puzzles:
+            if (
+                0 <= puzzle.unlock_global
+                and puzzle.round.slug in case_unlocks
+                and puzzle.unlock_global <= context.team.main_round_solves[0]
+            ):
+                unlock_time = context.now
+                Team.unlock_puzzle(context, puzzle, unlock_time)
+
+            if (
+                0 <= puzzle.unlock_local
+                and puzzle.round.slug in case_unlocks
+                and puzzle.unlock_local
+                <= context.team.main_round_solves[1][puzzle.round.slug]
+            ):
+                unlock_time = context.now
+                new_puzzle_unlocks.append(
+                    Team.unlock_puzzle(context, puzzle, unlock_time)
+                )
+
+        PuzzleUnlock.objects.bulk_create(new_puzzle_unlocks, ignore_conflicts=True)
+        return case_unlocks
+
+    # nlock_case(team, minor_case, unlock_datetime):
+
+    # for puzzle in context.all_puzzles:
+
+    # print("SOLVES:", context.team.solves)
+    # metas_solved = []
+    # puzzles_unlocked = collections.OrderedDict()
+    # unlocks = []
+    # for puzzle in context.all_puzzles:
+    #     if context.team and puzzle.is_meta:
+    #         if puzzle.id in context.team.solves:
+    #             # print("META SOLVED:", puzzle)
+    #             metas_solved.append(puzzle)
+    #             # print("META SOLVED:", puzzle)
+    #             metas_solved.append(puzzle)
+    # # print("META SOLVED CNT:", len(metas_solved))
+
+    # for puzzle in context.all_puzzles:
+    #     unlocked_at = None
+    #     if 0 <= puzzle.unlock_hours and (
+    #         puzzle.unlock_hours == 0
+    #         or not context.team
+    #         or context.team.allow_time_unlocks
+    #     ):
+    #         unlock_time = context.start_time + datetime.timedelta(
+    #             hours=puzzle.unlock_hours
+    #         )
+    #         if unlock_time <= context.now:
+    #             unlocked_at = unlock_time
+    #     # TODO: REMOVE TO REENABLE PRERELEASE FULL-VISIBILITY
+    #     if context.is_admin or context.hunt_is_over:
+    #         unlocked_at = context.start_time
+    #     elif context.team and context.hunt_has_started:
+    #         (global_solves, local_solves) = context.team.main_round_solves
+    #         # and (global_solves or any(metas_solved)):
+    #         if 0 <= puzzle.unlock_global <= global_solves:
+    #             unlocked_at = context.now
+    #         if 0 <= puzzle.unlock_local <= local_solves[puzzle.round.slug]:
+    #             unlocked_at = context.now
+    #         if 0 <= puzzle.unlock_meta <= len(metas_solved):
+    #             unlocked_at = context.now
+    #         # if puzzle.slug == RUNAROUND_SLUG and all(metas_solved):
+    #         #     unlocked_at = context.now
+    #         if puzzle.id in context.team.db_unlocks:
+    #             unlocked_at = context.team.db_unlocks[puzzle.id].unlock_datetime
+    #         elif unlocked_at:
+    #             unlocks.append(Team.unlock_puzzle(context, puzzle, unlocked_at))
+    #     if unlocked_at:
+    #         puzzles_unlocked[puzzle] = unlocked_at
+    # if unlocks:
+    #     PuzzleUnlock.objects.bulk_create(unlocks, ignore_conflicts=True)
+    # return puzzles_unlocked
 
     @staticmethod
     def unlock_puzzle(context, puzzle, unlocked_at):
         unlock = PuzzleUnlock(
             team=context.team, puzzle=puzzle, unlock_datetime=unlocked_at
         )
-        context.team.db_unlocks[puzzle.id] = unlock
+        # context.team.db_unlocks[puzzle.id] = unlock
 
-        if unlocked_at == context.now:
-            show_unlock_notification(context, unlock)
+        # TODO: reimplement unlock notification
+        # if unlocked_at == context.now:
+        #     show_unlock_notification(context, unlock)
         return unlock
 
     @staticmethod
@@ -929,16 +986,20 @@ class Team(models.Model):
             return None
 
         # unlock all puzzles in the minor case
+        puzzle_unlocks = []
         for puzzle in Puzzle.objects.filter(round=minor_case):
             try:
-                PuzzleUnlock.objects.get_or_create(
-                    team=team, puzzle=puzzle, unlock_datetime=unlock_datetime
-                )
+                # unlock all puzzles that don't require local solves.
+                if puzzle.unlock_local < 0:
+                    PuzzleUnlock.objects.get_or_create(
+                        team=team, puzzle=puzzle, unlock_datetime=unlock_datetime
+                    )
+                    puzzle_unlocks.append(puzzle)
             except:
                 print(f"Puzzle {puzzle} already unlocked for team {team}. Skipping.")
                 pass
 
-        return unlock
+        return unlock, puzzle_unlocks
 
 
 @receiver(post_save, sender=Team)

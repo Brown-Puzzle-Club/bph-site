@@ -194,11 +194,12 @@ class Context:
         return self.team.num_free_answers_remaining if self.team else 0
 
     def unlocks(self):
-        # return models.Team.compute_unlocks(self)
         return self.team.unlocks_by_case
 
     def case_unlocks(self):
-        return self.team.case_unlocks
+        case_unlocks = self.team.case_unlocks
+        models.Team.compute_unlocks(case_unlocks, self)
+        return case_unlocks
 
     def major_case_unlocks(self):
         return self.team.major_case_unlocks
