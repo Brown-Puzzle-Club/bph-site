@@ -19,6 +19,7 @@ import { BeatLoader } from "react-spinners";
 import TeamNavbar from "./TeamNavbar";
 
 import bluenoir_logo from "@/assets/navbar_logo_head.png";
+import { useTheme } from "@/hooks/useTheme";
 import { useState } from "react";
 
 const components: { title: string; href: string; description: string }[] = [
@@ -219,12 +220,14 @@ const NavbarRight = () => {
   );
 };
 
-export default function Navbar({ navbarColor }: { navbarColor: string }) {
+export default function Navbar() {
+  const { theme } = useTheme();
+
   return (
     <div
       className={`navbar dark sticky top-0 z-40 w-full backdrop-blur-sm flex transition-colors duration-500 lg:z-50 lg:border-b lg:border-slate-900/10 dark:border-slate-50/[0.06] supports-backdrop-blur:bg-white/60 dark:bg-transparent`}
       style={{
-        backgroundColor: navbarColor,
+        backgroundColor: theme.navbar_color,
       }}
     >
       <NavbarLeft />

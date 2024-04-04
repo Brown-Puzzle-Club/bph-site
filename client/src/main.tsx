@@ -13,6 +13,7 @@ import MajorCaseWrapper from "./components/major_cases/MajorCaseWrapper";
 import { PageWrapper } from "./components/PageWrapper";
 import { AuthContextProvider } from "./hooks/useAuth";
 import { DjangoContextProvider } from "./hooks/useDjangoContext";
+import { ThemeContextProvider } from "./hooks/useTheme";
 import AdminPanel from "./routes/Admin";
 import Archive from "./routes/Archive";
 import Club from "./routes/Club";
@@ -48,80 +49,56 @@ try {
 
 const router = createBrowserRouter([
   {
-    errorElement: (
-      <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<ErrorPage />} />
-    ),
+    errorElement: <PageWrapper route={<ErrorPage />} />,
     children: [
       {
         path: "/",
-        element: (
-          <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<Landing />} />
-        ),
+        element: <PageWrapper route={<Landing />} />,
       },
       {
         path: "/info",
-        element: (
-          <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<InfoPage />} />
-        ),
+        element: <PageWrapper route={<InfoPage />} />,
       },
       {
         path: "/credits",
-        element: (
-          <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<Credits />} />
-        ),
+        element: <PageWrapper route={<Credits />} />,
       },
       {
         path: "/club",
-        element: <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<Club />} />,
+        element: <PageWrapper route={<Club />} />,
       },
       {
         path: "/contact",
-        element: (
-          <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<Contact />} />
-        ),
+        element: <PageWrapper route={<Contact />} />,
       },
       {
         path: "/leaderboard",
-        element: (
-          <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<Leaderboard />} />
-        ),
+        element: <PageWrapper route={<Leaderboard />} />,
       },
       {
         path: "/my-team",
-        element: (
-          <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<MyTeamPage />} />
-        ),
+        element: <PageWrapper route={<MyTeamPage />} />,
       },
       {
         path: "/team/:team_id",
-        element: (
-          <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<TeamPage />} />
-        ),
+        element: <PageWrapper route={<TeamPage />} />,
       },
       {
         path: "/archive",
-        element: (
-          <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<Archive />} />
-        ),
+        element: <PageWrapper route={<Archive />} />,
       },
       {
         path: "/register",
-        element: (
-          <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<RegisterForm />} />
-        ),
+        element: <PageWrapper route={<RegisterForm />} />,
       },
       {
         path: "/markdown-test",
-        element: (
-          <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<MarkdownTest />} />
-        ),
+        element: <PageWrapper route={<MarkdownTest />} />,
       },
       {
         path: "/puzzles",
         element: (
           <PageWrapper
-            bg_color={"#02031d"}
-            navbar_color={"#0f0d2e82"}
             route={
               <Locked condition={HUNT_HAS_STARTED}>
                 <PuzzleList />
@@ -134,8 +111,6 @@ const router = createBrowserRouter([
         path: "/eventpage",
         element: (
           <PageWrapper
-            bg_color={"#02031d"}
-            navbar_color={"#0f0d2e82"}
             route={
               <Locked condition={HUNT_HAS_STARTED}>
                 <EventPage />
@@ -146,22 +121,16 @@ const router = createBrowserRouter([
       },
       {
         path: "/minorcase/:slug",
-        element: (
-          <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<MinorCasePage />} />
-        ),
+        element: <PageWrapper route={<MinorCasePage />} />,
       },
       {
         path: "/puzzle/:slug",
-        element: (
-          <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<PuzzlePage />} />
-        ),
+        element: <PageWrapper route={<PuzzlePage />} />,
       },
       {
         path: "/solveadmin",
         element: (
           <PageWrapper
-            bg_color={"#02031d"}
-            navbar_color={"#0f0d2e82"}
             route={
               <Locked condition={IS_ADMIN}>
                 <AdminPanel />
@@ -174,8 +143,6 @@ const router = createBrowserRouter([
         path: "/majorcase/social-deduction",
         element: (
           <PageWrapper
-            bg_color={"#1c160d"}
-            navbar_color={"#1c110d96"}
             route={
               <Locked condition={IS_MAJOR_CASE_UNLOCKED(MajorCaseEnum.SOCIAL_DEDUCTION)}>
                 <MajorCaseWrapper>
@@ -190,8 +157,6 @@ const router = createBrowserRouter([
         path: "/majorcase/colored-thread",
         element: (
           <PageWrapper
-            bg_color={"#1c160d"}
-            navbar_color={"#1c110d96"}
             route={
               <Locked condition={IS_MAJOR_CASE_UNLOCKED(MajorCaseEnum.COLORED_THREAD)}>
                 <MajorCaseWrapper>
@@ -206,8 +171,6 @@ const router = createBrowserRouter([
         path: "/majorcase/data",
         element: (
           <PageWrapper
-            bg_color={"#02031d"}
-            navbar_color={"#0f0d2e82"}
             route={
               <Locked condition={IS_MAJOR_CASE_UNLOCKED(MajorCaseEnum.DATA)}>
                 <MajorCaseWrapper>
@@ -220,9 +183,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/websocket-demo",
-        element: (
-          <PageWrapper bg_color={"#02031d"} navbar_color={"#0f0d2e82"} route={<WebsocketDemo />} />
-        ),
+        element: <PageWrapper route={<WebsocketDemo />} />,
       },
     ],
   },
@@ -232,7 +193,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <DjangoContextProvider>
       <AuthContextProvider>
-        <RouterProvider router={router} />
+        <ThemeContextProvider>
+          <RouterProvider router={router} />
+        </ThemeContextProvider>
       </AuthContextProvider>
     </DjangoContextProvider>
   </React.StrictMode>,
