@@ -240,7 +240,7 @@ export default function SVGBoard() {
   }
 
   return (
-    <div>
+    <div className="absolute">
       Selected Thread: {selectedThread?.color}
       <br />
       Selected Node: {selectedNode?.id}
@@ -250,7 +250,7 @@ export default function SVGBoard() {
         viewBox={`0 0 ${svgWidth} ${svgHeight}`}
         xmlns="http://www.w3.org/2000/svg"
       >
-        <image href={background} width={svgWidth} height={svgHeight} />
+        {/* <image href={background} width={svgWidth} height={svgHeight} /> */}
         {drawNodes()}
         {drawThreads()}
         {drawLinks()}

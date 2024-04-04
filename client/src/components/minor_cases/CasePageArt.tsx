@@ -103,7 +103,7 @@ const PuzzleIconWrapper = (props: PuzzleAsset) => {
   );
 };
 
-const ArtWrapper = ({
+export const ArtWrapper = ({
   className,
   background_src,
   children,
@@ -116,7 +116,7 @@ const ArtWrapper = ({
     <div>
       <div
         className={cn(
-          "map relative left-1/2 transform -translate-x-1/2 max-w-screen-xl w-full h-full",
+          "map relative left-1/2 transform -translate-x-1/2 w-full h-full",
           className,
         )}
       >
