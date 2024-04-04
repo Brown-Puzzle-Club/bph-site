@@ -8,6 +8,7 @@ export interface AssetProps {
   extraClasses?: string;
   onHover?: () => void;
   onLeave?: () => void;
+  onClick?: () => void;
   children?: ReactNode;
 }
 
@@ -19,6 +20,7 @@ const RelativeAsset: React.FC<AssetProps> = ({
   extraClasses,
   onHover,
   onLeave,
+  onClick,
   children,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -37,6 +39,9 @@ const RelativeAsset: React.FC<AssetProps> = ({
       onMouseLeave={() => {
         setIsHovered(false);
         onLeave ? onLeave() : (() => {})();
+      }}
+      onClick={() => {
+        onClick ? onClick() : (() => {})();
       }}
       style={extraStyles}
     >

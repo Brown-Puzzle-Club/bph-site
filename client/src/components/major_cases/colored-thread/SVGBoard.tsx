@@ -1,8 +1,6 @@
-import { useDjangoContext } from "@/hooks/useDjangoContext";
-import { useMemo, useRef, useState } from "react";
-import background from "../../../assets/major_cases/colored-thread/background.png";
-import { ILink, INode, IThread, NodeAnswer } from "./board_types";
-import { collectNodes } from "./nodes";
+import { useRef, useState } from "react";
+import { ILink, INode, NodeAnswer, ThreadType } from "./board_types";
+import { THREAD_COLOR } from "./consts";
 
 interface Position {
   x: number;
@@ -13,17 +11,26 @@ interface Position {
   };
 }
 
-export default function SVGBoard() {
-  const [selectedThread, setSelectedThread] = useState<IThread | null>(null);
-  const [selectedNode, setSelectedNode] = useState<INode | null>(null);
-  const [links, setLinks] = useState<ILink[]>([]);
+export default function SVGBoard({
+  selectedThread,
+  selectedNode,
+  setSelectedNode,
+  links,
+  setLinks,
+  nodes,
+}: {
+  selectedThread: ThreadType | null;
+  selectedNode: INode | null;
+  setSelectedNode: React.Dispatch<React.SetStateAction<INode | null>>;
+  links: ILink[];
+  setLinks: React.Dispatch<React.SetStateAction<ILink[]>>;
+  nodes: NodeAnswer[];
+}) {
   const [solutionPinPos, setSolutionPinPos] = useState<Position>({
     x: 300,
     y: 540,
     coords: {},
   });
-
-  const { context } = useDjangoContext();
 
   /**
    * TODO: Fix this later by adding a scale factor.
@@ -31,55 +38,22 @@ export default function SVGBoard() {
   const svgWidth = 1000;
   const svgHeight = 600;
 
-  const nodes: NodeAnswer[] = useMemo(() => {
-    if (!context) return [] as NodeAnswer[];
-    const nodes = collectNodes(context);
-    console.log(nodes);
-    return nodes;
-  }, [context]);
-
-  const threads: IThread[] = [
-    { color: "red", x: 576, y: 505 },
-    { color: "green", x: 622, y: 505 },
-    { color: "blue", x: 665, y: 505 },
-  ];
+  // const threads: IThread[] = [
+  //   { color: "red", x: 576, y: 505 },
+  //   { color: "green", x: 622, y: 505 },
+  //   { color: "blue", x: 665, y: 505 },
+  // ];
 
   /**
    * Handler for when a thread is clicked.
    */
-  const handleThreadClick = (thread: IThread) => {
-    if (selectedThread?.color === thread.color) {
-      setSelectedThread(null);
-      return;
-    }
-    setSelectedThread(thread);
-  };
-
-  /**
-   * Handler for when a node is clicked.
-   */
-  const handleNodeClick = (targetNode: INode) => {
-    if (selectedThread) {
-      if (!selectedNode) {
-        // Select the node
-        setSelectedNode(targetNode);
-        return;
-      }
-      // Check if the two nodes are not the same and there is no existing link between them
-      if (
-        selectedNode.id !== targetNode.id &&
-        !links.some(
-          (link) =>
-            (link.from.id === selectedNode.id && link.to.id === targetNode.id) ||
-            (link.from.id === targetNode.id && link.to.id === selectedNode.id),
-        )
-      ) {
-        // Link the two nodes
-        setLinks([...links, { from: selectedNode, to: targetNode, thread: selectedThread }]);
-        setSelectedNode(null);
-      }
-    }
-  };
+  // const handleThreadClick = (thread: IThread) => {
+  //   if (selectedThread?.color === thread.color) {
+  //     setSelectedThread(null);
+  //     return;
+  //   }
+  //   setSelectedThread(thread);
+  // };
 
   /**
    * Handler for when a link is clicked.
@@ -90,7 +64,6 @@ export default function SVGBoard() {
       links.filter((link) => link.from.id !== sourceNode.id || link.to.id !== targetNode.id),
     );
     setSelectedNode(null);
-    setSelectedThread(null);
   };
 
   /**
@@ -169,7 +142,6 @@ export default function SVGBoard() {
         style={{
           cursor: "pointer",
         }}
-        onClick={() => handleNodeClick(node.node)}
       />
     ));
   }
@@ -177,22 +149,22 @@ export default function SVGBoard() {
   /**
    * Draw the threads on the SVG board.
    */
-  function drawThreads() {
-    return threads.map((thread, index) => (
-      <rect
-        key={index}
-        x={thread.x}
-        y={thread.y}
-        width="30"
-        height="50"
-        fill={thread.color}
-        style={{
-          cursor: "pointer",
-        }}
-        onClick={() => handleThreadClick(thread)}
-      />
-    ));
-  }
+  // function drawThreads() {
+  //   return threads.map((thread, index) => (
+  //     <rect
+  //       key={index}
+  //       x={thread.x}
+  //       y={thread.y}
+  //       width="30"
+  //       height="50"
+  //       fill={thread.color}
+  //       style={{
+  //         cursor: "pointer",
+  //       }}
+  //       onClick={() => handleThreadClick(thread)}
+  //     />
+  //   ));
+  // }
 
   /**
    * Draw the links on the SVG board.
@@ -205,7 +177,7 @@ export default function SVGBoard() {
         y1={link.from.y}
         x2={link.to.x}
         y2={link.to.y}
-        stroke={link.thread.color}
+        stroke={THREAD_COLOR[link.thread]}
         strokeWidth="2"
         style={{
           cursor: "pointer",
@@ -230,7 +202,8 @@ export default function SVGBoard() {
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
         onClick={() => {
-          handleNodeClick({ id: "solution-pin", x: solutionPinPos.x, y: solutionPinPos.y });
+          // TOOD: reimplement solution pin with image on AnswerPins side maybe?
+          // handleNodeClick({ id: "solution-pin", x: solutionPinPos.x, y: solutionPinPos.y });
         }}
         style={{
           cursor: "pointer",
@@ -241,7 +214,7 @@ export default function SVGBoard() {
 
   return (
     <div className="absolute">
-      Selected Thread: {selectedThread?.color}
+      Selected Thread: {selectedThread}
       <br />
       Selected Node: {selectedNode?.id}
       <svg
@@ -252,7 +225,7 @@ export default function SVGBoard() {
       >
         {/* <image href={background} width={svgWidth} height={svgHeight} /> */}
         {drawNodes()}
-        {drawThreads()}
+        {/* {drawThreads()} */}
         {drawLinks()}
         {drawSolutionPin()}
       </svg>
