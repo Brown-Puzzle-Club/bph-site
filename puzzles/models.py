@@ -860,6 +860,8 @@ class Team(models.Model):
 
     @staticmethod
     def compute_unlocks(case_unlocks, context):
+        if not context.hunt_has_started and not context.is_admin:
+            return []
         # computes extra unlocks that could happen due to time or local solve count
 
         rounds_not_unlocked = Round.objects.order_by("order").exclude(
@@ -867,7 +869,9 @@ class Team(models.Model):
         )
         new_unlocks = []
 
+
         for round in rounds_not_unlocked:
+            # unlocks by hours
             if 0 <= round.unlock_hours and (
                 round.unlock_hours == 0
                 or not context.team
@@ -879,6 +883,11 @@ class Team(models.Model):
                 if unlock_time <= context.now:
                     case_unlocks[round.slug] = round
                     new_unlocks.append(round)
+
+            #  starting unlocks
+            if round.unlock_global_minor == 0:
+                case_unlocks[round.slug] = round
+                new_unlocks.append(round)
 
         for new_unlock in new_unlocks:
             Team.unlock_case(context.team, new_unlock, context.now)
