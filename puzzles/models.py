@@ -1,6 +1,7 @@
 import collections
 import datetime
 import re
+from typing import Optional
 import unicodedata
 from urllib.parse import quote_plus
 import math
@@ -1158,7 +1159,7 @@ class MinorCaseIncomingEvent(models.Model):
     def get_expiration_time(self):
         return self.expiration
 
-    def vote(self, old_vote: None | str, new_vote: None | str):
+    def vote(self, old_vote: Optional[str], new_vote: Optional[str]):
         if old_vote:
             vote = self.votes.get(minor_case__name=old_vote)
             if vote:
