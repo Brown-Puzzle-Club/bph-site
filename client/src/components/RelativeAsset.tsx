@@ -27,7 +27,7 @@ const RelativeAsset: React.FC<AssetProps> = ({
 
   return (
     <div
-      className={`relative-asset absolute${isHovered ? " hover-effect" : ""}${
+      className={`relative-asset w-full absolute${isHovered ? " hover-effect" : ""}${
         extraClasses ? " " + extraClasses : ""
       }`}
       onMouseEnter={() => {

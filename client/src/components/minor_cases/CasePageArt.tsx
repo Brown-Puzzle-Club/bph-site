@@ -3,6 +3,14 @@ import exile_bg from "@/assets/minor_cases/exile/exile_bg.png";
 import painting from "@/assets/minor_cases/exile/painting.png";
 import victrola from "@/assets/minor_cases/exile/victrola.png";
 import wine from "@/assets/minor_cases/exile/wine.png";
+
+import whale_bg from "@/assets/minor_cases/whales/background_whale2.png";
+import flowers from "@/assets/minor_cases/whales/flowers.png";
+import parrot from "@/assets/minor_cases/whales/parrot.png";
+import sheep from "@/assets/minor_cases/whales/sheep.png";
+import stool from "@/assets/minor_cases/whales/stool.png";
+import waterline from "@/assets/minor_cases/whales/waterline.png";
+
 import { useDjangoContext } from "@/hooks/useDjangoContext";
 import { CASE_PALETTE, MajorCaseEnum } from "@/utils/constants";
 import { PuzzleAnswer, cn, getUnlockedPuzzle } from "@/utils/utils";
@@ -11,7 +19,7 @@ import RelativeAsset, { AssetProps } from "../RelativeAsset";
 
 const ExileArt = () => {
   return (
-    <ArtWrapper className="aspect-w-4 aspect-h-3" background_src={exile_bg}>
+    <ArtWrapper className="aspect-w-4 aspect-h-3 max-w-screen-xl" background_src={exile_bg}>
       <PuzzleIconWrapper
         slug="still-at-the-restaurant"
         imageSrc={painting}
@@ -52,6 +60,63 @@ const ExileArt = () => {
           zIndex: 3,
         }}
         meta
+      />
+    </ArtWrapper>
+  );
+};
+
+const WhaleArt = () => {
+  return (
+    <ArtWrapper className="" background_src={whale_bg}>
+      <PuzzleIconWrapper
+        slug="underwater-flora"
+        imageSrc={flowers}
+        extraStyles={{
+          top: "40%",
+          left: "63%",
+          width: "10%",
+          zIndex: 3,
+        }}
+      />
+      <PuzzleIconWrapper
+        slug="waterlines"
+        imageSrc={waterline}
+        extraStyles={{
+          top: "20%",
+          left: "42%",
+          width: "13%",
+          zIndex: 3,
+        }}
+      />
+      <PuzzleIconWrapper
+        slug="shoot"
+        imageSrc={parrot}
+        extraStyles={{
+          top: "19%",
+          left: "35%",
+          width: "7%",
+          zIndex: 3,
+        }}
+      />
+      <PuzzleIconWrapper
+        slug="back-in-wales"
+        imageSrc={sheep}
+        extraStyles={{
+          top: "25%",
+          left: "59%",
+          width: "13%",
+          zIndex: 3,
+        }}
+      />
+      <PuzzleIconWrapper
+        slug="whelp"
+        imageSrc={stool}
+        extraStyles={{
+          top: "42%",
+          left: "46%",
+          width: "14%",
+          zIndex: 3,
+        }}
       />
     </ArtWrapper>
   );
@@ -105,25 +170,22 @@ const PuzzleIconWrapper = (props: PuzzleAsset) => {
 
 const ArtWrapper = ({
   className,
+  outerClassName,
   background_src,
   children,
 }: {
   className?: string;
+  outerClassName?: string;
   background_src: string;
   children?: ReactNode;
 }) => {
   return (
-    <div>
+    <div className={outerClassName}>
       <div
-        className={cn(
-          "map relative left-1/2 transform -translate-x-1/2 max-w-screen-xl w-full h-full",
-          className,
-        )}
+        className={cn("map relative left-1/2 transform -translate-x-1/2 w-full h-full", className)}
       >
         {children}
-        <div className="art-bg">
-          <img className="art-bg-img" src={background_src} />
-        </div>
+        <img className="art-bg-img w-full" src={background_src} />
       </div>
     </div>
   );
@@ -131,8 +193,9 @@ const ArtWrapper = ({
 
 const CASE_ART_COMPONENT: { [key: string]: JSX.Element } = {
   exile: <ExileArt />,
+  whales: <WhaleArt />,
 };
 
 export default function CasePageArt({ case_slug }: { case_slug: string }) {
-  return <section className="case-art">{CASE_ART_COMPONENT[case_slug]}</section>;
+  return CASE_ART_COMPONENT[case_slug];
 }
