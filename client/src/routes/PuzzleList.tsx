@@ -14,7 +14,7 @@ export default function PuzzleList() {
   return (
     <div>
       <CaseVoting path="ws/puzzles" />
-      <div className="tabs flex items-center justify-end gap-4 mx-[12%] md:mx-[26%] pr-2 md:pr-10 z-10 text-[1.45vw] md:text-[1vw] sm:text-sm">
+      <div className="tabs flex items-center justify-end gap-4 mx-[12%] md:mx-[26%] pr-2 md:pr-10 z-10 text-[1.45vw] md:text-[1vw] sm:text-sm pt-6">
         {Object.keys(CASE_PALETTE).map((tab) => (
           <button
             key={tab}
@@ -69,82 +69,85 @@ export default function PuzzleList() {
               </div>
             )}
             <ul className="ml-4">
-              {Object.entries(context.team_context.unlocks[curTab]).map(
-                ([round, puzzles], index, array) => (
-                  <li
-                    key={round}
-                    className={`text-[black] pt-3`}
-                    style={
-                      index !== array.length - 1
-                        ? {
-                            borderBottomColor: CASE_PALETTE[curTab].primary,
-                            borderBottomWidth: "4px",
-                          }
-                        : {}
-                    }
-                  >
-                    <div className={`flex justify-between items-center`}>
-                      <a
-                        href={`/minorcase/${round}`}
-                        className="underline text-center text-xl font-extrabold tracking-wider"
-                        style={{ color: CASE_PALETTE[curTab].textColor }}
-                      >
-                        {context?.team_context.case_unlocks[round] &&
-                          context?.team_context.case_unlocks[round].name}
-                      </a>
-                    </div>
-                    <ul className="ml-4">
-                      {puzzles &&
-                        Object.entries(puzzles).map(([slug, puzzle], index, array) => (
-                          <li key={slug}>
-                            {/* PUZZLE TITLE */}
-                            <div
-                              className={`team-box px-6 pt-3 pb-3 flex justify-between items-center space-x-4 text-slate-800`}
-                              style={
-                                index !== array.length - 1
-                                  ? {
-                                      borderBottomColor: CASE_PALETTE[curTab].primary,
-                                      borderBottomWidth: "1px",
-                                    }
-                                  : {}
-                              }
-                            >
-                              <div className="flex items-center space-x-4">
-                                <a
-                                  href={`/puzzle/${puzzle.slug}`}
-                                  className={`text-md underline ${puzzle.is_meta ? "font-bold" : ""}`}
-                                  style={{ color: CASE_PALETTE[curTab].textColor }}
-                                >
-                                  {puzzle.name}
-                                </a>
-                              </div>
-                              {/* ANSWER */}
-                              <span
-                                className="pl-3 font-mono font-bold text-right"
-                                style={{ color: CASE_PALETTE[curTab].answerColor }}
+              {context.team_context.unlocks[curTab] &&
+                Object.entries(context.team_context.unlocks[curTab]).map(
+                  ([round, puzzles], index, array) => (
+                    <li
+                      key={round}
+                      className={`text-[black] pt-3`}
+                      style={
+                        index !== array.length - 1
+                          ? {
+                              borderBottomColor: CASE_PALETTE[curTab].primary,
+                              borderBottomWidth: "4px",
+                            }
+                          : {}
+                      }
+                    >
+                      <div className={`flex justify-between items-center`}>
+                        <a
+                          href={`/minorcase/${round}`}
+                          className="underline text-center text-xl font-extrabold tracking-wider"
+                          style={{ color: CASE_PALETTE[curTab].textColor }}
+                        >
+                          {context?.team_context.case_unlocks[round] &&
+                            context?.team_context.case_unlocks[round].name}
+                        </a>
+                      </div>
+                      <ul className="ml-4">
+                        {puzzles &&
+                          Object.entries(puzzles).map(([slug, puzzle], index, array) => (
+                            <li key={slug}>
+                              {/* PUZZLE TITLE */}
+                              <div
+                                className={`team-box px-6 pt-3 pb-3 flex justify-between items-center space-x-4 text-slate-800`}
+                                style={
+                                  index !== array.length - 1
+                                    ? {
+                                        borderBottomColor: CASE_PALETTE[curTab].primary,
+                                        borderBottomWidth: "1px",
+                                      }
+                                    : {}
+                                }
                               >
-                                {puzzle.round.major_case.slug in
-                                  context.team_context.solves_by_case &&
-                                puzzle.round.slug in
-                                  context.team_context.solves_by_case[
-                                    puzzle.round.major_case.slug
-                                  ] &&
-                                puzzle.slug in
-                                  context.team_context.solves_by_case[puzzle.round.major_case.slug][
-                                    puzzle.round.slug
-                                  ]
-                                  ? context.team_context.solves_by_case[
+                                <div className="flex items-center space-x-4">
+                                  <a
+                                    href={`/puzzle/${puzzle.slug}`}
+                                    className={`text-md underline ${puzzle.is_meta ? "font-bold" : ""}`}
+                                    style={{ color: CASE_PALETTE[curTab].textColor }}
+                                  >
+                                    {puzzle.name}
+                                  </a>
+                                </div>
+                                {/* ANSWER */}
+                                <span
+                                  className="pl-3 font-mono font-bold text-right"
+                                  style={{ color: CASE_PALETTE[curTab].answerColor }}
+                                >
+                                  {puzzle.round.major_case.slug in
+                                    context.team_context.solves_by_case &&
+                                  puzzle.round.slug in
+                                    context.team_context.solves_by_case[
                                       puzzle.round.major_case.slug
-                                    ][puzzle.round.slug][puzzle.slug].submitted_answer.toUpperCase()
-                                  : ""}
-                              </span>
-                            </div>
-                          </li>
-                        ))}
-                    </ul>
-                  </li>
-                ),
-              )}
+                                    ] &&
+                                  puzzle.slug in
+                                    context.team_context.solves_by_case[
+                                      puzzle.round.major_case.slug
+                                    ][puzzle.round.slug]
+                                    ? context.team_context.solves_by_case[
+                                        puzzle.round.major_case.slug
+                                      ][puzzle.round.slug][
+                                        puzzle.slug
+                                      ].submitted_answer.toUpperCase()
+                                    : ""}
+                                </span>
+                              </div>
+                            </li>
+                          ))}
+                      </ul>
+                    </li>
+                  ),
+                )}
             </ul>
           </div>
         </div>
