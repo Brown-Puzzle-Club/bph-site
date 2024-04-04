@@ -1,10 +1,5 @@
-import { DEFAULT_THEME } from "@/utils/themes";
+import { DEFAULT_THEME, Theme } from "@/utils/themes";
 import { ReactNode, createContext, useContext, useState } from "react";
-
-type Theme = {
-  bg_color: string;
-  navbar_color: string;
-};
 
 type ThemeContextType = {
   theme: Theme;

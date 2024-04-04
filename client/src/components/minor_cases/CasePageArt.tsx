@@ -12,9 +12,11 @@ import stool from "@/assets/minor_cases/whales/stool.png";
 import waterline from "@/assets/minor_cases/whales/waterline.png";
 
 import { useDjangoContext } from "@/hooks/useDjangoContext";
+import { useTheme } from "@/hooks/useTheme";
 import { CASE_PALETTE, MajorCaseEnum } from "@/utils/constants";
+import { WHALE_THEME } from "@/utils/themes";
 import { PuzzleAnswer, cn, getUnlockedPuzzle } from "@/utils/utils";
-import { ReactNode, useMemo } from "react";
+import { ReactNode, useEffect, useMemo } from "react";
 import RelativeAsset, { AssetProps } from "../RelativeAsset";
 
 const ExileArt = () => {
@@ -66,6 +68,11 @@ const ExileArt = () => {
 };
 
 const WhaleArt = () => {
+  const { setTheme } = useTheme();
+  useEffect(() => {
+    setTheme(WHALE_THEME);
+  });
+
   return (
     <ArtWrapper className="" background_src={whale_bg}>
       <PuzzleIconWrapper
