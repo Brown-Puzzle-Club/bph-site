@@ -2,7 +2,6 @@
 import { useDjangoContext } from "@/hooks/useDjangoContext";
 import { CASE_PALETTE, MAJOR_CASE_NAMES, MajorCaseEnum } from "@/utils/constants";
 import { SetStateAction, useState } from "react";
-import ErrorPage from "./ErrorPage";
 
 export default function PuzzleList() {
   const { context } = useDjangoContext();
@@ -11,18 +10,6 @@ export default function PuzzleList() {
   const handleTabChange = (tab: SetStateAction<string>) => {
     setTab(tab as MajorCaseEnum);
   };
-
-  if (context && !context.team_context.major_case_puzzles[curTab]) {
-    return (
-      <ErrorPage
-        custom_error={{
-          status: 500,
-          statusText: `tab ${curTab} not found in context.`,
-          data: {},
-        }}
-      />
-    );
-  }
 
   return (
     <div>
