@@ -1,39 +1,18 @@
-import MinorCase from "@/components/MinorCase";
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 // import MinorCase from '../components/MinorCase';
 
 import MinorCaseModal from "@/components/MinorCaseModal";
 // import { MinorCaseStatus, context } from "../context";
 import { useDjangoContext } from "@/hooks/useDjangoContext";
-import {
-  DjangoContext,
-  MinorCaseActive,
-  MinorCaseCompleted,
-  MinorCaseIncoming,
-} from "@/utils/django_types";
+import { DjangoContext } from "@/utils/django_types";
 
-function renderActiveCases(
-  casesRecord: (MinorCaseActive | MinorCaseIncoming | MinorCaseCompleted)[],
-  openModal: (caseID: number) => void,
-): JSX.Element[] {
-  if (casesRecord.length === 0) {
-    return [];
-  }
-
-  console.log(casesRecord);
-
-  return casesRecord.map((minorCase) => (
-    <MinorCase
-      minorCase={minorCase.minor_case_round}
-      majorCase={minorCase.minor_case_round.major_case}
-      bgColor="pink-100"
-      onClick={() => {
-        openModal(minorCase.minor_case_round.id);
-      }}
-    />
-  ));
-}
+import backdrop from "@/assets/main_page/Backdrop.png";
+import shadow from "@/assets/main_page/Shadow.png";
+import shadowDesk from "@/assets/main_page/ShadowDesk.png";
+import ActiveCases, { renderActiveCases } from "@/components/main_page/ActiveCases";
+import { useTheme } from "@/hooks/useTheme";
+import { MAIN_PAGE_THEME } from "@/utils/themes";
 
 const findCaseFromContext = (case_id: number | null, context: DjangoContext | undefined) => {
   if (!context || !case_id) return undefined;
@@ -46,23 +25,17 @@ const findCaseFromContext = (case_id: number | null, context: DjangoContext | un
 };
 
 function EventPage() {
+  const { setTheme } = useTheme();
+  useEffect(() => {
+    setTheme(MAIN_PAGE_THEME);
+  }, [setTheme]);
+
   const [newCases, setNewCases] = useState<JSX.Element[]>([]);
   const [, setDoneCases] = useState<JSX.Element[]>([]);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   const [selectedCase, setSelectedCase] = useState<number | null>(null); //TODO: fix -1
   const { context } = useDjangoContext();
-
-  const active_cases = useMemo(() => {
-    if (!context) return [];
-    const active_cases = context.team_context.minor_case_active;
-    const solved_cases = context.team_context.minor_case_completed;
-
-    // truly active cases are all active that are not completed (solved)
-    return active_cases.filter((ac) => {
-      return !solved_cases.some((sc) => sc.minor_case_round.slug === ac.minor_case_round.slug);
-    });
-  }, [context]);
 
   const openModal = (caseID: number) => {
     setSelectedCase(caseID);
@@ -103,32 +76,27 @@ function EventPage() {
     <div
       className="flex min-h-screen flex-col relative"
       style={{
-        backgroundImage: "url('/src/assets/main_page/Backdrop.PNG')",
+        backgroundImage: `url(${backdrop})`,
       }}
     >
       <div
-        className="flex min-h-screen flex-col relative"
+        className="flex min-h-screen flex-col relative items-center"
         style={{
-          backgroundImage: "url('/src/assets/main_page/Shadow.PNG')",
+          backgroundImage: `url(${shadow})`,
         }}
       >
         {/* Top row
         <div className="bg-blue-200 p-4 z-10">Top Row</div> */}
         {/* Middle rows */}
-        <div className="flex flex-1 relative">
-          <img
-            className="w-full h-auto object-contain"
-            src=" src/assets/main_page/ShadowDesk.PNG"
-            alt=""
-          />
+        <div className="flex flex-1 relative max-w-screen-xl">
+          <img className="w-full h-auto object-contain" src={shadowDesk} alt="" />
           <div className="absolute inset-0 flex w-1/4 items-center justify-center z-10 object-contain">
             {/* Left column content */}
             <div
               className=" w-1/2 aspect-[3/4] cursor-pointer bg-blue-200 p-4 object-contain"
               onClick={() => addBox("left")}
             >
-              {" "}
-              <p onClick={() => openModal(0)}></p>
+              {/* LEFT CONTENT */}
             </div>
           </div>
           <div className="flex w-1/2 flex-col items-center justify-between z-10">
@@ -144,21 +112,38 @@ function EventPage() {
               className=" w-1/6 aspect-[3/4] cursor-pointer bg-blue-200 p-4 object-contain"
               onClick={() => addBox("right")}
             >
-              {/* Box content */}
-              <p onClick={() => openModal(0)}></p>
+              {/* RIGHT CONTENT */}
+            </div>
+          </div>
+          <div
+            className="absolute inset-0 flex items-center z-10 object-contain"
+            style={{
+              width: "50%",
+            }}
+          >
+            {/* Right column content */}
+            <div
+              className="w-1/6 aspect-[10/4] cursor-pointer bg-blue-200 p-4 object-contain"
+              onClick={() => addBox("right")}
+            >
+              {/* RIGHT CONTENT */}
             </div>
           </div>
         </div>
-        {/* Shadow desk */}
-        <div className="absolute inset-0 bg-no-repeat bg-center bg-contain h-4/5" />
         {/* Cases row */}
-        <div className="flex items-center justify-center p-2 bg-blue-200 z-10">
-          {/* Render a box for each active case */}
-          <div className="flex">{context ? renderActiveCases(active_cases, openModal) : null}</div>
+        <div
+          className="absolute flex items-center justify-center p-2 bg-blue-200 z-10"
+          style={{
+            bottom: "10%",
+            left: "0",
+            right: "0",
+          }}
+        >
+          {/* BOTTOM DESK CONTENT */}
+          <ActiveCases openModal={openModal} />
         </div>
-        {/* Bottom row */}
         <div className="flex flex-col items-center justify-center  p-4 z-10">
-          {/* Yellow bottom box */}
+          {/* BELOW DESK CONTENT */}
         </div>
         {/* Modal */}
         <MinorCaseModal
@@ -171,3 +156,114 @@ function EventPage() {
   );
 }
 export default EventPage;
+
+// import MinorCase from "@/components/MinorCase";
+// import { useEffect, useState } from "react";
+
+// // import MinorCase from '../components/MinorCase';
+
+// import MinorCaseModal from "@/components/MinorCaseModal";
+// // import { MinorCaseStatus, context } from "../context";
+// import { useDjangoContext } from "@/hooks/useDjangoContext";
+// import { DjangoContext } from "@/utils/django_types";
+
+// import backdrop from "@/assets/main_page/Backdrop.png";
+// import shadow from "@/assets/main_page/Shadow.png";
+// import shadowDesk from "@/assets/main_page/ShadowDesk.png";
+// import ActiveCases, { renderActiveCases } from "@/components/main_page/ActiveCases";
+// import { useTheme } from "@/hooks/useTheme";
+// import { MAIN_PAGE_THEME } from "@/utils/themes";
+
+// const findCaseFromContext = (case_id: number | null, context: DjangoContext | undefined) => {
+//   if (!context || !case_id) return undefined;
+
+//   const cases_query = context.team_context.minor_case_active?.filter((mca) => {
+//     return mca?.minor_case_round.id === case_id;
+//   });
+//   // TODO: maybe better error handling later
+//   return cases_query.length == 1 ? cases_query[0].minor_case_round : undefined;
+// };
+
+// function EventPage() {
+//   const { setTheme } = useTheme();
+//   useEffect(() => {
+//     setTheme(MAIN_PAGE_THEME);
+//   }, [setTheme]);
+
+//   const [newCases, setNewCases] = useState<JSX.Element[]>([]);
+//   const [, setDoneCases] = useState<JSX.Element[]>([]);
+//   const [modalOpen, setModalOpen] = useState<boolean>(false);
+
+//   const [selectedCase, setSelectedCase] = useState<number | null>(null); //TODO: fix -1
+//   const { context } = useDjangoContext();
+
+//   const openModal = (caseID: number) => {
+//     setSelectedCase(caseID);
+
+//     setModalOpen(true);
+//   };
+
+//   const closeModal = () => {
+//     setModalOpen(false);
+//   };
+
+//   const addBox = (side: "left" | "right") => {
+//     // return side
+
+//     // TODO: fix
+//     if (side === "left") {
+//       // Clear the middle column when clicking on the left box
+//       if (context != null) {
+//         const solvedCasesFromContext = context.team_context.minor_case_completed;
+//         // const solvedCasesFromContext = context.team?.minor_case_completed;
+//         const solvedCases = renderActiveCases(solvedCasesFromContext, openModal);
+
+//         setNewCases(solvedCases);
+//         setDoneCases([]);
+//       }
+//     } else {
+//       if (context != null) {
+//         const minorCasesFromContext = context.team_context.minor_case_incoming;
+//         // const minorCasesFromContext = context.team?.minor_case_incoming;
+//         const incomingCases = renderActiveCases(minorCasesFromContext, openModal);
+
+//         setNewCases(incomingCases);
+//         setDoneCases([]);
+//       }
+//     }
+//   };
+//   return (
+//     <div className="flex min-h-screen flex-col relative">
+//       <div className="flex min-h-screen flex-col relative items-center">
+//         {/* Middle rows */}
+//         <div className="flex flex-1 relative max-w-screen-xl">
+//           <img className="w-full h-auto object-contain" src={shadowDesk} alt="" />
+//           {/* Left column */}
+//           <div
+//             className="absolute inset-y-0 flex items-center justify-center z-10 bg-blue-200 h-10"
+//             style={{
+//               left: "33.33%", // Start one-third from the left
+//               right: "33.33%", // End one-third from the right
+//               top: "80%", // Start 80% down
+//               bottom: "33.33%", // End two-thirds from the bottom
+//             }}
+//           >
+//             middle
+//           </div>
+//           <div className="absolute inset-0 flex w-11/12 items-center justify-end z-10 object-contain bg-blue-200">
+//             {/* Right column content */}
+//             <div className=" w-1/6 object-contain" onClick={() => addBox("right")}>
+//               hi there
+//             </div>
+//           </div>
+//         </div>
+//         {/* Cases row */}
+//         <div className="flex flex-col items-center justify-center  p-4 z-10">
+//           {/* BELOW DESK CONTENT */}
+//         </div>
+//         {/* Modal */}
+//       </div>
+//     </div>
+//   );
+// }
+// export default EventPage;

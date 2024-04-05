@@ -196,7 +196,7 @@ const PuzzleIconWrapper = (props: PuzzleAsset) => {
   );
 };
 
-const ArtWrapper = ({
+export const ArtWrapper = ({
   className,
   outerClassName,
   background_src,

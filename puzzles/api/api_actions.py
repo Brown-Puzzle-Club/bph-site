@@ -175,8 +175,13 @@ def create_vote_event(request: Request) -> Response:
     else:
         return Response(serializer.errors, status=400)
 
-def handle_answer(answer: str | None, request_context, django_context, puzzle_slug: str) -> Response:
-    print(f"submitting for puzzle: {puzzle_slug} with answer: {answer} for team: {django_context.team}")
+
+def handle_answer(
+    answer: str | None, request_context, django_context, puzzle_slug: str
+) -> Response:
+    print(
+        f"submitting for puzzle: {puzzle_slug} with answer: {answer} for team: {django_context.team}"
+    )
 
     puzzle = django_context.team.unlocks.get(puzzle_slug)
     if not puzzle:
@@ -185,7 +190,7 @@ def handle_answer(answer: str | None, request_context, django_context, puzzle_sl
         else:
             return Response({"error": "Puzzle not unlocked"}, status=403)
 
-    guesses_left = request.context.team.guesses_remaining(puzzle)
+    guesses_left = request_context.team.guesses_remaining(puzzle)
     if guesses_left <= 0:
         return Response({"error": "No guesses remaining"}, status=400)
 
@@ -238,13 +243,14 @@ def handle_answer(answer: str | None, request_context, django_context, puzzle_sl
             # TODO: major case completion
 
     return Response(
-            {
-                "status": "correct" if correct else "incorrect",
-                "guesses_left": guesses_left,
-                "messages": PuzzleMessageSerializer(puzzle_messages, many=True).data,
-            },
-            status=200,
-        )
+        {
+            "status": "correct" if correct else "incorrect",
+            "guesses_left": guesses_left,
+            "messages": PuzzleMessageSerializer(puzzle_messages, many=True).data,
+        },
+        status=200,
+    )
+
 
 @api_view(["POST"])
 def submit_answer(request: Request, puzzle_slug: str) -> Response:

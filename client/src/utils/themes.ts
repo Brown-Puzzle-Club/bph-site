@@ -12,6 +12,12 @@ export const DEFAULT_THEME: Theme = {
   footer_color: "#02031d",
 };
 
+export const MAIN_PAGE_THEME: Theme = {
+  bg_color: "#020202",
+  content_color: "#020202",
+  footer_color: "#020202",
+};
+
 export const BROWN_THEME: Theme = {
   bg_color: "#1c160d",
   content_color: "#1c160d",

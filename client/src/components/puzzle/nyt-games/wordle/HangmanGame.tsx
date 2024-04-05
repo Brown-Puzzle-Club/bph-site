@@ -20,7 +20,6 @@ import {
   verifyGuess,
 } from "./utils";
 import { possibleWords } from "./wordList";
-import { useFetcher } from "react-router-dom";
 
 const hangmanTemplateAreas = `'a b c d e A . .'
                               '. . . . f . . .'
