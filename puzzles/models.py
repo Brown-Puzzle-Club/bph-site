@@ -1,13 +1,11 @@
 import collections
 import datetime
-import re
 from typing import Optional
 import unicodedata
 from urllib.parse import quote_plus
 import math
 
 from django import forms
-from django.core.exceptions import ValidationError
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
@@ -20,9 +18,6 @@ from django.db.models import (
     Case,
     When,
     Count,
-    Min,
-    Max,
-    IntegerField,
 )
 from django.db.models.functions import Coalesce
 from django.db.models.signals import post_save
@@ -1201,9 +1196,9 @@ class MinorCaseIncomingEvent(models.Model):
         if self.final_vote:
             return self.final_vote.selected_case.name
 
-        most_voted_case = max(
-            self.votes.all(), key=lambda vote: vote.num_votes
-        ).minor_case
+        most_votes = max(self.votes.all(), key=lambda vote: vote.num_votes).num_votes
+        most_voted_cases = self.votes.get(num_votes=most_votes)
+        most_voted_case = random.choice(most_voted_cases)
         current_time = timezone.now()
 
         try:
