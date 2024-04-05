@@ -9,18 +9,10 @@ import { Link } from "react-router-dom";
 interface ModalProps {
   isOpen: boolean;
   closeModal: () => void;
-  caseID: number;
-  onSubmit: (caseID: number) => void;
   cur_case: Round | undefined;
 }
 
-const MinorCaseModal: React.FC<ModalProps> = ({
-  isOpen,
-  closeModal,
-  caseID,
-  onSubmit,
-  cur_case,
-}) => {
+const MinorCaseModal: React.FC<ModalProps> = ({ isOpen, closeModal, cur_case }) => {
   useEffect(() => {
     console.log(cur_case?.id);
   }, [cur_case]);
@@ -31,17 +23,6 @@ const MinorCaseModal: React.FC<ModalProps> = ({
   }
 
   const cur_case_art: JSX.Element = cur_case ? CASE_ART_BY_ROUND_SLUG[cur_case?.id] : <></>;
-
-  function submitVote(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
-    //make some backend call to change the status of puzzle from incoming to active
-    //open minor case page
-    console.log(event);
-    throw new Error("Function not implemented.");
-  }
-
-  const handleSubmit = () => {
-    onSubmit(caseID);
-  };
 
   return (
     <>
@@ -74,11 +55,6 @@ const MinorCaseModal: React.FC<ModalProps> = ({
             <div className="flex justify-between">
               {/* Container for centering */}
               <div>{cur_case?.name}</div>
-              <button className="row-span-1 self-end" onClick={submitVote}>
-                Enter
-              </button>
-
-              <button onClick={handleSubmit}>Complete</button>
             </div>
           </div>
         </div>

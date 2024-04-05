@@ -12,7 +12,6 @@ import {
   MinorCaseCompleted,
   MinorCaseIncoming,
 } from "@/utils/django_types";
-import { getCookie } from "../utils/api";
 
 function renderActiveCases(
   casesRecord: (MinorCaseActive | MinorCaseIncoming | MinorCaseCompleted)[],
@@ -36,8 +35,8 @@ function renderActiveCases(
   ));
 }
 
-const findCaseFromContext = (case_id: number, context: DjangoContext | undefined) => {
-  if (!context) return undefined;
+const findCaseFromContext = (case_id: number | null, context: DjangoContext | undefined) => {
+  if (!context || !case_id) return undefined;
 
   const cases_query = context.team_context.minor_case_active?.filter((mca) => {
     return mca?.minor_case_round.id === case_id;
@@ -51,8 +50,7 @@ function EventPage() {
   const [, setDoneCases] = useState<JSX.Element[]>([]);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
-  const [selectedCase, setSelectedCase] = useState<number>(-1); //TODO: fix -1
-  const [, setOutput] = useState<string>("");
+  const [selectedCase, setSelectedCase] = useState<number | null>(null); //TODO: fix -1
   const { context } = useDjangoContext();
 
   const active_cases = useMemo(() => {
@@ -65,37 +63,6 @@ function EventPage() {
       return !solved_cases.some((sc) => sc.minor_case_round.slug === ac.minor_case_round.slug);
     });
   }, [context]);
-
-  const submit = async (caseID: number) => {
-    const csrftoken = getCookie("csrftoken");
-
-    try {
-      const result = await fetch("api/move_minor_case/" + caseID, {
-        method: "POST",
-        body: JSON.stringify({
-          // ...
-        }),
-        headers: {
-          "X-CSRFToken": csrftoken || "",
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!result.ok) {
-        // HTTP response code was not 2xx. Maybe introspect more...
-        setOutput(`Error: ${result.status} ${result.statusText}`);
-      } else {
-        // console.log('hi')
-        const res = await result.json();
-
-        // console.log(res)
-        setOutput(res["success"]);
-      }
-    } catch (e) {
-      // This error handling will be very poor.
-      setOutput(`Error: ${e}`);
-    }
-  };
 
   const openModal = (caseID: number) => {
     setSelectedCase(caseID);
@@ -197,8 +164,6 @@ function EventPage() {
         <MinorCaseModal
           isOpen={modalOpen}
           closeModal={closeModal}
-          caseID={selectedCase}
-          onSubmit={submit}
           cur_case={findCaseFromContext(selectedCase, context)}
         />
       </div>

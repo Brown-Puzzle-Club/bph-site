@@ -24,3 +24,8 @@ export const WHALE_THEME: Theme = {
   content_color: "#fbebc5",
   footer_color: "#fbebc5",
 };
+
+export const BIRB_THEME: Theme = {
+  content_color: "#db7319",
+  footer_color: "#db7319",
+};

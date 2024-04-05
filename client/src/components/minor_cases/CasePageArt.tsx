@@ -11,10 +11,13 @@ import sheep from "@/assets/minor_cases/whales/sheep.png";
 import stool from "@/assets/minor_cases/whales/stool.png";
 import waterline from "@/assets/minor_cases/whales/waterline.png";
 
+import birb_bg from "@/assets/minor_cases/birbs/birb_bg.png";
+import thebirb from "@/assets/minor_cases/birbs/thebirb.png";
+
 import { useDjangoContext } from "@/hooks/useDjangoContext";
 import { useTheme } from "@/hooks/useTheme";
 import { CASE_PALETTE, MajorCaseEnum } from "@/utils/constants";
-import { WHALE_THEME } from "@/utils/themes";
+import { BIRB_THEME, WHALE_THEME } from "@/utils/themes";
 import { PuzzleAnswer, cn, getUnlockedPuzzle } from "@/utils/utils";
 import { ReactNode, useEffect, useMemo } from "react";
 import RelativeAsset, { AssetProps } from "../RelativeAsset";
@@ -129,6 +132,24 @@ const WhaleArt = () => {
   );
 };
 
+const BirbsArt = () => {
+  const { setTheme } = useTheme();
+  useEffect(() => {
+    setTheme(BIRB_THEME);
+  });
+
+  return (
+    <ArtWrapper background_src={birb_bg}>
+      <PuzzleIconWrapper
+        slug="birbs-at-brown"
+        imageSrc={thebirb}
+        extraStyles={{ top: "36%", left: "7%", width: "28%", zIndex: 3 }}
+        meta
+      />
+    </ArtWrapper>
+  );
+};
+
 interface PuzzleAsset extends AssetProps {
   slug: string;
   meta?: boolean;
@@ -201,6 +222,7 @@ const ArtWrapper = ({
 const CASE_ART_COMPONENT: { [key: string]: JSX.Element } = {
   exile: <ExileArt />,
   whales: <WhaleArt />,
+  "birbs-at-brown": <BirbsArt />,
 };
 
 export default function CasePageArt({ case_slug }: { case_slug: string }) {
