@@ -718,7 +718,7 @@ class Team(models.Model):
 
     def major_case_puzzles(self):
         # first, calculate if there needs to be an unlock for any of the major case puzzles
-        solves = self.solves_by_case
+        solves = self.minor_case_solves
         major_case_puzzles = {}
         current_unlocks = self.unlocks
 
