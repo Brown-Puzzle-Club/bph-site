@@ -103,6 +103,14 @@ const PuzzleSchema = z.object({
 });
 type Puzzle = z.infer<typeof PuzzleSchema>;
 
+const PuzzleMessageSchema = z.object({
+  id: z.number(),
+  guess: z.string(),
+  response: z.string(),
+  puzzle: PuzzleSchema,
+});
+type PuzzleMessage = z.infer<typeof PuzzleMessageSchema>;
+
 const MinorCaseIncomingSchema = z.object({
   id: z.number(),
   incoming_datetime: z.date(),
@@ -134,8 +142,12 @@ const TeamPuzzleContextSchema = z.object({
   minor_case_incoming: z.array(MinorCaseIncomingSchema),
   minor_case_active: z.array(MinorCaseActiveSchema),
   minor_case_completed: z.array(MinorCaseCompletedSchema),
+  solves: z.record(AnswerSubmissionSchema),
   solves_by_case: z.record(z.record(z.record(AnswerSubmissionSchema))), // major_case -> case_id -> puzzle_id -> answer submission
   unlocks: z.record(z.record(z.record(PuzzleSchema))), // major_case_id -> case_id -> puzzle_id -> puzzle
+  case_unlocks: z.record(RoundSchema),
+  major_case_unlocks: z.record(MajorCaseSchema),
+  major_case_puzzles: z.record(PuzzleSchema),
 });
 
 const HuntContextSchema = z.object({
@@ -174,6 +186,7 @@ export type {
   MinorCaseCompleted,
   MinorCaseIncoming,
   Puzzle,
+  PuzzleMessage,
   Round,
   Team,
   TeamMember,

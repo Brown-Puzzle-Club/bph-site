@@ -1,21 +1,24 @@
-import Loader from "../Loader";
-import PresenceCounter from "./PresenceCounter";
-import VotingModal from "./VotingModal";
 import useSocket from "@/hooks/useSocket";
+import Loader from "../Loader";
+import VotingModal from "./VotingModal";
 
 interface CaseVotingProps {
   path: string;
-  votingOptions: string[];
 }
 
 const CaseVoting = ({ path }: CaseVotingProps) => {
-  const { sendMessage, readyState, presenceInfo, votingInfo } = useSocket(path);
+  const { sendMessage, readyState, presenceInfo, votingInfo } = useSocket(path, {
+    onOpen: () => {
+      console.log("Connected to websocket! yay!");
+    },
+  });
+
+  if (!presenceInfo || !votingInfo) return null;
 
   return readyState != WebSocket.OPEN ? (
     <Loader />
   ) : (
     <>
-      <PresenceCounter presenceInfo={presenceInfo} />
       <VotingModal sendMessage={sendMessage} presenceInfo={presenceInfo} votingInfo={votingInfo} />
     </>
   );

@@ -14,7 +14,7 @@ const ToastViewport = React.forwardRef<
   <ToastPrimitives.Viewport
     ref={ref}
     className={cn(
-      "fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]",
+      "fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4  sm:right-0  sm:flex-col md:max-w-[420px]",
       className,
     )}
     {...props}
@@ -32,6 +32,14 @@ const toastVariants = cva(
           "destructive group border-destructive bg-destructive text-destructive-foreground",
         wordle:
           "border border-foreground bg-foreground text-background top-6 left-1/2 flex fixed max-w-fit p-4",
+        answersubmit:
+          "border border-foreground bg-foreground text-background top-6 left-1/2 flex fixed max-w-fit p-4",
+        answersubmit_flagged:
+          "border border-foreground bg-[#f6af45] text-background top-6 left-1/2 flex fixed max-w-fit p-4",
+        answersubmit_happy:
+          "border border-foreground bg-[green] text-background top-6 left-1/2 flex fixed max-w-fit p-4",
+        answersubmit_error:
+          "border border-foreground bg-[#ff4949] text-background top-6 left-1/2 flex fixed max-w-fit p-4",
       },
     },
     defaultVariants: {

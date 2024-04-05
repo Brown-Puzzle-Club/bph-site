@@ -34,6 +34,16 @@ export const PFP_COLOR_CHOICES = [
 
 export const [MEMBER_COUNT_MIN, MEMBER_COUNT_MAX] = [1, 12];
 
+interface Palette {
+  primary: string;
+  secondary: string;
+  tertiary: string;
+  textColor: string;
+  answerColor: string;
+  backgroundStart: string;
+  backgroundEnd: string;
+}
+
 export enum MajorCaseEnum {
   COLORED_THREAD = "colored-thread",
   SOCIAL_DEDUCTION = "social-deduction",
@@ -41,20 +51,54 @@ export enum MajorCaseEnum {
 }
 
 export enum PuzzleStyle {
-  RED_THREAD = "puzzle-red-thread",
+  COLORED_THREAD = "puzzle-red-thread",
   SOCIAL_DEDUCTION = "puzzle-soc-deduction",
   DATA = "puzzle-data",
 }
 
+export const MAJOR_CASE_NAMES: Record<MajorCaseEnum, string> = {
+  [MajorCaseEnum.COLORED_THREAD]: "Red Thread",
+  [MajorCaseEnum.SOCIAL_DEDUCTION]: "Social Deduction",
+  [MajorCaseEnum.DATA]: "Data",
+};
+
 export const toPuzzleStyle = (major_case_slug: string) => {
-  switch (major_case_slug) {
-    case "colored-thread":
-      return PuzzleStyle.RED_THREAD;
-    case "red-thread":
-      return PuzzleStyle.RED_THREAD;
-    case "social-deduction":
+  switch (major_case_slug as MajorCaseEnum) {
+    case MajorCaseEnum.COLORED_THREAD:
+      return PuzzleStyle.COLORED_THREAD;
+    case MajorCaseEnum.SOCIAL_DEDUCTION:
       return PuzzleStyle.SOCIAL_DEDUCTION;
-    case "data":
+    case MajorCaseEnum.DATA:
       return PuzzleStyle.DATA;
   }
+};
+
+export const CASE_PALETTE: Record<MajorCaseEnum, Palette> = {
+  [MajorCaseEnum.COLORED_THREAD]: {
+    primary: "#957a62",
+    secondary: "#745a45",
+    tertiary: "#b3957c",
+    textColor: "#000000b8",
+    answerColor: "#98ff98",
+    backgroundStart: "#b3957c",
+    backgroundEnd: "#a28369",
+  },
+  [MajorCaseEnum.SOCIAL_DEDUCTION]: {
+    primary: "#35421d",
+    secondary: "#4f5a39",
+    tertiary: "#b3957c",
+    textColor: "#000000b8", //  #ffffffb3
+    answerColor: "#b6e1c1",
+    backgroundStart: "#6d8148", // #4c6b34
+    backgroundEnd: "#576837", // #425c2d
+  },
+  [MajorCaseEnum.DATA]: {
+    primary: "#bb5171",
+    secondary: "#9c5268",
+    tertiary: "#b3957c",
+    textColor: "#000000b8",
+    answerColor: "#fafffa",
+    backgroundStart: "#d86688",
+    backgroundEnd: "#c45b7b",
+  },
 };

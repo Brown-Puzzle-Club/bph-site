@@ -17,7 +17,7 @@ from puzzles.hunt_config import (
     HUNT_END_TIME,
     HUNT_CLOSE_TIME,
     HUNT_SOLUTION_TIME,
-    META_SLUGS,
+    MAJOR_CASE_SLUGS,
 )
 from puzzles import models
 from puzzles.shortcuts import get_shortcuts
@@ -136,11 +136,11 @@ class BaseContext:
     def hunt_is_closed(self):
         return self.now >= self.close_time
 
-    def hunt_solutions_open(self):  # TODO: change this to be if the solution
+    def hunt_solutions_open(self):
         return self.now >= self.solution_time
 
     def num_metas(self):
-        return len(META_SLUGS)
+        return len(MAJOR_CASE_SLUGS)
 
 
 # Also include the constants from hunt_config.
@@ -194,8 +194,18 @@ class Context:
         return self.team.num_free_answers_remaining if self.team else 0
 
     def unlocks(self):
-        # return models.Team.compute_unlocks(self)
         return self.team.unlocks_by_case
+
+    def case_unlocks(self):
+        case_unlocks = self.team.case_unlocks
+        models.Team.compute_unlocks(case_unlocks, self)
+        return case_unlocks
+
+    def major_case_unlocks(self):
+        return self.team.major_case_unlocks
+
+    def major_case_puzzles(self):
+        return self.team.major_case_puzzles
 
     #
     # def completed_hunt(self):
@@ -260,6 +270,9 @@ class Context:
         return False
 
     # BPH 2024 context
+    def solves(self):
+        return self.team.solves if self.team else {}
+
     def solves_by_case(self):
         return self.team.solves_by_case if self.team else {}
 

@@ -35,8 +35,8 @@ from puzzles.hunt_config import (
     HUNT_ORGANIZERS,
     CONTACT_EMAIL,
     MESSAGING_SENDER_EMAIL,
-    RUNAROUND_SLUG,
 )
+from puzzles.signals import create_minor_case_incoming_event
 
 logger = logging.getLogger("puzzles.messaging")
 
@@ -262,11 +262,9 @@ class DiscordInterface:
             try:
                 discord_id = self.client.loop.run_until_complete(
                     self.client.http.send_message(
-                        self.HINT_CHANNEL, message, embeds=[embed] # type: ignore
+                        self.HINT_CHANNEL, message, embeds=[embed]  # type: ignore
                     )
-                )[
-                    "id"
-                ]
+                )["id"]
             except Exception:
                 dispatch_general_alert(
                     _("Discord API failure: create\n{}").format(traceback.format_exc())
@@ -430,6 +428,20 @@ def broadcast_presence(sender, room, **kwargs):
         async_to_sync(channel.group_send)(room.channel_name, channel_layer_message)
 
 
+@receiver(create_minor_case_incoming_event)
+def broadcast_minor_case_incoming_event(sender, cases, room, **kwargs):
+    print(f"broadcasting minor case incoming event to {room}")
+    channel = get_channel_layer()
+    if channel is not None:
+        message = {
+            "type": "vote",
+            "data": {"cases": cases, "expiration_time": None},
+        }
+        channel_layer_message = {"type": "forward.message", "data": json.dumps(message)}
+
+        async_to_sync(channel.group_send)(room.channel_name, channel_layer_message)
+
+
 class VotingConsumer(WebsocketConsumer):
     def get_room(self):
         return f"{self.scope['path'].split('/')[-1]}-{self.scope['user'].team}"
@@ -462,7 +474,8 @@ class VotingConsumer(WebsocketConsumer):
             MinorCaseIncomingEvent = apps.get_model("puzzles", "MinorCaseIncomingEvent")
             incoming_event = MinorCaseIncomingEvent.get_current_incoming_event(self.scope.get("user"))  # type: ignore
             if not incoming_event:
-                incoming_event = MinorCaseIncomingEvent.create_incoming_event(self.scope.get("user"))  # type: ignore
+                return
+                # incoming_event = MinorCaseIncomingEvent.create_incoming_event(self.scope.get("user"))  # type: ignore
 
             incoming_event.vote(data["oldVote"], data["newVote"])
             response = {
@@ -473,9 +486,9 @@ class VotingConsumer(WebsocketConsumer):
                         incoming_event.get_expiration_time().isoformat()
                         if incoming_event.get_expiration_time()
                         else None
-                        ),
-                    },
-                }
+                    ),
+                },
+            }
             self.send_to_all(client_room, response)
 
         elif content["type"] == "finalizeVote":
@@ -487,7 +500,6 @@ class VotingConsumer(WebsocketConsumer):
                     "data": {"chosenCase": incoming_event.finalize_vote()},
                 }
                 self.send_to_all(client_room, response)
-
 
     def forward_message(self, event):
         self.send(text_data=event["data"])
@@ -513,7 +525,7 @@ def show_unlock_notification(context, unlock):
 
 
 def show_solve_notification(submission):
-    if not submission.puzzle.is_meta or submission.puzzle.slug == RUNAROUND_SLUG:
+    if not submission.puzzle.is_meta: #or submission.puzzle.slug == RUNAROUND_SLUG:
         return
     data = json.dumps(
         {

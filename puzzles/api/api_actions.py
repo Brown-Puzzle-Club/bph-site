@@ -170,6 +170,7 @@ def create_vote_event(request: Request) -> Response:
             incoming_event=serializer.validated_data.get("incoming_event"),
         )
         vote_event.save()
+
         return Response(serializer.data)
     else:
         return Response(serializer.errors, status=400)
@@ -184,15 +185,21 @@ def handle_answer(answer: str | None, request_context, django_context, puzzle_sl
         else:
             return Response({"error": "Puzzle not unlocked"}, status=403)
 
+    guesses_left = request.context.team.guesses_remaining(puzzle)
+    if guesses_left <= 0:
+        return Response({"error": "No guesses remaining"}, status=400)
+
     sanitized_answer = "".join(
         [char for char in puzzle.answer if char.isalpha()]
     ).upper()
+    semicleaned_guess = PuzzleMessage.semiclean_guess(answer)
+    puzzle_messages = [
+        message
+        for message in puzzle.puzzlemessage_set.all()
+        if semicleaned_guess == message.semicleaned_guess
+    ]
 
-    correct = answer.upper() == sanitized_answer
-    if correct:
-        print(f"Correct answer! ({sanitized_answer})")
-    else:
-        print("incorrect.")
+    correct = Puzzle.normalize_answer(answer) == sanitized_answer
 
     try:
         submission = AnswerSubmission.objects.create(
@@ -204,12 +211,15 @@ def handle_answer(answer: str | None, request_context, django_context, puzzle_sl
         )
         submission.save()
     except Exception as e:
-        return Response(
-            {"error": "Answer submission failed", "error_body": str(e)}, status=500
-        )
+        if not puzzle_messages:
+            return Response(
+                {"error": "Answer submission failed", "error_body": str(e)},
+                status=500,
+            )
 
     # if this submission solves the minor case:
     if correct:
+        print(f"Correct answer! ({sanitized_answer})")
         if not request_context.hunt_is_over:
             django_context.team.last_solve_time = request_context.now
             django_context.team.save()
@@ -223,12 +233,18 @@ def handle_answer(answer: str | None, request_context, django_context, puzzle_sl
                 completed_datetime=request_context.now,
             )
             completed.save()
-
-        if puzzle.is_major_meta:
+        elif puzzle.is_major_meta:
             print("Solved the major case!")
             # TODO: major case completion
 
-    return Response({"status": "correct" if correct else "incorrect"}, status=200)
+    return Response(
+            {
+                "status": "correct" if correct else "incorrect",
+                "guesses_left": guesses_left,
+                "messages": PuzzleMessageSerializer(puzzle_messages, many=True).data,
+            },
+            status=200,
+        )
 
 @api_view(["POST"])
 def submit_answer(request: Request, puzzle_slug: str) -> Response:

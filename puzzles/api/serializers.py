@@ -35,11 +35,10 @@ class PuzzleSerializer(serializers.ModelSerializer):
 
 
 class MajorCaseSerializer(serializers.ModelSerializer):
-    puzzle = PuzzleSerializer()
 
     class Meta:
         model = MajorCase
-        fields = "__all__"
+        fields = ["id", "name", "slug", "order"]
 
 
 class RoundSerializer(serializers.ModelSerializer):
@@ -147,6 +146,8 @@ class ExtraGuessGrantSerializer(serializers.ModelSerializer):
 
 
 class PuzzleMessageSerializer(serializers.ModelSerializer):
+    puzzle = PuzzleBasicSerializer()
+
     class Meta:
         model = PuzzleMessage
         fields = "__all__"
@@ -195,6 +196,7 @@ class TeamPuzzleContextSerializer(serializers.Serializer):
     )
     minor_case_active = MinorCaseActiveSerializer(many=True)
     minor_case_completed = MinorCaseCompletedSerializer(many=True)
+    solves = serializers.DictField(child=AnswerSubmissionSerializer())
     solves_by_case = serializers.DictField(
         child=serializers.DictField(
             child=serializers.DictField(child=AnswerSubmissionSerializer())
@@ -205,6 +207,9 @@ class TeamPuzzleContextSerializer(serializers.Serializer):
             child=serializers.DictField(child=PuzzleBasicSerializer())
         )
     )
+    case_unlocks = serializers.DictField(child=RoundSerializer())
+    major_case_unlocks = serializers.DictField(child=MajorCaseSerializer())
+    major_case_puzzles = serializers.DictField(child=PuzzleBasicSerializer())
 
 
 class HuntContextSerializer(serializers.Serializer):
