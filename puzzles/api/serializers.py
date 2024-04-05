@@ -244,19 +244,19 @@ class ContextSerializer(serializers.Serializer):
         )
 
         # context_fields = dir(data)
-        from time import time
+        # from time import time
 
         all_fields = hunt_context_fields.union(team_context_fields)
         for ctx in all_fields:
             if ctx in hunt_context_fields:
-                time_start = time()
+                # time_start = time()
                 hunt_context_data[ctx] = getattr(data, ctx)
-                time_elapsed = time() - time_start
-                print(f"took {time_elapsed} seconds to process")
+                # time_elapsed = time() - time_start
+                # print(f"took {time_elapsed} seconds to process")
             elif ctx in team_context_fields:
                 team_context_data[ctx] = getattr(data, ctx)
 
-        print("finished")
+        # print("finished")
 
         return {
             "team_context": TeamPuzzleContextSerializer(team_context_data).data,

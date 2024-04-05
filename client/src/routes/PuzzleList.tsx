@@ -118,7 +118,7 @@ export default function PuzzleList() {
                                     className={`text-md underline ${puzzle.is_meta ? "font-bold" : ""}`}
                                     style={{ color: CASE_PALETTE[curTab].textColor }}
                                   >
-                                    {puzzle.name}
+                                    {/* {puzzle.name} */}
                                   </a>
                                 </div>
                                 {/* ANSWER */}
@@ -126,7 +126,7 @@ export default function PuzzleList() {
                                   className="pl-3 font-mono font-bold text-right"
                                   style={{ color: CASE_PALETTE[curTab].answerColor }}
                                 >
-                                  {puzzle.round.major_case.slug in
+                                  {/* {puzzle.round.major_case.slug in
                                     context.team_context.solves_by_case &&
                                   puzzle.round.slug in
                                     context.team_context.solves_by_case[
@@ -141,7 +141,7 @@ export default function PuzzleList() {
                                       ][puzzle.round.slug][
                                         puzzle.slug
                                       ].submitted_answer.toUpperCase()
-                                    : ""}
+                                    : ""} */}
                                 </span>
                               </div>
                             </li>
