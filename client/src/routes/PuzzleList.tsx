@@ -1,4 +1,5 @@
 // import CaseVoting from "@/components/websockets/CaseVoting";
+import CaseVoting from "@/components/websockets/CaseVoting";
 import { useDjangoContext } from "@/hooks/useDjangoContext";
 import { CASE_PALETTE, MAJOR_CASE_NAMES, MajorCaseEnum } from "@/utils/constants";
 import { SetStateAction, useState } from "react";
@@ -13,7 +14,7 @@ export default function PuzzleList() {
 
   return (
     <div>
-      {/* <CaseVoting path="ws/puzzles" /> */}
+      <CaseVoting path="ws/puzzles" />
       <div className="tabs flex items-center justify-end gap-4 mx-[12%] md:mx-[26%] pr-2 md:pr-10 z-10 text-[1.45vw] md:text-[1vw] sm:text-sm pt-6">
         {Object.keys(CASE_PALETTE).map((tab) => (
           <button
