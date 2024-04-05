@@ -12,6 +12,7 @@ import {
   Row,
   VerificationState,
   clearRow,
+  generateAnswers,
   getLastTile,
   getNextNonEmptyTile,
   getPreviousFilledNotCorrectTile,
@@ -19,6 +20,7 @@ import {
   verifyGuess,
 } from "./utils";
 import { possibleWords } from "./wordList";
+import { useFetcher } from "react-router-dom";
 
 const hangmanTemplateAreas = `'a b c d e A . .'
                               '. . . . f . . .'
@@ -31,10 +33,9 @@ interface HangmanWordleProps {
   setGameMode: React.Dispatch<React.SetStateAction<GameMode>>;
   setGuesses: React.Dispatch<React.SetStateAction<number>>;
   gameState: GameState;
-  answers: [string, string, string];
 }
 
-const HangmanWordle = ({ setGameMode, setGuesses, gameState, answers }: HangmanWordleProps) => {
+const HangmanWordle = ({ setGameMode, setGuesses, gameState }: HangmanWordleProps) => {
   const [board, setBoard] = useState<Board>(
     new Array(13).fill({ letter: "", verified: VerificationState.Unverified }),
   );
@@ -42,7 +43,17 @@ const HangmanWordle = ({ setGameMode, setGuesses, gameState, answers }: HangmanW
   const [activeTile, setActiveTile] = useState<number>(-1);
   const [solved, setSolved] = useState<[boolean, boolean, boolean]>([false, false, false]);
   const [prevGuesses, setPrevGuesses] = useState<Guess[]>([]);
+  const [answers, setAnswers] = useState(["", "", "", ""]);
   const { toast } = useToast();
+
+  useEffect(() => {
+    setAnswers((prev) => {
+      if (prev[0] === "" && prev[1] === "" && prev[2] === "") {
+        return generateAnswers();
+      }
+      return prev;
+    });
+  }, [setAnswers]);
 
   useEffect(() => {
     if (solved.every((s) => s)) {
@@ -126,7 +137,7 @@ const HangmanWordle = ({ setGameMode, setGuesses, gameState, answers }: HangmanW
             return { letter: letter, verified: guessVerification[i] };
           }) as [Character, Character, Character, Character, Character];
           if (guessVerification.every((v) => v === VerificationState.Correct)) {
-            setBoard((prev) => clearRow(selectedRow, prev, guessVerification));
+            setBoard((prev) => clearRow(selectedRow, prev, guessVerification, solved));
             setSelectedRow(Row.None);
             setSolved((prev) => {
               const newSolved = [...prev] satisfies [boolean, boolean, boolean];
@@ -134,7 +145,7 @@ const HangmanWordle = ({ setGameMode, setGuesses, gameState, answers }: HangmanW
               return newSolved;
             });
           } else {
-            setBoard((prev) => clearRow(selectedRow, prev, guessVerification));
+            setBoard((prev) => clearRow(selectedRow, prev, guessVerification, solved));
             setGuesses((prev) => prev - 1);
             setSelectedRow(Row.None);
             setPrevGuesses((prev) => [...prev, { guess: characters, row: selectedRow }]);

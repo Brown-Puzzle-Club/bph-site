@@ -8,6 +8,7 @@ from puzzles.api import api_views, api_actions
 from . import nyt_games_api
 from . import data_mc_api
 from . import soc_ded_api
+from . import wordle_api
 
 
 @api_view(["GET"])
@@ -57,4 +58,6 @@ urlpatterns = [
         soc_ded_api.verdict_guess,
         name="social_deduction_verdict_guess",
     ),
+    path("wordle/verify-guess", wordle_api.verify_guess, name="verify-guess"),
+
 ]

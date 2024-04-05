@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useToast } from "../../../ui/use-toast";
 import Tile from "./Tile";
-import { Character, GameState, Row, VerificationState, verifyGuess } from "./utils";
+import { Character, GameState, VerificationState } from "./utils";
 import { possibleWords } from "./wordList";
+import axios from "axios";
 
 interface FinalWordleProps {
-  answer: string;
   gameState: GameState;
   setGameState: React.Dispatch<React.SetStateAction<GameState>>;
   setGuesses: React.Dispatch<React.SetStateAction<number>>;
@@ -26,13 +26,36 @@ const buildBoard = (numRows: number): Character[][] => {
   return board;
 };
 
-const FinalWordle = ({
-  answer,
-  gameState,
-  setGameState,
-  setGuesses,
-  numRows,
-}: FinalWordleProps) => {
+const verifyGuess = async (guess: string): Promise<VerificationState[]> => {
+  const response = await axios.post("/api/puzzle/wordle/verify-guess", { guess });
+  if (response.status === 200) {
+    const responseArray = response.data.verification;
+    const verificationArray = [];
+
+    for (const v of responseArray) {
+      if (v === "correct") {
+        verificationArray.push(VerificationState.Correct);
+      } else if (v === "incorrect") {
+        verificationArray.push(VerificationState.Incorrect);
+      } else if (v === "miss") {
+        verificationArray.push(VerificationState.SameMiss);
+      } else {
+        verificationArray.push(VerificationState.Unverified);
+      }
+    }
+
+    return verificationArray;
+  }
+  return [
+    VerificationState.Incorrect,
+    VerificationState.Incorrect,
+    VerificationState.Incorrect,
+    VerificationState.Incorrect,
+    VerificationState.Incorrect,
+  ];
+};
+
+const FinalWordle = ({ gameState, setGameState, setGuesses, numRows }: FinalWordleProps) => {
   const [{ board, currentRow, activeTile }, setWordleGameState] = useState<WordleGameState>({
     board: buildBoard(numRows),
     currentRow: 0,
@@ -89,25 +112,25 @@ const FinalWordle = ({
         .toLowerCase();
       if (enteredWord.length === 5) {
         if (possibleWords.includes(enteredWord)) {
-          const guessVerification = verifyGuess(enteredWord, [answer], Row.Top);
+          verifyGuess(enteredWord).then((guessVerification) => {
+            if (guessVerification.every((v) => v === VerificationState.Correct)) {
+              setGameState(GameState.Win);
+            } else {
+              setGuesses((prev) => prev - 1);
+            }
 
-          if (guessVerification.every((v) => v === VerificationState.Correct)) {
-            setGameState(GameState.Win);
-          } else {
-            setGuesses((prev) => prev - 1);
-          }
-
-          setWordleGameState((prev) => {
-            const newBoard = prev.board.map((arr) => [...arr]);
-            newBoard[prev.currentRow] = newBoard[prev.currentRow].map((char, i) => {
-              return { letter: char.letter, verified: guessVerification[i] };
+            setWordleGameState((prev) => {
+              const newBoard = prev.board.map((arr) => [...arr]);
+              newBoard[prev.currentRow] = newBoard[prev.currentRow].map((char, i) => {
+                return { letter: char.letter, verified: guessVerification[i] };
+              });
+              return {
+                ...prev,
+                board: newBoard,
+                currentRow: prev.currentRow + 1,
+                activeTile: 0,
+              };
             });
-            return {
-              ...prev,
-              board: newBoard,
-              currentRow: prev.currentRow + 1,
-              activeTile: 0,
-            };
           });
         } else {
           const { dismiss } = toast({

@@ -167,7 +167,7 @@ export const getRowString = (row: Row, board: Board) => {
   }
 };
 
-export const generateAnswers = (): [string, string, string, string] => {
+export const generateAnswers = (): [string, string, string] => {
   const answers = [possibleWords[Math.floor(Math.random() * possibleWords.length)]];
 
   while (answers.length < 2) {
@@ -184,14 +184,7 @@ export const generateAnswers = (): [string, string, string, string] => {
     }
   }
 
-  while (answers.length < 4) {
-    const newWord = possibleWords[Math.floor(Math.random() * possibleWords.length)];
-    if (!answers.includes(newWord)) {
-      answers.push(newWord);
-    }
-  }
-
-  return answers as [string, string, string, string];
+  return answers as [string, string, string];
 };
 
 const boardIndexToWordIndex = (index: number, selectedRow: Row) => {
@@ -212,25 +205,34 @@ const boardIndexToWordIndex = (index: number, selectedRow: Row) => {
   }
 };
 
-export const clearRow = (selectedRow: Row, board: Board, verificationGuess: WordVerification) => {
+export const clearRow = (
+  selectedRow: Row,
+  board: Board,
+  verificationGuess: WordVerification,
+  solved: [boolean, boolean, boolean],
+) => {
   const newBoard = [...board];
-  const removeCorrectLetters = verificationGuess.some((v) => v !== VerificationState.Correct);
+  const newSolved = [...solved];
+  newSolved[selectedRow] =
+    newSolved[selectedRow] || verificationGuess.every((v) => v === VerificationState.Correct);
+  console.log(newSolved);
 
   newBoard.forEach((_character, i) => {
-    if (
-      idToRow(i).includes(selectedRow) &&
-      (removeCorrectLetters ||
-        verificationGuess[boardIndexToWordIndex(i, selectedRow)] !== VerificationState.Correct)
-    ) {
-      newBoard[i] = { letter: "", verified: VerificationState.Unverified };
-    } else if (idToRow(i).includes(selectedRow)) {
-      newBoard[i].verified = VerificationState.Correct;
+    if (idToRow(i).includes(selectedRow)) {
+      if (
+        verificationGuess[boardIndexToWordIndex(i, selectedRow)] === VerificationState.Correct &&
+        idToRow(i).some((x) => newSolved[x as number])
+      ) {
+        newBoard[i].verified = VerificationState.Correct;
+      } else {
+        newBoard[i] = { letter: "", verified: VerificationState.Unverified };
+      }
     }
   });
+
   return newBoard;
 };
 
-// TODO: handle repeat letters correcty!
 export const verifyGuess = (
   guess: string,
   answers: string[],
@@ -254,25 +256,13 @@ export const verifyGuess = (
   const otherAnswers = answers.filter((_, i) => i !== selectedRow);
   const otherAnswersLetters = otherAnswers.map((answer) => answer.split(""));
 
-  const answerLetterOccurences = correctAnswer
-    .split("")
-    .reduce((acc: { [key: string]: number }, letter) => {
-      acc[letter] = (acc[letter] || 0) + 1;
-      return acc;
-    }, {});
-
-  const guessLetterOccurences: { [key: string]: number } = {};
-
   // exact match
   for (let i = 0; i < 5; i++) {
     if (correctAnswer[i] === guess[i]) {
       verificationArray[i] = VerificationState.Correct;
       correctAnswerLetters.splice(correctAnswerLetters.indexOf(guess[i]), 1);
-      guessLetterOccurences[guess[i]] = (guessLetterOccurences[guess[i]] || 0) + 1;
     }
   }
-
-  // console.log(guessLetterOccurences, answerLetterOccurences);
 
   // same letter, different position
   for (let i = 0; i < 5; i++) {
@@ -280,14 +270,9 @@ export const verifyGuess = (
       continue;
     }
 
-    // console.log(i, guessLetterOccurences[guess[i]]);
-    if (
-      correctAnswerLetters.includes(guess[i]) &&
-      (guessLetterOccurences[guess[i]] || 0) < answerLetterOccurences[guess[i]]
-    ) {
+    if (correctAnswerLetters.includes(guess[i])) {
       verificationArray[i] = VerificationState.SameMiss;
       correctAnswerLetters.splice(correctAnswerLetters.indexOf(guess[i]), 1);
-      guessLetterOccurences[guess[i]] = (guessLetterOccurences[guess[i]] || 0) + 1;
     }
   }
 
