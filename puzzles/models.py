@@ -1184,11 +1184,11 @@ class MinorCaseIncomingEvent(models.Model):
                 vote.save()
 
         if self.expiration is None and self.total_user_votes > 0:
-            self.expiration = timezone.now() + timezone.timedelta(seconds=30)
+            self.expiration = timezone.now() + timezone.timedelta(seconds=60)
         elif self.expiration and old_vote is None and new_vote is not None:
-            self.expiration = timezone.now() - timezone.timedelta(seconds=5)
+            self.expiration = self.expiration - timezone.timedelta(seconds=5)
         elif self.expiration and old_vote is not None and new_vote is None:
-            self.expiration = timezone.now() + timezone.timedelta(seconds=5)
+            self.expiration = self.expiration + timezone.timedelta(seconds=5)
 
         if self.total_user_votes == 0:
             self.expiration = None
