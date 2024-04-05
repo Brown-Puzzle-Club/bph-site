@@ -103,6 +103,14 @@ const PuzzleSchema = z.object({
 });
 type Puzzle = z.infer<typeof PuzzleSchema>;
 
+const PuzzleMessageSchema = z.object({
+  id: z.number(),
+  guess: z.string(),
+  response: z.string(),
+  puzzle: PuzzleSchema,
+});
+type PuzzleMessage = z.infer<typeof PuzzleMessageSchema>;
+
 const MinorCaseIncomingSchema = z.object({
   id: z.number(),
   incoming_datetime: z.date(),
@@ -178,6 +186,7 @@ export type {
   MinorCaseCompleted,
   MinorCaseIncoming,
   Puzzle,
+  PuzzleMessage,
   Round,
   Team,
   TeamMember,

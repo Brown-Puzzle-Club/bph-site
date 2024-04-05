@@ -45,7 +45,7 @@ interface Palette {
 }
 
 export enum MajorCaseEnum {
-  COLORED_THREAD = "red-thread",
+  COLORED_THREAD = "colored-thread",
   SOCIAL_DEDUCTION = "social-deduction",
   DATA = "data",
 }

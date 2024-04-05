@@ -193,32 +193,39 @@ def submit_answer(request: Request, puzzle_slug: str) -> Response:
             else:
                 return Response({"error": "Puzzle not unlocked"}, status=403)
 
-        sanitized_answer = "".join(
-            [char for char in puzzle.answer if char.isalpha()]
-        ).upper()
+        guesses_left = request.context.team.guesses_remaining(puzzle)
+        if guesses_left <= 0:
+            return Response({"error": "No guesses remaining"}, status=400)
 
-        correct = answer.upper() == sanitized_answer
-        if correct:
-            print(f"Correct answer! ({sanitized_answer})")
-        else:
-            print("incorrect.")
+        sanitized_answer = puzzle.normalized_answer
+        semicleaned_guess = PuzzleMessage.semiclean_guess(answer)
+        puzzle_messages = [
+            message
+            for message in puzzle.puzzlemessage_set.all()
+            if semicleaned_guess == message.semicleaned_guess
+        ]
+
+        correct = Puzzle.normalize_answer(answer) == sanitized_answer
 
         try:
             submission = AnswerSubmission.objects.create(
                 team=context.team,
                 puzzle=puzzle,
-                submitted_answer=answer,
+                submitted_answer=answer if not correct else sanitized_answer,
                 is_correct=correct,
                 used_free_answer=False,
             )
             submission.save()
         except Exception as e:
-            return Response(
-                {"error": "Answer submission failed", "error_body": str(e)}, status=500
-            )
+            if not puzzle_messages:
+                return Response(
+                    {"error": "Answer submission failed", "error_body": str(e)},
+                    status=500,
+                )
 
         # if this submission solves the minor case:
         if correct:
+            print(f"Correct answer! ({sanitized_answer})")
             if not request.context.hunt_is_over:
                 context.team.last_solve_time = request.context.now
                 context.team.save()
@@ -235,9 +242,15 @@ def submit_answer(request: Request, puzzle_slug: str) -> Response:
 
             elif puzzle.is_major_meta:
                 print("Solved the major case!")
-                # TODO: major case completion. Notification + some more
 
-        return Response({"status": "correct" if correct else "incorrect"}, status=200)
+        return Response(
+            {
+                "status": "correct" if correct else "incorrect",
+                "guesses_left": guesses_left,
+                "messages": PuzzleMessageSerializer(puzzle_messages, many=True).data,
+            },
+            status=200,
+        )
         # TODO:
         # - puzzle messages
         # - guess limit

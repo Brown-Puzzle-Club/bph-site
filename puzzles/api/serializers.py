@@ -146,6 +146,8 @@ class ExtraGuessGrantSerializer(serializers.ModelSerializer):
 
 
 class PuzzleMessageSerializer(serializers.ModelSerializer):
+    puzzle = PuzzleBasicSerializer()
+
     class Meta:
         model = PuzzleMessage
         fields = "__all__"
