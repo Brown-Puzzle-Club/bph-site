@@ -14,4 +14,4 @@ function PuzzlePage() {
   return <PuzzleWrapper puzzle_slug={puzzle_slug} />;
 }
 
-export default PuzzlePage;
+export default PuzzlePage; 
