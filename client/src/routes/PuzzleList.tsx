@@ -11,6 +11,8 @@ export default function PuzzleList() {
     setTab(tab as MajorCaseEnum);
   };
 
+  console.log("tab: ", curTab);
+
   return (
     <div>
       <CaseVoting path="ws/puzzles" />
@@ -111,13 +113,13 @@ export default function PuzzleList() {
                                 }
                               >
                                 <div className="flex items-center space-x-4">
-                                  <a
+                                  {/* <a
                                     href={`/puzzle/${puzzle.slug}`}
                                     className={`text-md underline ${puzzle.is_meta ? "font-bold" : ""}`}
                                     style={{ color: CASE_PALETTE[curTab].textColor }}
                                   >
                                     {puzzle.name}
-                                  </a>
+                                  </a> */}
                                 </div>
                                 {/* ANSWER */}
                                 <span

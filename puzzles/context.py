@@ -197,6 +197,8 @@ class Context:
         return self.team.unlocks_by_case
 
     def case_unlocks(self):
+        if not self.team:
+            return {}
         case_unlocks = self.team.case_unlocks
         models.Team.compute_unlocks(case_unlocks, self)
         return case_unlocks
