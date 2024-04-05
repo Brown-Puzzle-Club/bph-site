@@ -27,7 +27,7 @@ const buildBoard = (numRows: number): Character[][] => {
 };
 
 const verifyGuess = async (guess: string): Promise<VerificationState[]> => {
-  const response = await axios.post("/api/verify-guess", { guess });
+  const response = await axios.post("/api/puzzle/wordle/verify-guess", { guess });
   if (response.status === 200) {
     const responseArray = response.data.verification;
     const verificationArray = [];
