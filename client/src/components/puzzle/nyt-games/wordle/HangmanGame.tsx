@@ -56,10 +56,6 @@ const HangmanWordle = ({ setGameMode, setGuesses, gameState }: HangmanWordleProp
   }, [setAnswers]);
 
   useEffect(() => {
-    console.log(answers);
-  }, [answers]);
-
-  useEffect(() => {
     if (solved.every((s) => s)) {
       setGameMode(GameMode.FinalWordle);
     }
