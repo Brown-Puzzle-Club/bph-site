@@ -68,24 +68,36 @@ MIDDLEWARE = [
     "puzzles.context.context_middleware",
 ]
 
-redis_url = os.environ.get("REDISCLOUD_URL")
+# redis_url = os.environ.get("REDISCLOUD_URL")
 
+# CACHES = {
+#     "default": {
+#         "BACKEND": "django_redis.cache.RedisCache",
+#         "LOCATION": redis_url,
+#         "OPTIONS": {
+#             "CLIENT_CLASS": "django_redis.client.DefaultClient",
+#         },
+#     }
+# }
+
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels_redis.core.RedisChannelLayer",
+#         "CONFIG": {
+#             "hosts": [{"address": redis_url}],
+#         },
+#     }
+# }
+
+# FROM DEV:
 CACHES = {
     "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": redis_url,
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        },
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
     }
 }
-
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [{"address": redis_url}],
-        },
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
     }
 }
 
