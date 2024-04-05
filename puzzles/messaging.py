@@ -36,7 +36,7 @@ from puzzles.hunt_config import (
     CONTACT_EMAIL,
     MESSAGING_SENDER_EMAIL,
 )
-from puzzles.signals import create_minor_case_incoming_event
+from puzzles.signals import create_minor_case_incoming_event, send_notification
 
 logger = logging.getLogger("puzzles.messaging")
 
@@ -441,6 +441,19 @@ def broadcast_minor_case_incoming_event(sender, cases, room, **kwargs):
 
         async_to_sync(channel.group_send)(room.channel_name, channel_layer_message)
 
+@receiver(send_notification)
+def broadcast_notification(sender, type, title, desc, room, **kwargs):
+    print(f"broadcasting notification to {room}")
+    channel = get_channel_layer()
+    if channel is not None:
+        message = {
+            "type": f"notification.{type}",
+            "title": title,
+            "desc": desc,
+        }
+        channel_layer_message = {"type": "forward.message", "data": json.dumps(message)}
+
+        async_to_sync(channel.group_send)(room.channel_name, channel_layer_message)
 
 class VotingConsumer(WebsocketConsumer):
     def get_room(self):
