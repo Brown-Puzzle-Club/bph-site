@@ -12,8 +12,8 @@ import { cn } from "@/utils/utils";
 import { useEffect, useState } from "react";
 import { useTimer } from "react-timer-hook";
 import { SendMessage } from "react-use-websocket";
-import PresenceCounter from "./PresenceCounter";
 import DescriptionModal from "./DescriptionModal";
+import PresenceCounter from "./PresenceCounter";
 
 interface VotingModalProps {
   presenceInfo: PresenceInfo | null;
@@ -27,7 +27,7 @@ const VotingModal = ({ sendMessage, votingInfo, presenceInfo }: VotingModalProps
     expiryTimestamp: new Date(),
     onExpire: () => {
       sendMessage(JSON.stringify({ type: "finalizeVote" }));
-      window.location.reload();
+      // window.location.reload();
     },
     autoStart: false,
   });
