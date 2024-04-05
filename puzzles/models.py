@@ -361,7 +361,7 @@ class Team(models.Model):
     in_person = models.BooleanField(default=False, verbose_name=_("In person team?"))
     brown_team = models.BooleanField(
         default=False,
-        verbose_name=_("Any Brown community members on the team?"),
+        verbose_name=_("Brown U Team?"),
         help_text=_("(Undergraduates, Graduates, Faculty, or Alumni)"),
     )
     num_brown_members = models.IntegerField(
@@ -370,7 +370,7 @@ class Team(models.Model):
     )
     classroom_need = models.BooleanField(
         default=False,
-        verbose_name=_("Do you want to request a classroom to hunt in?"),
+        verbose_name=_("Classroom Request?"),
         help_text=_(
             "Our availability will be limited, so please do not request one if you can make alternate plans."
         ),
