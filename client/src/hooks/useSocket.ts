@@ -59,7 +59,6 @@ const useSocket = (path: string, callbacks: SocketCallbacks | undefined = undefi
 
   useEffect(() => {
     if (team) {
-      console.log(`${protocol}://${window.location.host}/${path}?token=${team.auth_token}`);
       setSocketUrl(`${protocol}://${window.location.host}/${path}?token=${team.auth_token}`);
     }
   }, [team, path, setSocketUrl, protocol]);

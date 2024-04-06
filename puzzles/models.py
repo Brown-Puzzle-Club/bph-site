@@ -37,16 +37,13 @@ import random
 from django.contrib.postgres.indexes import GinIndex
 from channels_presence.models import Room
 from puzzles.context import context_cache
-from puzzles.signals import create_minor_case_incoming_event
+from puzzles.signals import send_notification, create_minor_case_incoming_event
 from puzzles.messaging import (
     dispatch_general_alert,
     dispatch_free_answer_alert,
     dispatch_submission_alert,
     send_mail_wrapper,
     discord_interface,
-    show_unlock_notification,
-    show_solve_notification,
-    show_hint_notification,
 )
 
 from puzzles.hunt_config import (
@@ -1224,6 +1221,15 @@ class MinorCaseIncomingEvent(models.Model):
         self.final_vote = vote_event
         self.expiration = current_time
         self.save()
+
+        send_notification.send(
+            None,
+            notification_type="unlock",
+            team=self.team.team_name,
+            title="Time's Up!",
+            desc=f"Team {self.team.team_name} has unlocked a new case: {most_voted_case.name}!"
+        )
+
         return {
             "name": vote_event.selected_case.name,
             "desc": vote_event.selected_case.description,
@@ -1331,11 +1337,15 @@ class MinorCaseCompleted(models.Model):
 
         incoming_case_event = MinorCaseIncomingEvent.create_incoming_event(self.team)
         if incoming_case_event:
-            room = Room.objects.get(
-                channel_name=f"puzzles-{self.team.team_name}"
-            )  # TODO: need to ensure that this is synced with the consumer
+            send_notification.send(
+                None,
+                notification_type="solve",
+                team=self.team.team_name,
+                title="Congratulations! Case Solved!",
+                desc=f"Team {self.team.team_name} has solved a case! {self.minor_case_round.name}!"
+            )
             create_minor_case_incoming_event.send(
-                None, cases=incoming_case_event.get_votes(), room=room
+                None, cases=incoming_case_event.get_votes(), team=self.team.team_name
             )
             incoming_case_event.save()
 

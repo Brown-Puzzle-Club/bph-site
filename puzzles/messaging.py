@@ -313,100 +313,33 @@ class DiscordInterface:
 discord_interface = DiscordInterface()
 
 
-# A WebsocketConsumer subclass that can exchange messages with a single
-# browser tab.
-class IndividualWebsocketConsumer(WebsocketConsumer):
+@receiver(send_notification)
+def broadcast_notification(sender, notification_type, title, desc, team, **kwargs):
+    print(f"broadcasting notification to {team}")
+    room = Room.objects.get(channel_name=f"notifications-{team}")
+
+    channel = get_channel_layer()
+    if channel is not None:
+        message = {
+            "type": notification_type,
+            "title": title,
+            "desc": desc,
+        }
+        channel_layer_message = {"type": "forward.message", "data": json.dumps(message)}
+
+        async_to_sync(channel.group_send)(room.channel_name, channel_layer_message)
+
+class TeamNotificationsConsumer(WebsocketConsumer):
+    def get_room(self):
+        return f"notifications-{self.scope['user'].team}"
+
     def connect(self):
+        print(f"connected a new user: {self.scope['user']} {self.channel_name=}")
         self.accept()
-
-    def get_context(self):
-        # We don't have a request, but we do have a user...
-        context = Context(None)
-        context.request_user = self.scope["user"]
-        return context
-
-    # Use the following inherited methods:
-    # def receive(self, text_data):
-    # def send(self, text_data):
-
-
-# A WebsocketConsumer subclass that can broadcast messages to a set of users.
-class BroadcastWebsocketConsumer(ABC, WebsocketConsumer):
-    def connect(self):
-        if self.is_ok():
-            self.group = self.get_group()
-            if self.channel_layer is not None:
-                async_to_sync(self.channel_layer.group_add)(
-                    self.group, self.channel_name
-                )
-        # If not is_ok, still accept the connection to stop the client from
-        # repeatedly retrying. But consider modifying the client to not open a
-        # socket at all in this case since it's probably pointless to do so.
-        self.accept()
+        Room.objects.add(self.get_room(), self.channel_name)  # type: ignore
 
     def disconnect(self, close_code):
-        if self.is_ok() and self.channel_layer is not None:
-            async_to_sync(self.channel_layer.group_discard)(
-                self.group, self.channel_name
-            )
-
-    def channel_receive_broadcast(self, event):
-        try:
-            self.send(text_data=event["data"])
-        except Exception:
-            pass
-
-    @abstractmethod
-    def is_ok(self):
-        pass
-
-    @abstractmethod
-    def get_group(self):
-        pass
-
-
-class TeamWebsocketConsumer(BroadcastWebsocketConsumer):
-    group_id = None
-
-    def is_ok(self):
-        return self.scope["user"].is_authenticated
-
-    def get_group(self):
-        assert self.group_id
-        return "%s-%d" % (self.group_id, self.scope["user"].id)
-
-    @classmethod
-    def send_to_all(cls, text_data):
-        channel_layer = get_channel_layer()
-        if channel_layer is None:
-            return
-        async_to_sync(channel_layer.group_send)(
-            cls.group_id, {"type": "channel.receive_broadcast", "data": text_data}
-        )
-
-
-class TeamNotificationsConsumer(TeamWebsocketConsumer):
-    group_id = "team"
-
-
-class AdminWebsocketConsumer(BroadcastWebsocketConsumer):
-    group_id = None
-
-    def is_ok(self):
-        return self.scope["user"].is_superuser
-
-    def get_group(self):
-        assert self.group_id
-        return self.group_id
-
-    @classmethod
-    def send_to_all(cls, text_data):
-        channel_layer = get_channel_layer()
-        if channel_layer is None:
-            return
-        async_to_sync(channel_layer.group_send)(
-            cls.group_id, {"type": "channel.receive_broadcast", "data": text_data}
-        )
+        Room.objects.remove(self.get_room(), self.channel_name)  # type: ignore
 
 
 @receiver(presence_changed)
@@ -429,27 +362,17 @@ def broadcast_presence(sender, room, **kwargs):
 
 
 @receiver(create_minor_case_incoming_event)
-def broadcast_minor_case_incoming_event(sender, cases, room, **kwargs):
-    print(f"broadcasting minor case incoming event to {room}")
+def broadcast_minor_case_incoming_event(sender, cases, team, **kwargs):
+    print(f"broadcasting minor case incoming event to {team}")
+    room = Room.objects.get(
+                channel_name=f"puzzles-{team}"
+            )
+
     channel = get_channel_layer()
     if channel is not None:
         message = {
             "type": "vote",
             "data": {"cases": cases, "expiration_time": None},
-        }
-        channel_layer_message = {"type": "forward.message", "data": json.dumps(message)}
-
-        async_to_sync(channel.group_send)(room.channel_name, channel_layer_message)
-
-@receiver(send_notification)
-def broadcast_notification(sender, type, title, desc, room, **kwargs):
-    print(f"broadcasting notification to {room}")
-    channel = get_channel_layer()
-    if channel is not None:
-        message = {
-            "type": f"notification.{type}",
-            "title": title,
-            "desc": desc,
         }
         channel_layer_message = {"type": "forward.message", "data": json.dumps(message)}
 
@@ -485,10 +408,9 @@ class VotingConsumer(WebsocketConsumer):
         if content["type"] == "vote":
             data = content["data"]
             MinorCaseIncomingEvent = apps.get_model("puzzles", "MinorCaseIncomingEvent")
-            incoming_event = MinorCaseIncomingEvent.get_current_incoming_event(self.scope.get("user"))  # type: ignore
+            incoming_event = MinorCaseIncomingEvent.get_current_incoming_event(self.scope.get("user")) # type: ignore
             if not incoming_event:
                 return
-                # incoming_event = MinorCaseIncomingEvent.create_incoming_event(self.scope.get("user"))  # type: ignore
 
             incoming_event.vote(data["oldVote"], data["newVote"])
             response = {
@@ -516,59 +438,3 @@ class VotingConsumer(WebsocketConsumer):
 
     def forward_message(self, event):
         self.send(text_data=event["data"])
-
-
-class HintsConsumer(AdminWebsocketConsumer):
-    group_id = "hints"
-
-
-def show_unlock_notification(context, unlock):
-    data = json.dumps(
-        {
-            "title": str(unlock.puzzle),
-            "text": _("You’ve unlocked a new puzzle!"),
-            "link": reverse("puzzle", args=(unlock.puzzle.slug,)),
-        }
-    )
-    # There's an awkward edge case where the person/browser tab that actually
-    # triggered the notif is navigating between pages, so they don't have a
-    # websocket to send to... use messages.info to put it into the next page.
-    messages.info(context.request, data)
-    TeamNotificationsConsumer.send_to_all(data)
-
-
-def show_solve_notification(submission):
-    if not submission.puzzle.is_meta: #or submission.puzzle.slug == RUNAROUND_SLUG:
-        return
-    data = json.dumps(
-        {
-            "title": str(submission.puzzle),
-            "text": _("You’ve solved a meta!"),
-            "link": reverse("puzzle", args=(submission.puzzle.slug,)),
-        }
-    )
-    # No need to worry here since whoever triggered this is already getting a
-    # [ANSWER is correct!] notification.
-    TeamNotificationsConsumer.send_to_all(data)
-
-
-def show_victory_notification(context):
-    data = json.dumps(
-        {
-            "title": "Congratulations!",
-            "text": _("You’ve finished the %s!") % HUNT_TITLE,
-            "link": reverse("victory"),
-        }
-    )
-    TeamNotificationsConsumer.send_to_all(data)
-
-
-def show_hint_notification(hint):
-    data = json.dumps(
-        {
-            "title": str(hint.puzzle),
-            "text": _("Hint answered!"),
-            "link": reverse("hints", args=(hint.puzzle.slug,)),
-        }
-    )
-    TeamNotificationsConsumer.send_to_all(data)

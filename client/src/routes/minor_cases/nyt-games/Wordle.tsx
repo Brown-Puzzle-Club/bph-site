@@ -14,10 +14,6 @@ const Wordle = () => {
   const [remountCounter, setRemountCounter] = useState(0);
   const { toast } = useToast();
 
-  // useEffect(() => {
-  //   console.log(answers);
-  // }, [answers]);
-
   useEffect(() => {
     if (gameState === GameState.Win) {
       toast({
