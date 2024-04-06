@@ -11,9 +11,9 @@ import { VotingInfo } from "@/hooks/useSocket";
 import { cn } from "@/utils/utils";
 import { useEffect, useState } from "react";
 import { useTimer } from "react-timer-hook";
-import DescriptionModal from "./DescriptionModal";
-import { Checkbox } from "../ui/checkbox";
 import { SendJsonMessage } from "react-use-websocket/dist/lib/types";
+import { Checkbox } from "../ui/checkbox";
+import DescriptionModal from "./DescriptionModal";
 
 interface VotingModalProps {
   votingInfo: VotingInfo | null;
@@ -48,6 +48,10 @@ const VotingModal = ({ sendJsonMessage, votingInfo }: VotingModalProps) => {
   useEffect(() => {
     sendJsonMessage({ type: "vote", data: { oldVote: [], newVote: [] } });
   }, [sendJsonMessage]);
+
+  useEffect(() => {
+    console.log(votingInfo);
+  }, [votingInfo]);
 
   if (!votingInfo || Object.keys(votingInfo.cases).length === 0) {
     return null;
