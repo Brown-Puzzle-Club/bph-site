@@ -18,6 +18,15 @@ ALLOWED_HOSTS = [
     "localhost",
 ]
 
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    }
+}
+
 # Google Analytics
 GA_CODE = """
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-24DY5C1PC8"></script>
