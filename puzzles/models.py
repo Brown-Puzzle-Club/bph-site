@@ -1198,21 +1198,22 @@ class MinorCaseIncomingEvent(models.Model):
         # TODO: fix this in the case where multiple cases need to be unlocked
 
         if self.final_vote:
-            return self.final_vote.selected_case.name
+            return [case.name for case in self.final_vote.selected_cases]
 
-        most_votes = max(self.votes.all(), key=lambda vote: vote.num_votes).num_votes
-        most_voted_cases = self.votes.filter(num_votes=most_votes)
-        most_voted_case = random.choice(most_voted_cases).minor_case
+        sorted_votes = self.votes.order_by("-num_votes")
+        most_voted_cases = [
+            vote.minor_case for vote in sorted_votes[: self.num_votes_allowed]
+        ]
         current_time = timezone.now()
-
         try:
             vote_event = MinorCaseVoteEvent.objects.create(
                 team=self.team,
                 timestamp=current_time,
-                selected_case=most_voted_case,
                 incoming_event=self,
             )
             vote_event.final_votes.set(self.votes.all())
+            print("most voted cases: ", most_voted_cases)
+            vote_event.selected_cases.set(most_voted_cases)
         except Exception as e:
             print(f"ERROR: Vote Event creation failed with error {e}")
             print("-- likely due to a vote event already existing for the team --")
@@ -1224,18 +1225,24 @@ class MinorCaseIncomingEvent(models.Model):
         self.expiration = current_time
         self.save()
 
-        send_notification.send(
-            None,
-            notification_type="unlock",
-            team=self.team.id,
-            title="Time's Up!",
-            desc=f"Team {self.team.team_name} has unlocked a new case: {most_voted_case.name}!",
-        )
+        for case in most_voted_cases:
+            send_notification.send(
+                None,
+                notification_type="unlock",
+                team=self.team.id,
+                title="Time's Up!",
+                desc=f"Team {self.team.team_name} has unlocked a new case: {case.name}!",
+            )
+            print(f"EVENT: Unlocking case {case.name} for team {self.team}")
+            Team.unlock_case(self.team, case, self.timestamp)
 
-        return {
-            "name": vote_event.selected_case.name,
-            "desc": vote_event.selected_case.description,
-        }
+        return [
+            {
+                "name": selected_case.name,
+                "desc": selected_case.description,
+            }
+            for selected_case in vote_event.selected_cases.all()
+        ]
 
     @staticmethod
     def get_current_incoming_event(context):
@@ -1266,8 +1273,8 @@ class MinorCaseVoteEvent(models.Model):
     team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_("team"))
     timestamp = models.DateTimeField(verbose_name=_("Event creation datetime"))
     # the selected case from the vote.
-    selected_case = models.ForeignKey(
-        Round, on_delete=models.CASCADE, verbose_name=_("Selected minor case")
+    selected_cases = models.ManyToManyField(
+        Round, blank=True, verbose_name=_("Selected minor case(s)")
     )
     # the incomingEvent that caused the vote to occur
     incoming_event = models.OneToOneField(
@@ -1279,14 +1286,6 @@ class MinorCaseVoteEvent(models.Model):
     final_votes = models.ManyToManyField(
         MinorCaseVote, verbose_name=_("Final votes"), blank=True
     )
-
-    def save(self, *args, **kwargs):
-        print(
-            f"EVENT:Vote finalized. Unlocking case {self.selected_case.name} for team {self.team}"
-        )
-        super(MinorCaseVoteEvent, self).save(*args, **kwargs)
-        # on creation of the vote event, sets the case for the team as an active case.
-        Team.unlock_case(self.team, self.selected_case, self.timestamp)
 
 
 class MinorCaseActive(models.Model):

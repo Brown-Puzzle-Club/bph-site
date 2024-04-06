@@ -194,7 +194,7 @@ class Context:
         return self.team.num_free_answers_remaining if self.team else 0
 
     def unlocks(self):
-        return self.team.unlocks_by_case
+        return self.team.unlocks_by_case if self.team else {}
 
     def case_unlocks(self):
         if not self.team:

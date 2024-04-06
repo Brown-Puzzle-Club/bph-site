@@ -120,8 +120,8 @@ class MinorCaseVoteAdmin(admin.ModelAdmin):
 
 
 class MinorCaseVoteEventAdmin(admin.ModelAdmin):
-    list_display = ("team", "timestamp", "selected_case")
-    list_filter = ("team", "timestamp", "selected_case")
+    list_display = ("team", "timestamp")
+    list_filter = ("team", "timestamp")
 
 
 class MinorCaseActiveAdmin(admin.ModelAdmin):
