@@ -21,6 +21,7 @@ import Contact from "./routes/Contact";
 import Credits from "./routes/Credits";
 import ErrorPage from "./routes/ErrorPage";
 import EventPage from "./routes/EventPage";
+import EventPageNew from "./routes/EventPageNew";
 import InfoPage from "./routes/InfoPage";
 import Landing from "./routes/Landing";
 import Leaderboard from "./routes/Leaderboard";
@@ -119,6 +120,19 @@ const router = createBrowserRouter([
           />
         ),
       },
+      {
+        path: "/eventpagenew",
+        element: (
+          <PageWrapper
+            route={
+              <Locked condition={HUNT_HAS_STARTED}>
+                <EventPageNew />
+              </Locked>
+            }
+          />
+        ),
+      },
+
       {
         path: "/minorcase/:slug",
         element: <PageWrapper route={<MinorCasePage />} />,

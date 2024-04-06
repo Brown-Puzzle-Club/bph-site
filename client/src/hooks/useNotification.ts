@@ -1,8 +1,8 @@
+import { useToast } from "@/components/ui/use-toast";
 import { useEffect, useState } from "react";
 import useWebSocket from "react-use-websocket";
-import { useAuth } from "./useAuth";
-import { useToast } from "@/components/ui/use-toast";
 import { z } from "zod";
+import { useAuth } from "./useAuth";
 
 interface SocketCallbacks {
   onMessage?: (event: MessageEvent) => void;
@@ -41,17 +41,17 @@ export const useNotification = (callbacks: SocketCallbacks | undefined = undefin
     }
   }, [team, setSocketUrl, protocol]);
 
-  useEffect(() => {
-    const message = NotificationSchema.parse(lastJsonMessage);
-    switch (message.type) {
-      case "solve":
-        toast({
-          title: message.title,
-          description: message.desc,
-        });
-        break;
-    }
-  }, [lastJsonMessage, toast]);
+  // useEffect(() => {
+  //   const message = NotificationSchema.parse(lastJsonMessage);
+  //   switch (message.type) {
+  //     case "solve":
+  //       toast({
+  //         title: message.title,
+  //         description: message.desc,
+  //       });
+  //       break;
+  //   }
+  // }, [lastJsonMessage, toast]);
 
   return readyState;
 };

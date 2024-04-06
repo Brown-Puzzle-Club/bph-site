@@ -204,9 +204,15 @@ class Context:
         return case_unlocks
 
     def major_case_unlocks(self):
+        if not self.team:
+            return {}
+
         return self.team.major_case_unlocks
 
     def major_case_puzzles(self):
+        if not self.team:
+            return {}
+
         return self.team.major_case_puzzles
 
     #
