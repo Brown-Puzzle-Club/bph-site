@@ -68,8 +68,7 @@ DISCORD_TOGGLE = True if settings.DISCORD_TOKEN else False
 # supports at least a vaguely similar API, change the following code
 # accordingly:
 def dispatch_discord_alert(webhook: str, content: str, username: str):
-    content = "[{}] {}".format(
-        timezone.localtime().strftime("%H:%M:%S"), content)
+    content = "[{}] {}".format(timezone.localtime().strftime("%H:%M:%S"), content)
     if len(content) >= 2000:
         content = content[:1996] + "..."
     if settings.IS_TEST or not DISCORD_TOGGLE:
@@ -83,7 +82,9 @@ def dispatch_general_alert(content: str):
     dispatch_discord_alert(ALERT_WEBHOOK_URL, content, ALERT_DISCORD_USERNAME)
 
 
-def dispatch_submission_alert(content: str, correct: bool, is_minor_meta: bool, is_major_meta: bool):
+def dispatch_submission_alert(
+    content: str, correct: bool, is_minor_meta: bool, is_major_meta: bool
+):
     if not correct:
         username = INCORRECT_SUBMISSION_DISCORD_USERNAME
         webhook_url = INCORRECT_SUBMISSION_WEBHOOK_URL
@@ -112,8 +113,7 @@ request_logger = logging.getLogger("puzzles.request")
 
 def log_request_middleware(get_response):
     def middleware(request):
-        request_logger.info("{} {}".format(
-            request.get_full_path(), request.user))
+        request_logger.info("{} {}".format(request.get_full_path(), request.user))
         return get_response(request)
 
     return middleware
@@ -143,8 +143,7 @@ def send_mail_wrapper(subject, template, context, recipients):
         body=body,
         from_email=MESSAGING_SENDER_EMAIL,
         to=recipients,
-        alternatives=[
-            (render_to_string(template + ".html", context), "text/html")],
+        alternatives=[(render_to_string(template + ".html", context), "text/html")],
         reply_to=[CONTACT_EMAIL],
     )
     try:
@@ -188,11 +187,13 @@ class DiscordInterface:
             self.avatars = {}
             if self.client is not None:
                 members = [
-                    discord.Member(data=data, guild=self.GUILD,  # type: ignore
-                                   state=self.client._connection)
+                    discord.Member(
+                        data=data,
+                        guild=self.GUILD,  # type: ignore
+                        state=self.client._connection,
+                    )
                     for data in self.client.loop.run_until_complete(
-                        self.client.http.get_members(
-                            self.GUILD, limit=1000, after=None)
+                        self.client.http.get_members(self.GUILD, limit=1000, after=None)
                     )
                 ]
                 for member in members:
@@ -234,7 +235,8 @@ class DiscordInterface:
             embed["color"] = 0xDDDDDD  # type: ignore
             embed["timestamp"] = hint.claimed_datetime.isoformat()
             embed["author"]["name"] = _("Claimed by {}").format(  # type: ignore
-                hint.claimer)
+                hint.claimer
+            )
             avatar = self.get_avatar(hint.claimer)
             if avatar:
                 embed["author"]["icon_url"] = avatar
@@ -260,22 +262,19 @@ class DiscordInterface:
                 )
             except Exception:
                 dispatch_general_alert(
-                    _("Discord API failure: modify\n{}").format(
-                        traceback.format_exc())
+                    _("Discord API failure: modify\n{}").format(traceback.format_exc())
                 )
         else:
             message = hint.long_discord_message()
             try:
                 discord_id = self.client.loop.run_until_complete(
                     self.client.http.send_message(
-                        self.HINT_CHANNEL, message, embeds=[
-                            embed]  # type: ignore
+                        self.HINT_CHANNEL, message, embeds=[embed]  # type: ignore
                     )
                 )["id"]
             except Exception:
                 dispatch_general_alert(
-                    _("Discord API failure: create\n{}").format(
-                        traceback.format_exc())
+                    _("Discord API failure: create\n{}").format(traceback.format_exc())
                 )
                 return
             hint.discord_id = discord_id
@@ -289,8 +288,7 @@ class DiscordInterface:
             # what DPPH did instead of deleting messages:
             # (nb. I tried to make these colors color-blind friendly)
 
-            embed = collections.defaultdict(
-                lambda: collections.defaultdict(dict))
+            embed = collections.defaultdict(lambda: collections.defaultdict(dict))
             if hint.status == hint.ANSWERED:
                 embed["color"] = 0xAAFFAA  # type: ignore
             elif hint.status == hint.REFUNDED:
@@ -298,7 +296,8 @@ class DiscordInterface:
             # nothing for obsolete
 
             embed["author"]["name"] = _("{} by {}").format(  # type: ignore
-                hint.get_status_display(), hint.claimer)
+                hint.get_status_display(), hint.claimer
+            )
             embed["author"]["url"] = hint.full_url()
             embed["description"] = hint.response[:250]
             avatar = self.get_avatar(hint.claimer)
@@ -316,8 +315,7 @@ class DiscordInterface:
                 )
             except Exception:
                 dispatch_general_alert(
-                    _("Discord API failure: modify\n{}").format(
-                        traceback.format_exc())
+                    _("Discord API failure: modify\n{}").format(traceback.format_exc())
                 )
 
 
@@ -391,8 +389,7 @@ class TeamWebsocketConsumer(BroadcastWebsocketConsumer):
         if channel_layer is None:
             return
         async_to_sync(channel_layer.group_send)(
-            cls.group_id, {
-                "type": "channel.receive_broadcast", "data": text_data}
+            cls.group_id, {"type": "channel.receive_broadcast", "data": text_data}
         )
 
 
@@ -412,8 +409,7 @@ class AdminWebsocketConsumer(BroadcastWebsocketConsumer):
         if channel_layer is None:
             return
         async_to_sync(channel_layer.group_send)(
-            cls.group_id, {
-                "type": "channel.receive_broadcast", "data": text_data}
+            cls.group_id, {"type": "channel.receive_broadcast", "data": text_data}
         )
 
 
@@ -422,12 +418,14 @@ class TeamNotificationsConsumer(WebsocketConsumer):
         return f"notifications-{self.scope['user'].team.id}"
 
     def connect(self):
-        print(
-            f"connected a new user: {self.scope['user']} {self.channel_name=}")
+        print(f"connected a new user: {self.scope['user']} {self.channel_name=}")
         self.accept()
         Room.objects.add(self.get_room(), self.channel_name)  # type: ignore
 
     def disconnect(self, close_code):
+        print(
+            f"disconnected a user: {self.scope['user']} {self.channel_name=} with code {close_code}"
+        )
         Room.objects.remove(self.get_room(), self.channel_name)  # type: ignore
 
     def receive(self, text_data):
@@ -445,9 +443,7 @@ class TeamNotificationsConsumer(WebsocketConsumer):
 @receiver(create_minor_case_incoming_event)
 def broadcast_minor_case_incoming_event(sender, cases, team, **kwargs):
     print(f"broadcasting minor case incoming event to {team}")
-    room = Room.objects.get(
-        channel_name=f"puzzles-{team}"
-    )
+    room = Room.objects.get(channel_name=f"puzzles-{team}")
 
     channel = get_channel_layer()
     if channel is not None:
@@ -455,11 +451,9 @@ def broadcast_minor_case_incoming_event(sender, cases, team, **kwargs):
             "type": "vote",
             "data": {"cases": cases, "expiration_time": None},
         }
-        channel_layer_message = {
-            "type": "forward.message", "data": json.dumps(message)}
+        channel_layer_message = {"type": "forward.message", "data": json.dumps(message)}
 
-        async_to_sync(channel.group_send)(
-            room.channel_name, channel_layer_message)
+        async_to_sync(channel.group_send)(room.channel_name, channel_layer_message)
 
 
 class VotingConsumer(WebsocketConsumer):
@@ -467,21 +461,21 @@ class VotingConsumer(WebsocketConsumer):
         return f"{self.scope['path'].split('/')[-1]}-{self.scope['user'].team.id}"
 
     def connect(self):
-        print(
-            f"connected a new user: {self.scope['user']} {self.channel_name=}")
+        print(f"connected a new user: {self.scope['user']} {self.channel_name=}")
         self.accept()
         Room.objects.add(self.get_room(), self.channel_name)  # type: ignore
 
     def disconnect(self, close_code):
+        print(
+            f"disconnected a user: {self.scope['user']} {self.channel_name=} with code {close_code}"
+        )
         Room.objects.remove(self.get_room(), self.channel_name)  # type: ignore
 
     def send_to_all(self, client_room, response):
         channel = get_channel_layer()
         if channel is not None:
-            response = {"type": "forward.message",
-                        "data": json.dumps(response)}
-            async_to_sync(channel.group_send)(
-                client_room.channel_name, response)
+            response = {"type": "forward.message", "data": json.dumps(response)}
+            async_to_sync(channel.group_send)(client_room.channel_name, response)
 
     def receive(self, text_data):
         client_room = Room.objects.get(channel_name=self.get_room())
@@ -494,10 +488,10 @@ class VotingConsumer(WebsocketConsumer):
 
         if content["type"] == "vote":
             data = content["data"]
-            MinorCaseIncomingEvent = apps.get_model(
-                "puzzles", "MinorCaseIncomingEvent")
+            MinorCaseIncomingEvent = apps.get_model("puzzles", "MinorCaseIncomingEvent")
             incoming_event = MinorCaseIncomingEvent.get_current_incoming_event(  # type: ignore
-                self.scope.get("user"))
+                self.scope.get("user")
+            )
             if not incoming_event:
                 return
 
@@ -511,16 +505,16 @@ class VotingConsumer(WebsocketConsumer):
                         if incoming_event.get_expiration_time()
                         else None
                     ),
-                    "max_choices": incoming_event.get_num_votes_allowed()
+                    "max_choices": incoming_event.get_num_votes_allowed(),
                 },
             }
             self.send_to_all(client_room, response)
 
         elif content["type"] == "finalizeVote":
-            MinorCaseIncomingEvent = apps.get_model(
-                "puzzles", "MinorCaseIncomingEvent")
+            MinorCaseIncomingEvent = apps.get_model("puzzles", "MinorCaseIncomingEvent")
             incoming_event = MinorCaseIncomingEvent.get_current_incoming_event(  # type: ignore
-                self.scope.get("user"))
+                self.scope.get("user")
+            )
             if incoming_event:
                 response = {
                     "type": "finalizeVote",
