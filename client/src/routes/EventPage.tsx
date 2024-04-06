@@ -109,7 +109,7 @@ function EventPage() {
           <div className="absolute inset-0 flex w-11/12 items-center justify-end z-10 object-contain">
             {/* Right column content */}
             <div
-              className=" w-1/6 aspect-[3/4] cursor-pointer bg-blue-200 p-4 object-contain"
+              className=" w-1/6 aspect-[3/4] cursor-pointer  p-4 object-contain"
               onClick={() => addBox("right")}
             >
               {/* RIGHT CONTENT */}
