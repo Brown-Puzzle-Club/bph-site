@@ -21,6 +21,7 @@ interface VotingModalProps {
 }
 
 const VotingModal = ({ sendJsonMessage, votingInfo }: VotingModalProps) => {
+  console.log("this is a print statement");
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const { seconds, isRunning, restart, pause } = useTimer({
     expiryTimestamp: new Date(),
@@ -48,10 +49,6 @@ const VotingModal = ({ sendJsonMessage, votingInfo }: VotingModalProps) => {
   useEffect(() => {
     sendJsonMessage({ type: "vote", data: { oldVote: [], newVote: [] } });
   }, [sendJsonMessage]);
-
-  useEffect(() => {
-    console.log(votingInfo);
-  }, [votingInfo]);
 
   if (!votingInfo || Object.keys(votingInfo.cases).length === 0) {
     return null;
