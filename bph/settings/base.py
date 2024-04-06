@@ -247,25 +247,34 @@ LOGGING = {
             "stream": sys.stdout,
             "formatter": "puzzles",
         },
+        "file": {
+            "level": "INFO",
+            "class": "logging.handlers.TimedRotatingFileHandler",
+            "filename": os.path.join(LOGS_DIR, "django.log"),
+            "when": "H",
+            "interval": 3,
+            "backupCount": 36,
+            "formatter": "django",
+        },
     },
     "loggers": {
         "django": {
-            "handlers": ["django"],
+            "handlers": ["django", "file"],
             "level": "INFO",
             "propagate": True,
         },
         "puzzles": {
-            "handlers": ["general"],
+            "handlers": ["general", "file"],
             "level": "INFO",
             "propagate": True,
         },
         "puzzles.puzzle": {
-            "handlers": ["puzzle"],
+            "handlers": ["puzzle", "file"],
             "level": "INFO",
             "propagate": False,
         },
         "puzzles.request": {
-            "handlers": ["request"],
+            "handlers": ["request", "file"],
             "level": "INFO",
             "propagate": False,
         },
