@@ -33,6 +33,7 @@ const UserTeamSchema = z.object({
   user: z.number(),
   emoji_choice: z.string(),
   color_choice: z.string(),
+  auth_token: z.string(),
 });
 type UserTeam = z.infer<typeof UserTeamSchema>;
 
@@ -66,6 +67,13 @@ const MajorCaseSchema = z.object({
   name: z.string(),
   order: z.number(),
   slug: z.string(),
+  puzzle: z.object({
+    // TODO: don't know how to type this yet. import cycle with other schemas, so shallow typing quick solution.
+    name: z.string(),
+    slug: z.string(),
+    submissions: z.array(AnswerSubmissionSchema),
+  }),
+  submissions: z.array(AnswerSubmissionSchema),
 });
 type MajorCase = z.infer<typeof MajorCaseSchema>;
 
@@ -87,6 +95,7 @@ const PuzzleSchema = z.object({
   slug: z.string(),
   order: z.number(),
   is_meta: z.boolean(),
+  is_major_meta: z.boolean(),
   round: RoundSchema,
   body: z.string(),
   body_remote: z.string(),
@@ -94,12 +103,26 @@ const PuzzleSchema = z.object({
 });
 type Puzzle = z.infer<typeof PuzzleSchema>;
 
+const PuzzleMessageSchema = z.object({
+  id: z.number(),
+  guess: z.string(),
+  response: z.string(),
+  puzzle: PuzzleSchema,
+});
+type PuzzleMessage = z.infer<typeof PuzzleMessageSchema>;
+
 const MinorCaseIncomingSchema = z.object({
   id: z.number(),
   incoming_datetime: z.date(),
   minor_case_round: RoundSchema,
 });
 type MinorCaseIncoming = z.infer<typeof MinorCaseIncomingSchema>;
+
+const MinorCaseVote = z.object({
+  id: z.number(),
+  minor_case: RoundSchema,
+  num_votes: z.number(),
+});
 
 const MinorCaseActiveSchema = z.object({
   id: z.number(),
@@ -115,6 +138,17 @@ const MinorCaseCompletedSchema = z.object({
 });
 type MinorCaseCompleted = z.infer<typeof MinorCaseCompletedSchema>;
 
+const MinorCaseIncomingEventSchema = z.object({
+  id: z.number(),
+  team: TeamSchema,
+  timestamp: z.date(),
+  incoming_cases: z.array(RoundSchema),
+  votes: z.array(MinorCaseVote),
+  is_initialized: z.boolean(),
+  total_user_votes: z.number(),
+});
+type MinorCaseIncomingEvent = z.infer<typeof MinorCaseIncomingEventSchema>;
+
 const TeamPuzzleContextSchema = z.object({
   is_admin: z.boolean(),
   is_superuser: z.boolean(),
@@ -125,8 +159,13 @@ const TeamPuzzleContextSchema = z.object({
   minor_case_incoming: z.array(MinorCaseIncomingSchema),
   minor_case_active: z.array(MinorCaseActiveSchema),
   minor_case_completed: z.array(MinorCaseCompletedSchema),
+  solves: z.record(AnswerSubmissionSchema),
   solves_by_case: z.record(z.record(z.record(AnswerSubmissionSchema))), // major_case -> case_id -> puzzle_id -> answer submission
   unlocks: z.record(z.record(z.record(PuzzleSchema))), // major_case_id -> case_id -> puzzle_id -> puzzle
+  case_unlocks: z.record(RoundSchema),
+  major_case_unlocks: z.record(MajorCaseSchema),
+  major_case_puzzles: z.record(PuzzleSchema),
+  current_incoming_event: MinorCaseIncomingEventSchema,
 });
 
 const HuntContextSchema = z.object({
@@ -164,7 +203,9 @@ export type {
   MinorCaseActive,
   MinorCaseCompleted,
   MinorCaseIncoming,
+  MinorCaseIncomingEvent,
   Puzzle,
+  PuzzleMessage,
   Round,
   Team,
   TeamMember,

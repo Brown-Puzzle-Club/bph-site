@@ -1,25 +1,41 @@
 import Footer from "@/components/Footer";
 import Navbar from "@/components/navbar/Navbar";
+import { useNotification } from "@/hooks/useNotification";
+import { useTheme } from "@/hooks/useTheme";
+import { DEFAULT_THEME } from "@/utils/themes";
+import { Toaster } from "./ui/toaster";
 
-export const PageWrapper = ({
-  bg_color,
-  navbar_color,
-  route,
-}: {
-  bg_color: string;
-  navbar_color: string;
-  route: React.ReactNode;
-}) => {
+export const PageWrapper = ({ route }: { route: React.ReactNode }) => {
+  const { theme } = useTheme();
+  useNotification({
+    onOpen: (e) => console.log("Notifications connected", e),
+    onClose: (e) => console.log("Notifications disconnected", e),
+    onError: (e) => console.error("Notifications error", e),
+    onMessage: (e) => console.log("Notifications message", e),
+  });
+
   return (
     <div
       className={`react-page text-white`}
       style={{
-        backgroundColor: bg_color,
+        backgroundColor: theme.bg_color ? theme.bg_color : DEFAULT_THEME.bg_color,
       }}
     >
-      <Navbar navbarColor={navbar_color} />
-      <div className="content min-h-[90vh]">{route}</div>
-      <Footer />
+      <Navbar />
+      <div
+        className="content min-h-[90vh] pb-2"
+        style={{
+          backgroundColor: theme.content_color ? theme.content_color : DEFAULT_THEME.content_color,
+        }}
+      >
+        {route}
+      </div>
+      <Toaster />
+      <Footer
+        extraStyle={{
+          backgroundColor: theme.footer_color ? theme.footer_color : DEFAULT_THEME.footer_color,
+        }}
+      />
     </div>
   );
 };

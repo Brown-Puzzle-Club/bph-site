@@ -1,4 +1,4 @@
-import { LetterState, Puzzle } from "./LetterBoxedTypes";
+import { LetterState, Puzzle } from "../../../../utils/minor_cases/nyt/LetterBoxedTypes";
 
 /**
  * Draws the dots of how many uses are left
@@ -16,7 +16,7 @@ function Dots({ x, y, uses, used }: { x: number; y: number; uses: number; used: 
         fill={i < used ? "gray" : "white"}
         stroke={i < used ? "gray" : "white"}
         key={i}
-      />
+      />,
     );
   }
   return <>{dots}</>;
@@ -60,8 +60,8 @@ export default function Letter({
             state == LetterState.CURRENT
               ? "black"
               : state == LetterState.LOCKED
-              ? "#faa6a4"
-              : "white"
+                ? "#faa6a4"
+                : "white"
           }
           stroke={
             state == LetterState.CURRENT || state == LetterState.PENDING ? "#faa6a4" : "black"

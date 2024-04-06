@@ -1,6 +1,7 @@
-import ConnectionsBox from "@/components/puzzle/nyt-games/ConnectionsBox";
+import ConnectionsBox from "@/components/puzzle/nyt-games/connections/ConnectionsBox";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { BeatLoader } from "react-spinners";
 
 function Connections() {
   const [unfilteredWords, setUnfilteredWords] = useState<string[]>([]);
@@ -12,7 +13,9 @@ function Connections() {
   const [currRound, setRound] = useState<number>(1);
   // const [connections, setConnections] = useState<{ words: string[]; category: string }[]>([]);
   const [usedWordIndices, setUsedWords] = useState<number[]>([]);
-  const [answer, setAnswer] = useState<string>("");
+  const [answer, setAnswer] = useState<boolean>(false);
+
+  const [submitting, setSubmitting] = useState<boolean>(false);
 
   // function checkElements(array1: string[], array2: string[]): boolean {
   //   // Convert arrays to sets for efficient membership checking
@@ -35,7 +38,7 @@ function Connections() {
     }
     // Fetch connections data for the current round from the endpoint using axios
     axios
-      .get(`/api/nyt/get-round-words/${currRound}/`)
+      .get(`/api/puzzle/nyt/get-round-words/${currRound}/`)
       .then((response) => {
         const data = response.data;
 
@@ -66,16 +69,18 @@ function Connections() {
   const submitGroups = () => {
     const sanitizedWords = selectedWords.map((word) => word.replace(" N/A", ""));
     console.log(sanitizedWords);
+    setSubmitting(true);
     axios
-      .get(`/api/nyt/connections-guess/${currRound}/${sanitizedWords.join(",")}`)
+      .get(`/api/puzzle/nyt/connections-guess/${currRound}/${sanitizedWords.join(",")}`)
       .then((response) => {
         const data = response.data;
         if (data.Category) {
           const connectionCategory = data.Category;
-          const answer = data.Answer || "";
+          const answer = data.answer || false;
+          setAnswer(answer);
           setMatches([
             ...matches,
-            `${connectionCategory}: ${sanitizedWords.join(", ")}${answer ? ` (${answer})` : ""}`,
+            `${connectionCategory}: ${sanitizedWords.join(", ")}${answer ? ` (YOU WIN!)` : ""}`,
           ]);
           setRound(currRound + 1);
 
@@ -91,18 +96,18 @@ function Connections() {
             groupedWords.push(updatedWords.splice(0, 4));
           }
           setWords(groupedWords.flat());
-          if (data.Answer !== "") {
-            setAnswer(data.Answer);
-            localStorage.setItem("answer", data.Answer);
-          }
         } else {
           console.log("No matching category found");
+          alert("no match! :(");
           // Handle case when no matching category is found
         }
       })
       .catch((error) => {
         console.error("Error fetching connections guess:", error);
         // Handle error
+      })
+      .finally(() => {
+        setSubmitting(false);
       });
   };
 
@@ -112,7 +117,7 @@ function Connections() {
     setSelectedWords([]);
     setMatches([]);
     setRound(1);
-    setAnswer("");
+    setAnswer(false);
     setUsedWords([]);
   };
 
@@ -131,25 +136,36 @@ function Connections() {
         </div>
       )}
 
-      <div className="flex justify-center mt-4">
-        <div className="grid grid-cols-4 gap-4 mt-10 w-3/4">
-          {words.map((word, index) => (
-            <ConnectionsBox
-              key={index}
-              index={index}
-              word={word}
-              isSelected={selectedWords.includes(word)} // Check for words instead of indices
-              onClick={() => handleBoxClick(word)} // Pass word instead of index
-            />
-          ))}
+      {words.length != 0 ? (
+        <div className="flex justify-center mt-4">
+          <div className="grid grid-cols-4 gap-4 mt-10 w-3/4">
+            {words.map((word, index) => (
+              <ConnectionsBox
+                key={index}
+                index={index}
+                word={word}
+                isSelected={selectedWords.includes(word)} // Check for words instead of indices
+                onClick={() => handleBoxClick(word)} // Pass word instead of index
+              />
+            ))}
+          </div>
         </div>
-      </div>
+      ) : (
+        !answer && (
+          <BeatLoader
+            className="justify-center content-center text-center p-4"
+            color={"#fff"}
+            size={12}
+          />
+        )
+      )}
+
       <div className="flex justify-center mt-4">
         <button
           className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           onClick={submitGroups}
-          disabled={selectedWords.length !== 4}
-          style={{ opacity: selectedWords.length !== 4 ? 0.5 : 1 }}
+          disabled={selectedWords.length !== 4 || submitting}
+          style={{ opacity: selectedWords.length !== 4 || submitting ? 0.5 : 1 }}
         >
           Submit
         </button>
@@ -163,9 +179,7 @@ function Connections() {
       </div>
       {answer && ( // Conditionally render answer
         <div className="flex justify-center mt-4">
-          <div className="bg-yellow-300 text-black font-bold py-2 px-4 rounded">
-            {`Answer: ${answer}`} {/* Display the answer */}
-          </div>
+          <div className="bg-yellow-300 text-black font-bold py-2 px-4 rounded">{`You win!`}</div>
         </div>
       )}
     </div>

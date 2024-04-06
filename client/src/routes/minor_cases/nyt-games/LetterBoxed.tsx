@@ -1,9 +1,10 @@
 import InputBox from "@/components/puzzle/nyt-games/letterboxed/InputBox";
 import LetterBox from "@/components/puzzle/nyt-games/letterboxed/LetterBox";
-import { Puzzle, Solution } from "@/components/puzzle/nyt-games/letterboxed/LetterBoxedTypes";
-import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Puzzle, Solution } from "@/utils/minor_cases/nyt/LetterBoxedTypes";
+import { useEffect, useMemo, useState } from "react";
 
-export default function LetterBoxed({ puzzleNum }: { puzzleNum: 1 | 2 | 3 }) {
+function LetterBoxed({ puzzleNum }: { puzzleNum: 1 | 2 | 3 }) {
   const puzzles = {
     1: new Puzzle(
       [
@@ -66,7 +67,7 @@ export default function LetterBoxed({ puzzleNum }: { puzzleNum: 1 | 2 | 3 }) {
           null,
           { sides: [1], index: 4, letter: "r", uses: 2 },
           null,
-          { sides: [1], index: 5, letter: "i", uses: 1 },
+          { sides: [1], index: 5, letter: "i", uses: 2 },
           null,
         ],
         [
@@ -106,7 +107,7 @@ export default function LetterBoxed({ puzzleNum }: { puzzleNum: 1 | 2 | 3 }) {
         ],
         [
           null,
-          { sides: [2], index: 8, letter: "n", uses: 2 },
+          { sides: [2], index: 8, letter: "n", uses: 3 },
           { sides: [2], index: 9, letter: "c", uses: 2 },
           { sides: [2], index: 10, letter: "m", uses: 1 },
           { sides: [2, 3], index: 11, letter: "e", uses: 1 },
@@ -131,6 +132,11 @@ export default function LetterBoxed({ puzzleNum }: { puzzleNum: 1 | 2 | 3 }) {
 
   const [solution, setSolution] = useState<number[][]>([[]]);
   const solutionObj = new Solution(puzzles[puzzleNum], solution);
+
+  useEffect(() => {
+    // resets solution on puzzle change
+    setSolution([[]]);
+  }, [puzzleNum]);
 
   /**
    * Attempts to push a new letter into the solution, checking that the solution is valid before doing so.
@@ -183,5 +189,35 @@ export default function LetterBoxed({ puzzleNum }: { puzzleNum: 1 | 2 | 3 }) {
         </div>
       </div>
     </>
+  );
+}
+
+export default function LetterBoxedPuzzle() {
+  const [puzzleNum, setPuzzleNum] = useState<1 | 2 | 3>(1);
+
+  const emoji = useMemo(() => {
+    switch (puzzleNum) {
+      case 1:
+        return "🥕";
+      case 2:
+        return "🐾";
+      case 3:
+        return "🪶";
+    }
+  }, [puzzleNum]);
+
+  return (
+    <div className="flex flex-col items-center bg-[#fc716b]">
+      <div className="flex flex-col items-center">
+        <h1 className="text-4xl text-white">LetterB{emoji}xed</h1>
+        <div className="text-white">Choose a puzzle:</div>
+        <div className="flex space-x-4">
+          <Button onClick={() => setPuzzleNum(1)}>Puzzle 1</Button>
+          <Button onClick={() => setPuzzleNum(2)}>Puzzle 2</Button>
+          <Button onClick={() => setPuzzleNum(3)}>Puzzle 3</Button>
+        </div>
+      </div>
+      <LetterBoxed puzzleNum={puzzleNum} />
+    </div>
   );
 }

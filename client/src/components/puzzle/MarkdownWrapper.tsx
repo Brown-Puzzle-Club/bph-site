@@ -23,7 +23,7 @@ const formatGDriveImageUrl = (url: string) => {
   return `https://lh3.googleusercontent.com/d/${fileId}`;
 };
 
-const MarkdownComponents: object = {
+export const MarkdownComponents: object = {
   // TODO: figure out this typing.. documentation is poor
   //https://github.com/remarkjs/react-markdown?tab=readme-ov-file#components
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

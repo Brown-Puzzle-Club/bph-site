@@ -33,10 +33,13 @@ export const IS_ADMIN = (context: DjangoContext) => {
 };
 
 export const IS_MAJOR_CASE_UNLOCKED = (major_case_slug: string) => (context: DjangoContext) => {
-  return major_case_slug in context.team_context.unlocks;
+  if (context.team_context.is_admin) return true;
+  return major_case_slug in context.team_context.major_case_puzzles;
 };
 
 export const IS_MINOR_CASE_UNLOCKED = (case_slug: string) => (context: DjangoContext) => {
+  if (!context.team_context) return false;
+  if (context.team_context.is_admin) return true;
   for (const [, case_dict] of Object.entries(context.team_context.unlocks)) {
     if (case_slug in case_dict) {
       return true;
@@ -46,6 +49,7 @@ export const IS_MINOR_CASE_UNLOCKED = (case_slug: string) => (context: DjangoCon
 };
 
 export const IS_PUZZLE_UNLOCKED = (puzzle_slug: string) => (context: DjangoContext) => {
+  if (context.team_context.is_admin) return true;
   for (const [, case_dict] of Object.entries(context.team_context.unlocks)) {
     for (const [, puzzle_dict] of Object.entries(case_dict)) {
       if (puzzle_slug in puzzle_dict) {

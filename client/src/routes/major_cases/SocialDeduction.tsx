@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import Characters from "../../components/major_cases/social-deduction/Characters";
@@ -8,10 +8,10 @@ import Rules from "../../components/major_cases/social-deduction/Rules";
 import TopbarSelector from "../../components/major_cases/social-deduction/TopbarSelector";
 import Verdict from "../../components/major_cases/social-deduction/Verdict";
 
-import { IS_MAJOR_CASE_UNLOCKED, Locked } from "@/components/LockedContent";
 import { useDjangoContext } from "@/hooks/useDjangoContext";
-import { MajorCaseEnum } from "@/utils/constants";
+import { useTheme } from "@/hooks/useTheme";
 import { CHAR_NAME, numberOfCasesSolves } from "@/utils/major_cases/social-deduction/constants";
+import { BROWN_THEME } from "@/utils/themes";
 
 export enum SelectedPanel {
   RULES,
@@ -21,6 +21,13 @@ export enum SelectedPanel {
 }
 
 export default function SocialDeduction() {
+  const { setTheme } = useTheme();
+
+  useEffect(() => {
+    console.log("setting the theme");
+    setTheme(BROWN_THEME);
+  });
+
   const [panel, setPanel] = useState<SelectedPanel>(SelectedPanel.RULES);
 
   const { context } = useDjangoContext();
@@ -29,20 +36,18 @@ export default function SocialDeduction() {
   const NUM_CASES_SOLVED = numberOfCasesSolves(context);
 
   return (
-    <Locked condition={IS_MAJOR_CASE_UNLOCKED(MajorCaseEnum.SOCIAL_DEDUCTION)}>
-      <div className="text-[white]">
-        <Characters CHAR_NAMES={CHAR_NAMES} />
-        <TopbarSelector cur_panel={panel} setPanel={setPanel} NUM_CASES_SOLVED={NUM_CASES_SOLVED}>
-          {panel === SelectedPanel.RULES && <Rules />}
-          {panel === SelectedPanel.ROLES && <Roles />}
-          {panel === SelectedPanel.CHRONOLOGY && <Chronology CHAR_NAMES={CHAR_NAMES} />}
-          {panel === SelectedPanel.VERDICT && (
-            <DndProvider backend={HTML5Backend}>
-              <Verdict CHAR_NAMES={CHAR_NAMES} />
-            </DndProvider>
-          )}
-        </TopbarSelector>
-      </div>
-    </Locked>
+    <div className="text-[white]">
+      <Characters CHAR_NAMES={CHAR_NAMES} />
+      <TopbarSelector cur_panel={panel} setPanel={setPanel} NUM_CASES_SOLVED={NUM_CASES_SOLVED}>
+        {panel === SelectedPanel.RULES && <Rules />}
+        {panel === SelectedPanel.ROLES && <Roles />}
+        {panel === SelectedPanel.CHRONOLOGY && <Chronology CHAR_NAMES={CHAR_NAMES} />}
+        {panel === SelectedPanel.VERDICT && (
+          <DndProvider backend={HTML5Backend}>
+            <Verdict CHAR_NAMES={CHAR_NAMES} />
+          </DndProvider>
+        )}
+      </TopbarSelector>
+    </div>
   );
 }

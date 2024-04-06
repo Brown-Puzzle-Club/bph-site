@@ -26,15 +26,18 @@ const UnknownError = () => {
   );
 };
 
-export default function ErrorPage() {
+export default function ErrorPage({ custom_error }: { custom_error?: ErrorResponse }) {
   // RouteError comes from react router. It labels error pages as 404 etc.
   const error = useRouteError();
-  if (!isRouteErrorResponse(error)) {
-    return <UnknownError />;
+  if (!custom_error) {
+    if (!isRouteErrorResponse(error)) {
+      return <UnknownError />;
+    }
+    const error_response = error as ErrorResponse;
+    return <DefaultError error={error_response} />;
   }
-  const error_response = error as ErrorResponse;
 
-  return <DefaultError error={error_response} />;
+  return <DefaultError error={custom_error} />;
 }
 
 export const Error404 = () => {
