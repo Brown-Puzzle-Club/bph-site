@@ -8,7 +8,7 @@ import { MajorCaseEnum, toPuzzleStyle } from "@/utils/constants";
 import { Puzzle } from "@/utils/django_types";
 import AnswerSubmit from "./AnswerSubmission";
 
-const NO_ANSWER_SUBMIT = new Set(["wordle"]);
+const NO_ANSWER_SUBMIT = new Set(["wordle", "connection"]);
 
 function PuzzleWrapper({ puzzle_slug }: { puzzle_slug: string }) {
   const [puzzle, setPuzzle] = useState<Puzzle>({} as Puzzle);

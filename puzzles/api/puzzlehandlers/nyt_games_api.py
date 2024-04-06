@@ -1,6 +1,7 @@
 from rest_framework import permissions, viewsets, mixins
 from puzzles import models
 
+from puzzles.api.api_actions import handle_answer
 from puzzles.api.serializers import *
 
 from rest_framework.response import Response
@@ -145,13 +146,21 @@ def check(request: Request, connection_round: int, selected_words: str) -> Respo
         connections = CONNECTIONS_ROUND3
     elif connection_round == 4:
         connections = CONNECTIONS_ROUND4
-        answer = "PLACEHOLDERONE"
     else:
         return Response({"error": "Invalid round number"})
 
     for connection in connections:
         if check_elements(selected_words.split(","), connections[connection]):
-            return Response({"Category": connection, "Answer": answer})
+            final_solve = connection_round == 4
+            if final_solve:
+                answer = "FORMSOFTOBE"
+                # auto solve the puzzle:
+                django_context = request._request.context
+                request_context = request.context
+                # answer is a query parameter:
+                handle_answer(answer, request_context, django_context, "connection")
+
+            return Response({"Category": connection, "answer": final_solve})
 
     return Response({"error": "No matching category found"})
 
@@ -170,8 +179,6 @@ def check_nyt_answers(request: Request) -> Response:
 
     for key, value in answers.items():
         answers_sanitized[key] = Puzzle.normalize_answer(value)
-
-    print(answers_sanitized)
 
     if len(answers_sanitized) != 3:
         return Response({"error": "Invalid number of answers"}, status=400)
