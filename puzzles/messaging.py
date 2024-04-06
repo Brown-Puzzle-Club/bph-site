@@ -341,25 +341,8 @@ class TeamNotificationsConsumer(WebsocketConsumer):
     def disconnect(self, close_code):
         Room.objects.remove(self.get_room(), self.channel_name)  # type: ignore
 
-
-@receiver(presence_changed)
-def broadcast_presence(sender, room, **kwargs):
-    print(f"broadcasting presence to {room}")
-    channel = get_channel_layer()
-    if channel is not None:
-        message = {
-            "type": "presence",
-            "data": {
-                "channel_name": room.channel_name,
-                "members": [user.serialize() for user in room.get_users()],
-                "anons": room.get_anonymous_count(),
-                "num_connected": room.get_users().count() + room.get_anonymous_count(),
-            },
-        }
-        channel_layer_message = {"type": "forward.message", "data": json.dumps(message)}
-
-        async_to_sync(channel.group_send)(room.channel_name, channel_layer_message)
-
+    def forward_message(self, event):
+        self.send(text_data=event["data"])
 
 @receiver(create_minor_case_incoming_event)
 def broadcast_minor_case_incoming_event(sender, cases, team, **kwargs):
@@ -396,7 +379,6 @@ class VotingConsumer(WebsocketConsumer):
             response = {"type": "forward.message", "data": json.dumps(response)}
             async_to_sync(channel.group_send)(client_room.channel_name, response)
 
-    @touch_presence
     def receive(self, text_data):
         client_room = Room.objects.get(channel_name=self.get_room())
         content = json.loads(text_data)
