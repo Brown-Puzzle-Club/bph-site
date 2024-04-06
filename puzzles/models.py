@@ -1199,6 +1199,8 @@ class MinorCaseIncomingEvent(models.Model):
     def finalize_vote(self):
         """Finalizes the vote for the incoming event, and creates a MinorCaseVoteEvent"""
 
+        # TODO: fix this in the case where multiple cases need to be unlocked
+
         if self.final_vote:
             return self.final_vote.selected_case.name
 
