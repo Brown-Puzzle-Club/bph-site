@@ -15,8 +15,7 @@ import sys
 import dj_database_url
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(
-    os.path.dirname(os.path.abspath(__file__))))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Ensure logs directory exists.
 LOGS_DIR = os.path.join(BASE_DIR, "logs")
@@ -72,16 +71,6 @@ MIDDLEWARE = [
 ]
 
 # redis_url = os.environ.get("REDISCLOUD_URL")
-
-# CACHES = {
-#     "default": {
-#         "BACKEND": "django_redis.cache.RedisCache",
-#         "LOCATION": redis_url,
-#         "OPTIONS": {
-#             "CLIENT_CLASS": "django_redis.client.DefaultClient",
-#         },
-#     }
-# }
 
 # CHANNEL_LAYERS = {
 #     "default": {
