@@ -88,7 +88,7 @@ function Obituary() {
             <img className="w-1/2" src={nytImage} alt="nyt-page-image"></img>
           </div>
           {correctAnswer && (
-            <div className="font-serif mt-4 text-lg text-green-500">
+            <div className="font-serif mt-4 text-lg">
               Correct answer: {correctAnswer}
             </div>
           )}
