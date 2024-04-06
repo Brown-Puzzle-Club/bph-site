@@ -196,25 +196,33 @@ const PuzzleIconWrapper = (props: PuzzleAsset) => {
   );
 };
 
-export const ArtWrapper = ({
+export const ArtWrapperInner = ({
   className,
-  outerClassName,
   background_src,
   children,
 }: {
   className?: string;
-  outerClassName?: string;
   background_src: string;
   children?: ReactNode;
 }) => {
   return (
-    <div className={outerClassName}>
-      <div
-        className={cn("map relative left-1/2 transform -translate-x-1/2 w-full h-full", className)}
-      >
-        {children}
-        <img className="art-bg-img w-full" src={background_src} />
-      </div>
+    <div className={cn("map relative w-full h-full", className)}>
+      {children}
+      <img className="art-bg-img w-full h-auto object-contain" src={background_src} />
+    </div>
+  );
+};
+
+export const ArtWrapper = (props: {
+  className?: string;
+  outerClassName?: string;
+  background_src: string;
+  children?: ReactNode;
+  verticalCenter?: boolean;
+}) => {
+  return (
+    <div className={props.outerClassName}>
+      <ArtWrapperInner {...props} />
     </div>
   );
 };

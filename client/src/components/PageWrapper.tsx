@@ -3,11 +3,11 @@ import Navbar from "@/components/navbar/Navbar";
 import { useTheme } from "@/hooks/useTheme";
 import { DEFAULT_THEME } from "@/utils/themes";
 import { Toaster } from "./ui/toaster";
-import { useNotification } from "@/hooks/useNotification";
+// import { useNotification } from "@/hooks/useNotification";
 
 export const PageWrapper = ({ route }: { route: React.ReactNode }) => {
   const { theme } = useTheme();
-  const { readyState } = useNotification();
+  // const { readyState } = useNotification();
 
   return (
     <div

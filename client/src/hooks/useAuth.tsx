@@ -62,7 +62,6 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
   }, []);
 
   const login = async (username: string, password: string) => {
-    console.log("Logging in with", username, password);
     try {
       await axios
         .post("/api/login", {
