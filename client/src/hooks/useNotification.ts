@@ -27,7 +27,7 @@ export const useNotification = (callbacks: SocketCallbacks | undefined = undefin
     onError: callbacks?.onError,
     heartbeat: {
       message: JSON.stringify("heartbeat"),
-      interval: 50 * 1000,
+      interval: 5 * 1000,
     },
     retryOnError: true,
     shouldReconnect: () => true,

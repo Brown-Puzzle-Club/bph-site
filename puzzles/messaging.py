@@ -432,7 +432,7 @@ class TeamNotificationsConsumer(WebsocketConsumer):
         client_room = Room.objects.get(channel_name=self.get_room())
         content = json.loads(text_data)
 
-        print(content)
+        print(f"Notification Received: {content}" )
         if content == "heartbeat":
             return
 
@@ -441,7 +441,7 @@ class TeamNotificationsConsumer(WebsocketConsumer):
 
 
 @receiver(create_minor_case_incoming_event)
-def broadcast_minor_case_incoming_event(sender, cases, team, **kwargs):
+def broadcast_minor_case_incoming_event(sender, cases, team, max_choices, **kwargs):
     print(f"broadcasting minor case incoming event to {team}")
     room = Room.objects.get(channel_name=f"puzzles-{team}")
 
@@ -449,8 +449,13 @@ def broadcast_minor_case_incoming_event(sender, cases, team, **kwargs):
     if channel is not None:
         message = {
             "type": "vote",
-            "data": {"cases": cases, "expiration_time": None},
+            "data": {
+                "cases": cases,
+                "expiration_time": None,
+                "max_choices": max_choices,
+            },
         }
+
         channel_layer_message = {"type": "forward.message", "data": json.dumps(message)}
 
         async_to_sync(channel.group_send)(room.channel_name, channel_layer_message)
@@ -481,7 +486,7 @@ class VotingConsumer(WebsocketConsumer):
         client_room = Room.objects.get(channel_name=self.get_room())
         content = json.loads(text_data)
 
-        print(content)
+        print(f"Voting Received: {content}" )
 
         if content == "heartbeat":
             return
