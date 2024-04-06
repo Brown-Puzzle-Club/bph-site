@@ -42,7 +42,7 @@ const useSocket = (path: string, callbacks: SocketCallbacks | undefined = undefi
     onError: callbacks?.onError,
     heartbeat: {
       message: JSON.stringify("heartbeat"),
-      interval: 10 * 1000,
+      interval: 5 * 1000,
     },
     retryOnError: true,
   });
