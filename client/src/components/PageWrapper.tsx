@@ -8,8 +8,10 @@ import { useNotification } from "@/hooks/useNotification";
 export const PageWrapper = ({ route }: { route: React.ReactNode }) => {
   const { theme } = useTheme();
   useNotification({
-    onOpen: () => console.log("Notifications connected"),
-    onClose: () => console.log("Notifications disconnected"),
+    onOpen: (e) => console.log("Notifications connected", e),
+    onClose: (e) => console.log("Notifications disconnected", e),
+    onError: (e) => console.error("Notifications error", e),
+    onMessage: (e) => console.log("Notifications message", e),
   });
 
   return (

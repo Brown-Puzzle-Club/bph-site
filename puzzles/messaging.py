@@ -341,6 +341,14 @@ class TeamNotificationsConsumer(WebsocketConsumer):
     def disconnect(self, close_code):
         Room.objects.remove(self.get_room(), self.channel_name)  # type: ignore
 
+    def receive(self, text_data):
+        client_room = Room.objects.get(channel_name=self.get_room())
+        content = json.loads(text_data)
+
+        print(content)
+        if content == "heartbeat":
+            return
+
     def forward_message(self, event):
         self.send(text_data=event["data"])
 

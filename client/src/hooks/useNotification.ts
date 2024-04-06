@@ -30,6 +30,7 @@ export const useNotification = (callbacks: SocketCallbacks | undefined = undefin
       interval: 50 * 1000,
     },
     retryOnError: true,
+    shouldReconnect: () => true,
   });
   const { toast } = useToast();
   const { team } = useAuth();
@@ -47,7 +48,6 @@ export const useNotification = (callbacks: SocketCallbacks | undefined = undefin
   useEffect(() => {
     if (!lastJsonMessage) return;
     const message = NotificationSchema.parse(lastJsonMessage);
-    console.log(message);
     switch (message.type) {
       case "solve":
         toast({
