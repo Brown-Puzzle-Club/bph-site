@@ -8,6 +8,7 @@ from puzzles.models import (
     MinorCaseActive,
     MinorCaseCompleted,
     MinorCaseIncomingEvent,
+    MinorCaseVote,
     MinorCaseVoteEvent,
     Puzzle,
     PuzzleMessage,
@@ -99,7 +100,17 @@ class PuzzleUnlockSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class MinorCaseVoteSerializer(serializers.ModelSerializer):
+    minor_case = RoundSerializer()
+    class Meta:
+        model = MinorCaseVote
+        fields = "__all__"
+
+
 class MinorCaseIncomingEventSerializer(serializers.ModelSerializer):
+    incoming_cases = RoundSerializer(many=True)
+    votes = MinorCaseVoteSerializer(many=True)
+
     class Meta:
         model = MinorCaseIncomingEvent
         fields = "__all__"
@@ -210,6 +221,7 @@ class TeamPuzzleContextSerializer(serializers.Serializer):
     case_unlocks = serializers.DictField(child=RoundSerializer())
     major_case_unlocks = serializers.DictField(child=MajorCaseSerializer())
     major_case_puzzles = serializers.DictField(child=PuzzleBasicSerializer())
+    current_incoming_event = MinorCaseIncomingEventSerializer()
 
 
 class HuntContextSerializer(serializers.Serializer):
@@ -255,8 +267,6 @@ class ContextSerializer(serializers.Serializer):
                 # print(f"took {time_elapsed} seconds to process")
             elif ctx in team_context_fields:
                 team_context_data[ctx] = getattr(data, ctx)
-
-        # print("finished")
 
         return {
             "team_context": TeamPuzzleContextSerializer(team_context_data).data,

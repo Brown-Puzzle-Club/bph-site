@@ -118,6 +118,12 @@ const MinorCaseIncomingSchema = z.object({
 });
 type MinorCaseIncoming = z.infer<typeof MinorCaseIncomingSchema>;
 
+const MinorCaseVote = z.object({
+  id: z.number(),
+  minor_case: RoundSchema,
+  num_votes: z.number(),
+});
+
 const MinorCaseActiveSchema = z.object({
   id: z.number(),
   active_datetime: z.date(),
@@ -131,6 +137,17 @@ const MinorCaseCompletedSchema = z.object({
   minor_case_round: RoundSchema,
 });
 type MinorCaseCompleted = z.infer<typeof MinorCaseCompletedSchema>;
+
+const MinorCaseIncomingEventSchema = z.object({
+  id: z.number(),
+  team: TeamSchema,
+  timestamp: z.date(),
+  incoming_cases: z.array(RoundSchema),
+  votes: z.array(MinorCaseVote),
+  is_initialized: z.boolean(),
+  total_user_votes: z.number(),
+});
+type MinorCaseIncomingEvent = z.infer<typeof MinorCaseIncomingEventSchema>;
 
 const TeamPuzzleContextSchema = z.object({
   is_admin: z.boolean(),
@@ -148,6 +165,7 @@ const TeamPuzzleContextSchema = z.object({
   case_unlocks: z.record(RoundSchema),
   major_case_unlocks: z.record(MajorCaseSchema),
   major_case_puzzles: z.record(PuzzleSchema),
+  current_incoming_event: MinorCaseIncomingEventSchema,
 });
 
 const HuntContextSchema = z.object({
@@ -185,6 +203,7 @@ export type {
   MinorCaseActive,
   MinorCaseCompleted,
   MinorCaseIncoming,
+  MinorCaseIncomingEvent,
   Puzzle,
   PuzzleMessage,
   Round,

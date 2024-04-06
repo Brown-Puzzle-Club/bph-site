@@ -1,9 +1,9 @@
 import Footer from "@/components/Footer";
 import Navbar from "@/components/navbar/Navbar";
+import { useNotification } from "@/hooks/useNotification";
 import { useTheme } from "@/hooks/useTheme";
 import { DEFAULT_THEME } from "@/utils/themes";
 import { Toaster } from "./ui/toaster";
-import { useNotification } from "@/hooks/useNotification";
 
 export const PageWrapper = ({ route }: { route: React.ReactNode }) => {
   const { theme } = useTheme();

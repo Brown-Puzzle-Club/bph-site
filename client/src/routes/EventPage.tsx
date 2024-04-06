@@ -85,9 +85,6 @@ function EventPage() {
           backgroundImage: `url(${shadow})`,
         }}
       >
-        {/* Top row
-        <div className="bg-blue-200 p-4 z-10">Top Row</div> */}
-        {/* Middle rows */}
         <div className="flex flex-1 relative max-w-screen-xl">
           <img className="w-full h-auto object-contain" src={shadowDesk} alt="" />
           <div className="absolute inset-0 flex w-1/4 items-center justify-center z-10 object-contain">
