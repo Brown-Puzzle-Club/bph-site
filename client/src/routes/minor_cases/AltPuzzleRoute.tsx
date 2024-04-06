@@ -1,6 +1,7 @@
 import { Puzzle } from "@/utils/django_types";
 import Connections from "./nyt-games/Connections";
 import LetterBoxedPuzzle from "./nyt-games/LetterBoxed";
+import Obituary from "./nyt-games/Obituary";
 import Wordle from "./nyt-games/Wordle";
 import AlexGame from "./red-thread/AlexGame";
 
@@ -14,6 +15,7 @@ export function ALT_PUZZLE_ROUTES(puzzle: Puzzle): {
     lettertroxd: <LetterBoxedPuzzle />,
     connection: <Connections />,
     wordle: <Wordle />,
+    obituary: <Obituary />,
   };
 }
 

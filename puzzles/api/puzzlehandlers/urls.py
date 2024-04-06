@@ -44,6 +44,11 @@ urlpatterns = [
         name="nyt_connections_guess",
     ),
     path(
+        "nyt/obituary-check",
+        nyt_games_api.check_nyt_answers,
+        name="obituary_check",
+    ),
+    path(
         "data/search/",
         data_mc_api.search_voice_recordings,
         name="search_voice_recordings",
@@ -59,5 +64,4 @@ urlpatterns = [
         name="social_deduction_verdict_guess",
     ),
     path("wordle/verify-guess", wordle_api.verify_guess, name="verify-guess"),
-
 ]
