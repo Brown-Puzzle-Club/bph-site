@@ -1227,7 +1227,7 @@ class MinorCaseIncomingEvent(models.Model):
         send_notification.send(
             None,
             notification_type="unlock",
-            team=self.team.team_name,
+            team=self.team.id,
             title="Time's Up!",
             desc=f"Team {self.team.team_name} has unlocked a new case: {most_voted_case.name}!",
         )
@@ -1340,7 +1340,7 @@ class MinorCaseCompleted(models.Model):
         incoming_case_event = MinorCaseIncomingEvent.create_incoming_event(self.team)
         if incoming_case_event:
             create_minor_case_incoming_event.send(
-                None, cases=incoming_case_event.get_votes(), team=self.team.team_name
+                None, cases=incoming_case_event.get_votes(), team=self.team.id
             )
             incoming_case_event.save()
 
@@ -1813,14 +1813,14 @@ def notify_on_hint_update(sender, instance, created, update_fields, **kwargs):
         if "discord_id" not in update_fields:
             discord_interface.clear_hint(instance)
         # if "response" in update_fields:
-            # TODO: fix later
-            # link = settings.DOMAIN.rstrip("/") + reverse(
-            #     "hints", args=(instance.puzzle.slug,)
-            # )
-            # send_mail_wrapper(
-            #     _("Hint answered for {}").format(instance.puzzle),
-            #     "hint_answered_email",
-            #     {"hint": instance, "link": link},
-            #     instance.recipients(),
-            # )
-            # show_hint_notification(instance)
+        # TODO: fix later
+        # link = settings.DOMAIN.rstrip("/") + reverse(
+        #     "hints", args=(instance.puzzle.slug,)
+        # )
+        # send_mail_wrapper(
+        #     _("Hint answered for {}").format(instance.puzzle),
+        #     "hint_answered_email",
+        #     {"hint": instance, "link": link},
+        #     instance.recipients(),
+        # )
+        # show_hint_notification(instance)

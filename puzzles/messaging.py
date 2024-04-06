@@ -419,7 +419,7 @@ class AdminWebsocketConsumer(BroadcastWebsocketConsumer):
 
 class TeamNotificationsConsumer(WebsocketConsumer):
     def get_room(self):
-        return f"notifications-{self.scope['user'].team}"
+        return f"notifications-{self.scope['user'].team.id}"
 
     def connect(self):
         print(
@@ -464,7 +464,7 @@ def broadcast_minor_case_incoming_event(sender, cases, team, **kwargs):
 
 class VotingConsumer(WebsocketConsumer):
     def get_room(self):
-        return f"{self.scope['path'].split('/')[-1]}-{self.scope['user'].team}"
+        return f"{self.scope['path'].split('/')[-1]}-{self.scope['user'].team.id}"
 
     def connect(self):
         print(

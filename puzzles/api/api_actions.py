@@ -228,12 +228,12 @@ def handle_answer(
     if correct:
         print(f"Correct answer! ({sanitized_answer})")
         send_notification.send(
-                None,
-                notification_type="solve",
-                team=django_context.team,
-                title="Congratulations! Case Solved!",
-                desc=f"Team {django_context.team} has solved a case! {puzzle.name}!"
-            )
+            None,
+            notification_type="solve",
+            team=django_context.team.id,
+            title="Congratulations! Case Solved!",
+            desc=f"Team {django_context.team} has solved a case! {puzzle.name}!",
+        )
 
         if not request_context.hunt_is_over:
             django_context.team.last_solve_time = request_context.now
