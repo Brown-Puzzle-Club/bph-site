@@ -89,7 +89,7 @@ export default function Rules() {
         <li>
           During the day phase, all characters can talk to each other. After discussion, any player
           can accuse any other player of being evil. All accused players will have a chance to
-          defend themselves and all accusers will give a reasoning. Then votes are cast anonymously
+          defend themselves and all accusers will give a reasoning. Then votes are cast <b>anonymously</b>
           (players may vote for anyone, even a non-accused player or themselves). Votes are tallied
           and if a player has the majority of votes (and at least half), they will be exiled. If the
           votes are tied, no one is exiled.
