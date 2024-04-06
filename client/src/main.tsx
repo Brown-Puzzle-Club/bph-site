@@ -41,6 +41,8 @@ import "./styles/puzzlestyle-red-thread.css";
 import "./styles/puzzlestyle-soc-deduction.css";
 import { MajorCaseEnum } from "./utils/constants";
 
+import Obituary from "./components/puzzle/nyt-games/Obituary";
+
 try {
   axios.defaults.headers.common["X-CSRFToken"] = Cookies.get("csrftoken");
 } catch (e) {
@@ -118,6 +120,10 @@ const router = createBrowserRouter([
             }
           />
         ),
+      },
+      {
+        path: "/nyt-obituary",
+        element: <PageWrapper route={<Obituary/>} />
       },
       {
         path: "/minorcase/:slug",
