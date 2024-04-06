@@ -37,12 +37,17 @@ export const useNotification = (callbacks: SocketCallbacks | undefined = undefin
   const protocol = window.location.protocol.includes("https") ? "wss" : "ws";
   useEffect(() => {
     if (team) {
-      setSocketUrl(`${protocol}://${window.location.host}/notification?token=${team.auth_token}`);
+      console.log(`${protocol}://${window.location.host}/ws/notification?token=${team.auth_token}`);
+      setSocketUrl(
+        `${protocol}://${window.location.host}/ws/notification?token=${team.auth_token}`,
+      );
     }
   }, [team, setSocketUrl, protocol]);
 
   useEffect(() => {
+    if (!lastJsonMessage) return;
     const message = NotificationSchema.parse(lastJsonMessage);
+    console.log(message);
     switch (message.type) {
       case "solve":
         toast({
