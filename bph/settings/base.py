@@ -214,7 +214,7 @@ LOGGING = {
     "disable_existing_loggers": False,
     "formatters": {
         "django": {
-            "format": "%(asctime)s (PID %(process)d) [%(levelname)s] %(module)s\n%(message)s"
+            "format": "%(asctime)s (PID %(process)d) [%(levelname)s] %(module)s %(message)s"
         },
         "puzzles": {
             "format": "%(asctime)s (PID %(process)d) [%(levelname)s] %(name)s %(message)s"
