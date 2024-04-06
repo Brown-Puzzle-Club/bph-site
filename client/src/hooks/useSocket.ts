@@ -10,14 +10,6 @@ interface SocketCallbacks {
   onError?: (event: Event) => void;
 }
 
-const PresenceInfoSchema = z.object({
-  channel_name: z.string(),
-  members: z.array(z.string()),
-  anons: z.number().nonnegative(),
-  num_connected: z.number().nonnegative(),
-});
-export interface PresenceInfo extends z.infer<typeof PresenceInfoSchema> {}
-
 const VoteSchema = z.object({
   desc: z.string(),
   voteCount: z.number(),
@@ -37,21 +29,20 @@ const ResponseSchema = z.object({
 });
 
 const useSocket = (path: string, callbacks: SocketCallbacks | undefined = undefined) => {
-  const [presenceInfo, setPresenceInfo] = useState<PresenceInfo | null>(null);
   const [votingInfo, setVotingInfo] = useState<VotingInfo>({
     cases: {},
     expiration_time: null,
     max_choices: 0,
   });
   const [socketUrl, setSocketUrl] = useState<string | null>(null);
-  const { sendMessage, lastJsonMessage, readyState } = useWebSocket(socketUrl, {
+  const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(socketUrl, {
     onMessage: callbacks?.onMessage,
     onOpen: callbacks?.onOpen,
     onClose: callbacks?.onClose,
     onError: callbacks?.onError,
     heartbeat: {
       message: JSON.stringify("heartbeat"),
-      interval: 50 * 1000,
+      interval: 10 * 1000,
     },
     retryOnError: true,
   });
@@ -71,11 +62,6 @@ const useSocket = (path: string, callbacks: SocketCallbacks | undefined = undefi
 
     const parsedMessage = ResponseSchema.parse(lastJsonMessage);
     switch (parsedMessage.type) {
-      case "presence": {
-        const presenceInfo = PresenceInfoSchema.parse(parsedMessage.data);
-        setPresenceInfo(presenceInfo);
-        break;
-      }
       case "vote": {
         const votingInfo = VotingInfoSchema.parse(parsedMessage.data);
         console.log(votingInfo);
@@ -87,7 +73,7 @@ const useSocket = (path: string, callbacks: SocketCallbacks | undefined = undefi
     }
   }, [lastJsonMessage]);
 
-  return { sendMessage, readyState, presenceInfo, votingInfo };
+  return { sendJsonMessage, readyState, votingInfo };
 };
 
 export default useSocket;

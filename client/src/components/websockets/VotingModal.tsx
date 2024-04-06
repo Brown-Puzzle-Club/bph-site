@@ -7,27 +7,25 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { PresenceInfo, VotingInfo } from "@/hooks/useSocket";
+import { VotingInfo } from "@/hooks/useSocket";
 import { cn } from "@/utils/utils";
 import { useEffect, useState } from "react";
 import { useTimer } from "react-timer-hook";
-import { SendMessage } from "react-use-websocket";
 import DescriptionModal from "./DescriptionModal";
-import PresenceCounter from "./PresenceCounter";
 import { Checkbox } from "../ui/checkbox";
+import { SendJsonMessage } from "react-use-websocket/dist/lib/types";
 
 interface VotingModalProps {
-  presenceInfo: PresenceInfo | null;
   votingInfo: VotingInfo | null;
-  sendMessage: SendMessage;
+  sendJsonMessage: SendJsonMessage;
 }
 
-const VotingModal = ({ sendMessage, votingInfo, presenceInfo }: VotingModalProps) => {
+const VotingModal = ({ sendJsonMessage, votingInfo }: VotingModalProps) => {
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const { seconds, isRunning, restart, pause } = useTimer({
     expiryTimestamp: new Date(),
     onExpire: () => {
-      sendMessage(JSON.stringify({ type: "finalizeVote" }));
+      sendJsonMessage({ type: "finalizeVote" });
       window.location.reload();
     },
     autoStart: false,
@@ -43,18 +41,15 @@ const VotingModal = ({ sendMessage, votingInfo, presenceInfo }: VotingModalProps
   }, [votingInfo, pause, restart]);
 
   useEffect(() => {
-    sendMessage(
-      JSON.stringify({
-        type: "vote",
-        data: {
-          oldVote: [],
-          newVote: [],
-        },
-      }),
-    );
-  }, [sendMessage]);
+    console.log("hi voting info");
+    console.log(votingInfo);
+  }, [votingInfo]);
 
-  if (!votingInfo || !presenceInfo || Object.keys(votingInfo.cases).length === 0) {
+  useEffect(() => {
+    sendJsonMessage({ type: "vote", data: { oldVote: [], newVote: [] } });
+  }, [sendJsonMessage]);
+
+  if (!votingInfo || Object.keys(votingInfo.cases).length === 0) {
     return null;
   }
 
@@ -71,9 +66,7 @@ const VotingModal = ({ sendMessage, votingInfo, presenceInfo }: VotingModalProps
       }
 
       console.log(newSelectedOptions);
-      sendMessage(
-        JSON.stringify({ type: "vote", data: { oldVote: old, newVote: newSelectedOptions } }),
-      );
+      sendJsonMessage({ type: "vote", data: { oldVote: old, newVote: newSelectedOptions } });
       return newSelectedOptions;
     });
   };
@@ -85,7 +78,6 @@ const VotingModal = ({ sendMessage, votingInfo, presenceInfo }: VotingModalProps
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <PresenceCounter presenceInfo={presenceInfo} />
           <DialogTitle className="text-black">Select Your Option</DialogTitle>
           <DialogDescription>
             Select the next case [{votingInfo.max_choices}] you'd like to work on.
@@ -93,7 +85,6 @@ const VotingModal = ({ sendMessage, votingInfo, presenceInfo }: VotingModalProps
         </DialogHeader>
         <div className="grid gap-4 py-4">
           {votingInfo &&
-            presenceInfo &&
             Object.keys(votingInfo.cases)
               .sort()
               .map((option) => (
@@ -111,9 +102,7 @@ const VotingModal = ({ sendMessage, votingInfo, presenceInfo }: VotingModalProps
                       updateVote(option);
                     }}
                   />
-                  <p>
-                    {votingInfo.cases[option].voteCount}/{presenceInfo?.num_connected}
-                  </p>
+                  <p>{votingInfo.cases[option].voteCount}</p>
                 </div>
               ))}
 

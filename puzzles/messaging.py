@@ -392,6 +392,7 @@ class VotingConsumer(WebsocketConsumer):
         content = json.loads(text_data)
 
         print(content)
+
         if content == "heartbeat":
             return
 
@@ -399,6 +400,7 @@ class VotingConsumer(WebsocketConsumer):
             data = content["data"]
             MinorCaseIncomingEvent = apps.get_model("puzzles", "MinorCaseIncomingEvent")
             incoming_event = MinorCaseIncomingEvent.get_current_incoming_event(self.scope.get("user")) # type: ignore
+            print(incoming_event)
             if not incoming_event:
                 return
 
