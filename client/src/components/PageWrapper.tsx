@@ -7,7 +7,7 @@ import { useNotification } from "@/hooks/useNotification";
 
 export const PageWrapper = ({ route }: { route: React.ReactNode }) => {
   const { theme } = useTheme();
-  const { readyState } = useNotification();
+  useNotification();
 
   return (
     <div
