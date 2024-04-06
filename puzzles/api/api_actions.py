@@ -230,9 +230,9 @@ def handle_answer(
         send_notification.send(
                 None,
                 notification_type="solve",
-                team=self.team.team_name,
+                team=django_context.team,
                 title="Congratulations! Case Solved!",
-                desc=f"Team {self.team.team_name} has solved a case! {self.minor_case_round.name}!"
+                desc=f"Team {django_context.team} has solved a case! {puzzle.name}!"
             )
 
         if not request_context.hunt_is_over:
