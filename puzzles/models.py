@@ -1133,6 +1133,8 @@ class MinorCaseIncomingEvent(models.Model):
         self.num_votes_allowed = 1 if number_of_cases < 4 else 2
 
         potential_cases = self.generate_incoming_cases(self.team, number_of_cases)
+        if potential_cases is None:
+            return
         self.incoming_cases.set(potential_cases)
         for case in potential_cases:
             vote = MinorCaseVote.objects.create(
@@ -1264,7 +1266,7 @@ class MinorCaseIncomingEvent(models.Model):
             team=context.team, timestamp=timezone.now()
         )
         incoming_event.initialize()
-        return incoming_event
+        return incoming_event if incoming_event.is_initialized else None
 
 
 class MinorCaseVoteEvent(models.Model):
