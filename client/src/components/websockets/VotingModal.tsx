@@ -14,6 +14,7 @@ import { useTimer } from "react-timer-hook";
 import { SendMessage } from "react-use-websocket";
 import DescriptionModal from "./DescriptionModal";
 import PresenceCounter from "./PresenceCounter";
+import { Checkbox } from "../ui/checkbox";
 
 interface VotingModalProps {
   presenceInfo: PresenceInfo | null;
@@ -22,12 +23,12 @@ interface VotingModalProps {
 }
 
 const VotingModal = ({ sendMessage, votingInfo, presenceInfo }: VotingModalProps) => {
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const { seconds, isRunning, restart, pause } = useTimer({
     expiryTimestamp: new Date(),
     onExpire: () => {
       sendMessage(JSON.stringify({ type: "finalizeVote" }));
-      // window.location.reload();
+      window.location.reload();
     },
     autoStart: false,
   });
@@ -46,32 +47,36 @@ const VotingModal = ({ sendMessage, votingInfo, presenceInfo }: VotingModalProps
       JSON.stringify({
         type: "vote",
         data: {
-          oldVote: null,
-          newVote: null,
+          oldVote: [],
+          newVote: [],
         },
       }),
     );
   }, [sendMessage]);
 
-  const setVote = (option: string) => {
-    setSelectedOption((currOption) => {
-      const newVote = currOption === option ? null : option;
-      sendMessage(
-        JSON.stringify({
-          type: "vote",
-          data: {
-            oldVote: currOption,
-            newVote: newVote,
-          },
-        }),
-      );
-      return newVote;
-    });
-  };
-
   if (!votingInfo || !presenceInfo || Object.keys(votingInfo.cases).length === 0) {
     return null;
   }
+
+  const updateVote = (option: string) => {
+    setSelectedOptions((old) => {
+      const newSelectedOptions = [...old];
+      if (!selectedOptions.includes(option)) {
+        if (selectedOptions.length + 1 > votingInfo.max_choices) {
+          newSelectedOptions.shift();
+        }
+        newSelectedOptions.push(option);
+      } else {
+        newSelectedOptions.splice(newSelectedOptions.indexOf(option), 1);
+      }
+
+      console.log(newSelectedOptions);
+      sendMessage(
+        JSON.stringify({ type: "vote", data: { oldVote: old, newVote: newSelectedOptions } }),
+      );
+      return newSelectedOptions;
+    });
+  };
 
   return (
     <Dialog>
@@ -82,7 +87,9 @@ const VotingModal = ({ sendMessage, votingInfo, presenceInfo }: VotingModalProps
         <DialogHeader>
           <PresenceCounter presenceInfo={presenceInfo} />
           <DialogTitle className="text-black">Select Your Option</DialogTitle>
-          <DialogDescription>Select the next case you'd like to work on.</DialogDescription>
+          <DialogDescription>
+            Select the next case [{votingInfo.max_choices}] you'd like to work on.
+          </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           {votingInfo &&
@@ -90,17 +97,20 @@ const VotingModal = ({ sendMessage, votingInfo, presenceInfo }: VotingModalProps
             Object.keys(votingInfo.cases)
               .sort()
               .map((option) => (
-                <div className="flex items-center gap-4 text-black" key={option}>
+                <div
+                  className={cn(
+                    "flex items-center gap-4 text-black",
+                    selectedOptions.includes(option) && "ring-1",
+                  )}
+                  key={option}
+                >
                   <DescriptionModal caseName={option} desc={votingInfo.cases[option].desc} />
-                  <Button
-                    variant="destructive"
-                    className={cn(selectedOption == option && "ring-2", "flex basis-1/4")}
+                  <Checkbox
+                    checked={selectedOptions.includes(option)}
                     onClick={() => {
-                      setVote(option);
+                      updateVote(option);
                     }}
-                  >
-                    Set Vote!
-                  </Button>
+                  />
                   <p>
                     {votingInfo.cases[option].voteCount}/{presenceInfo?.num_connected}
                   </p>
@@ -111,9 +121,6 @@ const VotingModal = ({ sendMessage, votingInfo, presenceInfo }: VotingModalProps
             {isRunning ? `${seconds} seconds left` : "Start the countdown by selecting an option!"}
           </p>
         </div>
-        {/* <DialogFooter>
-          <Button type="submit">Save changes</Button>
-        </DialogFooter> */}
       </DialogContent>
     </Dialog>
   );

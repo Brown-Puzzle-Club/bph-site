@@ -1163,15 +1163,21 @@ class MinorCaseIncomingEvent(models.Model):
     def get_expiration_time(self):
         return self.expiration
 
-    def vote(self, old_vote: Optional[str], new_vote: Optional[str]):
-        if old_vote:
+    def get_num_votes_allowed(self):
+        return self.num_votes_allowed
+
+    def vote(self, old_votes: list[str], new_votes: list[str]):
+        votes_to_decrement = set(old_votes) - set(new_votes)
+        votes_to_increment = set(new_votes) - set(old_votes)
+
+        for old_vote in votes_to_decrement:
             vote = self.votes.get(minor_case__name=old_vote)
             if vote:
                 vote.num_votes -= 1
                 self.total_user_votes -= 1
                 vote.save()
 
-        if new_vote:
+        for new_vote in votes_to_increment:
             vote = self.votes.get(minor_case__name=new_vote)
             if vote:
                 vote.num_votes += 1
@@ -1180,9 +1186,9 @@ class MinorCaseIncomingEvent(models.Model):
 
         if self.expiration is None and self.total_user_votes > 0:
             self.expiration = timezone.now() + timezone.timedelta(seconds=60)
-        elif self.expiration and old_vote is None and new_vote is not None:
+        elif self.expiration and not old_votes and new_votes:
             self.expiration = self.expiration - timezone.timedelta(seconds=5)
-        elif self.expiration and old_vote is not None and new_vote is None:
+        elif self.expiration and old_votes and not new_votes:
             self.expiration = self.expiration + timezone.timedelta(seconds=5)
 
         if self.total_user_votes == 0:
@@ -1197,8 +1203,8 @@ class MinorCaseIncomingEvent(models.Model):
             return self.final_vote.selected_case.name
 
         most_votes = max(self.votes.all(), key=lambda vote: vote.num_votes).num_votes
-        most_voted_cases = self.votes.get(num_votes=most_votes)
-        most_voted_case = random.choice(most_voted_cases)
+        most_voted_cases = self.votes.filter(num_votes=most_votes)
+        most_voted_case = random.choice(most_voted_cases).minor_case
         current_time = timezone.now()
 
         try:

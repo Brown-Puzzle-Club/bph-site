@@ -487,6 +487,7 @@ class VotingConsumer(WebsocketConsumer):
                         if incoming_event.get_expiration_time()
                         else None
                     ),
+                    "max_choices": incoming_event.get_num_votes_allowed()
                 },
             }
             self.send_to_all(client_room, response)
