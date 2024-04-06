@@ -1340,13 +1340,6 @@ class MinorCaseCompleted(models.Model):
 
         incoming_case_event = MinorCaseIncomingEvent.create_incoming_event(self.team)
         if incoming_case_event:
-            send_notification.send(
-                None,
-                notification_type="solve",
-                team=self.team.team_name,
-                title="Congratulations! Case Solved!",
-                desc=f"Team {self.team.team_name} has solved a case! {self.minor_case_round.name}!"
-            )
             create_minor_case_incoming_event.send(
                 None, cases=incoming_case_event.get_votes(), team=self.team.team_name
             )

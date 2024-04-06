@@ -13,6 +13,8 @@ from rest_framework.request import Request
 from rest_framework.decorators import api_view
 from rest_framework.authtoken.models import Token
 
+from puzzles.signals import send_notification
+
 from .serializers import *
 
 
@@ -225,6 +227,14 @@ def handle_answer(
     # if this submission solves the minor case:
     if correct:
         print(f"Correct answer! ({sanitized_answer})")
+        send_notification.send(
+                None,
+                notification_type="solve",
+                team=self.team.team_name,
+                title="Congratulations! Case Solved!",
+                desc=f"Team {self.team.team_name} has solved a case! {self.minor_case_round.name}!"
+            )
+
         if not request_context.hunt_is_over:
             django_context.team.last_solve_time = request_context.now
             django_context.team.save()
