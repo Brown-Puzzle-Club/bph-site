@@ -1,13 +1,11 @@
 import collections
 import datetime
-import re
 from typing import Optional
 import unicodedata
 from urllib.parse import quote_plus
 import math
 
 from django import forms
-from django.core.exceptions import ValidationError
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
@@ -20,9 +18,6 @@ from django.db.models import (
     Case,
     When,
     Count,
-    Min,
-    Max,
-    IntegerField,
 )
 from django.db.models.functions import Coalesce
 from django.db.models.signals import post_save
@@ -1168,15 +1163,21 @@ class MinorCaseIncomingEvent(models.Model):
     def get_expiration_time(self):
         return self.expiration
 
-    def vote(self, old_vote: Optional[str], new_vote: Optional[str]):
-        if old_vote:
+    def get_num_votes_allowed(self):
+        return self.num_votes_allowed
+
+    def vote(self, old_votes: list[str], new_votes: list[str]):
+        votes_to_decrement = set(old_votes) - set(new_votes)
+        votes_to_increment = set(new_votes) - set(old_votes)
+
+        for old_vote in votes_to_decrement:
             vote = self.votes.get(minor_case__name=old_vote)
             if vote:
                 vote.num_votes -= 1
                 self.total_user_votes -= 1
                 vote.save()
 
-        if new_vote:
+        for new_vote in votes_to_increment:
             vote = self.votes.get(minor_case__name=new_vote)
             if vote:
                 vote.num_votes += 1
@@ -1184,11 +1185,11 @@ class MinorCaseIncomingEvent(models.Model):
                 vote.save()
 
         if self.expiration is None and self.total_user_votes > 0:
-            self.expiration = timezone.now() + timezone.timedelta(seconds=30)
-        elif self.expiration and old_vote is None and new_vote is not None:
-            self.expiration = timezone.now() - timezone.timedelta(seconds=5)
-        elif self.expiration and old_vote is not None and new_vote is None:
-            self.expiration = timezone.now() + timezone.timedelta(seconds=5)
+            self.expiration = timezone.now() + timezone.timedelta(seconds=60)
+        elif self.expiration and not old_votes and new_votes:
+            self.expiration = self.expiration - timezone.timedelta(seconds=5)
+        elif self.expiration and old_votes and not new_votes:
+            self.expiration = self.expiration + timezone.timedelta(seconds=5)
 
         if self.total_user_votes == 0:
             self.expiration = None
@@ -1198,12 +1199,14 @@ class MinorCaseIncomingEvent(models.Model):
     def finalize_vote(self):
         """Finalizes the vote for the incoming event, and creates a MinorCaseVoteEvent"""
 
+        # TODO: fix this in the case where multiple cases need to be unlocked
+
         if self.final_vote:
             return self.final_vote.selected_case.name
 
-        most_voted_case = max(
-            self.votes.all(), key=lambda vote: vote.num_votes
-        ).minor_case
+        most_votes = max(self.votes.all(), key=lambda vote: vote.num_votes).num_votes
+        most_voted_cases = self.votes.filter(num_votes=most_votes)
+        most_voted_case = random.choice(most_voted_cases).minor_case
         current_time = timezone.now()
 
         try:
