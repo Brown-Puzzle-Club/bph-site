@@ -4,12 +4,10 @@ import Cases from "./Cases";
 export default function CompletedCases({
   completed_cases,
   solvedCasesOpen,
-  setSolvedCasesOpen,
   setSelectedCase,
 }: {
   completed_cases: MinorCaseCompleted[];
   solvedCasesOpen: boolean;
-  setSolvedCasesOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedCase: (round: Round) => void;
 }) {
   return (

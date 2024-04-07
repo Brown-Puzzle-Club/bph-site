@@ -57,7 +57,6 @@ export default function EventPage() {
             <CompletedCases
               completed_cases={solved_cases}
               solvedCasesOpen={solvedCasesOpen}
-              setSolvedCasesOpen={setSolvedCasesOpen}
               setSelectedCase={setSelectedCase}
             />
           </div>
