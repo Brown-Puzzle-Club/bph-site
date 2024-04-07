@@ -30,6 +30,7 @@ export default function IncomingCasesStack() {
       </span>
       {context.team_context.current_incoming_event.incoming_cases.map((round) => (
         <img
+          key={round.id}
           className="absolute shadow-lg"
           src={MAJOR_CASE_FOLDER[round.major_case.slug as MajorCaseEnum]}
           style={{

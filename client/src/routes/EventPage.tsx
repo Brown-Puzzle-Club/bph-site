@@ -52,7 +52,7 @@ export default function EventPage() {
           </div>
           <div
             className="absolute rounded-xl p-4 align-center"
-            style={{ top: "31%", left: "29%", width: "47%", height: "37%" }}
+            style={{ top: "20%", left: "29%", width: "50%", height: "37%" }}
           >
             <CompletedCases
               completed_cases={solved_cases}

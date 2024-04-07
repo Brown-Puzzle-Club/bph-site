@@ -90,7 +90,7 @@ export function getMinorCaseSolution(round: Round, context: DjangoContext) {
   if (
     !context?.team_context ||
     !round ||
-    !context.team_context.minor_case_solves[round.slug] ||
+    !context.team_context.solves_by_case[round.major_case.slug][round.slug] ||
     !context?.team_context.unlocks[round.major_case.slug] ||
     !context?.team_context.unlocks[round.major_case.slug][round.slug]
   ) {
@@ -101,9 +101,11 @@ export function getMinorCaseSolution(round: Round, context: DjangoContext) {
   const meta_puzzle = Object.values(
     context.team_context.unlocks[round.major_case.slug][round.slug],
   ).find((puzzle) => puzzle.is_meta);
+  console.log("meta: ", meta_puzzle);
   if (
     meta_puzzle &&
-    (submission = context.team_context.minor_case_solves[round.slug][meta_puzzle.slug])
+    (submission =
+      context.team_context.solves_by_case[round.major_case.slug][round.slug][meta_puzzle.slug])
   ) {
     return submission.submitted_answer;
   }
