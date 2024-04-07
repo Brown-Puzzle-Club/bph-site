@@ -3,7 +3,7 @@ import { MAJOR_CASE_FOLDER, MajorCaseEnum } from "@/utils/constants";
 import { useState } from "react";
 import { RAND_ROT, RAND_TRANS } from "../MinorCaseFolder";
 
-export default function IncomingCases() {
+export default function IncomingCasesStack() {
   const { context } = useDjangoContext();
 
   const [isHovered, setIsHovered] = useState(false);

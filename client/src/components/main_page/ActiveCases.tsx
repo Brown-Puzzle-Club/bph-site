@@ -1,32 +1,7 @@
 import { useDjangoContext } from "@/hooks/useDjangoContext";
-import {
-  MinorCaseActive,
-  MinorCaseCompleted,
-  MinorCaseIncoming,
-  Round,
-} from "@/utils/django_types";
+import { Round } from "@/utils/django_types";
 import { useMemo } from "react";
-import MinorCaseFolder from "../MinorCaseFolder";
-
-export function renderActiveCases(
-  casesRecord: (MinorCaseActive | MinorCaseIncoming | MinorCaseCompleted)[],
-  setSelectedCase: (round: Round) => void,
-): JSX.Element[] {
-  if (casesRecord.length === 0) {
-    return [];
-  }
-
-  return casesRecord.map((minorCase) => (
-    <MinorCaseFolder
-      className="hover:rotate-0"
-      minorCase={minorCase.minor_case_round}
-      majorCase={minorCase.minor_case_round.major_case}
-      onClick={() => {
-        setSelectedCase(minorCase.minor_case_round);
-      }}
-    />
-  ));
-}
+import Cases from "./Cases";
 
 export default function ActiveCases({
   setSelectedCase,
@@ -48,7 +23,7 @@ export default function ActiveCases({
 
   return (
     <div className="flex space-x-4">
-      {context ? renderActiveCases(active_cases, setSelectedCase) : null}
+      {context ? <Cases casesRecord={active_cases} setSelectedCase={setSelectedCase} /> : null}
     </div>
   );
 }

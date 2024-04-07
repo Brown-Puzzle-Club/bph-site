@@ -4,12 +4,15 @@ import desk from "@/assets/main_page/ShadowDesk.png";
 import MinorCaseModal from "@/components/MinorCaseModal";
 import ActiveCases from "@/components/main_page/ActiveCases";
 import CompletedCases from "@/components/main_page/CompletedCases";
-import IncomingCases from "@/components/main_page/IncomingCases";
+import CompletedCasesStack from "@/components/main_page/CompletedCasesStack";
+import IncomingCasesStack from "@/components/main_page/IncomingCasesStack";
 import { ArtWrapperInner } from "@/components/minor_cases/CasePageArt";
+import { useDjangoContext } from "@/hooks/useDjangoContext";
 import { useTheme } from "@/hooks/useTheme";
 import { Round } from "@/utils/django_types";
 import { MAIN_PAGE_THEME } from "@/utils/themes";
-import { useEffect, useState } from "react";
+import { mostRecentSolves } from "@/utils/utils";
+import { useEffect, useMemo, useState } from "react";
 
 export default function EventPage() {
   const { setTheme } = useTheme();
@@ -18,6 +21,14 @@ export default function EventPage() {
   }, [setTheme]);
 
   const [selectedCase, setSelectedCase] = useState<Round | null>(null);
+  const [solvedCasesOpen, setSolvedCasesOpen] = useState(false);
+
+  const { context } = useDjangoContext();
+
+  const solved_cases = useMemo(() => {
+    if (!context) return [];
+    return mostRecentSolves(context);
+  }, [context]);
 
   return (
     <div
@@ -37,20 +48,34 @@ export default function EventPage() {
             className="absolute rounded-xl p-4 align-center"
             style={{ top: "35%", left: "83%", width: "14%", height: "29%" }}
           >
-            <IncomingCases />
+            <IncomingCasesStack />
           </div>
           <div
-            className="absolute bg-[#f5f5f51f] rounded-xl p-4 align-center"
-            style={{ top: "71%", left: "19%", width: "61%", height: "23%" }}
+            className="absolute rounded-xl p-4 align-center"
+            style={{ top: "31%", left: "29%", width: "47%", height: "37%" }}
           >
-            {/* Content for the first region */}
-            <ActiveCases setSelectedCase={setSelectedCase} />
+            <CompletedCases
+              completed_cases={solved_cases}
+              solvedCasesOpen={solvedCasesOpen}
+              setSolvedCasesOpen={setSolvedCasesOpen}
+              setSelectedCase={setSelectedCase}
+            />
           </div>
           <div
             className="absolute rounded-xl p-4 align-center"
             style={{ top: "35%", left: "1%", width: "14%", height: "29%" }}
           >
-            <CompletedCases />
+            <CompletedCasesStack
+              completed_cases={solved_cases}
+              solvedCasesOpen={solvedCasesOpen}
+              setSolvedCasesOpen={setSolvedCasesOpen}
+            />
+          </div>
+          <div
+            className="absolute bg-[#f5f5f51f] rounded-xl p-4 align-center"
+            style={{ top: "71%", left: "19%", width: "61%", height: "23%" }}
+          >
+            <ActiveCases setSelectedCase={setSelectedCase} />
           </div>
         </ArtWrapperInner>
       </div>

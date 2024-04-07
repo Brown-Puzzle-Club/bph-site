@@ -109,3 +109,12 @@ export function getMinorCaseSolution(round: Round, context: DjangoContext) {
   }
   return null;
 }
+
+export const mostRecentSolves = (context: DjangoContext, n?: number) => {
+  const solved_cases = context.team_context.minor_case_completed;
+  // sort by completed_datetime
+  solved_cases.sort((a, b) => {
+    return new Date(a.completed_datetime).getTime() - new Date(b.completed_datetime).getTime();
+  });
+  return n ? solved_cases.slice(0, n) : solved_cases;
+};
