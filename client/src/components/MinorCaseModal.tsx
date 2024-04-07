@@ -5,18 +5,61 @@ import manila from "@/assets/main/manila_open.png";
 import { Round } from "@/utils/django_types";
 import { CASE_ART_BY_ROUND_SLUG } from "@/utils/main/constants";
 import { Link } from "react-router-dom";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "./ui/dialog";
 
 interface ModalProps {
-  setCurrentCase: (round: Round | null) => void;
-  cur_case: Round | undefined;
+  setSelectedCase: (round: Round | null) => void;
+  selectedCase: Round | null;
+  action: string;
 }
 
-const MinorCaseModal: React.FC<ModalProps> = ({ setCurrentCase, cur_case }) => {
-  if (!cur_case) {
-    return null;
-  }
+const MinorCaseModal: React.FC<ModalProps> = ({ setSelectedCase, selectedCase, action }) => {
+  useEffect(() => {
+    console.log(selectedCase);
+  }, [selectedCase]);
 
-  const cur_case_art: JSX.Element = cur_case ? CASE_ART_BY_ROUND_SLUG[cur_case?.id] : <></>;
+  const selectedCaseArt: JSX.Element = selectedCase ? (
+    CASE_ART_BY_ROUND_SLUG[selectedCase?.id]
+  ) : (
+    <></>
+  );
+
+  return (
+    selectedCase && (
+      <Dialog open={true} onOpenChange={() => setSelectedCase(null)} modal>
+        <DialogContent
+          className="max-w-[60%] inline-block bg-transparent absolute"
+          style={{
+            aspectRatio: "16/9",
+            backgroundImage: `url(${manila})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center center",
+          }}
+        >
+          <DialogHeader
+            className="absolute max-w-[35%]"
+            style={{
+              left: "55%",
+            }}
+          >
+            <DialogTitle className="text-3xl">{selectedCase.name}</DialogTitle>
+            <p className="text-md">{selectedCase.description}</p>
+            <div className="flex-1" />
+          </DialogHeader>
+          <DialogFooter>
+            {typeof action === "string" && <Link to={action}>Go to Minor Case Page</Link>}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    )
+  );
 
   return (
     <>
