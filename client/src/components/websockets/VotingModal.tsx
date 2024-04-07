@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -65,9 +64,7 @@ const VotingModal = ({ sendJsonMessage, votingInfo }: VotingModalProps) => {
 
       toast.custom(
         <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild>
-            <Button variant="secondary">VOTE ON A NEW CASE</Button>
-          </DialogTrigger>
+          <DialogTrigger>VOTE ON A NEW CASE</DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
               <DialogTitle className="text-black">Select Your Option</DialogTitle>
@@ -109,7 +106,7 @@ const VotingModal = ({ sendJsonMessage, votingInfo }: VotingModalProps) => {
         { duration: Infinity, id: votingInfo.id.toString() },
       );
     }
-  }, [isRunning, seconds, selectedOptions, sendJsonMessage, votingInfo]);
+  }, [isRunning, open, seconds, selectedOptions, sendJsonMessage, votingInfo]);
 
   useEffect(() => {
     sendJsonMessage({ type: "vote", data: { oldVote: [], newVote: [] } });

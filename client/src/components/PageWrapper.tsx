@@ -27,7 +27,7 @@ export const PageWrapper = ({ route }: { route: React.ReactNode }) => {
         {route}
       </div>
       <Toaster
-        position="top-right"
+        position="bottom-right"
         reverseOrder={false}
         gutter={8}
         toastOptions={{
