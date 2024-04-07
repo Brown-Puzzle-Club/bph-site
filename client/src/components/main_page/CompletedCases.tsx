@@ -23,7 +23,7 @@ export default function CompletedCases() {
     return mostRecentSolves(context);
   }, [context]);
 
-  if (!context || !context.team_context.current_incoming_event) return null;
+  if (!context) return null;
 
   return (
     <a
