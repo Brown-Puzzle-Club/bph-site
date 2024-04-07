@@ -2,7 +2,7 @@ import InputBox from "@/components/puzzle/nyt-games/letterboxed/InputBox";
 import LetterBox from "@/components/puzzle/nyt-games/letterboxed/LetterBox";
 import { Button } from "@/components/ui/button";
 import { Puzzle, Solution } from "@/utils/minor_cases/nyt/LetterBoxedTypes";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 function LetterBoxed({ puzzleNum }: { puzzleNum: 1 | 2 | 3 }) {
   const puzzles = {
@@ -131,7 +131,8 @@ function LetterBoxed({ puzzleNum }: { puzzleNum: 1 | 2 | 3 }) {
   };
 
   const [solution, setSolution] = useState<number[][]>([[]]);
-  const solutionObj = new Solution(puzzles[puzzleNum], solution);
+  const [answer, setAnswer] = useState<string | null>(null);
+  const solutionObj = new Solution(puzzleNum, puzzles[puzzleNum], solution, setAnswer);
 
   useEffect(() => {
     // resets solution on puzzle change
@@ -154,6 +155,9 @@ function LetterBoxed({ puzzleNum }: { puzzleNum: 1 | 2 | 3 }) {
    * Handle enters and delete keypresses using useEffect
    */
   function handleKeyPress(event: KeyboardEvent) {
+    if (answer) {
+      return;
+    }
     if (event.key === "Enter") {
       // Check if solution is valid
       if (solutionObj.nextWord()) {
@@ -177,12 +181,13 @@ function LetterBoxed({ puzzleNum }: { puzzleNum: 1 | 2 | 3 }) {
   return (
     <>
       {/* All items centered */}
-      <div className="flex flex-col mx-[5%] md:mx-[10%] my-8 p-4 items-center">
-        <InputBox puzzle={puzzles[puzzleNum]} solutionArr={solution} />
+      <div className="flex flex-col mx-[5%] md:mx-[10%] my-6 items-center">
+        <InputBox puzzle={puzzles[puzzleNum]} solutionArr={solution} answer={answer} />
         <LetterBox
           puzzle={puzzles[puzzleNum]}
           solutionArr={solution}
           onSelect={attemptPushSolution}
+          solved={answer ? true : false}
         />
         <div className="text-white">
           (Use the <code>enter</code> and <code>delete</code> keys to navigate)
@@ -195,26 +200,29 @@ function LetterBoxed({ puzzleNum }: { puzzleNum: 1 | 2 | 3 }) {
 export default function LetterBoxedPuzzle() {
   const [puzzleNum, setPuzzleNum] = useState<1 | 2 | 3>(1);
 
-  const emoji = useMemo(() => {
-    switch (puzzleNum) {
-      case 1:
-        return "🥕";
-      case 2:
-        return "🐾";
-      case 3:
-        return "🪶";
-    }
-  }, [puzzleNum]);
-
   return (
-    <div className="flex flex-col items-center bg-[#fc716b]">
-      <div className="flex flex-col items-center">
-        <h1 className="text-4xl text-white">LetterB{emoji}xed</h1>
-        <div className="text-white">Choose a puzzle:</div>
+    <div className="flex flex-col items-center bg-[#fa8282]">
+      <div className="flex flex-col items-center py-4">
+        <div className="text-white py-2">Choose a puzzle:</div>
         <div className="flex space-x-4">
-          <Button onClick={() => setPuzzleNum(1)}>Puzzle 1</Button>
-          <Button onClick={() => setPuzzleNum(2)}>Puzzle 2</Button>
-          <Button onClick={() => setPuzzleNum(3)}>Puzzle 3</Button>
+          <Button
+            className={puzzleNum == 1 ? "bg-slate-800" : "bg-white"}
+            onClick={() => setPuzzleNum(1)}
+          >
+            🥕
+          </Button>
+          <Button
+            className={puzzleNum == 2 ? "bg-slate-800" : "bg-white"}
+            onClick={() => setPuzzleNum(2)}
+          >
+            🐾
+          </Button>
+          <Button
+            className={puzzleNum == 3 ? "bg-slate-800" : "bg-white"}
+            onClick={() => setPuzzleNum(3)}
+          >
+            🪶
+          </Button>
         </div>
       </div>
       <LetterBoxed puzzleNum={puzzleNum} />

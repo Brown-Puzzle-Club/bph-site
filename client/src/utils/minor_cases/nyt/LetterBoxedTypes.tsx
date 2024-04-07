@@ -1,3 +1,7 @@
+import axios from "axios";
+// @ts-expect-error untyped import :(
+import isDictionaryWord from "check-dictionary-word";
+
 export interface Letter {
   sides: number[];
   // Unique index of a letter in the puzzle!
@@ -31,13 +35,21 @@ export class Puzzle {
 }
 
 export class Solution {
+  private puzzleNum: 1 | 2 | 3;
   private puzzle: Puzzle;
   // A list of 'words', which are letter sequences
   public solution: number[][];
   // Dictionary from index to letters from puzzle
   private letterDict: Map<number, Letter>;
+  private setAnswer: (answer: string | null) => void;
 
-  constructor(puzzle: Puzzle, solution: number[][]) {
+  constructor(
+    puzzleNum: 1 | 2 | 3,
+    puzzle: Puzzle,
+    solution: number[][],
+    setAnswer: (answer: string | null) => void,
+  ) {
+    this.puzzleNum = puzzleNum;
     this.puzzle = puzzle;
     this.solution = solution;
     // Dictionary from index to letters from puzzle
@@ -51,6 +63,7 @@ export class Solution {
         }
       }
     }
+    this.setAnswer = setAnswer;
   }
 
   /**
@@ -96,6 +109,20 @@ export class Solution {
     return true;
   }
 
+  public getWords(): string[] {
+    // Copy solution, for every list in solution, append to the front the last idx of the previous list, or initialIdx
+    const words = [];
+    for (let i = 0; i < this.solution.length; i++) {
+      if (i === 0) {
+        words.push([this.puzzle.initialIdx]);
+      } else {
+        words.push([this.solution[i - 1][this.solution[i - 1].length - 1]]);
+      }
+      words[i].push(...this.solution[i]);
+    }
+    return words.map((word) => word.map((idx) => this.letterDict.get(idx)!.letter).join(""));
+  }
+
   /**
    * Run upon entering word, to check whether all the words are valid so far.
    * Also check letter-level validity.
@@ -104,8 +131,16 @@ export class Solution {
    * current word. This is because the words are chained together.
    */
   public checkWordValidity(): boolean {
-    // Gets list of words
-    // TODO: Implement
+    // Check letter validity
+    if (!this.checkLetterValidity()) {
+      return false;
+    }
+    // Check word validity
+    for (const word of this.getWords()) {
+      if (!isDictionaryWord(word)) {
+        return false;
+      }
+    }
     return true;
   }
 
@@ -188,12 +223,20 @@ export class Solution {
 
   private async submit() {
     console.log("submitting");
-    // const url = "/api/puzzle/nyt-games/letterboxed/1";
-    // const data = {
-    //   solution: this.serialize(),
-    // };
-    // const response = await axios.post(url, data);
-    // console.log(response);
+    this.setAnswer("submitting...");
+    const url = "/api/puzzle/nyt/letterboxed";
+    const data = {
+      puzzleNum: this.puzzleNum,
+      solution: this.serialize(),
+    };
+    const response = await axios.post(url, data);
+    // get response
+    console.log(response);
+    if (response.data.correct) {
+      this.setAnswer(response.data.answer);
+    } else {
+      this.setAnswer("An error occurred, contact HQ");
+    }
   }
 }
 
