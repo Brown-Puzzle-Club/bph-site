@@ -1,19 +1,17 @@
-import { useToast } from "@/components/ui/use-toast";
 import { useEffect } from "react";
 import { z } from "zod";
 import { useAuth } from "./useAuth";
+import { toast } from "react-hot-toast";
 
 const NotificationSchema = z.object({
   type: z.string(),
   title: z.string(),
   desc: z.string(),
 });
-export interface Notification extends z.infer<typeof NotificationSchema> {}
 
 export const useNotification = () => {
   const { team } = useAuth();
 
-  const { toast } = useToast();
   useEffect(() => {
     if (!team) return;
 
@@ -26,15 +24,17 @@ export const useNotification = () => {
 
       switch (message.data.type) {
         case "solve":
-          toast({
-            title: message.data.title,
-            description: message.data.desc,
-          });
-          break;
+          toast.custom(
+            <div>
+              <h1>{message.data.title}</h1>
+              <p>{message.data.desc}</p>
+            </div>,
+            { duration: 5000 },
+          );
       }
     };
     return () => {
       eventSource.close();
     };
-  }, [toast, team]);
+  }, [team]);
 };

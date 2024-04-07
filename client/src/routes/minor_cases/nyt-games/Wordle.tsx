@@ -2,8 +2,8 @@ import FinalWordle from "@/components/puzzle/nyt-games/wordle/FinalWordle";
 import HangmanWordle from "@/components/puzzle/nyt-games/wordle/HangmanGame";
 import { GameMode, GameState } from "@/components/puzzle/nyt-games/wordle/utils";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
 import { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
 
 const Wordle = () => {
   const [gameMode, setGameMode] = useState(GameMode.Hangman);
@@ -11,21 +11,14 @@ const Wordle = () => {
   const [guesses, setGuesses] = useState(9);
   const [numRows, setNumRows] = useState<number | null>(null);
   const [remountCounter, setRemountCounter] = useState(0);
-  const { toast } = useToast();
 
   useEffect(() => {
     if (gameState === GameState.Win) {
-      toast({
-        variant: "wordle",
-        title: "You win!",
-      });
+      toast.success("You win!", { duration: Infinity, position: "top-center" });
     } else if (gameState === GameState.Lose) {
-      toast({
-        variant: "wordle",
-        title: "You lose!",
-      });
+      toast.error("You lose!", { duration: Infinity, position: "top-center" });
     }
-  }, [gameState, toast]);
+  }, [gameState]);
 
   useEffect(() => {
     if (gameMode === GameMode.FinalWordle && numRows === null) {
@@ -73,6 +66,7 @@ const Wordle = () => {
             setGuesses(7);
             setNumRows(null);
             setRemountCounter((counter) => counter + 1);
+            toast.dismiss();
           }}
         >
           Reset

@@ -17,6 +17,7 @@ const VoteSchema = z.object({
 export interface Vote extends z.infer<typeof VoteSchema> {}
 
 const VotingInfoSchema = z.object({
+  id: z.number(),
   cases: z.record(VoteSchema),
   expiration_time: z.string().nullable(),
   max_choices: z.number().nonnegative(),
@@ -30,6 +31,7 @@ const ResponseSchema = z.object({
 
 const useSocket = (path: string, callbacks: SocketCallbacks | undefined = undefined) => {
   const [votingInfo, setVotingInfo] = useState<VotingInfo>({
+    id: 0,
     cases: {},
     expiration_time: null,
     max_choices: 0,

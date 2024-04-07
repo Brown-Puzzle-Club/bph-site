@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { useToast } from "../../../ui/use-toast";
 import Tile from "./Tile";
 import { Character, GameState, VerificationState } from "./utils";
 import { possibleWords } from "./wordList";
 import axios from "axios";
+import { toast } from "react-hot-toast";
 
 interface FinalWordleProps {
   gameState: GameState;
@@ -61,7 +61,6 @@ const FinalWordle = ({ gameState, setGameState, setGuesses, numRows }: FinalWord
     currentRow: 0,
     activeTile: 0,
   });
-  const { toast } = useToast();
 
   const keyPressHandler = (e: React.KeyboardEvent) => {
     if (gameState !== GameState.InProgress) {
@@ -133,18 +132,10 @@ const FinalWordle = ({ gameState, setGameState, setGuesses, numRows }: FinalWord
             });
           });
         } else {
-          const { dismiss } = toast({
-            title: "Not a valid word",
-            variant: "wordle",
-          });
-          setTimeout(dismiss, 2000);
+          toast.error("Not a valid word.", { duration: 5000, position: "top-center" });
         }
       } else {
-        const { dismiss } = toast({
-          title: "Not enough letters",
-          variant: "wordle",
-        });
-        setTimeout(dismiss, 2000);
+        toast.error("Not enough letters.", { duration: 5000, position: "top-center" });
       }
     }
   };

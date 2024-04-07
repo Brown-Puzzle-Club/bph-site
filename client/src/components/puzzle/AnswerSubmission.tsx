@@ -11,7 +11,7 @@ import { useEffect, useMemo, useState } from "react";
 import { BeatLoader } from "react-spinners";
 import { z } from "zod";
 import { Input } from "../ui/input";
-import { useToast } from "../ui/use-toast";
+import { toast } from "react-hot-toast";
 
 function sanitize_answer(answer: string) {
   const answer_only_letters = answer.replace(/[^a-zA-Z]/g, "");
@@ -40,8 +40,6 @@ const AnswerSubmitRedThread = ({
     resolver: zodResolver(redThreadAnswerSchema),
   });
 
-  const { toast } = useToast();
-
   const submit_answer = async (values: z.infer<typeof redThreadAnswerSchema>) => {
     const location = sanitize_answer(values.location);
     const cause = sanitize_answer(values.cause);
@@ -54,15 +52,12 @@ const AnswerSubmitRedThread = ({
       .then((response) => {
         console.log(response);
         if (response.data.status === "correct") {
-          toast({
-            variant: "answersubmit_happy",
-            title: "Correct answer!",
-          });
+          toast.success("Correct answer!", { duration: Infinity, position: "top-center" });
         } else {
           const guesses_left = response.data.guesses_left;
-          toast({
-            variant: "answersubmit",
-            title: `Incorrect answer. ${guesses_left} guesses left.`,
+          toast.error(`Incorrect answer. ${guesses_left} guesses left.`, {
+            duration: 5000,
+            position: "top-center",
           });
         }
         const new_submission: AnswerSubmission = {
@@ -78,19 +73,19 @@ const AnswerSubmitRedThread = ({
       .catch((error) => {
         console.log(error);
         if (error.response.data.error == "Answer submission failed") {
-          toast({
-            variant: "answersubmit_error",
-            title: `Answer already submitted.`,
+          toast.error("Answer already submitted.", {
+            duration: 5000,
+            position: "top-center",
           });
         } else if (error.response.error == "No guesses remaining") {
-          toast({
-            variant: "answersubmit_error",
-            title: `You are out of guesses.`,
+          toast.error("You are out of guesses", {
+            duration: 5000,
+            position: "top-center",
           });
         } else if (error.response.status == 403) {
-          toast({
-            variant: "answersubmit_error",
-            title: `You are unauthorized to answer this puzzle.`,
+          toast.error("You are unauthorized to see this puzzle.", {
+            duration: 5000,
+            position: "top-center",
           });
         }
       })
@@ -159,7 +154,6 @@ const AnswerSubmitRegular = ({
   const form = useForm<z.infer<typeof answerSchema>>({
     resolver: zodResolver(answerSchema),
   });
-  const { toast } = useToast();
 
   const submit_answer = async (values: z.infer<typeof answerSchema>) => {
     const answer = sanitize_answer(values.answer);
@@ -171,22 +165,16 @@ const AnswerSubmitRegular = ({
       .then((response) => {
         console.log(response);
         if (response.data.status === "correct") {
-          toast({
-            variant: "answersubmit_happy",
-            title: "Correct answer!",
-          });
+          toast.success("Correct answer!", { duration: Infinity, position: "top-center" });
         } else if (response.data.messages.length > 0) {
           response.data.messages.forEach((message: PuzzleMessage) => {
-            toast({
-              variant: "answersubmit_flagged",
-              title: message.response,
-            });
+            toast.custom(message.response, { duration: 5000, position: "top-center" });
           });
         } else {
           const guesses_left = response.data.guesses_left;
-          toast({
-            variant: "answersubmit",
-            title: `Incorrect answer. ${guesses_left} guesses left.`,
+          toast.error(`Incorrect answer. ${guesses_left} guesses left.`, {
+            duration: 5000,
+            position: "top-center",
           });
         }
         const new_submission: AnswerSubmission = {
@@ -202,19 +190,19 @@ const AnswerSubmitRegular = ({
       .catch((error) => {
         console.log(error);
         if (error.response.data.error == "Answer submission failed") {
-          toast({
-            variant: "answersubmit_error",
-            title: `Answer already submitted.`,
+          toast.error("Answer already submitted.", {
+            duration: 5000,
+            position: "top-center",
           });
         } else if (error.response.error == "No guesses remaining") {
-          toast({
-            variant: "answersubmit_error",
-            title: `You are out of guesses.`,
+          toast.error("You are out of guesses", {
+            duration: 5000,
+            position: "top-center",
           });
         } else if (error.response.status == 403) {
-          toast({
-            variant: "answersubmit_error",
-            title: `You are unauthorized to answer this puzzle.`,
+          toast.error("You are not authorized to see this puzzle.", {
+            duration: 5000,
+            position: "top-center",
           });
         }
       })
