@@ -1340,6 +1340,7 @@ class MinorCaseCompleted(models.Model):
         if incoming_case_event:
             create_minor_case_incoming_event.send(
                 None,
+                id=incoming_case_event.id,
                 cases=incoming_case_event.get_votes(),
                 team=self.team.id,
                 max_choices=incoming_case_event.num_votes_allowed,

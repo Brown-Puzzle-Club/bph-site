@@ -18,7 +18,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { useToast } from "@/components/ui/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import {
   MEMBER_COUNT_MAX,
@@ -31,6 +30,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import validator from "validator";
 import { z } from "zod";
+import { toast } from "react-hot-toast";
 
 export const registerFormSchema = z
   .object({
@@ -111,9 +111,6 @@ export default function RegisterForm() {
 
   const { register, team } = useAuth();
 
-  const { toast } = useToast();
-  // console.log(team)
-
   const form = useForm<z.infer<typeof registerFormSchema>>({
     resolver: zodResolver(registerFormSchema),
     defaultValues: {
@@ -132,10 +129,7 @@ export default function RegisterForm() {
     setSubmitting(true);
     await register(values).catch((error) => {
       console.error(error.response.data);
-      toast({
-        variant: "answersubmit_error",
-        title: error.response.data.error,
-      });
+      toast.error(error.response.data.message, { duration: 5000 });
     });
     setSubmitting(false);
   };

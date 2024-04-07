@@ -334,12 +334,6 @@ def broadcast_notification(sender, notification_type, title, desc, team, **kwarg
         "desc": desc,
     })
 
-
-    # Use the following inherited methods:
-    # def receive(self, text_data):
-    # def send(self, text_data):
-
-
 # A WebsocketConsumer subclass that can broadcast messages to a set of users.
 class BroadcastWebsocketConsumer(ABC, WebsocketConsumer):
     def connect(self):
@@ -443,7 +437,7 @@ class AdminWebsocketConsumer(BroadcastWebsocketConsumer):
 
 
 @receiver(create_minor_case_incoming_event)
-def broadcast_minor_case_incoming_event(sender, cases, team, max_choices, **kwargs):
+def broadcast_minor_case_incoming_event(sender, id, cases, team, max_choices, **kwargs):
     print(f"broadcasting minor case incoming event to {team}")
     room = Room.objects.get(channel_name=f"puzzles-{team}")
 
@@ -452,6 +446,7 @@ def broadcast_minor_case_incoming_event(sender, cases, team, max_choices, **kwar
         message = {
             "type": "vote",
             "data": {
+                "id": id,
                 "cases": cases,
                 "expiration_time": None,
                 "max_choices": max_choices,
@@ -488,10 +483,11 @@ class VotingConsumer(WebsocketConsumer):
         client_room = Room.objects.get(channel_name=self.get_room())
         content = json.loads(text_data)
 
-        print(f"Voting Received: {content}")
 
         if content == "heartbeat":
             return
+
+        print(f"Voting Received: {content}")
 
         if content["type"] == "vote":
             data = content["data"]
@@ -506,6 +502,7 @@ class VotingConsumer(WebsocketConsumer):
             response = {
                 "type": "vote",
                 "data": {
+                    "id": incoming_event.id,
                     "cases": incoming_event.get_votes(),
                     "expiration_time": (
                         incoming_event.get_expiration_time().isoformat()

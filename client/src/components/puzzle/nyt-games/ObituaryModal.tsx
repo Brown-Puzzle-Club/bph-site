@@ -1,13 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { BeatLoader } from "react-spinners";
 import { z } from "zod";
+import { toast } from "react-hot-toast";
 
 const obituarySchema = z.object({
   connections_answer: z.string(),
@@ -29,8 +29,6 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
     resolver: zodResolver(obituarySchema),
   });
 
-  const { toast } = useToast();
-
   const submit_answer = async (values: z.infer<typeof obituarySchema>) => {
     setSubmitting(true);
     // Submit the answer
@@ -41,18 +39,15 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
         setIsModalOpen(false);
         setCorrectAnswer(data.answer);
       } else {
-        toast({
-          variant: "answersubmit",
-          title: `Incorrect. Please try again.`,
+        toast.error("Incorrect answer. Please try again.", {
+          duration: 5000,
+          position: "top-center",
         });
       }
       console.log(data);
     } catch (error) {
       console.error("Error fetching data:", error);
-      toast({
-        variant: "answersubmit_error",
-        title: `An error has occurred.`,
-      });
+      toast.error("An error has occured.", { duration: 5000, position: "top-center" });
     } finally {
       setSubmitting(false);
     }

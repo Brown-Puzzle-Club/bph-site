@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useToast } from "../../../ui/use-toast";
 import { GuessTile } from "./GuessTile";
 import NumberTile from "./NumberTile";
 import Tile from "./Tile";
@@ -20,6 +19,7 @@ import {
   verifyGuess,
 } from "./utils";
 import { possibleWords } from "./wordList";
+import { toast } from "react-hot-toast";
 
 const hangmanTemplateAreas = `'a b c d e A . .'
                               '. . . . f . . .'
@@ -43,7 +43,6 @@ const HangmanWordle = ({ setGameMode, setGuesses, gameState }: HangmanWordleProp
   const [solved, setSolved] = useState<[boolean, boolean, boolean]>([false, false, false]);
   const [prevGuesses, setPrevGuesses] = useState<Guess[]>([]);
   const [answers, setAnswers] = useState(["", "", "", ""]);
-  const { toast } = useToast();
 
   useEffect(() => {
     setAnswers((prev) => {
@@ -150,20 +149,10 @@ const HangmanWordle = ({ setGameMode, setGuesses, gameState }: HangmanWordleProp
             setPrevGuesses((prev) => [...prev, { guess: characters, row: selectedRow }]);
           }
         } else {
-          const { dismiss } = toast({
-            title: "Not in word list",
-            variant: "wordle",
-          });
-
-          setTimeout(dismiss, 2000);
+          toast.error("Not a valid word.", { duration: 5000, position: "top-center" });
         }
       } else {
-        const { dismiss } = toast({
-          title: "Not enough letters",
-          variant: "wordle",
-        });
-
-        setTimeout(dismiss, 2000);
+        toast.error("Not enough letters.", { duration: 5000, position: "top-center" });
       }
     }
   };
