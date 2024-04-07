@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { useToast } from "@/components/ui/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import {
   MEMBER_COUNT_MAX,
@@ -109,6 +110,8 @@ export default function RegisterForm() {
   const [colorChoice, setColorChoice] = useState("#1e293ba1");
 
   const { register, team } = useAuth();
+
+  const { toast } = useToast();
   // console.log(team)
 
   const form = useForm<z.infer<typeof registerFormSchema>>({
@@ -128,8 +131,11 @@ export default function RegisterForm() {
   const onSubmit = async (values: z.infer<typeof registerFormSchema>) => {
     setSubmitting(true);
     await register(values).catch((error) => {
-      console.error(error);
-      alert("Team username and/or team name already taken. Please choose a different one.");
+      console.error(error.response.data);
+      toast({
+        variant: "answersubmit_error",
+        title: error.response.data.error,
+      });
     });
     setSubmitting(false);
   };

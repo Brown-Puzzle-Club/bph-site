@@ -1,5 +1,6 @@
 from datetime import datetime
 from django.contrib.auth import authenticate, login, logout
+from django.db import IntegrityError
 from puzzles import models
 
 from puzzles.api.api_guards import require_admin
@@ -16,6 +17,8 @@ from rest_framework.authtoken.models import Token
 from puzzles.signals import send_notification
 
 from .serializers import *
+
+from django.db import DataError
 
 
 @api_view(["POST"])
@@ -46,40 +49,67 @@ def register_action(request):
 
     if serializer.is_valid():
 
-        user = User.objects.create_user(
-            serializer.validated_data.get("team_id"),
-            password=serializer.validated_data.get("password"),
-            first_name=serializer.validated_data.get("team_name"),
-        )
-
-        team = Team.objects.create(
-            user=user,
-            team_name=serializer.validated_data.get("team_name"),
-            in_person=serializer.validated_data.get("in_person", False),
-            brown_team=(
-                serializer.validated_data.get("num_brown_members") is not None
-                and serializer.validated_data.get("num_brown_members") > 0
-            ),
-            num_brown_members=serializer.validated_data.get("num_brown_members", 0),
-            classroom_need=serializer.validated_data.get("classroom_need", False),
-            where_to_find=serializer.validated_data.get("where_to_find", ""),
-            phone_number=serializer.validated_data.get("phone_number", ""),
-            color_choice=serializer.validated_data.get("color_choice", ""),
-            emoji_choice=serializer.validated_data.get("emoji_choice", ""),
-        )
-
-        for team_member in serializer.validated_data.get("members"):
-            TeamMember.objects.create(
-                team=team,
-                name=team_member.get("name"),
-                email=team_member.get("email"),
+        try:
+            user = User.objects.create_user(
+                serializer.validated_data.get("team_id"),
+                password=serializer.validated_data.get("password"),
+                first_name=serializer.validated_data.get("team_name"),
             )
 
-        # Log in the newly registered user
-        login(request._request, user)
+            team = Team.objects.create(
+                user=user,
+                team_name=serializer.validated_data.get("team_name"),
+                in_person=serializer.validated_data.get("in_person", False),
+                brown_team=(
+                    serializer.validated_data.get("num_brown_members") is not None
+                    and serializer.validated_data.get("num_brown_members") > 0
+                ),
+                num_brown_members=serializer.validated_data.get("num_brown_members", 0),
+                classroom_need=serializer.validated_data.get("classroom_need", False),
+                where_to_find=serializer.validated_data.get("where_to_find", ""),
+                phone_number=serializer.validated_data.get("phone_number", ""),
+                color_choice=serializer.validated_data.get("color_choice", ""),
+                emoji_choice=serializer.validated_data.get("emoji_choice", ""),
+            )
 
-        # Return the serialized user data
-        return Response(TeamSerializer(team).data)
+            for team_member in serializer.validated_data.get("members"):
+                TeamMember.objects.create(
+                    team=team,
+                    name=team_member.get("name"),
+                    email=team_member.get("email"),
+                )
+
+            # Log in the newly registered user
+            login(request._request, user)
+
+            # Return the serialized user data
+            return Response(TeamSerializer(team).data)
+        # duplicate key
+        except IntegrityError as e:
+            return Response(
+                {"error": "Username and/or team name have already been taken."},
+                status=400,
+            )
+        except DataError as e:
+            # print type of exception
+            print(type(e))
+            return Response(
+                {
+                    "error": "Your input is either too long or too short. Please make sure all required fields are filled, and of reasonable size.",
+                    "error_dump": str(e),
+                },
+                status=400,
+            )
+        # input too long, etc.
+        except Exception as e:
+            # print type of exception
+            return Response(
+                {
+                    "error": "An unknown error has occured. Please make sure all required fields are filled, and of reasonable size.",
+                    "error_dump": str(e),
+                },
+                status=400,
+            )
     else:
         # Return errors if registration fails
         return Response(serializer.errors, status=400)
