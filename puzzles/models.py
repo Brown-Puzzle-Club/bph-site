@@ -1231,7 +1231,7 @@ class MinorCaseIncomingEvent(models.Model):
             send_notification.send(
                 None,
                 notification_type="unlock",
-                team=self.team.id,
+                team=self.team.user.id,
                 title="Time's Up!",
                 desc=f"Team {self.team.team_name} has unlocked a new case: {case.name}!",
             )

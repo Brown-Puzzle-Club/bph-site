@@ -415,31 +415,31 @@ class AdminWebsocketConsumer(BroadcastWebsocketConsumer):
         )
 
 
-class TeamNotificationsConsumer(WebsocketConsumer):
-    def get_room(self):
-        return f"notifications-{self.scope['user'].team.id}"
+# class TeamNotificationsConsumer(WebsocketConsumer):
+#     def get_room(self):
+#         return f"notifications-{self.scope['user'].team.id}"
 
-    def connect(self):
-        print(f"connected a new user: {self.scope['user']} {self.channel_name=}")
-        self.accept()
-        Room.objects.add(self.get_room(), self.channel_name)  # type: ignore
+#     def connect(self):
+#         print(f"connected a new user: {self.scope['user']} {self.channel_name=}")
+#         self.accept()
+#         Room.objects.add(self.get_room(), self.channel_name)  # type: ignore
 
-    def disconnect(self, close_code):
-        print(
-            f"disconnected a user: {self.scope['user']} {self.channel_name=} with code {close_code}"
-        )
-        Room.objects.remove(self.get_room(), self.channel_name)  # type: ignore
+#     def disconnect(self, close_code):
+#         print(
+#             f"disconnected a user: {self.scope['user']} {self.channel_name=} with code {close_code}"
+#         )
+#         Room.objects.remove(self.get_room(), self.channel_name)  # type: ignore
 
-    def receive(self, text_data):
-        client_room = Room.objects.get(channel_name=self.get_room())
-        content = json.loads(text_data)
+#     def receive(self, text_data):
+#         client_room = Room.objects.get(channel_name=self.get_room())
+#         content = json.loads(text_data)
 
-        print(f"Notification Received: {content}")
-        if content == "heartbeat":
-            return
+#         print(f"Notification Received: {content}")
+#         if content == "heartbeat":
+#             return
 
-    def forward_message(self, event):
-        self.send(text_data=event["data"])
+#     def forward_message(self, event):
+#         self.send(text_data=event["data"])
 
 
 @receiver(create_minor_case_incoming_event)
@@ -537,56 +537,56 @@ class HintsConsumer(AdminWebsocketConsumer):
     group_id = "hints"
 
 
-def show_unlock_notification(context, unlock):
-    data = json.dumps(
-        {
-            "title": str(unlock.puzzle),
-            "text": _("You’ve unlocked a new puzzle!"),
-            "link": reverse("puzzle", args=(unlock.puzzle.slug,)),
-        }
-    )
-    # There's an awkward edge case where the person/browser tab that actually
-    # triggered the notif is navigating between pages, so they don't have a
-    # websocket to send to... use messages.info to put it into the next page.
-    messages.info(context.request, data)
-    TeamNotificationsConsumer.send_to_all(data)  # type: ignore
+# def show_unlock_notification(context, unlock):
+#     data = json.dumps(
+#         {
+#             "title": str(unlock.puzzle),
+#             "text": _("You’ve unlocked a new puzzle!"),
+#             "link": reverse("puzzle", args=(unlock.puzzle.slug,)),
+#         }
+#     )
+#     # There's an awkward edge case where the person/browser tab that actually
+#     # triggered the notif is navigating between pages, so they don't have a
+#     # websocket to send to... use messages.info to put it into the next page.
+#     messages.info(context.request, data)
+#     TeamNotificationsConsumer.send_to_all(data)  # type: ignore
 
 
-def show_solve_notification(submission):
-    if not submission.puzzle.is_meta:  # or submission.puzzle.slug == RUNAROUND_SLUG:
-        return
-    data = json.dumps(
-        {
-            "title": str(submission.puzzle),
-            "text": _("You’ve solved a meta!"),
-            "link": reverse("puzzle", args=(submission.puzzle.slug,)),
-        }
-    )
-    # No need to worry here since whoever triggered this is already getting a
-    # [ANSWER is correct!] notification.
-    TeamNotificationsConsumer.send_to_all(data)  # type: ignore
+# def show_solve_notification(submission):
+#     if not submission.puzzle.is_meta:  # or submission.puzzle.slug == RUNAROUND_SLUG:
+#         return
+#     data = json.dumps(
+#         {
+#             "title": str(submission.puzzle),
+#             "text": _("You’ve solved a meta!"),
+#             "link": reverse("puzzle", args=(submission.puzzle.slug,)),
+#         }
+#     )
+#     # No need to worry here since whoever triggered this is already getting a
+#     # [ANSWER is correct!] notification.
+#     TeamNotificationsConsumer.send_to_all(data)  # type: ignore
 
 
-def show_victory_notification(context):
-    data = json.dumps(
-        {
-            "title": "Congratulations!",
-            "text": _("You’ve finished the %s!") % HUNT_TITLE,
-            "link": reverse("victory"),
-        }
-    )
-    TeamNotificationsConsumer.send_to_all(data)  # type: ignore
+# def show_victory_notification(context):
+#     data = json.dumps(
+#         {
+#             "title": "Congratulations!",
+#             "text": _("You’ve finished the %s!") % HUNT_TITLE,
+#             "link": reverse("victory"),
+#         }
+#     )
+#     TeamNotificationsConsumer.send_to_all(data)  # type: ignore
 
 
-def show_hint_notification(hint):
-    data = json.dumps(
-        {
-            "title": str(hint.puzzle),
-            "text": _("Hint answered!"),
-            "link": reverse("hints", args=(hint.puzzle.slug,)),
-        }
-    )
-    TeamNotificationsConsumer.send_to_all(data)  # type: ignore
+# def show_hint_notification(hint):
+#     data = json.dumps(
+#         {
+#             "title": str(hint.puzzle),
+#             "text": _("Hint answered!"),
+#             "link": reverse("hints", args=(hint.puzzle.slug,)),
+#         }
+#     )
+#     TeamNotificationsConsumer.send_to_all(data)  # type: ignore
 
 
 # DJANGO EVENTSTREAM BELOW:
