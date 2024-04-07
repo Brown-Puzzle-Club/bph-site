@@ -1,18 +1,25 @@
 import { useDjangoContext } from "@/hooks/useDjangoContext";
 import { MAJOR_CASE_FOLDER, MajorCaseEnum } from "@/utils/constants";
-import { RAND_ROT } from "../MinorCaseFolder";
+import { useState } from "react";
+import { RAND_ROT, RAND_TRANS } from "../MinorCaseFolder";
 
 export default function IncomingCases() {
   const { context } = useDjangoContext();
+
+  const [isHovered, setIsHovered] = useState(false);
 
   if (!context || !context.team_context.current_incoming_event) return null;
 
   // console.log("incoming:", context.team_context.current_incoming_event.incoming_cases);
 
   return (
-    <a className="absolute hover:cursor-pointer hover:drop-shadow-[0_12px_12px_rgba(255,196,100,0.5)] w-full">
+    <a
+      className="absolute hover:cursor-pointer transition-all duration-150 hover:drop-shadow-[0_12px_12px_rgba(255,196,100,0.5)] w-full"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       <span
-        className="z-10 absolute font-mono font-bold text-black text-center whitespace-pre-line break-words text-[2vw] bg-[#ffffff82] rounded"
+        className="z-10 absolute font-mono font-bold text-black text-center whitespace-pre-line break-words text-[1.5vw] bg-[#ffffff82] rounded"
         style={{
           top: "20%",
           left: "50%",
@@ -26,7 +33,8 @@ export default function IncomingCases() {
           className="absolute shadow-lg"
           src={MAJOR_CASE_FOLDER[round.major_case.slug as MajorCaseEnum]}
           style={{
-            transform: `rotate(${RAND_ROT(40)}deg)`,
+            transform: `rotate(${RAND_ROT(40)}deg) translate(${isHovered ? RAND_TRANS() : 0}px, ${isHovered ? RAND_TRANS() : 0}px)`, // Apply translation only on hover
+            transition: "transform 0.2s ease",
           }}
         />
       ))}
