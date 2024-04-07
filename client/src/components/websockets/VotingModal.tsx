@@ -23,11 +23,14 @@ interface VotingModalProps {
 
 const VotingModal = ({ sendJsonMessage, votingInfo }: VotingModalProps) => {
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+  const [open, setOpen] = useState(false);
+
   const { seconds, isRunning, restart, pause } = useTimer({
     expiryTimestamp: new Date(),
     onExpire: () => {
       sendJsonMessage({ type: "finalizeVote" });
-      toast.dismiss(votingInfo?.id.toString());
+      toast.dismiss();
+      setOpen(false);
     },
     autoStart: false,
   });
@@ -61,7 +64,7 @@ const VotingModal = ({ sendJsonMessage, votingInfo }: VotingModalProps) => {
       };
 
       toast.custom(
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button variant="secondary">VOTE ON A NEW CASE</Button>
           </DialogTrigger>

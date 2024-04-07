@@ -334,12 +334,6 @@ def broadcast_notification(sender, notification_type, title, desc, team, **kwarg
         "desc": desc,
     })
 
-
-    # Use the following inherited methods:
-    # def receive(self, text_data):
-    # def send(self, text_data):
-
-
 # A WebsocketConsumer subclass that can broadcast messages to a set of users.
 class BroadcastWebsocketConsumer(ABC, WebsocketConsumer):
     def connect(self):
