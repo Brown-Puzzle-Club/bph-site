@@ -6,17 +6,12 @@ import { Round } from "@/utils/django_types";
 import { CASE_ART_BY_ROUND_SLUG } from "@/utils/main/constants";
 import { Link } from "react-router-dom";
 import { useDjangoContext } from "../hooks/useDjangoContext";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "./ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { getMinorCaseSolution } from "@/utils/utils";
 import { CASE_PALETTE, MajorCaseEnum } from "@/utils/constants";
-
+import * as birb from "@/assets/minor_cases/birbs/teaser-1.png";
+import * as clip1 from "@/assets/minor_cases/clipping1.png";
+import * as clip2 from "@/assets/minor_cases/clipping2.png";
 interface ModalProps {
   setSelectedCase: (round: Round | null) => void;
   selectedCase: Round | null;
@@ -49,6 +44,29 @@ const MinorCaseModal: React.FC<ModalProps> = ({ setSelectedCase, selectedCase, a
             backgroundPosition: "center center",
           }}
         >
+          <div>
+            <img
+              className="absolute shadow-lg aspect-square object-cover w-[8vw]"
+              style={{ left: "10%", top: "10%", rotate: "-27deg" }}
+              src={birb.default}
+            />
+            <img
+              className="absolute shadow-lg aspect-square object-cover w-[10vw]"
+              style={{ left: "8%", top: "55%", rotate: "15deg" }}
+              src={clip1.default}
+            />
+            <img
+              className="absolute shadow-lg aspect-square object-cover w-[8vw]"
+              style={{ left: "28%", top: "30%", rotate: "5deg" }}
+              src={clip2.default}
+            />
+            <img
+              className="absolute shadow-lg aspect-square object-cover w-[9vw]"
+              style={{ left: "30%", top: "60%", rotate: "-15deg" }}
+              src={birb.default}
+            />
+          </div>
+
           <DialogHeader
             className="absolute max-w-[35%] grid gap-2"
             style={{
@@ -56,75 +74,31 @@ const MinorCaseModal: React.FC<ModalProps> = ({ setSelectedCase, selectedCase, a
               top: "3%",
             }}
           >
-            <DialogTitle className="text-3xl">{selectedCase.name}</DialogTitle>
-            <p className="text-md">{selectedCase.description}</p>
+            <DialogTitle className="text-[2vw]">{selectedCase.name}</DialogTitle>
+            <p className="text-[0.9vw]">{selectedCase.description}</p>
           </DialogHeader>
-
           <div
             className="grid gap-4 absolute"
             style={{
               left: "55%",
-              top: "58%",
+              top: "70%",
             }}
           >
             <p
-              className="font-mono pt-1 text-5xl"
+              className="font-mono pt-1 text-[3vw]"
               style={{
                 color: CASE_PALETTE[selectedCase.major_case.slug as MajorCaseEnum].answerColor,
               }}
             >
               {getMinorCaseSolution(selectedCase, context) ?? "PLACEHOLDER"}
             </p>
-            <div>
+            <div className="text-[0.9vw]">
               {typeof action === "string" && <Link to={action}>Go to Minor Case Page</Link>}
             </div>
           </div>
         </DialogContent>
       </Dialog>
     )
-  );
-
-  return (
-    <>
-      <div className="fixed inset-0 flex items-center justify-center text-[black] z-10">
-        <div
-          className="flex h-2/3 w-3/5 flex-row rounded-md p-6 pl-8"
-          style={{
-            backgroundImage: `url(${manila})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center center",
-          }}
-        >
-          <div className="w-7/12">{cur_case_art}</div>
-          <div></div>
-          <div></div>
-          <div className="grid w-5/12 grid-cols-1 grid-rows-9">
-            {/*Div containg all puzzle info */}
-            <div className="row-span-1 mb-4 grid w-full grid-cols-4">
-              <h2 className="col-span-3 text-xl text-purple-500">{cur_case?.name}</h2>
-              <button
-                className="col-span-1 flex justify-end self-end"
-                onClick={() => {
-                  setCurrentCase(null);
-                }}
-              >
-                X
-              </button>
-            </div>
-            <h3 className="row-span-7">{cur_case?.description} description text</h3>{" "}
-            {/* className="row-span-7" */}
-            {/* Link to the minor case page */}
-            <Link className="text-xl text-purple-500" to={`/minorcase/${cur_case?.slug}`}>
-              Go to Minor Case Page
-            </Link>
-            <div className="flex justify-between">
-              {/* Container for centering */}
-              <div>{cur_case?.name}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
   );
 };
 
