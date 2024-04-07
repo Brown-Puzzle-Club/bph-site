@@ -11,13 +11,21 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import * as birb from "@/assets/minor_cases/birbs/teaser-1.png";
 import * as clip1 from "@/assets/minor_cases/clipping1.png";
 import * as clip2 from "@/assets/minor_cases/clipping2.png";
+import { Checkbox } from "./ui/checkbox";
+
 interface ModalProps {
   setSelectedCase: (round: Round | null) => void;
   selectedCase: Round | null;
-  action: string;
+  selectedCases?: string[];
+  action: string | ((round: string) => void);
 }
 
-const MinorCaseModal: React.FC<ModalProps> = ({ setSelectedCase, selectedCase, action }) => {
+const MinorCaseModal: React.FC<ModalProps> = ({
+  setSelectedCase,
+  selectedCase,
+  selectedCases,
+  action,
+}) => {
   const { context } = useDjangoContext();
 
   useEffect(() => {
@@ -86,7 +94,18 @@ const MinorCaseModal: React.FC<ModalProps> = ({ setSelectedCase, selectedCase, a
               {getMinorCaseSolution(selectedCase, context) ?? "PLACEHOLDER"}
             </p>
             <div className="text-[0.9vw]">
-              {typeof action === "string" && <Link to={action}>Go to Minor Case Page</Link>}
+              {typeof action === "string" ? (
+                <Link to={action}>Go to Minor Case Page</Link>
+              ) : (
+                <div>
+                  <Checkbox
+                    id={selectedCase.name}
+                    checked={selectedCases && selectedCases.includes(selectedCase.name)}
+                    onClick={() => action(selectedCase.name)}
+                  />
+                  <label htmlFor={selectedCase.name}>Vote for {selectedCase.name}!</label>
+                </div>
+              )}
             </div>
           </div>
         </DialogContent>

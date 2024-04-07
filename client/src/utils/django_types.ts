@@ -77,7 +77,7 @@ const MajorCaseSchema = z.object({
 });
 type MajorCase = z.infer<typeof MajorCaseSchema>;
 
-const RoundSchema = z.object({
+export const RoundSchema = z.object({
   id: z.number(),
   slug: z.string(),
   name: z.string(),
@@ -196,6 +196,14 @@ const MinorCaseSchema = z.object({
 });
 type MinorCase = z.infer<typeof MinorCaseSchema>;
 
+const VotingInfoSchema = z.object({
+  id: z.number(),
+  cases: z.record(z.object({ round: RoundSchema, count: z.number().nonnegative() })),
+  expiration_time: z.string().nullable(),
+  max_choices: z.number().nonnegative(),
+});
+interface VotingInfo extends z.infer<typeof VotingInfoSchema> {}
+
 export type {
   AnswerSubmission,
   DjangoContext,
@@ -212,4 +220,5 @@ export type {
   TeamMember,
   User,
   UserTeam,
+  VotingInfo,
 };
