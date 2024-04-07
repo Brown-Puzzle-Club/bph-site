@@ -16,14 +16,9 @@ export function renderActiveCases(
     return [];
   }
 
-  // console.log(casesRecord);
-  // const RANDOM_ROTATION_SCALE = 5;
   return casesRecord.map((minorCase) => (
     <MinorCaseFolder
       className="hover:rotate-0"
-      // extraStyle={{
-      //   transform: `rotate(${Math.random() * RANDOM_ROTATION_SCALE - RANDOM_ROTATION_SCALE / 2}deg)`,
-      // }}
       minorCase={minorCase.minor_case_round}
       majorCase={minorCase.minor_case_round.major_case}
       onClick={() => {

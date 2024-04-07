@@ -1,5 +1,5 @@
 // Modal.tsx
-import React, { useEffect } from "react";
+import React from "react";
 
 import manila from "@/assets/main/manila_open.png";
 import { Round } from "@/utils/django_types";

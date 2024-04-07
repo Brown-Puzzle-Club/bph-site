@@ -3,6 +3,8 @@ import shadow from "@/assets/main_page/Shadow.png";
 import desk from "@/assets/main_page/ShadowDesk.png";
 import MinorCaseModal from "@/components/MinorCaseModal";
 import ActiveCases from "@/components/main_page/ActiveCases";
+import CompletedCases from "@/components/main_page/CompletedCases";
+import IncomingCases from "@/components/main_page/IncomingCases";
 import { ArtWrapperInner } from "@/components/minor_cases/CasePageArt";
 import { useTheme } from "@/hooks/useTheme";
 import { Round } from "@/utils/django_types";
@@ -32,11 +34,23 @@ export default function EventPage() {
       >
         <ArtWrapperInner background_src={desk} className="relative max-w-screen-xl">
           <div
-            className="absolute bg-[#f5f5f51f] rounded-xl shadow-lg p-4"
+            className="absolute rounded-xl p-4 align-center"
+            style={{ top: "35%", left: "83%", width: "14%", height: "29%" }}
+          >
+            <IncomingCases />
+          </div>
+          <div
+            className="absolute bg-[#f5f5f51f] rounded-xl p-4 align-center"
             style={{ top: "71%", left: "19%", width: "61%", height: "23%" }}
           >
             {/* Content for the first region */}
             <ActiveCases setSelectedCase={setSelectedCase} />
+          </div>
+          <div
+            className="absolute rounded-xl p-4 align-center"
+            style={{ top: "35%", left: "1%", width: "14%", height: "29%" }}
+          >
+            <CompletedCases />
           </div>
         </ArtWrapperInner>
       </div>

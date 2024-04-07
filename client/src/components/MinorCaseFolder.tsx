@@ -1,11 +1,9 @@
 import { MajorCase, Round } from "@/utils/django_types";
-import React from "react";
+import React, { useMemo } from "react";
 
-import greenclosed from "@/assets/main_page/greenclosed.png";
-import manilaclosed from "@/assets/main_page/manilaclosed.png";
-import pinkclosed from "@/assets/main_page/pinkclosed.png";
-import { MajorCaseEnum } from "@/utils/constants";
-import { cn } from "@/utils/utils";
+import { useDjangoContext } from "@/hooks/useDjangoContext";
+import { MAJOR_CASE_FOLDER, MajorCaseEnum } from "@/utils/constants";
+import { cn, getMinorCaseSolution } from "@/utils/utils";
 
 interface BoxProps {
   minorCase: Round;
@@ -18,14 +16,8 @@ interface BoxProps {
 const RANDOM_ROTATION_SCALE = 10;
 const GROW_FACTOR = 1.15;
 
-const RAND_ROT = () => {
-  return Math.random() * RANDOM_ROTATION_SCALE - RANDOM_ROTATION_SCALE / 2;
-};
-
-const MAJOR_CASE_FOLDER: Record<MajorCaseEnum, string> = {
-  [MajorCaseEnum.COLORED_THREAD]: manilaclosed,
-  [MajorCaseEnum.SOCIAL_DEDUCTION]: greenclosed,
-  [MajorCaseEnum.DATA]: pinkclosed,
+export const RAND_ROT = (scale_factor = RANDOM_ROTATION_SCALE) => {
+  return Math.random() * scale_factor - scale_factor / 2;
 };
 
 const MinorCaseFolder: React.FC<BoxProps> = ({
@@ -38,8 +30,15 @@ const MinorCaseFolder: React.FC<BoxProps> = ({
   const [isHovered, setIsHovered] = React.useState(false);
   const [randomRotation, setRandomRotation] = React.useState(RAND_ROT());
 
+  const { context } = useDjangoContext();
+
+  const solution = useMemo(() => {
+    if (!context) return null;
+    return getMinorCaseSolution(minorCase, context);
+  }, [context, minorCase]);
+
   return (
-    <div>
+    <div className="">
       <div
         className={cn(
           `relative overflow-hidden hover:cursor-pointer hover:drop-shadow-[0_15px_15px_rgba(255,255,255,0.2)] transform transition-transform duration-300`,
@@ -59,7 +58,10 @@ const MinorCaseFolder: React.FC<BoxProps> = ({
         }}
       >
         {/* Background image */}
-        <img className="logo art-bg-img" src={MAJOR_CASE_FOLDER[majorCase.slug as MajorCaseEnum]} />
+        <img
+          className="logo art-bg-img max-h-[10rem]"
+          src={MAJOR_CASE_FOLDER[majorCase.slug as MajorCaseEnum]}
+        />
         {/* Box content */}
         <span
           className="z-10 absolute font-mono font-bold text-black text-center whitespace-pre-line break-words text-[1vw]"
@@ -75,8 +77,11 @@ const MinorCaseFolder: React.FC<BoxProps> = ({
           {minorCase.name.toUpperCase()}
         </span>
       </div>
-      <p className="text-center font-mono text-[green] bg-slate-800 rounded-xl mt-2 p-1 text-[1vw]">
-      </p>
+      {solution && (
+        <p className="text-center font-mono text-[green] bg-slate-800 rounded-xl mt-2 p-1 text-[1vw]">
+          {solution?.toUpperCase()}
+        </p>
+      )}
     </div>
   );
 };

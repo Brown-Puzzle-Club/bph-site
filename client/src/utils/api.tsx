@@ -13,3 +13,4 @@ export const getCookie = (name: string) => {
   }
   return cookieValue;
 };
+
