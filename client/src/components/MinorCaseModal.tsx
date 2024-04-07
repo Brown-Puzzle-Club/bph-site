@@ -2,13 +2,12 @@
 import React, { useEffect } from "react";
 
 import manila from "@/assets/main/manila_open.png";
+import { CASE_PALETTE, MajorCaseEnum } from "@/utils/constants";
 import { Round } from "@/utils/django_types";
-import { CASE_ART_BY_ROUND_SLUG } from "@/utils/main/constants";
+import { getMinorCaseSolution } from "@/utils/utils";
 import { Link } from "react-router-dom";
 import { useDjangoContext } from "../hooks/useDjangoContext";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
-import { getMinorCaseSolution } from "@/utils/utils";
-import { CASE_PALETTE, MajorCaseEnum } from "@/utils/constants";
 import * as birb from "@/assets/minor_cases/birbs/teaser-1.png";
 import * as clip1 from "@/assets/minor_cases/clipping1.png";
 import * as clip2 from "@/assets/minor_cases/clipping2.png";
@@ -24,12 +23,6 @@ const MinorCaseModal: React.FC<ModalProps> = ({ setSelectedCase, selectedCase, a
   useEffect(() => {
     console.log(selectedCase);
   }, [selectedCase]);
-
-  const selectedCaseArt: JSX.Element = selectedCase ? (
-    CASE_ART_BY_ROUND_SLUG[selectedCase?.id]
-  ) : (
-    <></>
-  );
 
   return (
     selectedCase &&
