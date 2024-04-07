@@ -38,6 +38,9 @@ from puzzles.hunt_config import (
 )
 from puzzles.signals import create_minor_case_incoming_event, send_notification
 
+from django_eventstream.channelmanager import DefaultChannelManager
+from django_eventstream import send_event
+
 logger = logging.getLogger("puzzles.messaging")
 
 
@@ -325,13 +328,12 @@ discord_interface = DiscordInterface()
 @receiver(send_notification)
 def broadcast_notification(sender, notification_type, title, desc, team, **kwargs):
     print(f"broadcasting notification to {team}")
-    room = Room.objects.get(channel_name=f"notifications-{team}")
+    send_event(f"_user-{team}", "message", {
+        "type": notification_type,
+        "title": title,
+        "desc": desc,
+    })
 
-    def get_context(self):
-        # We don't have a request, but we do have a user...
-        context = Context(None)
-        context.request_user = self.scope["user"]
-        return context
 
     # Use the following inherited methods:
     # def receive(self, text_data):
@@ -432,7 +434,7 @@ class TeamNotificationsConsumer(WebsocketConsumer):
         client_room = Room.objects.get(channel_name=self.get_room())
         content = json.loads(text_data)
 
-        print(f"Notification Received: {content}" )
+        print(f"Notification Received: {content}")
         if content == "heartbeat":
             return
 
@@ -486,7 +488,7 @@ class VotingConsumer(WebsocketConsumer):
         client_room = Room.objects.get(channel_name=self.get_room())
         content = json.loads(text_data)
 
-        print(f"Voting Received: {content}" )
+        print(f"Voting Received: {content}")
 
         if content == "heartbeat":
             return
@@ -585,3 +587,14 @@ def show_hint_notification(hint):
         }
     )
     TeamNotificationsConsumer.send_to_all(data)  # type: ignore
+
+
+# DJANGO EVENTSTREAM BELOW:
+
+
+class AuthChannelManager(DefaultChannelManager):
+    def can_read_channel(self, user, channel):
+        # print(channel, user.id)
+        if channel.startswith("_") and (user is None or channel[6:] != str(user.id)):
+            return False
+        return True

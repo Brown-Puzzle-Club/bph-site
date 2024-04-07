@@ -9,11 +9,11 @@ https://docs.djangoproject.com/en/3.2/howto/deployment/asgi/
 
 import os
 
+import django.urls
 from dotenv import load_dotenv
 
 load_dotenv()
 
-from django.core.asgi import get_asgi_application
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "bph.settings")
 
@@ -29,6 +29,10 @@ from channels.db import database_sync_to_async
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import AnonymousUser
 from .routing import websocket_urlpatterns
+from django.core.asgi import get_asgi_application
+from django.urls import re_path
+
+from .routing import eventstream_urlpatterns
 
 
 @database_sync_to_async
@@ -59,7 +63,9 @@ class TokenAuthMiddleware:
 
 application = ProtocolTypeRouter(
     {
-        "http": get_asgi_application(),
+        "http": URLRouter(
+            eventstream_urlpatterns + [re_path(r"", get_asgi_application())]
+        ),
         "websocket": TokenAuthMiddleware(
             AuthMiddlewareStack(URLRouter(websocket_urlpatterns))
         ),

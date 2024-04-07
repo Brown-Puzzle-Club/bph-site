@@ -169,7 +169,8 @@ class Context:
         self.request = request
 
     def request_user(self):
-        return self.request.user
+        user = self.request.user
+        return user
 
     def is_admin(self):
         # print("checking if admin:", self.request_user.is_staff)

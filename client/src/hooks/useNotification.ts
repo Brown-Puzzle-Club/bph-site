@@ -1,15 +1,7 @@
 import { useToast } from "@/components/ui/use-toast";
-import { useEffect, useState } from "react";
-import useWebSocket from "react-use-websocket";
+import { useEffect } from "react";
 import { z } from "zod";
 import { useAuth } from "./useAuth";
-
-interface SocketCallbacks {
-  onMessage?: (event: MessageEvent) => void;
-  onOpen?: (event: Event) => void;
-  onClose?: (event: CloseEvent) => void;
-  onError?: (event: Event) => void;
-}
 
 const NotificationSchema = z.object({
   type: z.string(),
@@ -18,45 +10,31 @@ const NotificationSchema = z.object({
 });
 export interface Notification extends z.infer<typeof NotificationSchema> {}
 
-export const useNotification = (callbacks: SocketCallbacks | undefined = undefined) => {
-  const [socketUrl, setSocketUrl] = useState<string | null>(null);
-  const { lastJsonMessage, readyState } = useWebSocket(socketUrl, {
-    onMessage: callbacks?.onMessage,
-    onOpen: callbacks?.onOpen,
-    onClose: callbacks?.onClose,
-    onError: callbacks?.onError,
-    heartbeat: {
-      message: JSON.stringify("heartbeat"),
-      interval: 5 * 1000,
-    },
-    retryOnError: true,
-    shouldReconnect: () => true,
-  });
-  const { toast } = useToast();
+export const useNotification = () => {
   const { team } = useAuth();
 
-  const protocol = window.location.protocol.includes("https") ? "wss" : "ws";
+  const { toast } = useToast();
   useEffect(() => {
-    if (team) {
-      console.log(`${protocol}://${window.location.host}/ws/notification?token=${team.auth_token}`);
-      setSocketUrl(
-        `${protocol}://${window.location.host}/ws/notification?token=${team.auth_token}`,
-      );
-    }
-  }, [team, setSocketUrl, protocol]);
+    if (!team) return;
 
-  useEffect(() => {
-    if (!lastJsonMessage) return;
-    const message = NotificationSchema.parse(lastJsonMessage);
-    switch (message.type) {
-      case "solve":
-        toast({
-          title: message.title,
-          description: message.desc,
-        });
-        break;
-    }
-  }, [lastJsonMessage, toast]);
+    const eventSource = new EventSource(`/notifications/${team?.user}`);
+    eventSource.onmessage = (e) => {
+      console.log(e);
+      const message = NotificationSchema.safeParse(JSON.parse(e.data));
+      console.log(message);
+      if (!message.success) return;
 
-  return readyState;
+      switch (message.data.type) {
+        case "solve":
+          toast({
+            title: message.data.title,
+            description: message.data.desc,
+          });
+          break;
+      }
+    };
+    return () => {
+      eventSource.close();
+    };
+  }, [toast, team]);
 };
