@@ -22,6 +22,8 @@ from puzzles.hunt_config import (
 from puzzles import models
 from puzzles.shortcuts import get_shortcuts
 
+from django_eventstream import send_event
+
 
 def context_middleware(get_response):
     def middleware(request):
@@ -169,7 +171,10 @@ class Context:
         self.request = request
 
     def request_user(self):
-        return self.request.user
+        user = self.request.user
+        print("sending to stream:", f"_user-{user}")
+        send_event(f"_user-{user}", "message", {"text": "hello world"})
+        return user
 
     def is_admin(self):
         # print("checking if admin:", self.request_user.is_staff)

@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     "mathfilters",
     "puzzles",
     "channels",
+    "django_eventstream",
     "bph.apps.CustomRoomsConfig",
     "rest_framework",
     "rest_framework.authtoken",
@@ -92,6 +93,8 @@ CHANNEL_LAYERS = {
         "BACKEND": "channels.layers.InMemoryChannelLayer",
     }
 }
+
+EVENTSTREAM_CHANNELMANAGER_CLASS = "puzzles.messaging.AuthChannelManager"
 
 SESSION_ENGINE = "django.contrib.sessions.backends.db"
 SESSION_CACHE_ALIAS = "default"

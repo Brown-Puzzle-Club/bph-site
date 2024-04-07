@@ -38,6 +38,8 @@ from puzzles.hunt_config import (
 )
 from puzzles.signals import create_minor_case_incoming_event, send_notification
 
+from django_eventstream.channelmanager import DefaultChannelManager
+
 logger = logging.getLogger("puzzles.messaging")
 
 
@@ -432,7 +434,7 @@ class TeamNotificationsConsumer(WebsocketConsumer):
         client_room = Room.objects.get(channel_name=self.get_room())
         content = json.loads(text_data)
 
-        print(f"Notification Received: {content}" )
+        print(f"Notification Received: {content}")
         if content == "heartbeat":
             return
 
@@ -486,7 +488,7 @@ class VotingConsumer(WebsocketConsumer):
         client_room = Room.objects.get(channel_name=self.get_room())
         content = json.loads(text_data)
 
-        print(f"Voting Received: {content}" )
+        print(f"Voting Received: {content}")
 
         if content == "heartbeat":
             return
@@ -585,3 +587,14 @@ def show_hint_notification(hint):
         }
     )
     TeamNotificationsConsumer.send_to_all(data)  # type: ignore
+
+
+# DJANGO EVENTSTREAM BELOW:
+
+
+class AuthChannelManager(DefaultChannelManager):
+    def can_read_channel(self, user, channel):
+        print(channel)
+        if channel.startswith("_") and (user is None or channel[6:] != str(user)):
+            return False
+        return True
