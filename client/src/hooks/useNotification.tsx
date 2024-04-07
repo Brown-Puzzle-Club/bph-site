@@ -22,16 +22,13 @@ export const useNotification = () => {
       console.log(message);
       if (!message.success) return;
 
-      switch (message.data.type) {
-        case "solve":
-          toast.custom(
-            <div>
-              <h1>{message.data.title}</h1>
-              <p>{message.data.desc}</p>
-            </div>,
-            { duration: 5000 },
-          );
-      }
+      toast.custom(
+        <div>
+          <h1>{message.data.title}</h1>
+          <p>{message.data.desc}</p>
+        </div>,
+        { duration: 5000 },
+      );
     };
     return () => {
       eventSource.close();
