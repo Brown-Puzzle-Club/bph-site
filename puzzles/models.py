@@ -37,8 +37,6 @@ from puzzles.messaging import (
     dispatch_submission_alert,
     send_mail_wrapper,
     discord_interface,
-    show_hint_notification,
-    show_solve_notification,
 )
 
 from puzzles.hunt_config import (

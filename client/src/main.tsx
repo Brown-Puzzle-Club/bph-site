@@ -35,7 +35,6 @@ import PuzzleList from "./routes/PuzzleList";
 import PuzzlePage from "./routes/PuzzlePage";
 import RegisterForm from "./routes/Register";
 import TeamPage from "./routes/TeamPage";
-import WebsocketDemo from "./routes/WebsocketDemo";
 import "./styles/index.css";
 import "./styles/puzzlestyle-data.css";
 import "./styles/puzzlestyle-red-thread.css";
@@ -194,10 +193,6 @@ const router = createBrowserRouter([
             }
           />
         ),
-      },
-      {
-        path: "/websocket-demo",
-        element: <PageWrapper route={<WebsocketDemo />} />,
       },
     ],
   },
