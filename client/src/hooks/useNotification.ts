@@ -17,7 +17,7 @@ export const useNotification = () => {
   useEffect(() => {
     if (!team) return;
 
-    const eventSource = new EventSource(`/notifications/${team?.user}`);
+    const eventSource = new EventSource(`/notifications/${team?.id}`);
     eventSource.onmessage = (e) => {
       console.log(e);
       const message = NotificationSchema.safeParse(JSON.parse(e.data));
