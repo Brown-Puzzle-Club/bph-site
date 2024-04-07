@@ -285,7 +285,7 @@ class Team(models.Model):
     # Public team name for scoreboards and comms -- not necessarily the same as
     # the user's name from the User object
     team_name = models.CharField(
-        max_length=255,
+        max_length=420 + 3,
         unique=True,
         verbose_name=_("Team name"),
         help_text=_("Public team name for scoreboards and communications"),
@@ -1341,7 +1341,10 @@ class MinorCaseCompleted(models.Model):
         incoming_case_event = MinorCaseIncomingEvent.create_incoming_event(self.team)
         if incoming_case_event:
             create_minor_case_incoming_event.send(
-                None, cases=incoming_case_event.get_votes(), team=self.team.id, max_choices=incoming_case_event.num_votes_allowed
+                None,
+                cases=incoming_case_event.get_votes(),
+                team=self.team.id,
+                max_choices=incoming_case_event.num_votes_allowed,
             )
             incoming_case_event.save()
 
