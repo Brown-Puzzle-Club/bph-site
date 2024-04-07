@@ -1,3 +1,7 @@
+import greenclosed from "@/assets/main_page/greenclosed.png";
+import manilaclosed from "@/assets/main_page/manilaclosed.png";
+import pinkclosed from "@/assets/main_page/pinkclosed.png";
+
 export const MURDER_WEAPON_EMOJIS = [
   "🔫",
   "🗡️",
@@ -101,4 +105,10 @@ export const CASE_PALETTE: Record<MajorCaseEnum, Palette> = {
     backgroundStart: "#d86688",
     backgroundEnd: "#c45b7b",
   },
+};
+
+export const MAJOR_CASE_FOLDER: Record<MajorCaseEnum, string> = {
+  [MajorCaseEnum.COLORED_THREAD]: manilaclosed,
+  [MajorCaseEnum.SOCIAL_DEDUCTION]: greenclosed,
+  [MajorCaseEnum.DATA]: pinkclosed,
 };

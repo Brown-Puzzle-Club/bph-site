@@ -133,7 +133,7 @@ type MinorCaseActive = z.infer<typeof MinorCaseActiveSchema>;
 
 const MinorCaseCompletedSchema = z.object({
   id: z.number(),
-  active_datetime: z.date(),
+  completed_datetime: z.date(),
   minor_case_round: RoundSchema,
 });
 type MinorCaseCompleted = z.infer<typeof MinorCaseCompletedSchema>;

@@ -105,7 +105,7 @@ export function getMinorCaseSolution(round: Round, context: DjangoContext) {
     meta_puzzle &&
     (submission = context.team_context.minor_case_solves[round.slug][meta_puzzle.slug])
   ) {
-    return submission;
+    return submission.submitted_answer;
   }
   return null;
 }

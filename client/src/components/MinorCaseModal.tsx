@@ -1,5 +1,5 @@
 // Modal.tsx
-import React, { useEffect } from "react";
+import React from "react";
 
 import manila from "@/assets/main/manila_open.png";
 import { Round } from "@/utils/django_types";
@@ -12,10 +12,6 @@ interface ModalProps {
 }
 
 const MinorCaseModal: React.FC<ModalProps> = ({ setCurrentCase, cur_case }) => {
-  useEffect(() => {
-    console.log(cur_case?.id);
-  }, [cur_case]);
-
   if (!cur_case) {
     return null;
   }
