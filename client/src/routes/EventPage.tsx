@@ -40,7 +40,11 @@ export default function EventPage() {
           </div>
         </ArtWrapperInner>
       </div>
-      {selectedCase && <MinorCaseModal setCurrentCase={setSelectedCase} cur_case={selectedCase} />}
+      <MinorCaseModal
+        setSelectedCase={setSelectedCase}
+        selectedCase={selectedCase}
+        action={`/minorcase/${selectedCase?.slug}`}
+      />
     </div>
   );
 }
