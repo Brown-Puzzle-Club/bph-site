@@ -191,6 +191,7 @@ const MinorCaseSchema = z.object({
   name: z.string(),
   description: z.string(),
   slug: z.string(),
+  major_case: MajorCaseSchema,
   //
 });
 type MinorCase = z.infer<typeof MinorCaseSchema>;

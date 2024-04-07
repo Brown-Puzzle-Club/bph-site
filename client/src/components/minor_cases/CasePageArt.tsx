@@ -24,7 +24,10 @@ import RelativeAsset, { AssetProps } from "../RelativeAsset";
 
 const ExileArt = () => {
   return (
-    <ArtWrapper className="aspect-w-4 aspect-h-3 max-w-screen-xl" background_src={exile_bg}>
+    <ArtWrapper
+      className="aspect-w-4 aspect-h-3 max-w-screen-xl left-1/2 transform -translate-x-1/2"
+      background_src={exile_bg}
+    >
       <PuzzleIconWrapper
         slug="still-at-the-restaurant"
         imageSrc={painting}
@@ -87,6 +90,7 @@ const WhaleArt = () => {
           width: "10%",
           zIndex: 3,
         }}
+        answer_bg
       />
       <PuzzleIconWrapper
         slug="waterlines"
@@ -97,6 +101,7 @@ const WhaleArt = () => {
           width: "13%",
           zIndex: 3,
         }}
+        answer_bg
       />
       <PuzzleIconWrapper
         slug="shoot"
@@ -107,6 +112,7 @@ const WhaleArt = () => {
           width: "7%",
           zIndex: 3,
         }}
+        answer_bg
       />
       <PuzzleIconWrapper
         slug="back-in-wales"
@@ -117,6 +123,7 @@ const WhaleArt = () => {
           width: "13%",
           zIndex: 3,
         }}
+        answer_bg
       />
       <PuzzleIconWrapper
         slug="whelp"
@@ -127,6 +134,7 @@ const WhaleArt = () => {
           width: "14%",
           zIndex: 3,
         }}
+        answer_bg
       />
     </ArtWrapper>
   );
@@ -145,6 +153,7 @@ const BirbsArt = () => {
         imageSrc={thebirb}
         extraStyles={{ top: "36%", left: "7%", width: "28%", zIndex: 3 }}
         meta
+        answer_bg
       />
     </ArtWrapper>
   );
@@ -153,6 +162,7 @@ const BirbsArt = () => {
 interface PuzzleAsset extends AssetProps {
   slug: string;
   meta?: boolean;
+  answer_bg?: boolean;
 }
 
 const PuzzleIconWrapper = (props: PuzzleAsset) => {
@@ -181,7 +191,10 @@ const PuzzleIconWrapper = (props: PuzzleAsset) => {
             {puzzle_answer?.puzzle.name.toUpperCase()}
           </p>
           <p
-            className={`answer mt-1 p-[0.2rem] font-bold text-center font-mono drop-shadow ${props.meta ? "text-[1vw]" : "text-[0.8vw]"}`}
+            className={cn(
+              `answer mt-1 p-[0.2rem] font-bold text-center font-mono drop-shadow ${props.meta ? "text-[1vw]" : "text-[0.8vw]"}`,
+              props.answer_bg ? "bg-[#262e3a87] rounded-xl" : "",
+            )}
             style={{
               color:
                 CASE_PALETTE[puzzle_answer.puzzle.round.major_case.slug as MajorCaseEnum]

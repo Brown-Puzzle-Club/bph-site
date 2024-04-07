@@ -3,12 +3,19 @@ import CasePageArt from "@/components/minor_cases/CasePageArt";
 import { useDjangoContext } from "@/hooks/useDjangoContext";
 import { CASE_PALETTE, MajorCaseEnum } from "@/utils/constants";
 import { PuzzleAnswer, getUnlockedPuzzles } from "@/utils/utils";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { BeatLoader } from "react-spinners";
 import { Error404 } from "./ErrorPage";
+import { DEFAULT_THEME } from "@/utils/themes";
+import { useTheme } from "@/hooks/useTheme";
 
 function MinorCasePage() {
+  const { setTheme } = useTheme();
+  useEffect(() => {
+    setTheme(DEFAULT_THEME);
+  }, [setTheme]);
+
   const MINOR_CASE_SLUG = window.location.pathname.split("/").pop();
   const { context } = useDjangoContext();
 

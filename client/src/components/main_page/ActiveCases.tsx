@@ -1,30 +1,43 @@
 import { useDjangoContext } from "@/hooks/useDjangoContext";
-import { MinorCaseActive, MinorCaseCompleted, MinorCaseIncoming } from "@/utils/django_types";
+import {
+  MinorCaseActive,
+  MinorCaseCompleted,
+  MinorCaseIncoming,
+  Round,
+} from "@/utils/django_types";
 import { useMemo } from "react";
-import MinorCase from "../MinorCase";
+import MinorCaseFolder from "../MinorCaseFolder";
 
 export function renderActiveCases(
   casesRecord: (MinorCaseActive | MinorCaseIncoming | MinorCaseCompleted)[],
-  openModal: (caseID: number) => void,
+  setSelectedCase: (round: Round) => void,
 ): JSX.Element[] {
   if (casesRecord.length === 0) {
     return [];
   }
 
-  console.log(casesRecord);
-
+  // console.log(casesRecord);
+  // const RANDOM_ROTATION_SCALE = 5;
   return casesRecord.map((minorCase) => (
-    <MinorCase
+    <MinorCaseFolder
+      className="hover:rotate-0"
+      // extraStyle={{
+      //   transform: `rotate(${Math.random() * RANDOM_ROTATION_SCALE - RANDOM_ROTATION_SCALE / 2}deg)`,
+      // }}
       minorCase={minorCase.minor_case_round}
       majorCase={minorCase.minor_case_round.major_case}
       onClick={() => {
-        openModal(minorCase.minor_case_round.id);
+        setSelectedCase(minorCase.minor_case_round);
       }}
     />
   ));
 }
 
-export default function ActiveCases({ openModal }: { openModal: (caseID: number) => void }) {
+export default function ActiveCases({
+  setSelectedCase,
+}: {
+  setSelectedCase: (round: Round | null) => void;
+}) {
   const { context } = useDjangoContext();
 
   const active_cases = useMemo(() => {
@@ -40,7 +53,7 @@ export default function ActiveCases({ openModal }: { openModal: (caseID: number)
 
   return (
     <div className="flex space-x-4">
-      {context ? renderActiveCases(active_cases, openModal) : null}
+      {context ? renderActiveCases(active_cases, setSelectedCase) : null}
     </div>
   );
 }

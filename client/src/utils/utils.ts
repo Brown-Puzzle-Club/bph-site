@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { DjangoContext, Puzzle } from "./django_types";
+import { DjangoContext, Puzzle, Round } from "./django_types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -84,4 +84,28 @@ export function getUnlockedPuzzle(slug: string, context: DjangoContext, case_slu
   return {
     puzzle,
   };
+}
+
+export function getMinorCaseSolution(round: Round, context: DjangoContext) {
+  if (
+    !context?.team_context ||
+    !round ||
+    !context.team_context.minor_case_solves[round.slug] ||
+    !context?.team_context.unlocks[round.major_case.slug] ||
+    !context?.team_context.unlocks[round.major_case.slug][round.slug]
+  ) {
+    return null;
+  }
+
+  let submission;
+  const meta_puzzle = Object.values(
+    context.team_context.unlocks[round.major_case.slug][round.slug],
+  ).find((puzzle) => puzzle.is_meta);
+  if (
+    meta_puzzle &&
+    (submission = context.team_context.minor_case_solves[round.slug][meta_puzzle.slug])
+  ) {
+    return submission;
+  }
+  return null;
 }

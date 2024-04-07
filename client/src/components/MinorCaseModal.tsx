@@ -7,18 +7,16 @@ import { CASE_ART_BY_ROUND_SLUG } from "@/utils/main/constants";
 import { Link } from "react-router-dom";
 
 interface ModalProps {
-  isOpen: boolean;
-  closeModal: () => void;
+  setCurrentCase: (round: Round | null) => void;
   cur_case: Round | undefined;
 }
 
-const MinorCaseModal: React.FC<ModalProps> = ({ isOpen, closeModal, cur_case }) => {
+const MinorCaseModal: React.FC<ModalProps> = ({ setCurrentCase, cur_case }) => {
   useEffect(() => {
     console.log(cur_case?.id);
   }, [cur_case]);
 
-  console.log(isOpen);
-  if (!isOpen) {
+  if (!cur_case) {
     return null;
   }
 
@@ -42,7 +40,12 @@ const MinorCaseModal: React.FC<ModalProps> = ({ isOpen, closeModal, cur_case }) 
             {/*Div containg all puzzle info */}
             <div className="row-span-1 mb-4 grid w-full grid-cols-4">
               <h2 className="col-span-3 text-xl text-purple-500">{cur_case?.name}</h2>
-              <button className="col-span-1 flex justify-end self-end" onClick={closeModal}>
+              <button
+                className="col-span-1 flex justify-end self-end"
+                onClick={() => {
+                  setCurrentCase(null);
+                }}
+              >
                 X
               </button>
             </div>
