@@ -225,7 +225,15 @@ export default function LetterBoxedPuzzle() {
           </Button>
         </div>
       </div>
-      <LetterBoxed puzzleNum={puzzleNum} />
+      <div className={puzzleNum != 1 ? "hidden" : ""}>
+        <LetterBoxed puzzleNum={1} />
+      </div>
+      <div className={puzzleNum != 2 ? "hidden" : ""}>
+        <LetterBoxed puzzleNum={2} />
+      </div>
+      <div className={puzzleNum != 3 ? "hidden" : ""}>
+        <LetterBoxed puzzleNum={3} />
+      </div>
     </div>
   );
 }
