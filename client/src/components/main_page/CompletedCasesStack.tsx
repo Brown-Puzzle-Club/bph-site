@@ -45,6 +45,7 @@ export default function CompletedCasesStack({
       </span>
       {completed_cases.map((mc_completed) => (
         <img
+          key={mc_completed.minor_case_round.id}
           className="absolute shadow-lg"
           src={MAJOR_CASE_FOLDER[mc_completed.minor_case_round.major_case.slug as MajorCaseEnum]}
           style={{

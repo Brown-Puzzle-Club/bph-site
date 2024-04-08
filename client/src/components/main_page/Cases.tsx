@@ -19,6 +19,7 @@ export default function Cases({
 
   return casesRecord.map((minorCase) => (
     <MinorCaseFolder
+      key={minorCase.minor_case_round.id}
       className="hover:rotate-0"
       minorCase={minorCase.minor_case_round}
       majorCase={minorCase.minor_case_round.major_case}
