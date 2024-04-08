@@ -1,7 +1,9 @@
-import React from "react";
-
 import blueno_what from "@/assets/landing/blueno_what.svg";
 import blueno_when from "@/assets/landing/blueno_when.svg";
+import React from "react";
+import blueno_what from "@/assets/landing/blueno_what.svg";
+import blueno_when from "@/assets/landing/blueno_when.svg";
+import React from "react";
 
 const SVG_FILTER =
   "invert(100%) sepia(0%) saturate(0%) hue-rotate(158deg) brightness(104%) contrast(102%)";

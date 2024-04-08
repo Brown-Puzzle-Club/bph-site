@@ -1,9 +1,13 @@
-import { MajorCase, Round } from "@/utils/django_types";
-import React, { useMemo } from "react";
-
 import { useDjangoContext } from "@/hooks/useDjangoContext";
 import { MAJOR_CASE_FOLDER, MajorCaseEnum } from "@/utils/constants";
+import { MajorCase, Round } from "@/utils/django_types";
 import { cn, getMinorCaseSolution } from "@/utils/utils";
+import React, { useMemo } from "react";
+import { useDjangoContext } from "@/hooks/useDjangoContext";
+import { MAJOR_CASE_FOLDER, MajorCaseEnum } from "@/utils/constants";
+import { MajorCase, Round } from "@/utils/django_types";
+import { cn, getMinorCaseSolution } from "@/utils/utils";
+import React, { useMemo } from "react";
 
 interface BoxProps {
   minorCase: Round;

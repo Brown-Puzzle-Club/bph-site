@@ -1,4 +1,5 @@
 import { Puzzle } from "@/utils/django_types";
+import { Puzzle } from "@/utils/django_types";
 
 export default function AlexGame({ puzzle }: { puzzle: Puzzle }) {
   console.log(puzzle);

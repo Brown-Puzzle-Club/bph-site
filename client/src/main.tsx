@@ -1,16 +1,11 @@
-import axios from "axios";
-import Cookies from "js-cookie";
-import * as React from "react";
-import * as ReactDOM from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import {
   HUNT_HAS_STARTED,
   IS_ADMIN,
   IS_MAJOR_CASE_UNLOCKED,
   Locked,
 } from "./components/LockedContent";
-import MajorCaseWrapper from "./components/major_cases/MajorCaseWrapper";
 import { PageWrapper } from "./components/PageWrapper";
+import MajorCaseWrapper from "./components/major_cases/MajorCaseWrapper";
 import { AuthContextProvider } from "./hooks/useAuth";
 import { DjangoContextProvider } from "./hooks/useDjangoContext";
 import { ThemeContextProvider } from "./hooks/useTheme";
@@ -24,9 +19,6 @@ import EventPage from "./routes/EventPage";
 import InfoPage from "./routes/InfoPage";
 import Landing from "./routes/Landing";
 import Leaderboard from "./routes/Leaderboard";
-import ColoredThread from "./routes/major_cases/ColoredThread";
-import Data from "./routes/major_cases/Data";
-import SocialDeduction from "./routes/major_cases/SocialDeduction";
 import MarkdownTest from "./routes/MarkdownTest";
 import MinorCasePage from "./routes/MinorCasePage";
 import MyTeamPage from "./routes/MyTeamPage";
@@ -34,11 +26,60 @@ import PuzzleList from "./routes/PuzzleList";
 import PuzzlePage from "./routes/PuzzlePage";
 import RegisterForm from "./routes/Register";
 import TeamPage from "./routes/TeamPage";
+import ColoredThread from "./routes/major_cases/ColoredThread";
+import Data from "./routes/major_cases/Data";
+import SocialDeduction from "./routes/major_cases/SocialDeduction";
 import "./styles/index.css";
 import "./styles/puzzlestyle-data.css";
 import "./styles/puzzlestyle-red-thread.css";
 import "./styles/puzzlestyle-soc-deduction.css";
 import { MajorCaseEnum } from "./utils/constants";
+import axios from "axios";
+import Cookies from "js-cookie";
+import * as React from "react";
+import * as ReactDOM from "react-dom/client";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  HUNT_HAS_STARTED,
+  IS_ADMIN,
+  IS_MAJOR_CASE_UNLOCKED,
+  Locked,
+} from "./components/LockedContent";
+import { PageWrapper } from "./components/PageWrapper";
+import MajorCaseWrapper from "./components/major_cases/MajorCaseWrapper";
+import { AuthContextProvider } from "./hooks/useAuth";
+import { DjangoContextProvider } from "./hooks/useDjangoContext";
+import { ThemeContextProvider } from "./hooks/useTheme";
+import AdminPanel from "./routes/Admin";
+import Archive from "./routes/Archive";
+import Club from "./routes/Club";
+import Contact from "./routes/Contact";
+import Credits from "./routes/Credits";
+import ErrorPage from "./routes/ErrorPage";
+import EventPage from "./routes/EventPage";
+import InfoPage from "./routes/InfoPage";
+import Landing from "./routes/Landing";
+import Leaderboard from "./routes/Leaderboard";
+import MarkdownTest from "./routes/MarkdownTest";
+import MinorCasePage from "./routes/MinorCasePage";
+import MyTeamPage from "./routes/MyTeamPage";
+import PuzzleList from "./routes/PuzzleList";
+import PuzzlePage from "./routes/PuzzlePage";
+import RegisterForm from "./routes/Register";
+import TeamPage from "./routes/TeamPage";
+import ColoredThread from "./routes/major_cases/ColoredThread";
+import Data from "./routes/major_cases/Data";
+import SocialDeduction from "./routes/major_cases/SocialDeduction";
+import "./styles/index.css";
+import "./styles/puzzlestyle-data.css";
+import "./styles/puzzlestyle-red-thread.css";
+import "./styles/puzzlestyle-soc-deduction.css";
+import { MajorCaseEnum } from "./utils/constants";
+import axios from "axios";
+import Cookies from "js-cookie";
+import * as React from "react";
+import * as ReactDOM from "react-dom/client";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 try {
   axios.defaults.headers.common["X-CSRFToken"] = Cookies.get("csrftoken");

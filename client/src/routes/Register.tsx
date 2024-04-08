@@ -28,9 +28,42 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
 import validator from "validator";
 import { z } from "zod";
+import TeamIcon from "@/components/team/TeamIcon";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { useAuth } from "@/hooks/useAuth";
+import {
+  MEMBER_COUNT_MAX,
+  MEMBER_COUNT_MIN,
+  MURDER_WEAPON_EMOJIS,
+  PFP_COLOR_CHOICES,
+} from "@/utils/constants";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
+import validator from "validator";
+import { z } from "zod";
 
 export const registerFormSchema = z
   .object({

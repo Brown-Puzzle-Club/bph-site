@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { ReactNode } from "react";
 
 const CaseArtWrapper = ({ children }: { children: ReactNode }) => {
   return (
@@ -27,7 +28,6 @@ export const BluesCluesCaseArt = () => {
   // TODO...
   return null;
 };
-
 
 // const FOLDER_ART_COMPONENT: { [key: string]: JSX.Element } = {
 //   // ...

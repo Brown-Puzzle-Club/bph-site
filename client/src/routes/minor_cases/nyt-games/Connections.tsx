@@ -2,6 +2,10 @@ import ConnectionsBox from "@/components/puzzle/nyt-games/connections/Connection
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { BeatLoader } from "react-spinners";
+import ConnectionsBox from "@/components/puzzle/nyt-games/connections/ConnectionsBox";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { BeatLoader } from "react-spinners";
 
 function Connections() {
   const [unfilteredWords, setUnfilteredWords] = useState<string[]>([]);

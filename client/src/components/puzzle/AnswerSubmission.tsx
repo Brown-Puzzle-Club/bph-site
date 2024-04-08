@@ -1,17 +1,29 @@
-import { MajorCaseEnum } from "@/utils/constants";
-import axios from "axios";
-import { useForm } from "react-hook-form";
 import { Button } from "../ui/button";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "../ui/form";
-
+import { Input } from "../ui/input";
+import { MajorCaseEnum } from "@/utils/constants";
 import { AnswerSubmission, Puzzle, PuzzleMessage } from "@/utils/django_types";
 import { cn } from "@/utils/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
 import { useEffect, useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
 import { BeatLoader } from "react-spinners";
 import { z } from "zod";
+import { Button } from "../ui/button";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
+import { MajorCaseEnum } from "@/utils/constants";
+import { AnswerSubmission, Puzzle, PuzzleMessage } from "@/utils/django_types";
+import { cn } from "@/utils/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
+import { useEffect, useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
+import { BeatLoader } from "react-spinners";
+import { z } from "zod";
 
 function sanitize_answer(answer: string) {
   const answer_only_letters = answer.replace(/[^a-zA-Z]/g, "");

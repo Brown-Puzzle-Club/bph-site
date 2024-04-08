@@ -1,6 +1,9 @@
 import NumberTile from "./NumberTile";
 import Tile from "./Tile";
 import { Guess } from "./utils";
+import NumberTile from "./NumberTile";
+import Tile from "./Tile";
+import { Guess } from "./utils";
 
 interface GuessTileProps {
   guess: Guess;

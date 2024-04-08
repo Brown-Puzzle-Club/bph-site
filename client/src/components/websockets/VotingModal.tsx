@@ -1,9 +1,15 @@
+import VotingModal2 from "./VotingModal2";
+import { VotingInfo } from "@/utils/django_types";
 import { useCallback, useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
 import { useTimer } from "react-timer-hook";
 import { SendJsonMessage } from "react-use-websocket/dist/lib/types";
-import { toast } from "react-hot-toast";
-import { VotingInfo } from "@/utils/django_types";
 import VotingModal2 from "./VotingModal2";
+import { VotingInfo } from "@/utils/django_types";
+import { useCallback, useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
+import { useTimer } from "react-timer-hook";
+import { SendJsonMessage } from "react-use-websocket/dist/lib/types";
 
 interface VotingModalProps {
   votingInfo: VotingInfo | null;

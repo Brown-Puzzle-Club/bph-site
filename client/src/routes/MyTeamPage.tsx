@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { useAuth } from "@/hooks/useAuth";
+import { useDjangoContext } from "@/hooks/useDjangoContext";
 import {
   MEMBER_COUNT_MAX,
   MEMBER_COUNT_MIN,
@@ -39,11 +40,54 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaEye } from "react-icons/fa";
+import { BeatLoader } from "react-spinners";
 import validator from "validator";
 import { z } from "zod";
-
+import TeamIcon from "@/components/team/TeamIcon";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { useAuth } from "@/hooks/useAuth";
 import { useDjangoContext } from "@/hooks/useDjangoContext";
+import {
+  MEMBER_COUNT_MAX,
+  MEMBER_COUNT_MIN,
+  MURDER_WEAPON_EMOJIS,
+  PFP_COLOR_CHOICES,
+} from "@/utils/constants";
+import { TeamMember } from "@/utils/django_types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { FaEye } from "react-icons/fa";
 import { BeatLoader } from "react-spinners";
+import validator from "validator";
+import { z } from "zod";
 
 const editTeamFormSchema = z
   .object({

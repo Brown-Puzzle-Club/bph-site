@@ -7,6 +7,15 @@ import {
   NavigationMenuTrigger,
 } from "../ui/navigation-menu";
 import { ListItem } from "./Navbar";
+import { useAuth } from "../../hooks/useAuth";
+import TeamIcon from "../team/TeamIcon";
+import {
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "../ui/navigation-menu";
+import { ListItem } from "./Navbar";
 
 export default function TeamNavbar() {
   const { team, logout } = useAuth();

@@ -1,8 +1,13 @@
+import background from "../../../assets/major_cases/colored-thread/background.png";
+import { ILink, INode, IThread, NodeAnswer } from "./board_types";
+import { collectNodes } from "./nodes";
 import { useDjangoContext } from "@/hooks/useDjangoContext";
 import { useMemo, useRef, useState } from "react";
 import background from "../../../assets/major_cases/colored-thread/background.png";
 import { ILink, INode, IThread, NodeAnswer } from "./board_types";
 import { collectNodes } from "./nodes";
+import { useDjangoContext } from "@/hooks/useDjangoContext";
+import { useMemo, useRef, useState } from "react";
 
 interface Position {
   x: number;

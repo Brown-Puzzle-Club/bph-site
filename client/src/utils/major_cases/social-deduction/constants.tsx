@@ -1,14 +1,6 @@
-import pfpDaisycula from "../../../assets/major_cases/social-deduction/pfp-daisycula.png";
-import pfpGorgon from "../../../assets/major_cases/social-deduction/pfp-gorgon.png";
-import pfpGreenribbon from "../../../assets/major_cases/social-deduction/pfp-greenribbon.png";
-import pfpInvisiguy from "../../../assets/major_cases/social-deduction/pfp-invisiguy.png";
-import pfpWolfguy from "../../../assets/major_cases/social-deduction/pfp-wolfguy.png";
-
-import deadProfile from "../../../assets/major_cases/social-deduction/dead.png";
-
-import { DjangoContext } from "@/utils/django_types";
 import assasinProfile from "../../../assets/major_cases/social-deduction/assassin.png";
 import bodyguardProfile from "../../../assets/major_cases/social-deduction/bodyguard.png";
+import deadProfile from "../../../assets/major_cases/social-deduction/dead.png";
 import doctorProfile from "../../../assets/major_cases/social-deduction/doctor.png";
 import enchanterProfile from "../../../assets/major_cases/social-deduction/enchanter.png";
 import foolProfile from "../../../assets/major_cases/social-deduction/fool.png";
@@ -16,11 +8,38 @@ import gossipProfile from "../../../assets/major_cases/social-deduction/gossip.p
 import headhunterProfile from "../../../assets/major_cases/social-deduction/headhunter.png";
 import investigatorProfile from "../../../assets/major_cases/social-deduction/investigator.png";
 import loverProfile from "../../../assets/major_cases/social-deduction/lover.png";
+import pfpDaisycula from "../../../assets/major_cases/social-deduction/pfp-daisycula.png";
+import pfpGorgon from "../../../assets/major_cases/social-deduction/pfp-gorgon.png";
+import pfpGreenribbon from "../../../assets/major_cases/social-deduction/pfp-greenribbon.png";
+import pfpInvisiguy from "../../../assets/major_cases/social-deduction/pfp-invisiguy.png";
+import pfpWolfguy from "../../../assets/major_cases/social-deduction/pfp-wolfguy.png";
 import resurrectedProfile from "../../../assets/major_cases/social-deduction/resurrected.png";
 import silencerProfile from "../../../assets/major_cases/social-deduction/silencer.png";
 import telepathProfile from "../../../assets/major_cases/social-deduction/telepath.png";
 import villagerProfile from "../../../assets/major_cases/social-deduction/villager.png";
 import zealotProfile from "../../../assets/major_cases/social-deduction/zealot.png";
+import { DjangoContext } from "@/utils/django_types";
+import assasinProfile from "../../../assets/major_cases/social-deduction/assassin.png";
+import bodyguardProfile from "../../../assets/major_cases/social-deduction/bodyguard.png";
+import deadProfile from "../../../assets/major_cases/social-deduction/dead.png";
+import doctorProfile from "../../../assets/major_cases/social-deduction/doctor.png";
+import enchanterProfile from "../../../assets/major_cases/social-deduction/enchanter.png";
+import foolProfile from "../../../assets/major_cases/social-deduction/fool.png";
+import gossipProfile from "../../../assets/major_cases/social-deduction/gossip.png";
+import headhunterProfile from "../../../assets/major_cases/social-deduction/headhunter.png";
+import investigatorProfile from "../../../assets/major_cases/social-deduction/investigator.png";
+import loverProfile from "../../../assets/major_cases/social-deduction/lover.png";
+import pfpDaisycula from "../../../assets/major_cases/social-deduction/pfp-daisycula.png";
+import pfpGorgon from "../../../assets/major_cases/social-deduction/pfp-gorgon.png";
+import pfpGreenribbon from "../../../assets/major_cases/social-deduction/pfp-greenribbon.png";
+import pfpInvisiguy from "../../../assets/major_cases/social-deduction/pfp-invisiguy.png";
+import pfpWolfguy from "../../../assets/major_cases/social-deduction/pfp-wolfguy.png";
+import resurrectedProfile from "../../../assets/major_cases/social-deduction/resurrected.png";
+import silencerProfile from "../../../assets/major_cases/social-deduction/silencer.png";
+import telepathProfile from "../../../assets/major_cases/social-deduction/telepath.png";
+import villagerProfile from "../../../assets/major_cases/social-deduction/villager.png";
+import zealotProfile from "../../../assets/major_cases/social-deduction/zealot.png";
+import { DjangoContext } from "@/utils/django_types";
 
 export const MISS_TEXT = "?????";
 

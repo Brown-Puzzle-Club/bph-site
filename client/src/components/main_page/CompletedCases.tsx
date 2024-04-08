@@ -1,5 +1,7 @@
+import Cases from "./Cases";
 import { MinorCaseCompleted, Round } from "@/utils/django_types";
 import Cases from "./Cases";
+import { MinorCaseCompleted, Round } from "@/utils/django_types";
 
 export default function CompletedCases({
   completed_cases,

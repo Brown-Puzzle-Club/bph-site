@@ -13,6 +13,21 @@ import { Round } from "@/utils/django_types";
 import { MAIN_PAGE_THEME } from "@/utils/themes";
 import { mostRecentSolves } from "@/utils/utils";
 import { useEffect, useMemo, useState } from "react";
+import background from "@/assets/main_page/Backdrop.png";
+import shadow from "@/assets/main_page/Shadow.png";
+import desk from "@/assets/main_page/ShadowDesk.png";
+import MinorCaseModal from "@/components/MinorCaseModal";
+import ActiveCases from "@/components/main_page/ActiveCases";
+import CompletedCases from "@/components/main_page/CompletedCases";
+import CompletedCasesStack from "@/components/main_page/CompletedCasesStack";
+import IncomingCasesStack from "@/components/main_page/IncomingCasesStack";
+import { ArtWrapperInner } from "@/components/minor_cases/CasePageArt";
+import { useDjangoContext } from "@/hooks/useDjangoContext";
+import { useTheme } from "@/hooks/useTheme";
+import { Round } from "@/utils/django_types";
+import { MAIN_PAGE_THEME } from "@/utils/themes";
+import { mostRecentSolves } from "@/utils/utils";
+import { useEffect, useMemo, useState } from "react";
 
 interface EventPage {
   setVotingOpen?: (open: boolean) => void;

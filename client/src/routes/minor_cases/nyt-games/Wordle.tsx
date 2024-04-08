@@ -4,6 +4,12 @@ import { GameMode, GameState } from "@/components/puzzle/nyt-games/wordle/utils"
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
+import FinalWordle from "@/components/puzzle/nyt-games/wordle/FinalWordle";
+import HangmanWordle from "@/components/puzzle/nyt-games/wordle/HangmanGame";
+import { GameMode, GameState } from "@/components/puzzle/nyt-games/wordle/utils";
+import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
 
 const Wordle = () => {
   const [gameMode, setGameMode] = useState(GameMode.Hangman);

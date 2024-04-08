@@ -2,6 +2,10 @@ import { PuzzleStyle } from "@/utils/constants";
 import { cn } from "@/utils/utils";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { PuzzleStyle } from "@/utils/constants";
+import { cn } from "@/utils/utils";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 const parseStyle = (style: string) => {
   // assert style is a string of the form "key1: value1; key2: value2; ..."

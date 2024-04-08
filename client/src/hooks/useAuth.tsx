@@ -4,6 +4,12 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { createContext, useContext, useEffect, useState } from "react";
 import { z } from "zod";
+import { registerFormSchema } from "@/routes/Register";
+import { UserTeam } from "@/utils/django_types";
+import axios from "axios";
+import Cookies from "js-cookie";
+import { createContext, useContext, useEffect, useState } from "react";
+import { z } from "zod";
 
 type AuthContextType = {
   loggedIn: boolean;

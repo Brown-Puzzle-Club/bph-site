@@ -1,8 +1,13 @@
+import ErrorPage from "./ErrorPage";
 import PuzzleWrapper from "@/components/puzzle/PuzzleWrapper";
+import { useTheme } from "@/hooks/useTheme";
+import { DEFAULT_THEME } from "@/utils/themes";
 import { useEffect, useMemo } from "react";
 import ErrorPage from "./ErrorPage";
-import { DEFAULT_THEME } from "@/utils/themes";
+import PuzzleWrapper from "@/components/puzzle/PuzzleWrapper";
 import { useTheme } from "@/hooks/useTheme";
+import { DEFAULT_THEME } from "@/utils/themes";
+import { useEffect, useMemo } from "react";
 
 function PuzzlePage() {
   const puzzle_slug = useMemo(() => {

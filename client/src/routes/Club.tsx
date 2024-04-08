@@ -1,5 +1,7 @@
+import logo from "../assets/landing/bpc_logo.svg";
 import { FaEnvelope } from "react-icons/fa";
 import logo from "../assets/landing/bpc_logo.svg";
+import { FaEnvelope } from "react-icons/fa";
 
 export default function Club() {
   return (

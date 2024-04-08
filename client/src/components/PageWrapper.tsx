@@ -1,12 +1,21 @@
+import CaseVoting from "./websockets/CaseVoting";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/navbar/Navbar";
-import { Toaster } from "react-hot-toast";
+import { useNotification } from "@/hooks/useNotification";
 import { useTheme } from "@/hooks/useTheme";
 import { DEFAULT_THEME } from "@/utils/themes";
-import { useNotification } from "@/hooks/useNotification";
-import CaseVoting from "./websockets/CaseVoting";
 import { useEffect, useState } from "react";
 import { cloneElement } from "react";
+import { Toaster } from "react-hot-toast";
+import CaseVoting from "./websockets/CaseVoting";
+import Footer from "@/components/Footer";
+import Navbar from "@/components/navbar/Navbar";
+import { useNotification } from "@/hooks/useNotification";
+import { useTheme } from "@/hooks/useTheme";
+import { DEFAULT_THEME } from "@/utils/themes";
+import { useEffect, useState } from "react";
+import { cloneElement } from "react";
+import { Toaster } from "react-hot-toast";
 
 export const PageWrapper = ({ route }: { route: React.ReactElement }) => {
   const { theme } = useTheme();

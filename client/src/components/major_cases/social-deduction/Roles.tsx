@@ -5,6 +5,13 @@ import {
   SOLO_TEXT_COLOR,
 } from "../../../utils/major_cases/social-deduction/constants";
 import CharacterRoleTooltip from "./CharacterRoleTooltip";
+import {
+  EVIL_TEXT_COLOR,
+  GOOD_TEXT_COLOR,
+  Role,
+  SOLO_TEXT_COLOR,
+} from "../../../utils/major_cases/social-deduction/constants";
+import CharacterRoleTooltip from "./CharacterRoleTooltip";
 
 function TextBreak() {
   return <div className="text-break h-1 w-50 bg-[#80808024] mx-auto mb-8 mt-5 rounded-md"></div>;
@@ -122,8 +129,8 @@ export default function Roles() {
           </span>
           <br></br> An indecisive villager with a serial killer gene. The Resurrected{" "}
           <i>
-            acts and reads as a member of the <b style={{ color: GOOD_TEXT_COLOR }}>Village</b> team, 
-            until they are killed by the Assassin, at which point they join the{" "}
+            acts and reads as a member of the <b style={{ color: GOOD_TEXT_COLOR }}>Village</b>{" "}
+            team, until they are killed by the Assassin, at which point they join the{" "}
             <b style={{ color: EVIL_TEXT_COLOR }}>Evil</b> team.
           </i>
         </li>

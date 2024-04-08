@@ -1,6 +1,9 @@
 import greenclosed from "@/assets/main_page/greenclosed.png";
 import manilaclosed from "@/assets/main_page/manilaclosed.png";
 import pinkclosed from "@/assets/main_page/pinkclosed.png";
+import greenclosed from "@/assets/main_page/greenclosed.png";
+import manilaclosed from "@/assets/main_page/manilaclosed.png";
+import pinkclosed from "@/assets/main_page/pinkclosed.png";
 
 export const MURDER_WEAPON_EMOJIS = [
   "🔫",

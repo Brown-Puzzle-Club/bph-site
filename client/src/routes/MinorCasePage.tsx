@@ -1,14 +1,25 @@
+import { Error404 } from "./ErrorPage";
 import { IS_MINOR_CASE_UNLOCKED } from "@/components/LockedContent";
 import CasePageArt from "@/components/minor_cases/CasePageArt";
 import { useDjangoContext } from "@/hooks/useDjangoContext";
+import { useTheme } from "@/hooks/useTheme";
 import { CASE_PALETTE, MajorCaseEnum } from "@/utils/constants";
+import { DEFAULT_THEME } from "@/utils/themes";
 import { PuzzleAnswer, getUnlockedPuzzles } from "@/utils/utils";
 import { useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { BeatLoader } from "react-spinners";
 import { Error404 } from "./ErrorPage";
-import { DEFAULT_THEME } from "@/utils/themes";
+import { IS_MINOR_CASE_UNLOCKED } from "@/components/LockedContent";
+import CasePageArt from "@/components/minor_cases/CasePageArt";
+import { useDjangoContext } from "@/hooks/useDjangoContext";
 import { useTheme } from "@/hooks/useTheme";
+import { CASE_PALETTE, MajorCaseEnum } from "@/utils/constants";
+import { DEFAULT_THEME } from "@/utils/themes";
+import { PuzzleAnswer, getUnlockedPuzzles } from "@/utils/utils";
+import { useEffect, useMemo } from "react";
+import { Link } from "react-router-dom";
+import { BeatLoader } from "react-spinners";
 
 function MinorCasePage() {
   const { setTheme } = useTheme();

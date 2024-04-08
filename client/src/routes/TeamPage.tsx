@@ -5,6 +5,13 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { FaCog } from "react-icons/fa";
 import { BeatLoader } from "react-spinners";
+import TeamIcon from "@/components/team/TeamIcon";
+import { useAuth } from "@/hooks/useAuth";
+import { Team, TeamMember } from "@/utils/django_types";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { FaCog } from "react-icons/fa";
+import { BeatLoader } from "react-spinners";
 
 const TEAM_ID = window.location.pathname.split("/").pop();
 

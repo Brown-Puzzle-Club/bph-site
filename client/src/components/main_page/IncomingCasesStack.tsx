@@ -1,7 +1,11 @@
+import { RAND_ROT, RAND_TRANS } from "../MinorCaseFolder";
 import { useDjangoContext } from "@/hooks/useDjangoContext";
 import { MAJOR_CASE_FOLDER, MajorCaseEnum } from "@/utils/constants";
 import { useState } from "react";
 import { RAND_ROT, RAND_TRANS } from "../MinorCaseFolder";
+import { useDjangoContext } from "@/hooks/useDjangoContext";
+import { MAJOR_CASE_FOLDER, MajorCaseEnum } from "@/utils/constants";
+import { useState } from "react";
 
 interface IncomingCasesStackProps {
   onClick?: () => void;

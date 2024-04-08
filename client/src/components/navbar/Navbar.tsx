@@ -1,5 +1,6 @@
-import * as React from "react";
-
+import LoginNavbar from "./LoginNavbar";
+import TeamNavbar from "./TeamNavbar";
+import bluenoir_logo from "@/assets/navbar_logo_head.png";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -9,19 +10,36 @@ import {
   NavigationMenuRight,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
-import { cn } from "@/utils/utils";
-import LoginNavbar from "./LoginNavbar";
-
 import { useAuth } from "@/hooks/useAuth";
 import { useDjangoContext } from "@/hooks/useDjangoContext";
+import { useTheme } from "@/hooks/useTheme";
+import { DEFAULT_THEME } from "@/utils/themes";
+import { cn } from "@/utils/utils";
+import * as React from "react";
+import { useState } from "react";
 import Countdown from "react-countdown";
 import { BeatLoader } from "react-spinners";
+import LoginNavbar from "./LoginNavbar";
 import TeamNavbar from "./TeamNavbar";
-
 import bluenoir_logo from "@/assets/navbar_logo_head.png";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuRight,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
+import { useAuth } from "@/hooks/useAuth";
+import { useDjangoContext } from "@/hooks/useDjangoContext";
 import { useTheme } from "@/hooks/useTheme";
-import { useState } from "react";
 import { DEFAULT_THEME } from "@/utils/themes";
+import { cn } from "@/utils/utils";
+import * as React from "react";
+import { useState } from "react";
+import Countdown from "react-countdown";
+import { BeatLoader } from "react-spinners";
 
 const components: { title: string; href: string; description: string }[] = [
   {

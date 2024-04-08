@@ -1,4 +1,5 @@
-import { SendJsonMessage } from "react-use-websocket/dist/lib/types";
+import MinorCaseFolder from "../MinorCaseFolder";
+import MinorCaseModal from "../MinorCaseModal";
 import {
   Dialog,
   DialogTrigger,
@@ -7,12 +8,26 @@ import {
   DialogTitle,
   DialogFooter,
 } from "../ui/dialog";
-import MinorCaseFolder from "../MinorCaseFolder";
-import { Round, VotingInfo } from "@/utils/django_types";
-import { useState } from "react";
-import MinorCaseModal from "../MinorCaseModal";
-import { cn } from "@/utils/utils";
 import VotingIndicators from "./VotingIndicators";
+import { Round, VotingInfo } from "@/utils/django_types";
+import { cn } from "@/utils/utils";
+import { useState } from "react";
+import { SendJsonMessage } from "react-use-websocket/dist/lib/types";
+import MinorCaseFolder from "../MinorCaseFolder";
+import MinorCaseModal from "../MinorCaseModal";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "../ui/dialog";
+import VotingIndicators from "./VotingIndicators";
+import { Round, VotingInfo } from "@/utils/django_types";
+import { cn } from "@/utils/utils";
+import { useState } from "react";
+import { SendJsonMessage } from "react-use-websocket/dist/lib/types";
 
 interface VotingModalProps {
   seconds: number;

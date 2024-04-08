@@ -1,5 +1,7 @@
+import { GameState, Row } from "./utils";
 import { cva } from "class-variance-authority";
 import { GameState, Row } from "./utils";
+import { cva } from "class-variance-authority";
 
 interface NumberTileProps {
   rowNumber: 1 | 2 | 3;

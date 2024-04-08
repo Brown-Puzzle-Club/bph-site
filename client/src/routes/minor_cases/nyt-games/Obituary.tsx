@@ -1,10 +1,18 @@
+import SubscriptionModal from "../../../components/puzzle/nyt-games/ObituaryModal";
 import nytImage from "@/assets/minor_cases/nyt/nyt-image.png";
 import nytLogo from "@/assets/minor_cases/nyt/nyt-logo.png";
 import axios from "axios";
-import { useEffect, useState } from "react"; // Import useEffect
+import { useEffect, useState } from "react";
+// Import useEffect
 import { FaBars, FaSearch } from "react-icons/fa";
 import ReactMarkdown from "react-markdown";
 import SubscriptionModal from "../../../components/puzzle/nyt-games/ObituaryModal";
+import nytImage from "@/assets/minor_cases/nyt/nyt-image.png";
+import nytLogo from "@/assets/minor_cases/nyt/nyt-logo.png";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { FaBars, FaSearch } from "react-icons/fa";
+import ReactMarkdown from "react-markdown";
 
 function Obituary() {
   const [isModalOpen, setIsModalOpen] = useState(true);

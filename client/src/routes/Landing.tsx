@@ -1,6 +1,9 @@
+import LandingInfo from "../components/landing/LandingInfo";
+import LandingSplash from "../components/landing/LandingSplash";
 import { useEffect, useState } from "react";
 import LandingInfo from "../components/landing/LandingInfo";
 import LandingSplash from "../components/landing/LandingSplash";
+import { useEffect, useState } from "react";
 
 const userAgent = navigator.userAgent.toLowerCase();
 const isMobileDevice = /iphone|ipad|ipod|android|blackberry|windows phone|iemobile|webos/i.test(

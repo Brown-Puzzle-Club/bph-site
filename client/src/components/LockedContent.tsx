@@ -3,6 +3,11 @@ import { Error404 } from "@/routes/ErrorPage";
 import { DjangoContext } from "@/utils/django_types";
 import { cloneElement } from "react";
 import { BeatLoader } from "react-spinners";
+import { useDjangoContext } from "@/hooks/useDjangoContext";
+import { Error404 } from "@/routes/ErrorPage";
+import { DjangoContext } from "@/utils/django_types";
+import { cloneElement } from "react";
+import { BeatLoader } from "react-spinners";
 
 export const HUNT_HAS_STARTED = (context: DjangoContext) => {
   return (

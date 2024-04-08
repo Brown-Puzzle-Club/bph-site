@@ -1,10 +1,3 @@
-import ProgressDocs from "@/components/ProgressDocs";
-import { FaCar } from "react-icons/fa";
-import { FaBus, FaLocationDot, FaTrain } from "react-icons/fa6";
-
-import macmillan from "../assets/info/macmillan_squiggle.png";
-import salomon from "../assets/info/salomon_squiggle.png";
-
 import brown from "../assets/info/browndooble.svg";
 import team from "../assets/info/dooble1.svg";
 import guy from "../assets/info/dooble3.svg";
@@ -12,9 +5,29 @@ import gift from "../assets/info/giftdooble.svg";
 import google from "../assets/info/googlydooble.svg";
 import hooray from "../assets/info/kingdooble.svg";
 import building from "../assets/info/kongdooble.svg";
+import macmillan from "../assets/info/macmillan_squiggle.png";
 import rubix from "../assets/info/rubixdooble.svg";
+import salomon from "../assets/info/salomon_squiggle.png";
 import wiggle from "../assets/info/squigglydooble.svg";
 import waiver from "../assets/info/waiverdooble.svg";
+import ProgressDocs from "@/components/ProgressDocs";
+import { FaCar } from "react-icons/fa";
+import { FaBus, FaLocationDot, FaTrain } from "react-icons/fa6";
+import brown from "../assets/info/browndooble.svg";
+import team from "../assets/info/dooble1.svg";
+import guy from "../assets/info/dooble3.svg";
+import gift from "../assets/info/giftdooble.svg";
+import google from "../assets/info/googlydooble.svg";
+import hooray from "../assets/info/kingdooble.svg";
+import building from "../assets/info/kongdooble.svg";
+import macmillan from "../assets/info/macmillan_squiggle.png";
+import rubix from "../assets/info/rubixdooble.svg";
+import salomon from "../assets/info/salomon_squiggle.png";
+import wiggle from "../assets/info/squigglydooble.svg";
+import waiver from "../assets/info/waiverdooble.svg";
+import ProgressDocs from "@/components/ProgressDocs";
+import { FaCar } from "react-icons/fa";
+import { FaBus, FaLocationDot, FaTrain } from "react-icons/fa6";
 
 const smoothScroll = (element_id: string) => {
   const element = document.getElementById(element_id);

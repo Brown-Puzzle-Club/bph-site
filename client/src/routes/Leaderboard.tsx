@@ -5,6 +5,13 @@ import { Team, UserTeam } from "@/utils/django_types";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { BeatLoader } from "react-spinners";
+import TeamIcon from "@/components/team/TeamIcon";
+import { useAuth } from "@/hooks/useAuth";
+import { useDjangoContext } from "@/hooks/useDjangoContext";
+import { Team, UserTeam } from "@/utils/django_types";
+import Cookies from "js-cookie";
+import { useEffect, useState } from "react";
+import { BeatLoader } from "react-spinners";
 
 enum LeaderboardTab {
   IN_PERSON = "In Person",

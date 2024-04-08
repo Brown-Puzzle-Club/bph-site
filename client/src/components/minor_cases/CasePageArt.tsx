@@ -1,19 +1,17 @@
+import RelativeAsset, { AssetProps } from "../RelativeAsset";
+import birb_bg from "@/assets/minor_cases/birbs/birb_bg.png";
+import thebirb from "@/assets/minor_cases/birbs/thebirb.png";
 import bottle from "@/assets/minor_cases/exile/bottle.png";
 import exile_bg from "@/assets/minor_cases/exile/exile_bg.png";
 import painting from "@/assets/minor_cases/exile/painting.png";
 import victrola from "@/assets/minor_cases/exile/victrola.png";
 import wine from "@/assets/minor_cases/exile/wine.png";
-
 import whale_bg from "@/assets/minor_cases/whales/background_whale2.png";
 import flowers from "@/assets/minor_cases/whales/flowers.png";
 import parrot from "@/assets/minor_cases/whales/parrot.png";
 import sheep from "@/assets/minor_cases/whales/sheep.png";
 import stool from "@/assets/minor_cases/whales/stool.png";
 import waterline from "@/assets/minor_cases/whales/waterline.png";
-
-import birb_bg from "@/assets/minor_cases/birbs/birb_bg.png";
-import thebirb from "@/assets/minor_cases/birbs/thebirb.png";
-
 import { useDjangoContext } from "@/hooks/useDjangoContext";
 import { useTheme } from "@/hooks/useTheme";
 import { CASE_PALETTE, MajorCaseEnum } from "@/utils/constants";
@@ -21,6 +19,25 @@ import { BIRB_THEME, WHALE_THEME } from "@/utils/themes";
 import { PuzzleAnswer, cn, getUnlockedPuzzle } from "@/utils/utils";
 import { ReactNode, useEffect, useMemo } from "react";
 import RelativeAsset, { AssetProps } from "../RelativeAsset";
+import birb_bg from "@/assets/minor_cases/birbs/birb_bg.png";
+import thebirb from "@/assets/minor_cases/birbs/thebirb.png";
+import bottle from "@/assets/minor_cases/exile/bottle.png";
+import exile_bg from "@/assets/minor_cases/exile/exile_bg.png";
+import painting from "@/assets/minor_cases/exile/painting.png";
+import victrola from "@/assets/minor_cases/exile/victrola.png";
+import wine from "@/assets/minor_cases/exile/wine.png";
+import whale_bg from "@/assets/minor_cases/whales/background_whale2.png";
+import flowers from "@/assets/minor_cases/whales/flowers.png";
+import parrot from "@/assets/minor_cases/whales/parrot.png";
+import sheep from "@/assets/minor_cases/whales/sheep.png";
+import stool from "@/assets/minor_cases/whales/stool.png";
+import waterline from "@/assets/minor_cases/whales/waterline.png";
+import { useDjangoContext } from "@/hooks/useDjangoContext";
+import { useTheme } from "@/hooks/useTheme";
+import { CASE_PALETTE, MajorCaseEnum } from "@/utils/constants";
+import { BIRB_THEME, WHALE_THEME } from "@/utils/themes";
+import { PuzzleAnswer, cn, getUnlockedPuzzle } from "@/utils/utils";
+import { ReactNode, useEffect, useMemo } from "react";
 
 const ExileArt = () => {
   return (
