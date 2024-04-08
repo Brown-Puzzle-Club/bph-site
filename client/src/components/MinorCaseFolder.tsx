@@ -1,11 +1,10 @@
-import React, { useMemo } from "react";
+import React from "react";
 
-import { useDjangoContext } from "@/hooks/useDjangoContext";
 import type { MajorCaseEnum } from "@/utils/constants";
 import { MAJOR_CASE_FOLDER } from "@/utils/constants";
 import type { MajorCase, Round } from "@/utils/django_types";
 import { RAND_ROT } from "@/utils/math";
-import { cn, getMinorCaseSolution } from "@/utils/utils";
+import { cn } from "@/utils/utils";
 
 interface BoxProps {
   minorCase: Round;
@@ -27,12 +26,12 @@ const MinorCaseFolder: React.FC<BoxProps> = ({
   const [isHovered, setIsHovered] = React.useState(false);
   const [randomRotation, setRandomRotation] = React.useState(RAND_ROT());
 
-  const { context } = useDjangoContext();
+  // const { context } = useDjangoContext();
 
-  const solution = useMemo(() => {
-    if (!context) return null;
-    return getMinorCaseSolution(minorCase, context);
-  }, [context, minorCase]);
+  // const solution = useMemo(() => {
+  //   if (!context) return null;
+  //   return getMinorCaseSolution(minorCase, context);
+  // }, [context, minorCase]);
 
   return (
     <div className="max-w-[8vw]">
@@ -74,13 +73,13 @@ const MinorCaseFolder: React.FC<BoxProps> = ({
           {minorCase.name.toUpperCase()}
         </span>
       </div>
-      {solution && (
+      {/* {solution && (
         <div className="flex flex-col items-center">
-          <span className="text-center font-mono font-bold text-[green] bg-[#ffffffbd] rounded-xl mt-2 p-1 text-[1vw]">
+          <span className="text-center overflow-hiddenfont-mono font-bold text-[green] bg-[#ffffffbd] rounded-xl mt-2 p-1 text-[1vw]">
             {solution?.toUpperCase()}
           </span>
         </div>
-      )}
+      )} */}
     </div>
   );
 };
