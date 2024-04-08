@@ -5,6 +5,7 @@ import { useTheme } from "@/hooks/useTheme";
 import { DEFAULT_THEME } from "@/utils/themes";
 import { useNotification } from "@/hooks/useNotification";
 import CaseVoting from "./websockets/CaseVoting";
+import Bluenoir from "./bluenoir/Bluenoir";
 
 export const PageWrapper = ({ route }: { route: React.ReactNode }) => {
   const { theme } = useTheme();
@@ -17,6 +18,7 @@ export const PageWrapper = ({ route }: { route: React.ReactNode }) => {
         backgroundColor: theme.bg_color ? theme.bg_color : DEFAULT_THEME.bg_color,
       }}
     >
+      <Bluenoir show={true} setShow={() => {}} />
       <Navbar />
       <div
         className="content min-h-[90vh] pb-2"
