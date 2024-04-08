@@ -1,7 +1,7 @@
 import { useDjangoContext } from "@/hooks/useDjangoContext";
 import { Error404 } from "@/routes/ErrorPage";
 import { DjangoContext } from "@/utils/django_types";
-import { ReactNode } from "react";
+import { cloneElement } from "react";
 import { BeatLoader } from "react-spinners";
 
 export const HUNT_HAS_STARTED = (context: DjangoContext) => {
@@ -64,9 +64,10 @@ export const IS_PUZZLE_UNLOCKED = (puzzle_slug: string) => (context: DjangoConte
 export function Locked({
   condition,
   children,
+  ...props
 }: {
   condition: (context: DjangoContext) => boolean;
-  children: ReactNode;
+  children: React.ReactElement;
 }) {
   const { context } = useDjangoContext();
 
@@ -75,7 +76,7 @@ export function Locked({
     return <BeatLoader className="justify-center content-center p-4" color={"#fff"} size={12} />;
   } else if (context && condition(context)) {
     // PASSES CONDITION
-    return <>{children}</>;
+    return <>{cloneElement(children, props)}</>;
   } else {
     // DOES NOT PASS CONDITION
     return <Error404 />;

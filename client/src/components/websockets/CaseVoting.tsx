@@ -4,9 +4,11 @@ import VotingModal from "./VotingModal";
 
 interface CaseVotingProps {
   path: string;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
-const CaseVoting = ({ path }: CaseVotingProps) => {
+const CaseVoting = ({ path, open, onOpenChange }: CaseVotingProps) => {
   const { sendJsonMessage, readyState, votingInfo } = useSocket(path, {
     onOpen: () => {
       console.log("Connected to websocket! yay!");
@@ -16,7 +18,12 @@ const CaseVoting = ({ path }: CaseVotingProps) => {
   return readyState != WebSocket.OPEN ? (
     <Loader />
   ) : (
-    <VotingModal sendJsonMessage={sendJsonMessage} votingInfo={votingInfo} />
+    <VotingModal
+      sendJsonMessage={sendJsonMessage}
+      votingInfo={votingInfo}
+      open={open}
+      onOpenChange={onOpenChange}
+    />
   );
 };
 
