@@ -5,13 +5,17 @@ import { useTheme } from "@/hooks/useTheme";
 import { DEFAULT_THEME } from "@/utils/themes";
 import { useNotification } from "@/hooks/useNotification";
 import CaseVoting from "./websockets/CaseVoting";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { cloneElement } from "react";
 
 export const PageWrapper = ({ route }: { route: React.ReactElement }) => {
   const { theme } = useTheme();
   const [votingOpen, setVotingOpen] = useState(false);
   useNotification();
+
+  useEffect(() => {
+    console.log(votingOpen);
+  }, [votingOpen]);
 
   return (
     <div

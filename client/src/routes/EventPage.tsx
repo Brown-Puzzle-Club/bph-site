@@ -34,10 +34,6 @@ export default function EventPage({ setVotingOpen }: EventPage) {
     return mostRecentSolves(context);
   }, [context]);
 
-  useEffect(() => {
-    console.log(setVotingOpen);
-  }, [setVotingOpen]);
-
   return (
     <div
       className="min-h-[90vh]"

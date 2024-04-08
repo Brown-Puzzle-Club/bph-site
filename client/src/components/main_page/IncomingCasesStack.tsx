@@ -14,8 +14,6 @@ export default function IncomingCasesStack({ onClick }: IncomingCasesStackProps)
 
   if (!context || !context.team_context.current_incoming_event) return null;
 
-  // console.log("incoming:", context.team_context.current_incoming_event.incoming_cases);
-
   return (
     <a
       className="absolute hover:cursor-pointer transition-all duration-150 hover:drop-shadow-[0_12px_12px_rgba(255,196,100,0.5)] w-full"
