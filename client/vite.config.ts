@@ -1,5 +1,6 @@
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
+import svgr from "vite-plugin-svgr";
 import { fileURLToPath } from "url";
 import { defineConfig } from "vite";
 
@@ -8,7 +9,7 @@ const __dirname = path.dirname(__filename);
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), svgr()],
   server: {
     proxy: {
       "/notifications": "http://127.0.0.1:8000",

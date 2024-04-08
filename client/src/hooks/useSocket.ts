@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import useWebSocket from "react-use-websocket";
 import { z } from "zod";
 import { useAuth } from "./useAuth";
+import { VotingInfo } from "@/utils/django_types";
 
 interface SocketCallbacks {
   onMessage?: (event: MessageEvent) => void;
@@ -15,14 +16,6 @@ const VoteSchema = z.object({
   voteCount: z.number(),
 });
 export interface Vote extends z.infer<typeof VoteSchema> {}
-
-const VotingInfoSchema = z.object({
-  id: z.number(),
-  cases: z.record(VoteSchema),
-  expiration_time: z.string().nullable(),
-  max_choices: z.number().nonnegative(),
-});
-export interface VotingInfo extends z.infer<typeof VotingInfoSchema> {}
 
 const ResponseSchema = z.object({
   type: z.string(),
@@ -60,14 +53,12 @@ const useSocket = (path: string, callbacks: SocketCallbacks | undefined = undefi
 
   useEffect(() => {
     if (!lastJsonMessage) return;
-    console.log(lastJsonMessage);
 
     const parsedMessage = ResponseSchema.parse(lastJsonMessage);
+    console.log(parsedMessage);
     switch (parsedMessage.type) {
       case "vote": {
-        const votingInfo = VotingInfoSchema.parse(parsedMessage.data);
-        console.log(votingInfo);
-        setVotingInfo(votingInfo);
+        setVotingInfo(parsedMessage.data);
         break;
       }
       default:
