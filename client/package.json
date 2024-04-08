@@ -9,7 +9,7 @@
     "build-watch": "tsc && vite build --watch --config ./vite.config.ts",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "prepare": "cd .. && husky client/.husky && husky "
+    "prepare": "cd .. && husky install client/.husky"
   },
   "lint-staged": {
     "**/*": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0 && prettier --write --ignore-unknown"
