@@ -8,11 +8,12 @@ import VotingModal2 from "./VotingModal2";
 interface VotingModalProps {
   votingInfo: VotingInfo | null;
   sendJsonMessage: SendJsonMessage;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
-const VotingModal = ({ sendJsonMessage, votingInfo }: VotingModalProps) => {
+const VotingModal = ({ sendJsonMessage, votingInfo, open, onOpenChange }: VotingModalProps) => {
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
-  const [open, setOpen] = useState(false);
   const updateVote = useCallback(
     (option: string) => {
       if (!votingInfo) return;
@@ -40,7 +41,8 @@ const VotingModal = ({ sendJsonMessage, votingInfo }: VotingModalProps) => {
     onExpire: () => {
       sendJsonMessage({ type: "finalizeVote" });
       toast.dismiss();
-      setOpen(false);
+      if (window.location.pathname.includes("eventpage")) window.location.reload();
+      onOpenChange(false);
     },
     autoStart: false,
   });
@@ -56,21 +58,9 @@ const VotingModal = ({ sendJsonMessage, votingInfo }: VotingModalProps) => {
 
   useEffect(() => {
     if (votingInfo && votingInfo.max_choices > 0) {
-      toast.custom(
-        <VotingModal2
-          seconds={seconds}
-          isRunning={isRunning}
-          open={open}
-          onOpenChange={setOpen}
-          votingInfo={votingInfo}
-          sendJsonMessage={sendJsonMessage}
-          votedCases={selectedOptions}
-          updateVote={updateVote}
-        />,
-        { duration: Infinity, id: votingInfo.id.toString() },
-      );
+      // toast.custom({ duration: Infinity, id: votingInfo.id.toString() });
     }
-  }, [isRunning, open, seconds, selectedOptions, sendJsonMessage, updateVote, votingInfo]);
+  }, [isRunning, seconds, selectedOptions, sendJsonMessage, updateVote, votingInfo]);
 
   useEffect(() => {
     sendJsonMessage({ type: "vote", data: { oldVote: [], newVote: [] } });
@@ -79,6 +69,19 @@ const VotingModal = ({ sendJsonMessage, votingInfo }: VotingModalProps) => {
   if (!votingInfo || Object.keys(votingInfo.cases).length === 0) {
     return null;
   }
+
+  return (
+    <VotingModal2
+      seconds={seconds}
+      isRunning={isRunning}
+      open={open}
+      onOpenChange={onOpenChange}
+      votingInfo={votingInfo}
+      sendJsonMessage={sendJsonMessage}
+      votedCases={selectedOptions}
+      updateVote={updateVote}
+    />
+  );
 };
 
 export default VotingModal;
