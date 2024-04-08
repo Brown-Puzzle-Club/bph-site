@@ -300,9 +300,6 @@ def submit_answer(request: Request, puzzle_slug: str) -> Response:
         # answer is a query parameter:
         answer = request.query_params.get("answer")
         return handle_answer(answer, request_context, django_context, puzzle_slug)
-        # TODO:
-        # - puzzle messages
-        # - guess limit
 
     except Puzzle.DoesNotExist:
         return Response({"error": "Puzzle not found"}, status=404)

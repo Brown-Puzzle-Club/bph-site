@@ -177,6 +177,32 @@ class Puzzle(models.Model):
         ),
     )
 
+    solution = models.TextField(
+        default="",
+        blank=True,
+        verbose_name=_("Solution"),
+        null=True,
+        help_text=_("Markdown-compliant solution to the puzzle."),
+    )
+
+    clipboard = models.TextField(
+        default="",
+        blank=True,
+        verbose_name=_("Clipboard"),
+        null=True,
+        help_text=_("Google-sheets compliant copy to clipboard for the puzzle"),
+    )
+
+    clipboard_remote = models.TextField(
+        default="",
+        blank=True,
+        verbose_name=_("Remote Clipboard"),
+        null=True,
+        help_text=_(
+            "Google-sheets compliant copy to clipboard for the puzzle for remote teams"
+        ),
+    )
+
     answer = models.CharField(
         max_length=255,
         verbose_name=_("Answer"),
@@ -1147,7 +1173,6 @@ class MinorCaseIncomingEvent(models.Model):
         return {
             "cases": {
                 vote.minor_case.name: {
-
                     "round": RoundSerializer(instance=vote.minor_case).data,
                     "count": vote.num_votes,
                 }
@@ -1156,7 +1181,6 @@ class MinorCaseIncomingEvent(models.Model):
             "expiration_time": self.expiration.isoformat() if self.expiration else None,
             "max_choices": self.num_votes_allowed,
         }
-
 
     def vote(self, old_votes: list[str], new_votes: list[str]):
         votes_to_decrement = set(old_votes) - set(new_votes)

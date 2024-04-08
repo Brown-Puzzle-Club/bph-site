@@ -99,6 +99,9 @@ const PuzzleSchema = z.object({
   round: RoundSchema,
   body: z.string(),
   body_remote: z.string(),
+  solution: z.string(),
+  clipboard: z.string(),
+  clipboard_remote: z.string(),
   submissions: z.array(AnswerSubmissionSchema),
 });
 type Puzzle = z.infer<typeof PuzzleSchema>;
