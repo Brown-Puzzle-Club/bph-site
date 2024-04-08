@@ -14,6 +14,7 @@ import CaseVoting from "./websockets/CaseVoting";
 export const PageWrapper = ({ route }: { route: React.ReactElement }) => {
   const { theme } = useTheme();
   const [votingOpen, setVotingOpen] = useState(false);
+  const [blueNoirOpen, setBlueNoirOpen] = useState(false);
   useNotification();
 
   useEffect(() => {
@@ -27,7 +28,7 @@ export const PageWrapper = ({ route }: { route: React.ReactElement }) => {
         backgroundColor: theme.bg_color ? theme.bg_color : DEFAULT_THEME.bg_color,
       }}
     >
-      <Bluenoir show={true} setShow={() => {}} />
+      <Bluenoir show={blueNoirOpen} setShow={(open) => setBlueNoirOpen(open)} />
       <Navbar />
       <div
         className="content min-h-[90vh] pb-2"
