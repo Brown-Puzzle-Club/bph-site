@@ -1,13 +1,11 @@
-import { RAND_ROT, RAND_TRANS } from "../MinorCaseFolder";
-import { MAJOR_CASE_FOLDER, MajorCaseEnum } from "@/utils/constants";
-import { MinorCaseCompleted } from "@/utils/django_types";
+import type React from "react";
+import { useState } from "react";
+
+import type { MajorCaseEnum } from "@/utils/constants";
+import { MAJOR_CASE_FOLDER } from "@/utils/constants";
+import type { MinorCaseCompleted } from "@/utils/django_types";
+import { RAND_ROT, RAND_TRANS } from "@/utils/math";
 import { cn } from "@/utils/utils";
-import React, { useState } from "react";
-import { RAND_ROT, RAND_TRANS } from "../MinorCaseFolder";
-import { MAJOR_CASE_FOLDER, MajorCaseEnum } from "@/utils/constants";
-import { MinorCaseCompleted } from "@/utils/django_types";
-import { cn } from "@/utils/utils";
-import React, { useState } from "react";
 
 export default function CompletedCasesStack({
   completed_cases,

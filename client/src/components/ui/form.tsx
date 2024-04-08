@@ -1,29 +1,11 @@
-import { Label } from "@/components/ui/label";
-import { cn } from "@/utils/utils";
-import * as LabelPrimitive from "@radix-ui/react-label";
+import type * as LabelPrimitive from "@radix-ui/react-label";
 import { Slot } from "@radix-ui/react-slot";
 import * as React from "react";
-import {
-  Controller,
-  ControllerProps,
-  FieldPath,
-  FieldValues,
-  FormProvider,
-  useFormContext,
-} from "react-hook-form";
+import type { ControllerProps, FieldPath, FieldValues } from "react-hook-form";
+import { Controller, FormProvider, useFormContext } from "react-hook-form";
+
 import { Label } from "@/components/ui/label";
 import { cn } from "@/utils/utils";
-import * as LabelPrimitive from "@radix-ui/react-label";
-import { Slot } from "@radix-ui/react-slot";
-import * as React from "react";
-import {
-  Controller,
-  ControllerProps,
-  FieldPath,
-  FieldValues,
-  FormProvider,
-  useFormContext,
-} from "react-hook-form";
 
 const Form = FormProvider;
 
@@ -79,6 +61,7 @@ type FormItemContextValue = {
 const FormItemContext = React.createContext<FormItemContextValue>({} as FormItemContextValue);
 
 const FormItem = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  // eslint-disable-next-line react/prop-types
   ({ className, ...props }, ref) => {
     const id = React.useId();
 
@@ -94,6 +77,7 @@ FormItem.displayName = "FormItem";
 const FormLabel = React.forwardRef<
   React.ElementRef<typeof LabelPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root>
+  // eslint-disable-next-line react/prop-types
 >(({ className, ...props }, ref) => {
   const { error, formItemId } = useFormField();
 
@@ -129,6 +113,7 @@ FormControl.displayName = "FormControl";
 const FormDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
+  // eslint-disable-next-line react/prop-types
 >(({ className, ...props }, ref) => {
   const { formDescriptionId } = useFormField();
 
@@ -146,6 +131,7 @@ FormDescription.displayName = "FormDescription";
 const FormMessage = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
+  // eslint-disable-next-line react/prop-types
 >(({ className, children, ...props }, ref) => {
   const { error, formMessageId } = useFormField();
   const body = error ? String(error?.message) : children;
@@ -167,13 +153,4 @@ const FormMessage = React.forwardRef<
 });
 FormMessage.displayName = "FormMessage";
 
-export {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  useFormField,
-};
+export { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage };

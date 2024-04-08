@@ -1,14 +1,8 @@
+import type { Role } from "../../../utils/major_cases/social-deduction/constants";
 import {
   CharacterRoleAssetMap,
   CharacterRoleColorMap,
   InternalCharacter,
-  Role,
-} from "../../../utils/major_cases/social-deduction/constants";
-import {
-  CharacterRoleAssetMap,
-  CharacterRoleColorMap,
-  InternalCharacter,
-  Role,
 } from "../../../utils/major_cases/social-deduction/constants";
 
 export default function CharacterRoleTooltip({

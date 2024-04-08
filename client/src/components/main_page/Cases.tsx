@@ -1,17 +1,11 @@
-import MinorCaseFolder from "../MinorCaseFolder";
-import {
+import type {
   MinorCaseActive,
   MinorCaseCompleted,
   MinorCaseIncoming,
   Round,
 } from "@/utils/django_types";
+
 import MinorCaseFolder from "../MinorCaseFolder";
-import {
-  MinorCaseActive,
-  MinorCaseCompleted,
-  MinorCaseIncoming,
-  Round,
-} from "@/utils/django_types";
 
 export default function Cases({
   casesRecord,

@@ -4,12 +4,6 @@ import {
   Role,
 } from "../../../utils/major_cases/social-deduction/constants";
 import CharacterRoleTooltip from "./CharacterRoleTooltip";
-import {
-  InternalCharacter,
-  MISS_TEXT,
-  Role,
-} from "../../../utils/major_cases/social-deduction/constants";
-import CharacterRoleTooltip from "./CharacterRoleTooltip";
 
 const oddStyle = "even:bg-[#2b241ca3] odd:bg-[#2a2218]";
 const borderStyle = "border-y border-[#78777736] px-4 py-2";

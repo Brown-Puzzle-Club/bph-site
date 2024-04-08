@@ -1,8 +1,6 @@
 import axios from "axios";
 // @ts-expect-error untyped import :(
 import isDictionaryWord from "check-dictionary-word";
-import axios from "axios";
-import isDictionaryWord from "check-dictionary-word";
 
 export interface Letter {
   sides: number[];

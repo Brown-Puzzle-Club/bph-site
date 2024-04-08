@@ -5,13 +5,6 @@ import {
   SOLO_TEXT_COLOR,
 } from "../../../utils/major_cases/social-deduction/constants";
 import CharacterRoleTooltip from "./CharacterRoleTooltip";
-import {
-  EVIL_TEXT_COLOR,
-  GOOD_TEXT_COLOR,
-  Role,
-  SOLO_TEXT_COLOR,
-} from "../../../utils/major_cases/social-deduction/constants";
-import CharacterRoleTooltip from "./CharacterRoleTooltip";
 
 function TextBreak() {
   return <div className="text-break h-1 w-50 bg-[#80808024] mx-auto mb-8 mt-5 rounded-md"></div>;
@@ -54,7 +47,7 @@ export default function Roles() {
         <TextBreak />
         <li>
           <RoleDisplay role={Role.DOCTOR} /> The noble doctor has devoted their work to saving
-          other's lives, but now their own is at stake. This obligation to the Hippocratic oath
+          other&apos;s lives, but now their own is at stake. This obligation to the Hippocratic oath
           means their work must continue even during a well-needed vacation at Hotel Ghoulsby and
           they can <i>choose one player to protect each night of the game</i>. If that player is
           attacked, neither the doctor nor the player are injured. However, the Doctor may not
@@ -78,7 +71,7 @@ export default function Roles() {
             <b style={{ color: GOOD_TEXT_COLOR }}>Village</b>
           </i>
           , but do not win if they are killed by the <b style={{ color: EVIL_TEXT_COLOR }}>Evil</b>{" "}
-          team because, coincidentally, they'll never escape if they're dead.
+          team because, coincidentally, they&apos;ll never escape if they&apos;re dead.
         </li>
         <TextBreak />
         <li>
@@ -113,8 +106,8 @@ export default function Roles() {
         <TextBreak />
         <li>
           <RoleDisplay role={Role.LOVER} /> An all-around loving person with more to share. As a
-          member of the villager team the Lover visits one player each night. Unfortunately, they're
-          not always the best at choosing their company.{" "}
+          member of the villager team the Lover visits one player each night. Unfortunately,
+          they&apos;re not always the best at choosing their company.{" "}
           <i>
             If the player they visit is evil OR if that player is killed by the Assassin on that
             night, the Lover will die.
@@ -136,7 +129,7 @@ export default function Roles() {
         </li>
         <TextBreak />
         <li>
-          <RoleDisplay role={Role.SILENCER} /> It's always the quiet ones.{" "}
+          <RoleDisplay role={Role.SILENCER} /> It&apos;s always the quiet ones.{" "}
           <i>
             The Silencer can choose one player each night who will not be able to use their
             night-time action on that night.
@@ -159,8 +152,8 @@ export default function Roles() {
         </li>
         <TextBreak />
         <li>
-          <RoleDisplay role={Role.ZEALOT} /> It's nice to be a bigshot in a small town. The Zealot
-          is more influential than their fellow villagers. When voting,{" "}
+          <RoleDisplay role={Role.ZEALOT} /> It&apos;s nice to be a bigshot in a small town. The
+          Zealot is more influential than their fellow villagers. When voting,{" "}
           <i>their vote carries twice the weight.</i>{" "}
         </li>
       </ul>

@@ -1,7 +1,6 @@
-import { cn } from "@/utils/utils";
 import { useState } from "react";
+
 import { cn } from "@/utils/utils";
-import { useState } from "react";
 
 export default function TeamIcon({
   className,

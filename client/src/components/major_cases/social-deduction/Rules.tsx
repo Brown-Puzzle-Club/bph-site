@@ -1,3 +1,5 @@
+import { GiBatwingEmblem } from "react-icons/gi";
+
 import {
   EVIL_TEXT_COLOR,
   GOOD_TEXT_COLOR,
@@ -5,15 +7,6 @@ import {
   SOLO_TEXT_COLOR,
 } from "../../../utils/major_cases/social-deduction/constants";
 import CharacterRoleTooltip from "./CharacterRoleTooltip";
-import { GiBatwingEmblem } from "react-icons/gi";
-import {
-  EVIL_TEXT_COLOR,
-  GOOD_TEXT_COLOR,
-  Role,
-  SOLO_TEXT_COLOR,
-} from "../../../utils/major_cases/social-deduction/constants";
-import CharacterRoleTooltip from "./CharacterRoleTooltip";
-import { GiBatwingEmblem } from "react-icons/gi";
 
 export default function Rules() {
   return (
@@ -24,15 +17,15 @@ export default function Rules() {
           You are cordially invited to witness the game of a lifetime (or the end of many).
           <br />
           <br />
-          Hotel Ghoulsby is hosting their 10th annual Assassin's Tournament, whereby 10 lucky
+          Hotel Ghoulsby is hosting their 10th annual Assassin&apos;s Tournament, whereby 10 lucky
           players will take on their chosen roles in a game of intrigue, lies, and horribly
-          difficult deductions. But this year the tournament has turned out more lethal than they've
-          intended.
+          difficult deductions. But this year the tournament has turned out more lethal than
+          they&apos;ve intended.
           <br />
           <br />
-          It's the last night of the game, and you must determine which guest is masquerading as
-          which role in order to help the village win. Once you've done that, you'll need to work
-          out: <b>who's been turning the game into a bloodbath?</b>
+          It&apos;s the last night of the game, and you must determine which guest is masquerading
+          as which role in order to help the village win. Once you&apos;ve done that, you&apos;ll
+          need to work out: <b>who&apos;s been turning the game into a bloodbath?</b>
         </p>
       </div>
       <div className="text-break h-1 w-50 bg-[#80808024] mx-auto mb-5 mt-5 rounded-md"></div>

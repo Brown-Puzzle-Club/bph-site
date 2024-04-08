@@ -9,10 +9,15 @@
     "build-watch": "tsc && vite build --watch --config ./vite.config.ts",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "prepare": "cd .. && husky install client/.husky"
+    "prepare": "cd .. && husky client/.husky"
   },
   "lint-staged": {
-    "**/*": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0 && prettier --write --ignore-unknown"
+    "*.{ts,tsx}": [
+      "eslint . --report-unused-disable-directives --config .eslintrc.cjs"
+    ],
+    "*.{json,ts,tsx}": [
+      "prettier --write --ignore-unknown"
+    ]
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
@@ -34,6 +39,7 @@
     "check-dictionary-word": "^1.1.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
+    "eslint-plugin-react": "^7.34.1",
     "i": "^0.3.7",
     "js-cookie": "^3.0.5",
     "lucide-react": "^0.314.0",

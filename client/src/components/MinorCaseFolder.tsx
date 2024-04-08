@@ -1,13 +1,11 @@
-import { useDjangoContext } from "@/hooks/useDjangoContext";
-import { MAJOR_CASE_FOLDER, MajorCaseEnum } from "@/utils/constants";
-import { MajorCase, Round } from "@/utils/django_types";
-import { cn, getMinorCaseSolution } from "@/utils/utils";
 import React, { useMemo } from "react";
+
 import { useDjangoContext } from "@/hooks/useDjangoContext";
-import { MAJOR_CASE_FOLDER, MajorCaseEnum } from "@/utils/constants";
-import { MajorCase, Round } from "@/utils/django_types";
+import type { MajorCaseEnum } from "@/utils/constants";
+import { MAJOR_CASE_FOLDER } from "@/utils/constants";
+import type { MajorCase, Round } from "@/utils/django_types";
+import { RAND_ROT } from "@/utils/math";
 import { cn, getMinorCaseSolution } from "@/utils/utils";
-import React, { useMemo } from "react";
 
 interface BoxProps {
   minorCase: Round;
@@ -17,16 +15,7 @@ interface BoxProps {
   extraStyle?: React.CSSProperties;
 }
 
-const RANDOM_ROTATION_SCALE = 10;
-const RANDOM_TRANSLATION_SCALE = 5;
 const GROW_FACTOR = 1.15;
-
-export const RAND_ROT = (scale_factor = RANDOM_ROTATION_SCALE) => {
-  return Math.random() * scale_factor - scale_factor / 2;
-};
-export const RAND_TRANS = () => {
-  return Math.floor(Math.random() * 11) - RANDOM_TRANSLATION_SCALE;
-};
 
 const MinorCaseFolder: React.FC<BoxProps> = ({
   minorCase,

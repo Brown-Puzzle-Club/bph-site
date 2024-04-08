@@ -1,5 +1,4 @@
-import { ReactNode } from "react";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 const CaseArtWrapper = ({ children }: { children: ReactNode }) => {
   return (

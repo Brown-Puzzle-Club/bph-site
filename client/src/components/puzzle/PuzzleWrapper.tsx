@@ -1,19 +1,14 @@
-import AnswerSubmit from "./AnswerSubmission";
+import { useEffect, useMemo, useState } from "react";
+
 import MarkdownWrapper from "@/components/puzzle/MarkdownWrapper";
 import { useDjangoContext } from "@/hooks/useDjangoContext";
 import { Error404 } from "@/routes/ErrorPage";
 import AltPuzzleRoute, { ALT_PUZZLE_ROUTES } from "@/routes/minor_cases/AltPuzzleRoute";
-import { MajorCaseEnum, toPuzzleStyle } from "@/utils/constants";
-import { Puzzle } from "@/utils/django_types";
-import { useEffect, useMemo, useState } from "react";
+import type { MajorCaseEnum } from "@/utils/constants";
+import { toPuzzleStyle } from "@/utils/constants";
+import type { Puzzle } from "@/utils/django_types";
+
 import AnswerSubmit from "./AnswerSubmission";
-import MarkdownWrapper from "@/components/puzzle/MarkdownWrapper";
-import { useDjangoContext } from "@/hooks/useDjangoContext";
-import { Error404 } from "@/routes/ErrorPage";
-import AltPuzzleRoute, { ALT_PUZZLE_ROUTES } from "@/routes/minor_cases/AltPuzzleRoute";
-import { MajorCaseEnum, toPuzzleStyle } from "@/utils/constants";
-import { Puzzle } from "@/utils/django_types";
-import { useEffect, useMemo, useState } from "react";
 
 const NO_ANSWER_SUBMIT = new Set(["wordle", "connection", "lettertroxd"]);
 

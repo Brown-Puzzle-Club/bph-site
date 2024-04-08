@@ -1,11 +1,10 @@
-import AnswerSubmit from "../puzzle/AnswerSubmission";
-import { MajorCase, Puzzle } from "@/utils/django_types";
 import axios from "axios";
-import { ReactNode, useEffect, useMemo, useState } from "react";
+import type { ReactNode } from "react";
+import { useEffect, useMemo, useState } from "react";
+
+import type { MajorCase, Puzzle } from "@/utils/django_types";
+
 import AnswerSubmit from "../puzzle/AnswerSubmission";
-import { MajorCase, Puzzle } from "@/utils/django_types";
-import axios from "axios";
-import { ReactNode, useEffect, useMemo, useState } from "react";
 
 function MajorCaseWrapper({ children }: { children: ReactNode }) {
   const [majorCase, setMajorCase] = useState<MajorCase>({} as MajorCase);

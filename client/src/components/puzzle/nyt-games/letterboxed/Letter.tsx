@@ -1,5 +1,5 @@
-import { LetterState, Puzzle } from "../../../../utils/minor_cases/nyt/LetterBoxedTypes";
-import { LetterState, Puzzle } from "../../../../utils/minor_cases/nyt/LetterBoxedTypes";
+import type { Puzzle } from "../../../../utils/minor_cases/nyt/LetterBoxedTypes";
+import { LetterState } from "../../../../utils/minor_cases/nyt/LetterBoxedTypes";
 
 /**
  * Draws the dots of how many uses are left

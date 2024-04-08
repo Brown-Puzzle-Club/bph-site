@@ -1,5 +1,4 @@
 import { possibleWords } from "./wordList";
-import { possibleWords } from "./wordList";
 
 export enum Row {
   None = -1,

@@ -1,3 +1,12 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { FaEye } from "react-icons/fa";
+import { BeatLoader } from "react-spinners";
+import validator from "validator";
+import { z } from "zod";
+
 import TeamIcon from "@/components/team/TeamIcon";
 import { Button } from "@/components/ui/button";
 import {
@@ -34,60 +43,7 @@ import {
   MURDER_WEAPON_EMOJIS,
   PFP_COLOR_CHOICES,
 } from "@/utils/constants";
-import { TeamMember } from "@/utils/django_types";
-import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { FaEye } from "react-icons/fa";
-import { BeatLoader } from "react-spinners";
-import validator from "validator";
-import { z } from "zod";
-import TeamIcon from "@/components/team/TeamIcon";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
-import { useAuth } from "@/hooks/useAuth";
-import { useDjangoContext } from "@/hooks/useDjangoContext";
-import {
-  MEMBER_COUNT_MAX,
-  MEMBER_COUNT_MIN,
-  MURDER_WEAPON_EMOJIS,
-  PFP_COLOR_CHOICES,
-} from "@/utils/constants";
-import { TeamMember } from "@/utils/django_types";
-import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { FaEye } from "react-icons/fa";
-import { BeatLoader } from "react-spinners";
-import validator from "validator";
-import { z } from "zod";
+import type { TeamMember } from "@/utils/django_types";
 
 const editTeamFormSchema = z
   .object({
@@ -128,7 +84,7 @@ const editTeamFormSchema = z
       return true;
     },
     {
-      message: "Required for in person teams that don't need a room reserved.",
+      message: "Required for in person teams that don&apos;t need a room reserved.",
       path: ["where_to_find"],
     },
   );
@@ -274,9 +230,9 @@ export default function MyTeamPage() {
                                     </SelectTrigger>
                                   </FormControl>
                                   <SelectContent className="dark">
-                                    {MURDER_WEAPON_EMOJIS.map((emoji) => {
+                                    {MURDER_WEAPON_EMOJIS.map((emoji, idx) => {
                                       return (
-                                        <SelectItem value={emoji} className="text-xl">
+                                        <SelectItem key={idx} value={emoji} className="text-xl">
                                           {emoji}
                                         </SelectItem>
                                       );
@@ -309,9 +265,9 @@ export default function MyTeamPage() {
                                     </SelectTrigger>
                                   </FormControl>
                                   <SelectContent className="dark">
-                                    {PFP_COLOR_CHOICES.map((color) => {
+                                    {PFP_COLOR_CHOICES.map((color, idx) => {
                                       return (
-                                        <SelectItem value={color} className="text-xl">
+                                        <SelectItem key={idx} value={color} className="text-xl">
                                           <div
                                             className="w-10 h-10 border-2 border-slate-800 rounded"
                                             style={{ backgroundColor: color }}
@@ -467,7 +423,7 @@ export default function MyTeamPage() {
                   </div>
                   <div className="members pt-6 flex flex-wrap justify-center items-center">
                     {members.map((member, index) => (
-                      <span id={index.toString()} className="nowrap">
+                      <span key={index} id={index.toString()} className="nowrap">
                         {member.name}
                         {index < memberCount - 1 ? ", " : ""}
                       </span>
@@ -488,7 +444,7 @@ export default function MyTeamPage() {
                         <div className="space-y-0.5">
                           <FormLabel>In Person Participation</FormLabel>
                           <FormDescription>
-                            Are you planning on participating in the hunt on Brown University's
+                            Are you planning on participating in the hunt on Brown University&apos;s
                             campus?
                           </FormDescription>
                         </div>
@@ -567,7 +523,8 @@ export default function MyTeamPage() {
                                   render={({ field }) => (
                                     <FormItem>
                                       <FormLabel>
-                                        Where can we best find you while you're solving puzzles?
+                                        Where can we best find you while you&apos;re solving
+                                        puzzles?
                                       </FormLabel>
                                       <FormControl>
                                         <Input type="text" {...field} />

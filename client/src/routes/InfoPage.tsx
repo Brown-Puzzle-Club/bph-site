@@ -1,3 +1,8 @@
+import { FaCar } from "react-icons/fa";
+import { FaBus, FaLocationDot, FaTrain } from "react-icons/fa6";
+
+import ProgressDocs from "@/components/ProgressDocs";
+
 import brown from "../assets/info/browndooble.svg";
 import team from "../assets/info/dooble1.svg";
 import guy from "../assets/info/dooble3.svg";
@@ -10,24 +15,6 @@ import rubix from "../assets/info/rubixdooble.svg";
 import salomon from "../assets/info/salomon_squiggle.png";
 import wiggle from "../assets/info/squigglydooble.svg";
 import waiver from "../assets/info/waiverdooble.svg";
-import ProgressDocs from "@/components/ProgressDocs";
-import { FaCar } from "react-icons/fa";
-import { FaBus, FaLocationDot, FaTrain } from "react-icons/fa6";
-import brown from "../assets/info/browndooble.svg";
-import team from "../assets/info/dooble1.svg";
-import guy from "../assets/info/dooble3.svg";
-import gift from "../assets/info/giftdooble.svg";
-import google from "../assets/info/googlydooble.svg";
-import hooray from "../assets/info/kingdooble.svg";
-import building from "../assets/info/kongdooble.svg";
-import macmillan from "../assets/info/macmillan_squiggle.png";
-import rubix from "../assets/info/rubixdooble.svg";
-import salomon from "../assets/info/salomon_squiggle.png";
-import wiggle from "../assets/info/squigglydooble.svg";
-import waiver from "../assets/info/waiverdooble.svg";
-import ProgressDocs from "@/components/ProgressDocs";
-import { FaCar } from "react-icons/fa";
-import { FaBus, FaLocationDot, FaTrain } from "react-icons/fa6";
 
 const smoothScroll = (element_id: string) => {
   const element = document.getElementById(element_id);
@@ -94,8 +81,9 @@ export default function InfoPage() {
           <p>
             This is a puzzlehunt! Teams of people will compete to solve puzzles (think escape room,
             not jigsaw) using information both online and in real life. Brown Puzzlehunt 2024 is
-            Brown Puzzle Club's second annual puzzlehunt; to see an example of a complete event,
-            check out last year's <a href="https://2023.brownpuzzlehunt.com/">hunt archive</a>.
+            Brown Puzzle Club&apos;s second annual puzzlehunt; to see an example of a complete
+            event, check out last year&apos;s{" "}
+            <a href="https://2023.brownpuzzlehunt.com/">hunt archive</a>.
           </p>
         </div>
         <h4 className="pb-2">When and where is it?</h4>
@@ -132,12 +120,12 @@ export default function InfoPage() {
             , with doors opening at <b>8:15pm</b>. Kickoff and Wrap-up will both be livestreamed.
           </p>
         </div>
-        <h4>What's the goal?</h4>
+        <h4>What&apos;s the goal?</h4>
         <img className="h-52 invert float-right m-4" src={gift} />
         <div>
           <p>
-            Teams will compete to be the first to earn Brown Investigation Bureau's prestigious
-            'Detective of the Month' award!
+            Teams will compete to be the first to earn Brown Investigation Bureau&apos;s prestigious
+            &apos;Detective of the Month&apos; award!
           </p>
           <p>
             Any detective worth their salt would kill for this title! But watch out - only teams
@@ -146,8 +134,8 @@ export default function InfoPage() {
           </p>
           <p>
             Additionally, for your team to win, you must have at least one current Brown/RISD
-            student on-campus. If you don't have a current Brown/RISD student on your team, you'll
-            be able to do the final runaround, but you won't be able to win.
+            student on-campus. If you don&apos;t have a current Brown/RISD student on your team,
+            you&apos;ll be able to do the final runaround, but you won&apos;t be able to win.
           </p>
         </div>
         <img className="h-48 invert float-left m-4" src={team} />
@@ -161,7 +149,7 @@ export default function InfoPage() {
           </p>
           <p>
             <b>We recommend teams to be around 7 to 10 people</b>. The maximum team size is 12
-            people, but there's no minimum team size - you can still have fun with a team of 2!
+            people, but there&apos;s no minimum team size - you can still have fun with a team of 2!
             Students and those new to hunting are encouraged to build teams on the larger side.
           </p>
         </div>
@@ -194,9 +182,9 @@ export default function InfoPage() {
           </p>
           <p>
             You can use a hint to get help on a puzzle. This can be something like a nudge in the
-            right direction (i.e. you give us your progress on the puzzle and we'll try to get you
-            unstuck) or an answer to a question (e.g. “Which answers to these crossword clues are
-            wrong?”).
+            right direction (i.e. you give us your progress on the puzzle and we&apos;ll try to get
+            you unstuck) or an answer to a question (e.g. “Which answers to these crossword clues
+            are wrong?”).
           </p>
           <p>
             If you are a beginner student team or a team with a strong on-site presence that is not
@@ -210,14 +198,14 @@ export default function InfoPage() {
             You can only have <b>one open hint request</b> at a time.
           </p>
         </div>
-        <h4>I'm a non-Brown/RISD participant on-campus.</h4>
+        <h4>I&apos;m a non-Brown/RISD participant on-campus.</h4>
         <div>
           <p>
             Anyone who is participating on-campus will need to print and fill out{" "}
             <a href="https://studentactivities.brown.edu/sites/default/files/safety/Physical%20Activity%20Release.pdf">
               this waiver form
             </a>
-            . We'll collect these at kickoff.
+            . We&apos;ll collect these at kickoff.
           </p>
           <p>
             For essential information, check out{" "}
@@ -229,7 +217,7 @@ export default function InfoPage() {
         <div>
           <p>
             You may use any external sources for help, including other people, as long as they
-            aren't helping other teams and aren't actively participating in the hunt.
+            aren&apos;t helping other teams and aren&apos;t actively participating in the hunt.
           </p>
           <p>
             <b className="bg-[#1d3650]">Use of Google is not only permitted, but essential</b>. You
@@ -251,14 +239,14 @@ export default function InfoPage() {
           </ul>
           <p>You may not publicly stream a solve of our hunt when the hunt is live.</p>
           <p>
-            It won't be necessary to look at the HTML source/JavaScript/CSS on any webpages for any
-            puzzle. Infractions or abuse of these elements may be grounds for disqualification or
-            removal from the hunt.
+            It won&apos;t be necessary to look at the HTML source/JavaScript/CSS on any webpages for
+            any puzzle. Infractions or abuse of these elements may be grounds for disqualification
+            or removal from the hunt.
           </p>
           <p>We reserve the right to disqualify any team for unsportsmanlike conduct.</p>
           <p>
-            We reserve the right to change any of these rules. If there's a big change, we'll
-            announce it to all teams.
+            We reserve the right to change any of these rules. If there&apos;s a big change,
+            we&apos;ll announce it to all teams.
           </p>
           <p>
             If you have any questions about these rules, or if you want to contact us for any
@@ -269,24 +257,24 @@ export default function InfoPage() {
         <h4>What is a puzzlehunt? How do I solve these puzzles?</h4>
         <div>
           <p>
-            If you've never heard of puzzlehunts before, here's a very brief summary: in a typical
-            puzzle, you receive some information and have to extract an answer out of it, which is
-            almost always an English word or phrase. Puzzles can come in many different forms; the
-            only real commonality is that you usually receive no direct instructions, so it's up to
-            you to figure out how to make sense of the information you're given. You can read a
-            longer introduction to puzzlehunts{" "}
+            If you&apos;ve never heard of puzzlehunts before, here&apos;s a very brief summary: in a
+            typical puzzle, you receive some information and have to extract an answer out of it,
+            which is almost always an English word or phrase. Puzzles can come in many different
+            forms; the only real commonality is that you usually receive no direct instructions, so
+            it&apos;s up to you to figure out how to make sense of the information you&apos;re
+            given. You can read a longer introduction to puzzlehunts{" "}
             <a href="https://blog.vero.site/post/puzzlehunts">here</a>.
           </p>
           <p>
-            If you are new to puzzles and are interested in seeing some examples, or if you're
+            If you are new to puzzles and are interested in seeing some examples, or if you&apos;re
             looking for some practice, we recommend looking at puzzles from other online hunts such
             as <a href="https://galacticpuzzlehunt.com/">Galactic Puzzle Hunt</a>,{" "}
             <a href="https://teammatehunt.com/">Teammate Hunt</a>, or{" "}
             <a href="https://puzzlepotluck.com/">Puzzle Potluck</a>. You can also check out last
-            year's <a href="https://2023.brownpuzzlehunt.com/">Brown Puzzlehunt</a>.
+            year&apos;s <a href="https://2023.brownpuzzlehunt.com/">Brown Puzzlehunt</a>.
           </p>
         </div>
-        <h4>Who's writing this hunt?</h4>
+        <h4>Who&apos;s writing this hunt?</h4>
         <img className="h-36 invert float-right m-4" src={guy} />
         <div>
           <p>
@@ -296,48 +284,48 @@ export default function InfoPage() {
         <h4>How hard will this hunt be? How long will it be?</h4>
         <div>
           <p>
-            We've designed this hunt to be a{" "}
+            We&apos;ve designed this hunt to be a{" "}
             <b className="bg-[#1d3650]">
               relatively easy introduction to puzzlehunting for beginner teams
             </b>
             , while also showcasing what makes puzzlehunts so fun.
           </p>
           <p>
-            We expect this year's Brown Puzzlehunt to be roughly the same length as last year's, but
-            much easier towards the start. Highly experienced, somewhat insane online-only teams may
-            finish all online components in only a few hours, but we expect and encourage teams
-            engaging with the on-campus puzzles to take longer.
+            We expect this year&apos;s Brown Puzzlehunt to be roughly the same length as last
+            year&apos;s, but much easier towards the start. Highly experienced, somewhat insane
+            online-only teams may finish all online components in only a few hours, but we expect
+            and encourage teams engaging with the on-campus puzzles to take longer.
           </p>
         </div>
-        <h4>What's unique about this puzzlehunt?</h4>
+        <h4>What&apos;s unique about this puzzlehunt?</h4>
         <img className="w-1/4 invert float-right m-4" src={brown} />
         <div>
           <p>
             Brown Puzzlehunt is a hunt written by current Brown and RISD students, and we hope that
             we are able to share some of the unique history, culture, and student zeitgeist with the
-            puzzle community! We're also excited to explore the unique possibility space of
+            puzzle community! We&apos;re also excited to explore the unique possibility space of
             in-person puzzles.
           </p>
         </div>
-        <h4 id="stuck">I'm stuck on a puzzle. What should I do?</h4>
+        <h4 id="stuck">I&apos;m stuck on a puzzle. What should I do?</h4>
         <div>
           <p>Here are some general puzzle tips that might be useful:</p>
           <ul>
             <li>
-              Thoroughly check the work that you've already done. Fixing a small mistake or
+              Thoroughly check the work that you&apos;ve already done. Fixing a small mistake or
               incorrect assumption can greatly help with getting unstuck.
             </li>
             <li>
               Get fresh eyes on the puzzle, or conversely, take a break and look at something else.
             </li>
-            <li>Consider what information you haven't used yet.</li>
+            <li>Consider what information you haven&apos;t used yet.</li>
             <li>Put everything you have into your favorite search engine.</li>
             <li>
               Look at{" "}
               <a href="https://devjoe.appspot.com/huntindex/index/keywords.html">
                 similar examples
               </a>{" "}
-              of the puzzle type you're working on.
+              of the puzzle type you&apos;re working on.
             </li>
             <li>
               <a href="https://beta.vero.site/try">Have you tried…</a>
@@ -345,20 +333,20 @@ export default function InfoPage() {
           </ul>
           <p>
             Remember that after hints are released, you can also use them to get a nudge in the
-            right direction. Please use them if you're stuck!
+            right direction. Please use them if you&apos;re stuck!
           </p>
         </div>
-        <h4>I think there's a mistake in this puzzle!</h4>
+        <h4>I think there&apos;s a mistake in this puzzle!</h4>
         <div>
           <p>
-            Please describe the error in a <a href="/contact">contact HQ</a> submission and we'll
-            try to correct it.
+            Please describe the error in a <a href="/contact">contact HQ</a> submission and
+            we&apos;ll try to correct it.
           </p>
         </div>
-        <h4>I have a question that's not on this list!</h4>
+        <h4>I have a question that&apos;s not on this list!</h4>
         <div>
           <p>
-            Please <a href="/contact">contact HQ</a> and we'll do our best to answer it.
+            Please <a href="/contact">contact HQ</a> and we&apos;ll do our best to answer it.
           </p>
         </div>
         <h1 id="on-campus">On-Campus</h1>
@@ -374,8 +362,8 @@ export default function InfoPage() {
           <h4>Being Safe On-Campus</h4>
           <p>
             Brown University is not a playground for puzzlers; it is also a live university, with
-            classes, students, faculty, research, and other events happening all the time. If you're
-            going to be on-site,{" "}
+            classes, students, faculty, research, and other events happening all the time. If
+            you&apos;re going to be on-site,{" "}
             <b className="bg-[#1d3650]">
               please be respectful of both the community and the campus
             </b>
@@ -384,15 +372,15 @@ export default function InfoPage() {
           <p>
             Brown Puzzlehunt will not require you to do anything illegal, immoral, or untoward,
             including accessing unauthorized spaces. If you think that a puzzle is asking you to do
-            something dangerous, against the law, or disrespectful, stop and think. If you're really
-            not sure, please <a href="/contact">contact us</a> and check.
+            something dangerous, against the law, or disrespectful, stop and think. If you&apos;re
+            really not sure, please <a href="/contact">contact us</a> and check.
           </p>
           <p>
             Anyone who is attending on-campus will need to print and fill out{" "}
             <a href="https://studentactivities.brown.edu/sites/default/files/safety/Physical%20Activity%20Release.pdf">
               this waiver form
             </a>
-            . We'll collect these at kickoff.
+            . We&apos;ll collect these at kickoff.
           </p>
         </div>
         <h4>Minors</h4>
@@ -427,9 +415,9 @@ export default function InfoPage() {
             Some events and puzzles might use locations that require card swipe access, which is
             limited to current undergraduate or graduate students (or some faculty). Puzzles which
             require this will be kept to a minimum and, where applicable, clearly marked as such. If
-            you know ahead of time that you'll want to participate in these puzzles but have no
+            you know ahead of time that you&apos;ll want to participate in these puzzles but have no
             current students on your team, <a href="/contact">contact us</a> before the hunt and
-            we'll find a way to get that sorted.
+            we&apos;ll find a way to get that sorted.
           </p>
         </div>
         <h4>Getting to Providence</h4>
@@ -440,10 +428,10 @@ export default function InfoPage() {
             </div>
             <span>
               Brown University is a 10-15 minute walk from our nearest train station, Providence
-              Station, which is across the river from College Hill. If you're traveling from Boston,
-              we recommend Amtrak Northeast Regional as the least expensive provider. Providence is
-              also accessible via the MBTA Rapid Transit system, along the Providence/Stoughton
-              line, starting at South Station.
+              Station, which is across the river from College Hill. If you&apos;re traveling from
+              Boston, we recommend Amtrak Northeast Regional as the least expensive provider.
+              Providence is also accessible via the MBTA Rapid Transit system, along the
+              Providence/Stoughton line, starting at South Station.
             </span>
           </div>
           <div className="transport-box flex items-center">
@@ -467,7 +455,7 @@ export default function InfoPage() {
               The visitor entrance is located at the intersection of Power and Thayer Streets.
               Parking costs $2.00 per hour over the weekend. If you want overnight parking or
               require a permit for more than one day, you can <a href="/contact">contact us</a> and
-              we'll try to help you out.
+              we&apos;ll try to help you out.
             </span>
           </div>
         </div>
@@ -484,10 +472,10 @@ export default function InfoPage() {
           <p>
             If you are going to be on-campus,{" "}
             <b>we will need you to let us know where your HQ is</b>. This is the location where you
-            will be spending most of your time solving puzzles while you're on-campus. If you are a
-            student team or have student members, this might be a dorm common area or an apartment
-            near campus, or a noise-tolerant space like the Student Center or some floors of the
-            SciLi.
+            will be spending most of your time solving puzzles while you&apos;re on-campus. If you
+            are a student team or have student members, this might be a dorm common area or an
+            apartment near campus, or a noise-tolerant space like the Student Center or some floors
+            of the SciLi.
           </p>
           <p>
             If you need a place for your team to work during the hunt, let us know during the
@@ -499,10 +487,10 @@ export default function InfoPage() {
         <h4>Events</h4>
         <div>
           <p>
-            We're excited to say that there will be events on-campus! These events will provide one
-            “free solve” to teams who complete it, which can be used to get the answer to a puzzle
-            that they're stuck on. Anyone who is on-campus during the event is welcome to
-            participate.
+            We&apos;re excited to say that there will be events on-campus! These events will provide
+            one “free solve” to teams who complete it, which can be used to get the answer to a
+            puzzle that they&apos;re stuck on. Anyone who is on-campus during the event is welcome
+            to participate.
           </p>
           <div className="events flex flex-col md:flex-row p-5 space-y-5 md:space-y-0">
             <div className="event-box bg-red items-center flex-auto lg:w-1/3 text-center">

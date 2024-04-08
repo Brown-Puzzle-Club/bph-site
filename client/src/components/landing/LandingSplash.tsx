@@ -1,3 +1,6 @@
+import type React from "react";
+import { useEffect, useState } from "react";
+
 import bear_regular from "../../assets/landing/bear_regular.png";
 import bear_wave from "../../assets/landing/bear_wave.png";
 import layer1 from "../../assets/landing/layer_1_crop.png";
@@ -7,17 +10,6 @@ import logo from "../../assets/landing/logo.png";
 import blimp from "../../assets/landing/register_blimp.png";
 import blimp_hover from "../../assets/landing/register_hover.png";
 import release from "../../assets/landing/release.png";
-import React, { useEffect, useState } from "react";
-import bear_regular from "../../assets/landing/bear_regular.png";
-import bear_wave from "../../assets/landing/bear_wave.png";
-import layer1 from "../../assets/landing/layer_1_crop.png";
-import layer2 from "../../assets/landing/layer_2.png";
-import layer3 from "../../assets/landing/layer_3.png";
-import logo from "../../assets/landing/logo.png";
-import blimp from "../../assets/landing/register_blimp.png";
-import blimp_hover from "../../assets/landing/register_hover.png";
-import release from "../../assets/landing/release.png";
-import React, { useEffect, useState } from "react";
 
 const LandingSplash: React.FC = () => {
   const [blimpPosition, setBlimpPosition] = useState(20);

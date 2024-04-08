@@ -1,3 +1,8 @@
+import { useState } from "react";
+import { BeatLoader } from "react-spinners";
+
+import { useAuth } from "@/hooks/useAuth";
+
 import { Button } from "../ui/button";
 import {
   NavigationMenuContent,
@@ -5,19 +10,6 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "../ui/navigation-menu";
-import { useAuth } from "@/hooks/useAuth";
-import { useState } from "react";
-import { BeatLoader } from "react-spinners";
-import { Button } from "../ui/button";
-import {
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from "../ui/navigation-menu";
-import { useAuth } from "@/hooks/useAuth";
-import { useState } from "react";
-import { BeatLoader } from "react-spinners";
 
 interface CustomError extends Error {
   response?: {

@@ -1,7 +1,6 @@
-import cthulu_blueno from "../assets/landing/chibi_blueno.png";
 import { useState } from "react";
+
 import cthulu_blueno from "../assets/landing/chibi_blueno.png";
-import { useState } from "react";
 
 const ArchiveCard = ({
   year,

@@ -1,3 +1,10 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
+import validator from "validator";
+import { z } from "zod";
+
 import TeamIcon from "@/components/team/TeamIcon";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,45 +32,6 @@ import {
   MURDER_WEAPON_EMOJIS,
   PFP_COLOR_CHOICES,
 } from "@/utils/constants";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "react-hot-toast";
-import validator from "validator";
-import { z } from "zod";
-import TeamIcon from "@/components/team/TeamIcon";
-import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
-import { useAuth } from "@/hooks/useAuth";
-import {
-  MEMBER_COUNT_MAX,
-  MEMBER_COUNT_MIN,
-  MURDER_WEAPON_EMOJIS,
-  PFP_COLOR_CHOICES,
-} from "@/utils/constants";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "react-hot-toast";
-import validator from "validator";
-import { z } from "zod";
 
 export const registerFormSchema = z
   .object({
@@ -130,7 +98,7 @@ export const registerFormSchema = z
       return true;
     },
     {
-      message: "Required for in person teams that don't need a room reserved.",
+      message: "Required for in person teams that don&apos;t need a room reserved.",
       path: ["where_to_find"],
     },
   );
@@ -231,7 +199,9 @@ export default function RegisterForm() {
                     <FormControl>
                       <Input type="password" placeholder="Enter team password" {...field} />
                     </FormControl>
-                    <FormDescription>You'll probably share this with your team.</FormDescription>
+                    <FormDescription>
+                      You&apos;ll probably share this with your team.
+                    </FormDescription>
                     <FormMessage className="text-right" />
                   </FormItem>
                 )}
@@ -255,7 +225,8 @@ export default function RegisterForm() {
               <h1 className="text-center font-bold text-xl">Team Members</h1>
               <h4 className="text-center text-slate-400 text-sm">
                 <b>We recommend teams to be around 7 to 10 people</b>. The maximum team size is 12
-                people, but there's no minimum team size — you can still have fun with a team of 2!
+                people, but there&apos;s no minimum team size — you can still have fun with a team
+                of 2!
               </h4>
               <h4 className="text-center text-slate-400 text-sm">
                 <b>Team membership is modifiable at any time before the hunt</b>
@@ -333,7 +304,8 @@ export default function RegisterForm() {
               </h4>
               <h4 className="text-center text-slate-400 text-sm">
                 <b>
-                  Your teams' in-person / remote status is modifiable at any time before the hunt.
+                  Your teams&apos; in-person / remote status is modifiable at any time before the
+                  hunt.
                 </b>
               </h4>
               <FormField
@@ -346,7 +318,7 @@ export default function RegisterForm() {
                         <div className="space-y-0.5">
                           <FormLabel>In Person Participation</FormLabel>
                           <FormDescription>
-                            Are you planning on participating in the hunt on Brown University's
+                            Are you planning on participating in the hunt on Brown University&apos;s
                             campus?
                           </FormDescription>
                         </div>
@@ -425,7 +397,8 @@ export default function RegisterForm() {
                                   render={({ field }) => (
                                     <FormItem>
                                       <FormLabel>
-                                        Where can we best find you while you're solving puzzles?
+                                        Where can we best find you while you&apos;re solving
+                                        puzzles?
                                       </FormLabel>
                                       <FormControl>
                                         <Input type="text" {...field} />
@@ -477,9 +450,9 @@ export default function RegisterForm() {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent className="dark">
-                            {MURDER_WEAPON_EMOJIS.map((emoji) => {
+                            {MURDER_WEAPON_EMOJIS.map((emoji, idx) => {
                               return (
-                                <SelectItem value={emoji} className="text-xl">
+                                <SelectItem key={idx} value={emoji} className="text-xl">
                                   {emoji}
                                 </SelectItem>
                               );
@@ -512,9 +485,9 @@ export default function RegisterForm() {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent className="dark">
-                            {PFP_COLOR_CHOICES.map((color) => {
+                            {PFP_COLOR_CHOICES.map((color, idx) => {
                               return (
-                                <SelectItem value={color} className="text-xl">
+                                <SelectItem key={idx} value={color} className="text-xl">
                                   {/* square div with color as the background color */}
                                   <div
                                     className="w-10 h-10 border-2 border-slate-800 rounded"

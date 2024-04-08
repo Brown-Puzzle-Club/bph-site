@@ -1,15 +1,10 @@
+import { useLocalStorage } from "@uidotdev/usehooks";
+import { useEffect, useState } from "react";
+
 import InputBox from "@/components/puzzle/nyt-games/letterboxed/InputBox";
 import LetterBox from "@/components/puzzle/nyt-games/letterboxed/LetterBox";
 import { Button } from "@/components/ui/button";
 import { Puzzle, Solution } from "@/utils/minor_cases/nyt/LetterBoxedTypes";
-import { useLocalStorage } from "@uidotdev/usehooks";
-import { useEffect, useState } from "react";
-import InputBox from "@/components/puzzle/nyt-games/letterboxed/InputBox";
-import LetterBox from "@/components/puzzle/nyt-games/letterboxed/LetterBox";
-import { Button } from "@/components/ui/button";
-import { Puzzle, Solution } from "@/utils/minor_cases/nyt/LetterBoxedTypes";
-import { useLocalStorage } from "@uidotdev/usehooks";
-import { useEffect, useState } from "react";
 
 function LetterBoxed({ puzzleNum }: { puzzleNum: 1 | 2 | 3 }) {
   const puzzles = {

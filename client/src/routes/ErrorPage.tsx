@@ -1,5 +1,5 @@
-import { ErrorResponse, isRouteErrorResponse, useRouteError } from "react-router-dom";
-import { ErrorResponse, isRouteErrorResponse, useRouteError } from "react-router-dom";
+import type { ErrorResponse } from "react-router-dom";
+import { isRouteErrorResponse, useRouteError } from "react-router-dom";
 
 const DefaultError = ({ error }: { error: ErrorResponse }) => {
   return (

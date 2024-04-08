@@ -1,7 +1,6 @@
-import { INode, NodeAnswer } from "./board_types";
-import { DjangoContext } from "@/utils/django_types";
-import { INode, NodeAnswer } from "./board_types";
-import { DjangoContext } from "@/utils/django_types";
+import type { DjangoContext } from "@/utils/django_types";
+
+import type { INode, NodeAnswer } from "./board_types";
 
 export const collectNodes = (context: DjangoContext) => {
   // TODO: fix coordinates

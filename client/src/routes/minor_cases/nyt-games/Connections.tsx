@@ -1,11 +1,8 @@
-import ConnectionsBox from "@/components/puzzle/nyt-games/connections/ConnectionsBox";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { BeatLoader } from "react-spinners";
+
 import ConnectionsBox from "@/components/puzzle/nyt-games/connections/ConnectionsBox";
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { BeatLoader } from "react-spinners";
 
 function Connections() {
   const [unfilteredWords, setUnfilteredWords] = useState<string[]>([]);
@@ -54,7 +51,7 @@ function Connections() {
         setWords(filteredWords);
       })
       .catch((error) => console.error("Error fetching words for round:", currRound, error));
-  }, [currRound]);
+  }, [currRound, usedWordIndices]);
 
   const handleBoxClick = (word: string) => {
     // Changed parameter to word

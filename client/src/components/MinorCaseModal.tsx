@@ -1,28 +1,19 @@
 // Modal.tsx
-import { useDjangoContext } from "../hooks/useDjangoContext";
-import { Checkbox } from "./ui/checkbox";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
+import type React from "react";
+import { useEffect } from "react";
+import { Link } from "react-router-dom";
+
 import manila from "@/assets/main/manila_open.png";
 import * as birb from "@/assets/minor_cases/birbs/teaser-1.png";
 import * as clip1 from "@/assets/minor_cases/clipping1.png";
 import * as clip2 from "@/assets/minor_cases/clipping2.png";
-import { CASE_PALETTE, MajorCaseEnum } from "@/utils/constants";
-import { Round } from "@/utils/django_types";
+import { CASE_PALETTE, type MajorCaseEnum } from "@/utils/constants";
+import type { Round } from "@/utils/django_types";
 import { getMinorCaseSolution } from "@/utils/utils";
-import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
+
 import { useDjangoContext } from "../hooks/useDjangoContext";
 import { Checkbox } from "./ui/checkbox";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
-import manila from "@/assets/main/manila_open.png";
-import * as birb from "@/assets/minor_cases/birbs/teaser-1.png";
-import * as clip1 from "@/assets/minor_cases/clipping1.png";
-import * as clip2 from "@/assets/minor_cases/clipping2.png";
-import { CASE_PALETTE, MajorCaseEnum } from "@/utils/constants";
-import { Round } from "@/utils/django_types";
-import { getMinorCaseSolution } from "@/utils/utils";
-import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
 
 interface ModalProps {
   setSelectedCase: (round: Round | null) => void;

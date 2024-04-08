@@ -1,9 +1,8 @@
+import type { SetStateAction } from "react";
+import { useState } from "react";
+
 import { useDjangoContext } from "@/hooks/useDjangoContext";
 import { CASE_PALETTE, MAJOR_CASE_NAMES, MajorCaseEnum } from "@/utils/constants";
-import { SetStateAction, useState } from "react";
-import { useDjangoContext } from "@/hooks/useDjangoContext";
-import { CASE_PALETTE, MAJOR_CASE_NAMES, MajorCaseEnum } from "@/utils/constants";
-import { SetStateAction, useState } from "react";
 
 export default function PuzzleList() {
   const { context } = useDjangoContext();

@@ -1,6 +1,5 @@
-import { LetterState, Puzzle } from "../../../../utils/minor_cases/nyt/LetterBoxedTypes";
-import Letter from "./Letter";
-import { LetterState, Puzzle } from "../../../../utils/minor_cases/nyt/LetterBoxedTypes";
+import type { Puzzle } from "../../../../utils/minor_cases/nyt/LetterBoxedTypes";
+import { LetterState } from "../../../../utils/minor_cases/nyt/LetterBoxedTypes";
 import Letter from "./Letter";
 
 export default function LetterBox({

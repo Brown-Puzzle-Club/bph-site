@@ -1,11 +1,9 @@
-import Cases from "./Cases";
-import { useDjangoContext } from "@/hooks/useDjangoContext";
-import { Round } from "@/utils/django_types";
 import { useMemo } from "react";
-import Cases from "./Cases";
+
 import { useDjangoContext } from "@/hooks/useDjangoContext";
-import { Round } from "@/utils/django_types";
-import { useMemo } from "react";
+import type { Round } from "@/utils/django_types";
+
+import Cases from "./Cases";
 
 export default function ActiveCases({
   setSelectedCase,

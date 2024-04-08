@@ -1,5 +1,5 @@
-import { ReactNode, useEffect, useRef, useState } from "react";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import type { ReactNode } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function ProgressDocs({ children }: { children: ReactNode }) {
   const [scrollPercentage, setScrollPercentage] = useState<number>(0);

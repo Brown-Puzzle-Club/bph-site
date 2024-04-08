@@ -1,9 +1,7 @@
+import useSocket from "@/hooks/useSocket";
+
 import Loader from "../Loader";
 import VotingModal from "./VotingModal";
-import useSocket from "@/hooks/useSocket";
-import Loader from "../Loader";
-import VotingModal from "./VotingModal";
-import useSocket from "@/hooks/useSocket";
 
 interface CaseVotingProps {
   path: string;

@@ -1,5 +1,8 @@
-import LoginNavbar from "./LoginNavbar";
-import TeamNavbar from "./TeamNavbar";
+import * as React from "react";
+import { useState } from "react";
+import Countdown from "react-countdown";
+import { BeatLoader } from "react-spinners";
+
 import bluenoir_logo from "@/assets/navbar_logo_head.png";
 import {
   NavigationMenu,
@@ -15,31 +18,9 @@ import { useDjangoContext } from "@/hooks/useDjangoContext";
 import { useTheme } from "@/hooks/useTheme";
 import { DEFAULT_THEME } from "@/utils/themes";
 import { cn } from "@/utils/utils";
-import * as React from "react";
-import { useState } from "react";
-import Countdown from "react-countdown";
-import { BeatLoader } from "react-spinners";
+
 import LoginNavbar from "./LoginNavbar";
 import TeamNavbar from "./TeamNavbar";
-import bluenoir_logo from "@/assets/navbar_logo_head.png";
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuRight,
-  NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu";
-import { useAuth } from "@/hooks/useAuth";
-import { useDjangoContext } from "@/hooks/useDjangoContext";
-import { useTheme } from "@/hooks/useTheme";
-import { DEFAULT_THEME } from "@/utils/themes";
-import { cn } from "@/utils/utils";
-import * as React from "react";
-import { useState } from "react";
-import Countdown from "react-countdown";
-import { BeatLoader } from "react-spinners";
 
 const components: { title: string; href: string; description: string }[] = [
   {
@@ -67,6 +48,7 @@ const components: { title: string; href: string; description: string }[] = [
 export const ListItem = React.forwardRef<
   React.ElementRef<"a">,
   React.ComponentPropsWithoutRef<"a">
+  // eslint-disable-next-line react/prop-types
 >(({ className, title, children, ...props }, ref) => {
   return (
     <li>
@@ -87,7 +69,10 @@ export const ListItem = React.forwardRef<
   );
 });
 
+ListItem.displayName = "ListItem";
+
 const IconItem = React.forwardRef<React.ElementRef<"a">, React.ComponentPropsWithoutRef<"a">>(
+  // eslint-disable-next-line react/prop-types
   ({ className, title, ...props }, ref) => {
     return (
       <li>
@@ -108,6 +93,8 @@ const IconItem = React.forwardRef<React.ElementRef<"a">, React.ComponentPropsWit
     );
   },
 );
+
+IconItem.displayName = "IconItem";
 
 const hunt_start_timer = ({
   days,

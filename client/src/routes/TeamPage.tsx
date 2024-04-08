@@ -1,17 +1,11 @@
-import TeamIcon from "@/components/team/TeamIcon";
-import { useAuth } from "@/hooks/useAuth";
-import { Team, TeamMember } from "@/utils/django_types";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { FaCog } from "react-icons/fa";
 import { BeatLoader } from "react-spinners";
+
 import TeamIcon from "@/components/team/TeamIcon";
 import { useAuth } from "@/hooks/useAuth";
-import { Team, TeamMember } from "@/utils/django_types";
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { FaCog } from "react-icons/fa";
-import { BeatLoader } from "react-spinners";
+import type { Team, TeamMember } from "@/utils/django_types";
 
 const TEAM_ID = window.location.pathname.split("/").pop();
 
@@ -82,9 +76,9 @@ export default function TeamPage() {
               <div className="justify-center items-center flex">
                 <div className="members pt-6 flex flex-wrap justify-center items-center">
                   {members?.map((member, index) => (
-                    <p id={index.toString()} className="">
+                    <p key={index} id={index.toString()} className="">
                       {member.name}
-                      {index < members?.length - 1 ? ", " : ""}
+                      {index < members?.length - 1 ? ", " : ""}
                     </p>
                   ))}
                 </div>
