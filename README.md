@@ -1,3 +1,10 @@
+## Startup Checklist
+
+```
+sudo systemctl status gunicorn
+sudo systemctl status redis-server
+```
+
 This is a Django app for running puzzlehunts, a modified branch of Galactic Trendsetter's [bph-site](https://github.com/galacticpuzzlehunt/bph-site), to run [Brown Puzzlehunt](https://www.brownpuzzlehunt.com/)
 
 On top of the core features of bph-site (teams, puzzle unlocks, interactive puzzles, hints, email + discord hooks, admin panel), we have also implemented:
