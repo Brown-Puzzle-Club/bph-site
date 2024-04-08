@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+
 import VotingIndicator from "./VotingIndicator";
 
 interface VotingIndicatorsProps {

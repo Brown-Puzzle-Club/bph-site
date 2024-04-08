@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
+
 import { GuessTile } from "./GuessTile";
 import NumberTile from "./NumberTile";
 import Tile from "./Tile";
+import type { Board, Character, Guess } from "./utils";
 import {
-  Board,
-  Character,
   GameMode,
   GameState,
-  Guess,
   Row,
   VerificationState,
   clearRow,
@@ -19,7 +19,6 @@ import {
   verifyGuess,
 } from "./utils";
 import { possibleWords } from "./wordList";
-import { toast } from "react-hot-toast";
 
 const hangmanTemplateAreas = `'a b c d e A . .'
                               '. . . . f . . .'

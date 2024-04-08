@@ -1,9 +1,11 @@
-import { useState } from "react";
-import Tile from "./Tile";
-import { Character, GameState, VerificationState } from "./utils";
-import { possibleWords } from "./wordList";
 import axios from "axios";
+import { useState } from "react";
 import { toast } from "react-hot-toast";
+
+import Tile from "./Tile";
+import type { Character } from "./utils";
+import { GameState, VerificationState } from "./utils";
+import { possibleWords } from "./wordList";
 
 interface FinalWordleProps {
   gameState: GameState;

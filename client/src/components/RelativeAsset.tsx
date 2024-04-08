@@ -1,4 +1,5 @@
-import { CSSProperties, ReactNode, useState } from "react";
+import type { CSSProperties, ReactNode } from "react";
+import { useState } from "react";
 
 export interface AssetProps {
   imageSrc: string;
@@ -11,7 +12,7 @@ export interface AssetProps {
   children?: ReactNode;
 }
 
-const RelativeAsset: React.FC<AssetProps> = ({
+const RelativeAsset = ({
   imageSrc,
   linkTo,
   hoverImageSrc,
@@ -20,7 +21,7 @@ const RelativeAsset: React.FC<AssetProps> = ({
   onHover,
   onLeave,
   children,
-}) => {
+}: AssetProps) => {
   const [isHovered, setIsHovered] = useState(false);
 
   const curImageSrc = isHovered && hoverImageSrc ? hoverImageSrc : imageSrc;

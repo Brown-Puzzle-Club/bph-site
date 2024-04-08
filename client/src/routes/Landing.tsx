@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+
 import LandingInfo from "../components/landing/LandingInfo";
 import LandingSplash from "../components/landing/LandingSplash";
 

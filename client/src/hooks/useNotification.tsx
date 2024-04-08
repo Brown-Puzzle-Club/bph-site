@@ -1,7 +1,8 @@
 import { useEffect } from "react";
-import { z } from "zod";
-import { useAuth } from "./useAuth";
 import { toast } from "react-hot-toast";
+import { z } from "zod";
+
+import { useAuth } from "./useAuth";
 
 const NotificationSchema = z.object({
   type: z.string(),

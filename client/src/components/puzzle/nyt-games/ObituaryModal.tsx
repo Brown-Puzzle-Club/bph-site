@@ -1,13 +1,14 @@
-import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
 import { BeatLoader } from "react-spinners";
 import { z } from "zod";
-import { toast } from "react-hot-toast";
+
+import { Button } from "@/components/ui/button";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
 const obituarySchema = z.object({
   connections_answer: z.string(),
@@ -20,10 +21,7 @@ interface SubscriptionModalProps {
   setCorrectAnswer: (answer: string) => void; // Define prop for setting the correct answer
 }
 
-const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
-  setIsModalOpen,
-  setCorrectAnswer,
-}) => {
+const SubscriptionModal = ({ setIsModalOpen, setCorrectAnswer }: SubscriptionModalProps) => {
   const [submitting, setSubmitting] = useState(false);
   const form = useForm<z.infer<typeof obituarySchema>>({
     resolver: zodResolver(obituarySchema),
@@ -60,13 +58,13 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
         {/* Modal Content */}
         <div className="text-center h-100 items-center justify-center flex flex-col">
           <p className="">
-            You've reached your limit of free articles. Already a subscriber? <b>Log in</b>
+            You&apos;ve reached your limit of free articles. Already a subscriber? <b>Log in</b>
           </p>
           <div className="border-2 border-blue-500 rounded-md max-w-screen-md py-5 mt-4 w-9/12">
             <h2 className="text-xl font-bold mb-4 ">Special offer:</h2>
-            <h2 className="text-lg">Get unlimited access by proving you're</h2>
-            <h2 className="text-lg">not a robot and clicking the 'Subscribe</h2>
-            <h2 className="text-lg mb-4">Now' button below.</h2>
+            <h2 className="text-lg">Get unlimited access by proving you&apos;re</h2>
+            <h2 className="text-lg">not a robot and clicking the &apos;Subscribe</h2>
+            <h2 className="text-lg mb-4">Now&apos; button below.</h2>
             <h2 className="text-lg mb-4 text-zinc-500">$0.00/week</h2>
 
             <Form {...form}>

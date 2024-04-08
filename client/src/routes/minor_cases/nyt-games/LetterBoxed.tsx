@@ -1,9 +1,10 @@
+import { useLocalStorage } from "@uidotdev/usehooks";
+import { useEffect, useState } from "react";
+
 import InputBox from "@/components/puzzle/nyt-games/letterboxed/InputBox";
 import LetterBox from "@/components/puzzle/nyt-games/letterboxed/LetterBox";
 import { Button } from "@/components/ui/button";
 import { Puzzle, Solution } from "@/utils/minor_cases/nyt/LetterBoxedTypes";
-import { useEffect, useState } from "react";
-import { useLocalStorage } from "@uidotdev/usehooks";
 
 function LetterBoxed({ puzzleNum }: { puzzleNum: 1 | 2 | 3 }) {
   const puzzles = {
@@ -202,14 +203,8 @@ function LetterBoxed({ puzzleNum }: { puzzleNum: 1 | 2 | 3 }) {
 export default function LetterBoxedPuzzle() {
   const [puzzleNum, setPuzzleNum] = useState<1 | 2 | 3>(1);
 
-  const [puzzleOneAnswer] = useLocalStorage<string | null>(
-    "nyt-letterboxed-1-answer",
-    null,
-  );
-  const [puzzleTwoAnswer] = useLocalStorage<string | null>(
-    "nyt-letterboxed-2-answer",
-    null,
-  );
+  const [puzzleOneAnswer] = useLocalStorage<string | null>("nyt-letterboxed-1-answer", null);
+  const [puzzleTwoAnswer] = useLocalStorage<string | null>("nyt-letterboxed-2-answer", null);
 
   return (
     <div className="flex flex-col items-center bg-[#fa8282]">

@@ -1,5 +1,8 @@
-import { DEFAULT_THEME, Theme } from "@/utils/themes";
-import { ReactNode, createContext, useContext, useState } from "react";
+import type { ReactNode } from "react";
+import { createContext, useContext, useState } from "react";
+
+import type { Theme } from "@/utils/themes";
+import { DEFAULT_THEME } from "@/utils/themes";
 
 type ThemeContextType = {
   theme: Theme;

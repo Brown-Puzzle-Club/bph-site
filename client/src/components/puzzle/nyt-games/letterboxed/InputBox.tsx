@@ -1,4 +1,4 @@
-import { Puzzle } from "../../../../utils/minor_cases/nyt/LetterBoxedTypes";
+import type { Puzzle } from "@/utils/minor_cases/nyt/LetterBoxedTypes";
 
 export default function InputBox(props: {
   puzzle: Puzzle;

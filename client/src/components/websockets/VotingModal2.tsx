@@ -1,4 +1,11 @@
-import { SendJsonMessage } from "react-use-websocket/dist/lib/types";
+import { useState } from "react";
+import type { SendJsonMessage } from "react-use-websocket/dist/lib/types";
+
+import type { Round, VotingInfo } from "@/utils/django_types";
+import { cn } from "@/utils/utils";
+
+import MinorCaseFolder from "../MinorCaseFolder";
+import MinorCaseModal from "../MinorCaseModal";
 import {
   Dialog,
   DialogTrigger,
@@ -7,11 +14,6 @@ import {
   DialogTitle,
   DialogFooter,
 } from "../ui/dialog";
-import MinorCaseFolder from "../MinorCaseFolder";
-import { Round, VotingInfo } from "@/utils/django_types";
-import { useState } from "react";
-import MinorCaseModal from "../MinorCaseModal";
-import { cn } from "@/utils/utils";
 import VotingIndicators from "./VotingIndicators";
 
 interface VotingModalProps {
@@ -53,7 +55,7 @@ const VotingModal = ({
           )}
         >
           {Object.values(votingInfo.cases).map((caseObj) => (
-            <div className={"grid place-items-center gap-5"}>
+            <div key={caseObj.round.id} className={"grid place-items-center gap-5"}>
               <MinorCaseFolder
                 className={cn(
                   "max-w-fit hover:rotate-0",

@@ -1,4 +1,5 @@
-import { Puzzle } from "@/utils/django_types";
+import type { Puzzle } from "@/utils/django_types";
+
 import Connections from "./nyt-games/Connections";
 import LetterBoxedPuzzle from "./nyt-games/LetterBoxed";
 import Obituary from "./nyt-games/Obituary";

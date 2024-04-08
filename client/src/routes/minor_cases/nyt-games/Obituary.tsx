@@ -1,9 +1,12 @@
-import nytImage from "@/assets/minor_cases/nyt/nyt-image.png";
-import nytLogo from "@/assets/minor_cases/nyt/nyt-logo.png";
 import axios from "axios";
-import { useEffect, useState } from "react"; // Import useEffect
+import { useEffect, useState } from "react";
+// Import useEffect
 import { FaBars, FaSearch } from "react-icons/fa";
 import ReactMarkdown from "react-markdown";
+
+import nytImage from "@/assets/minor_cases/nyt/nyt-image.png";
+import nytLogo from "@/assets/minor_cases/nyt/nyt-logo.png";
+
 import SubscriptionModal from "../../../components/puzzle/nyt-games/ObituaryModal";
 
 function Obituary() {
@@ -76,9 +79,9 @@ function Obituary() {
             <hr style={{ width: "10%" }} />
           </div>
           <p className="font-serif mt-4 text-5xl text-black font-bold">
-            We're Living Through the 'Boring
+            We&apos;re Living Through the &apos;Boring
           </p>
-          <p className="font-serif mt-4 text-5xl text-black font-bold">Apocalypse'</p>
+          <p className="font-serif mt-4 text-5xl text-black font-bold">Apocalypse&apos;</p>
           <h3 className="font-serif mt-4 text-m text-zinc-500">Dec. 16, 2021</h3>
           <div className="flex justify-center items-center">
             <img className="w-1/2" src={nytImage} alt="nyt-page-image"></img>

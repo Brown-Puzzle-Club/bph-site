@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
-import { useTimer } from "react-timer-hook";
-import { SendJsonMessage } from "react-use-websocket/dist/lib/types";
 import { toast } from "react-hot-toast";
-import { VotingInfo } from "@/utils/django_types";
+import { useTimer } from "react-timer-hook";
+import type { SendJsonMessage } from "react-use-websocket/dist/lib/types";
+
+import type { VotingInfo } from "@/utils/django_types";
+
 import VotingModal2 from "./VotingModal2";
 
 interface VotingModalProps {

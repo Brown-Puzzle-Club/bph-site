@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import useWebSocket from "react-use-websocket";
 import { z } from "zod";
+
+import type { VotingInfo } from "@/utils/django_types";
+
 import { useAuth } from "./useAuth";
-import { VotingInfo } from "@/utils/django_types";
 
 interface SocketCallbacks {
   onMessage?: (event: MessageEvent) => void;

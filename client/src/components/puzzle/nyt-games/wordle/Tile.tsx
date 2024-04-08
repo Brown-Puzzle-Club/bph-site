@@ -1,5 +1,7 @@
 import { cva } from "class-variance-authority";
-import { Character, GameState, Row, VerificationState, idToRow } from "./utils";
+
+import type { Character } from "./utils";
+import { GameState, Row, VerificationState, idToRow } from "./utils";
 
 interface TileProps {
   character: Character;

@@ -1,10 +1,11 @@
-import { DjangoContext } from "@/utils/django_types";
-import { INode, NodeAnswer } from "./board_types";
+import type { DjangoContext } from "@/utils/django_types";
+
+import type { INode, NodeAnswer } from "./board_types";
 
 export const collectNodes = (context: DjangoContext) => {
   // TODO: fix coordinates
   const consistent_nodes: NodeAnswer[] = [
-    { node: { id: "wasting-illness", x:608, y: 90 }, answer: "WASTING ILLNESS" },
+    { node: { id: "wasting-illness", x: 608, y: 90 }, answer: "WASTING ILLNESS" },
     { node: { id: "trampled", x: 550, y: 350 }, answer: "TRAMPLED" },
     { node: { id: "ennui", x: 415, y: 342 }, answer: "ENNUI" },
     { node: { id: "internal-lacerations", x: 478, y: 435 }, answer: "INTERNAL LACERATIONS" },

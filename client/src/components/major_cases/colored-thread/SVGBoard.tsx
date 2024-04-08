@@ -1,7 +1,9 @@
-import { useDjangoContext } from "@/hooks/useDjangoContext";
 import { useMemo, useRef, useState } from "react";
+
+import { useDjangoContext } from "@/hooks/useDjangoContext";
+
 import background from "../../../assets/major_cases/colored-thread/background.png";
-import { ILink, INode, IThread, NodeAnswer } from "./board_types";
+import type { ILink, INode, IThread, NodeAnswer } from "./board_types";
 import { collectNodes } from "./nodes";
 
 interface Position {

@@ -1,9 +1,10 @@
-import { registerFormSchema } from "@/routes/Register";
-import { UserTeam } from "@/utils/django_types";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { createContext, useContext, useEffect, useState } from "react";
-import { z } from "zod";
+import type { z } from "zod";
+
+import type { registerFormSchema } from "@/routes/Register";
+import type { UserTeam } from "@/utils/django_types";
 
 type AuthContextType = {
   loggedIn: boolean;

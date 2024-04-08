@@ -1,6 +1,7 @@
-import { cn } from "@/utils/utils";
-import { CSSProperties } from "react";
+import type { CSSProperties } from "react";
 import { FaInstagram } from "react-icons/fa";
+
+import { cn } from "@/utils/utils";
 
 export default function Footer({
   className,

@@ -1,27 +1,27 @@
-import background from "../../../assets/major_cases/social-deduction/Background.jpg";
-import RelativeAsset from "../../RelativeAsset";
-
-// characters
-import invisiguy from "../../../assets/major_cases/social-deduction/Invisiguy.png";
-import daisyculaPose from "../../../assets/major_cases/social-deduction/daisycula-pose.png";
-import daisycula from "../../../assets/major_cases/social-deduction/daisycula.png";
-import gorgonPose from "../../../assets/major_cases/social-deduction/gorgon-pose.png";
-import gorgon from "../../../assets/major_cases/social-deduction/gorgon.png";
-import greenribbonPose from "../../../assets/major_cases/social-deduction/greenribbon-pose.png";
-import greenribbon from "../../../assets/major_cases/social-deduction/greenribbon.png";
-import invisiguyPose from "../../../assets/major_cases/social-deduction/invisiguy-pose.png";
-import wolfguyPose from "../../../assets/major_cases/social-deduction/wolfguy-pose.png";
-import wolfguy from "../../../assets/major_cases/social-deduction/wolfguy.png";
-
 // ghosts
-import { CSSProperties, useEffect, useState } from "react";
-import anxiousghost from "../../../assets/major_cases/social-deduction/anxiousghost.png";
-import happyghost from "../../../assets/major_cases/social-deduction/happyghost.png";
-import heartghost from "../../../assets/major_cases/social-deduction/heartghost.png";
-import normalghost from "../../../assets/major_cases/social-deduction/normalghost.png";
-import sleepyghost from "../../../assets/major_cases/social-deduction/sleepyghost.png";
+import type { CSSProperties } from "react";
+import { useEffect, useState } from "react";
 
-import { InternalCharacter } from "../../../utils/major_cases/social-deduction/constants";
+import background from "@/assets/major_cases/social-deduction/Background.jpg";
+// characters
+import invisiguy from "@/assets/major_cases/social-deduction/Invisiguy.png";
+import anxiousghost from "@/assets/major_cases/social-deduction/anxiousghost.png";
+import daisyculaPose from "@/assets/major_cases/social-deduction/daisycula-pose.png";
+import daisycula from "@/assets/major_cases/social-deduction/daisycula.png";
+import gorgonPose from "@/assets/major_cases/social-deduction/gorgon-pose.png";
+import gorgon from "@/assets/major_cases/social-deduction/gorgon.png";
+import greenribbonPose from "@/assets/major_cases/social-deduction/greenribbon-pose.png";
+import greenribbon from "@/assets/major_cases/social-deduction/greenribbon.png";
+import happyghost from "@/assets/major_cases/social-deduction/happyghost.png";
+import heartghost from "@/assets/major_cases/social-deduction/heartghost.png";
+import invisiguyPose from "@/assets/major_cases/social-deduction/invisiguy-pose.png";
+import normalghost from "@/assets/major_cases/social-deduction/normalghost.png";
+import sleepyghost from "@/assets/major_cases/social-deduction/sleepyghost.png";
+import wolfguyPose from "@/assets/major_cases/social-deduction/wolfguy-pose.png";
+import wolfguy from "@/assets/major_cases/social-deduction/wolfguy.png";
+import RelativeAsset from "@/components/RelativeAsset";
+import { InternalCharacter } from "@/utils/major_cases/social-deduction/constants";
+
 import InternalCharacterRoleTooltip from "./CharacterRoleTooltip";
 
 const GHOST_HOVER = "hover:drop-shadow-[0_15px_15px_rgba(255,255,255,0.2)]";

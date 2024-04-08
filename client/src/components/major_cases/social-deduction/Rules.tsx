@@ -1,4 +1,5 @@
 import { GiBatwingEmblem } from "react-icons/gi";
+
 import {
   EVIL_TEXT_COLOR,
   GOOD_TEXT_COLOR,
@@ -16,14 +17,15 @@ export default function Rules() {
           You are cordially invited to witness the game of a lifetime (or the end of many).
           <br />
           <br />
-          Hotel Ghoulsby is hosting their 10th annual Assassin's Tournament, whereby 10 lucky players
-          will take on their chosen roles in a game of intrigue, lies, and horribly difficult
-          deductions. But this year the tournament has turned out more lethal than they've intended.
+          Hotel Ghoulsby is hosting their 10th annual Assassin&apos;s Tournament, whereby 10 lucky
+          players will take on their chosen roles in a game of intrigue, lies, and horribly
+          difficult deductions. But this year the tournament has turned out more lethal than
+          they&apos;ve intended.
           <br />
           <br />
-          It's the last night of the game, and you must determine which guest is
-          masquerading as which role in order to help the village win. Once you've done that, 
-          you'll need to work out: <b>who's been turning the game into a bloodbath?</b>
+          It&apos;s the last night of the game, and you must determine which guest is masquerading
+          as which role in order to help the village win. Once you&apos;ve done that, you&apos;ll
+          need to work out: <b>who&apos;s been turning the game into a bloodbath?</b>
         </p>
       </div>
       <div className="text-break h-1 w-50 bg-[#80808024] mx-auto mb-5 mt-5 rounded-md"></div>
@@ -35,10 +37,10 @@ export default function Rules() {
         </li>
         <li>
           Night Phase 1 is a set-up round. Each player will be assigned a role in secret, with no
-          duplicate roles, though some roles will remain unused. During night 1, every
-          player except the <CharacterRoleTooltip char_role={Role.ASSASSIN} scale={false} /> will be
-          able to perform their role-designated action if they have one. No one will be killed by
-          the <CharacterRoleTooltip char_role={Role.ASSASSIN} scale={false} /> on the first night.
+          duplicate roles, though some roles will remain unused. During night 1, every player except
+          the <CharacterRoleTooltip char_role={Role.ASSASSIN} scale={false} /> will be able to
+          perform their role-designated action if they have one. No one will be killed by the{" "}
+          <CharacterRoleTooltip char_role={Role.ASSASSIN} scale={false} /> on the first night.
         </li>
         <li>
           Every role belongs to one of three designations:{" "}
@@ -101,8 +103,9 @@ export default function Rules() {
         <li>
           The <b style={{ color: GOOD_TEXT_COLOR }}>Village</b> team wins once the{" "}
           <CharacterRoleTooltip char_role={Role.ASSASSIN} scale={false} /> has been exiled by the{" "}
-          <b style={{ color: GOOD_TEXT_COLOR }}>Village</b> or killed for any other reason. It does not matter if other{" "}
-          <b style={{ color: EVIL_TEXT_COLOR }}>Evil</b> players are still alive.
+          <b style={{ color: GOOD_TEXT_COLOR }}>Village</b> or killed for any other reason. It does
+          not matter if other <b style={{ color: EVIL_TEXT_COLOR }}>Evil</b> players are still
+          alive.
         </li>
         <li>
           The <b style={{ color: EVIL_TEXT_COLOR }}>Evil</b> team wins when the{" "}
