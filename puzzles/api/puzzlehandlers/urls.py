@@ -66,4 +66,5 @@ urlpatterns = [
     ),
     path("wordle/verify-guess", wordle_api.verify_guess, name="verify-guess"),
     path("nyt/letterboxed", letterboxed_api.check, name="letterboxed"),
+    path("nyt/letterboxed-final", letterboxed_api.checkall, name="letterboxed"),
 ]
