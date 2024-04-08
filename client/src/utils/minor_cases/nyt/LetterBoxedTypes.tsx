@@ -137,7 +137,7 @@ export class Solution {
     }
     // Check word validity
     for (const word of this.getWords()) {
-      if (!isDictionaryWord(word)) {
+      if (!isDictionaryWord(word) || word.length < 3) {
         return false;
       }
     }
@@ -170,13 +170,17 @@ export class Solution {
     return true;
   }
 
+  public serializeFromArray(solution: number[][]): string {
+    return solution
+      .map((word) => word.map((letter) => this.letterDict.get(letter)!.index.toString()).join(","))
+      .join(";");
+  }
+
   /**
    * Serializes the solution into a string, comma-separated between letters and semicolon-separated between words
    */
   public serialize() {
-    return this.solution
-      .map((word) => word.map((letter) => this.letterDict.get(letter)!.index.toString()).join(","))
-      .join(";");
+    return this.serializeFromArray(this.solution);
   }
 
   public attemptPushLetter(idx: number): boolean {
@@ -222,20 +226,46 @@ export class Solution {
   }
 
   private async submit() {
-    console.log("submitting");
-    this.setAnswer("submitting...");
-    const url = "/api/puzzle/nyt/letterboxed";
-    const data = {
-      puzzleNum: this.puzzleNum,
-      solution: this.serialize(),
-    };
-    const response = await axios.post(url, data);
-    // get response
-    console.log(response);
-    if (response.data.correct) {
-      this.setAnswer(response.data.answer);
+    if (this.puzzleNum === 3) {
+      this.setAnswer("submitting...");
+      const solution1str = localStorage.getItem(`nyt-letterboxed-1-solution`);
+      if (solution1str === null) {
+        this.setAnswer("An error occurred, contact HQ");
+        return;
+      }
+      const solution2str = localStorage.getItem(`nyt-letterboxed-2-solution`);
+      if (solution2str === null) {
+        this.setAnswer("An error occurred, contact HQ");
+        return;
+      }
+      const url = "/api/puzzle/nyt/letterboxed-final";
+      const data = {
+        solution1: this.serializeFromArray(JSON.parse(solution1str)),
+        solution2: this.serializeFromArray(JSON.parse(solution2str)),
+        solution3: this.serialize(),
+      };
+      const response = await axios.post(url, data);
+      if (response.data.correct) {
+        this.setAnswer("An error occurred, contact HQ");
+      } else {
+        this.setAnswer("Solved!");
+      }
     } else {
-      this.setAnswer("An error occurred, contact HQ");
+      console.log("submitting");
+      this.setAnswer("Solved!");
+      const url = "/api/puzzle/nyt/letterboxed";
+      const data = {
+        puzzleNum: this.puzzleNum,
+        solution: this.serialize(),
+      };
+      const response = await axios.post(url, data);
+      // get response
+      console.log(response);
+      if (response.data.correct) {
+        this.setAnswer(response.data.answer);
+      } else {
+        this.setAnswer("An error occurred, contact HQ");
+      }
     }
   }
 }

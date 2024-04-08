@@ -8,7 +8,7 @@ import { MajorCaseEnum, toPuzzleStyle } from "@/utils/constants";
 import { Puzzle } from "@/utils/django_types";
 import AnswerSubmit from "./AnswerSubmission";
 
-const NO_ANSWER_SUBMIT = new Set(["wordle", "connection"]);
+const NO_ANSWER_SUBMIT = new Set(["wordle", "connection", "lettertroxd"]);
 
 function PuzzleWrapper({ puzzle_slug }: { puzzle_slug: string }) {
   const [puzzle, setPuzzle] = useState<Puzzle>({} as Puzzle);
@@ -64,7 +64,7 @@ function PuzzleWrapper({ puzzle_slug }: { puzzle_slug: string }) {
             major_case={puzzle?.round?.major_case.slug as MajorCaseEnum}
           />
         ) : (
-          <p className="text-center">Completion of the game will solve this puzzle</p>
+          <p className="text-center py-4">Completion of the game will solve this puzzle</p>
         )}
         {ALT_PUZZLE_ROUTES(puzzle)[puzzle_slug] ? (
           <AltPuzzleRoute puzzle={puzzle} />

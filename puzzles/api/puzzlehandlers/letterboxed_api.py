@@ -2,6 +2,8 @@ from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.decorators import api_view
 from dataclasses import dataclass
+
+from puzzles.api.api_actions import handle_answer
 from . import twl
 
 
@@ -83,9 +85,9 @@ puzzles = {
 }
 
 answers = {
-    1: "test1",
-    2: "test2",
-    3: "test3",
+    1: "Solved!",
+    2: "Solved!",
+    3: "Solved!",
 }
 
 
@@ -129,4 +131,30 @@ def check(request: Request) -> Response:
     print(f"solution for {puzzleNum}: {solution}")
     if checkSolution(puzzles[puzzleNum], solution):
         return Response({"correct": True, "answer": answers[puzzleNum]})
+    return errorResponse
+
+
+@api_view(["POST"])
+def checkall(request: Request) -> Response:
+    errorResponse = Response(
+        {
+            "correct": False,
+            "error": "There was something wrong with your request, please contact HQ.",
+        }
+    )
+    print("got request!")
+    solutionStrs = [request.data["solution1"], request.data["solution2"], request.data["solution3"]]  # type: ignore
+    solutions = [[[int(l) for l in word.split(",")] for word in solutionStr.split(";")] for solutionStr in solutionStrs]  # type: ignore
+    if (
+        checkSolution(puzzles[1], solutions[0])
+        and checkSolution(puzzles[2], solutions[1])
+        and checkSolution(puzzles[3], solutions[2])
+    ):
+        answer = "KINGFISHER"
+        # auto solve the puzzle:
+        django_context = request._request.context  # type: ignore
+        request_context = request.context
+        # answer is a query parameter:
+        handle_answer(answer, request_context, django_context, "lettertroxd")
+        return Response({"correct": True})
     return errorResponse

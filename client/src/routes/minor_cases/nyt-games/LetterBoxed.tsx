@@ -3,6 +3,7 @@ import LetterBox from "@/components/puzzle/nyt-games/letterboxed/LetterBox";
 import { Button } from "@/components/ui/button";
 import { Puzzle, Solution } from "@/utils/minor_cases/nyt/LetterBoxedTypes";
 import { useEffect, useState } from "react";
+import { useLocalStorage } from "@uidotdev/usehooks";
 
 function LetterBoxed({ puzzleNum }: { puzzleNum: 1 | 2 | 3 }) {
   const puzzles = {
@@ -130,14 +131,15 @@ function LetterBoxed({ puzzleNum }: { puzzleNum: 1 | 2 | 3 }) {
     ),
   };
 
-  const [solution, setSolution] = useState<number[][]>([[]]);
-  const [answer, setAnswer] = useState<string | null>(null);
+  const [solution, setSolution] = useLocalStorage<number[][]>(
+    `nyt-letterboxed-${puzzleNum}-solution`,
+    [[]],
+  );
+  const [answer, setAnswer] = useLocalStorage<string | null>(
+    `nyt-letterboxed-${puzzleNum}-answer`,
+    null,
+  );
   const solutionObj = new Solution(puzzleNum, puzzles[puzzleNum], solution, setAnswer);
-
-  useEffect(() => {
-    // resets solution on puzzle change
-    setSolution([[]]);
-  }, [puzzleNum]);
 
   /**
    * Attempts to push a new letter into the solution, checking that the solution is valid before doing so.
@@ -200,6 +202,15 @@ function LetterBoxed({ puzzleNum }: { puzzleNum: 1 | 2 | 3 }) {
 export default function LetterBoxedPuzzle() {
   const [puzzleNum, setPuzzleNum] = useState<1 | 2 | 3>(1);
 
+  const [puzzleOneAnswer] = useLocalStorage<string | null>(
+    "nyt-letterboxed-1-answer",
+    null,
+  );
+  const [puzzleTwoAnswer] = useLocalStorage<string | null>(
+    "nyt-letterboxed-2-answer",
+    null,
+  );
+
   return (
     <div className="flex flex-col items-center bg-[#fa8282]">
       <div className="flex flex-col items-center py-4">
@@ -214,14 +225,16 @@ export default function LetterBoxedPuzzle() {
           <Button
             className={puzzleNum == 2 ? "bg-slate-800" : "bg-white"}
             onClick={() => setPuzzleNum(2)}
+            disabled={puzzleOneAnswer ? false : true}
           >
-            🐾
+            {puzzleOneAnswer ? "🐾" : "❓"}
           </Button>
           <Button
             className={puzzleNum == 3 ? "bg-slate-800" : "bg-white"}
             onClick={() => setPuzzleNum(3)}
+            disabled={puzzleTwoAnswer ? false : true}
           >
-            🪶
+            {puzzleTwoAnswer ? "🪶" : "❓"}
           </Button>
         </div>
       </div>
