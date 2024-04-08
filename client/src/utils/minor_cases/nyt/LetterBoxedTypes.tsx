@@ -246,9 +246,9 @@ export class Solution {
       };
       const response = await axios.post(url, data);
       if (response.data.correct) {
-        this.setAnswer("An error occurred, contact HQ");
-      } else {
         this.setAnswer("Solved!");
+      } else {
+        this.setAnswer("An error occurred, contact HQ");
       }
     } else {
       console.log("submitting");
