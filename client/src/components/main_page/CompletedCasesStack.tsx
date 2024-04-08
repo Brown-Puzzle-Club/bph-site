@@ -26,8 +26,8 @@ export default function CompletedCasesStack({
       className={cn(
         "absolute hover:cursor-pointer transition-all duration-150 w-full",
         solvedCasesOpen
-          ? "drop-shadow-[0_12px_12px_rgba(255,196,100,0.5)]"
-          : "hover:drop-shadow-[0_12px_12px_rgba(255,196,100,0.5)]",
+          ? "drop-shadow-[0_15px_15px_rgba(255,196,100,0.8)]"
+          : "hover:drop-shadow-[0_12px_12px_rgba(255,196,100,0.3)]",
       )}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}

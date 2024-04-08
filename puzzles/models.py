@@ -1,6 +1,5 @@
 import collections
 import datetime
-from typing import Optional
 import unicodedata
 from urllib.parse import quote_plus
 import math
@@ -29,13 +28,11 @@ import uuid
 import random
 
 from django.contrib.postgres.indexes import GinIndex
-from channels_presence.models import Room
 from puzzles.context import context_cache
 from puzzles.signals import send_notification, create_minor_case_incoming_event
 from puzzles.messaging import (
     dispatch_general_alert,
     dispatch_submission_alert,
-    send_mail_wrapper,
     discord_interface,
 )
 
@@ -1144,23 +1141,22 @@ class MinorCaseIncomingEvent(models.Model):
         self.is_initialized = True
         self.save()
 
-    def cases(self):
-        return [vote.minor_case.name for vote in self.votes.all()]
-
     def get_votes(self):
+        from puzzles.api.serializers import RoundSerializer
+
         return {
-            vote.minor_case.name: {
-                "desc": vote.minor_case.description,
-                "voteCount": vote.num_votes,
-            }
-            for vote in self.votes.all()
+            "cases": {
+                vote.minor_case.name: {
+
+                    "round": RoundSerializer(instance=vote.minor_case).data,
+                    "count": vote.num_votes,
+                }
+                for vote in self.votes.all()
+            },
+            "expiration_time": self.expiration.isoformat() if self.expiration else None,
+            "max_choices": self.num_votes_allowed,
         }
 
-    def get_expiration_time(self):
-        return self.expiration
-
-    def get_num_votes_allowed(self):
-        return self.num_votes_allowed
 
     def vote(self, old_votes: list[str], new_votes: list[str]):
         votes_to_decrement = set(old_votes) - set(new_votes)

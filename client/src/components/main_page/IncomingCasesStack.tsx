@@ -3,7 +3,11 @@ import { MAJOR_CASE_FOLDER, MajorCaseEnum } from "@/utils/constants";
 import { useState } from "react";
 import { RAND_ROT, RAND_TRANS } from "../MinorCaseFolder";
 
-export default function IncomingCasesStack() {
+interface IncomingCasesStackProps {
+  onClick?: () => void;
+}
+
+export default function IncomingCasesStack({ onClick }: IncomingCasesStackProps) {
   const { context } = useDjangoContext();
 
   const [isHovered, setIsHovered] = useState(false);
@@ -17,6 +21,7 @@ export default function IncomingCasesStack() {
       className="absolute hover:cursor-pointer transition-all duration-150 hover:drop-shadow-[0_12px_12px_rgba(255,196,100,0.5)] w-full"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={onClick}
     >
       <span
         className="z-10 absolute font-mono font-bold text-black text-center whitespace-pre-line break-words text-[1.5vw] bg-[#ffffff82] rounded"
@@ -30,6 +35,7 @@ export default function IncomingCasesStack() {
       </span>
       {context.team_context.current_incoming_event.incoming_cases.map((round) => (
         <img
+          key={round.id}
           className="absolute shadow-lg"
           src={MAJOR_CASE_FOLDER[round.major_case.slug as MajorCaseEnum]}
           style={{

@@ -503,14 +503,8 @@ class VotingConsumer(WebsocketConsumer):
                 "type": "vote",
                 "data": {
                     "id": incoming_event.id,
-                    "cases": incoming_event.get_votes(),
-                    "expiration_time": (
-                        incoming_event.get_expiration_time().isoformat()
-                        if incoming_event.get_expiration_time()
-                        else None
-                    ),
-                    "max_choices": incoming_event.get_num_votes_allowed(),
-                },
+                    **incoming_event.get_votes()
+                }
             }
             self.send_to_all(client_room, response)
 

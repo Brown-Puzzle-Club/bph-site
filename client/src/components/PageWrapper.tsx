@@ -5,9 +5,12 @@ import { useTheme } from "@/hooks/useTheme";
 import { DEFAULT_THEME } from "@/utils/themes";
 import { useNotification } from "@/hooks/useNotification";
 import CaseVoting from "./websockets/CaseVoting";
+import { useState } from "react";
+import { cloneElement } from "react";
 
-export const PageWrapper = ({ route }: { route: React.ReactNode }) => {
+export const PageWrapper = ({ route }: { route: React.ReactElement }) => {
   const { theme } = useTheme();
+  const [votingOpen, setVotingOpen] = useState(false);
   useNotification();
 
   return (
@@ -24,10 +27,10 @@ export const PageWrapper = ({ route }: { route: React.ReactNode }) => {
           backgroundColor: theme.content_color ? theme.content_color : DEFAULT_THEME.content_color,
         }}
       >
-        {route}
+        {cloneElement(route, { setVotingOpen: (open: boolean) => setVotingOpen(open) })}
       </div>
       <Toaster
-        position="bottom-right"
+        position="top-right"
         reverseOrder={false}
         gutter={8}
         toastOptions={{
@@ -36,7 +39,11 @@ export const PageWrapper = ({ route }: { route: React.ReactNode }) => {
           duration: 5000,
         }}
       />
-      <CaseVoting path="ws/puzzles" />
+      <CaseVoting
+        path="ws/puzzles"
+        open={votingOpen}
+        onOpenChange={(open) => setVotingOpen(open)}
+      />
       <Footer
         extraStyle={{
           backgroundColor: theme.footer_color ? theme.footer_color : DEFAULT_THEME.footer_color,

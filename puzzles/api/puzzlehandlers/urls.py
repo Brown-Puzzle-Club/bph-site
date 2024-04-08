@@ -9,6 +9,7 @@ from . import nyt_games_api
 from . import data_mc_api
 from . import soc_ded_api
 from . import wordle_api
+from . import letterboxed_api
 
 
 @api_view(["GET"])
@@ -64,4 +65,5 @@ urlpatterns = [
         name="social_deduction_verdict_guess",
     ),
     path("wordle/verify-guess", wordle_api.verify_guess, name="verify-guess"),
+    path("nyt/letterboxed", letterboxed_api.check, name="letterboxed"),
 ]

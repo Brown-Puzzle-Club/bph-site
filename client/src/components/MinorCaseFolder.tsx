@@ -42,7 +42,7 @@ const MinorCaseFolder: React.FC<BoxProps> = ({
   }, [context, minorCase]);
 
   return (
-    <div className="">
+    <div className="max-w-[8vw]">
       <div
         className={cn(
           `relative overflow-hidden hover:cursor-pointer hover:drop-shadow-[0_15px_15px_rgba(255,255,255,0.2)] transform transition-transform duration-300`,
@@ -68,7 +68,7 @@ const MinorCaseFolder: React.FC<BoxProps> = ({
         />
         {/* Box content */}
         <span
-          className="z-10 absolute font-mono font-bold text-black text-center whitespace-pre-line break-words text-[1vw]"
+          className="z-10 absolute font-mono font-bold text-[#000000b0] text-center whitespace-pre-line break-words text-[1vw]"
           style={{
             top: "30%",
             left: "50%",
@@ -82,9 +82,11 @@ const MinorCaseFolder: React.FC<BoxProps> = ({
         </span>
       </div>
       {solution && (
-        <p className="text-center font-mono text-[green] bg-slate-800 rounded-xl mt-2 p-1 text-[1vw]">
-          {solution?.toUpperCase()}
-        </p>
+        <div className="flex flex-col items-center">
+          <span className="text-center font-mono font-bold text-[green] bg-[#ffffffbd] rounded-xl mt-2 p-1 text-[1vw]">
+            {solution?.toUpperCase()}
+          </span>
+        </div>
       )}
     </div>
   );

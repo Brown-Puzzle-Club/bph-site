@@ -14,7 +14,11 @@ import { MAIN_PAGE_THEME } from "@/utils/themes";
 import { mostRecentSolves } from "@/utils/utils";
 import { useEffect, useMemo, useState } from "react";
 
-export default function EventPage() {
+interface EventPage {
+  setVotingOpen?: (open: boolean) => void;
+}
+
+export default function EventPage({ setVotingOpen }: EventPage) {
   const { setTheme } = useTheme();
   useEffect(() => {
     setTheme(MAIN_PAGE_THEME);
@@ -29,6 +33,10 @@ export default function EventPage() {
     if (!context) return [];
     return mostRecentSolves(context);
   }, [context]);
+
+  useEffect(() => {
+    console.log(setVotingOpen);
+  }, [setVotingOpen]);
 
   return (
     <div
@@ -48,11 +56,15 @@ export default function EventPage() {
             className="absolute rounded-xl p-4 align-center"
             style={{ top: "35%", left: "83%", width: "14%", height: "29%" }}
           >
-            <IncomingCasesStack />
+            <IncomingCasesStack
+              onClick={() => {
+                if (setVotingOpen != undefined) setVotingOpen(true);
+              }}
+            />
           </div>
           <div
             className="absolute rounded-xl p-4 align-center"
-            style={{ top: "31%", left: "29%", width: "47%", height: "37%" }}
+            style={{ top: "20%", left: "29%", width: "50%", height: "37%" }}
           >
             <CompletedCases
               completed_cases={solved_cases}
