@@ -191,7 +191,7 @@ const Bluenoir = ({ show, setShow, position, setPosition }: BluenoirProps) => {
   return (
     <motion.div
       ref={ref}
-      className="fixed z-[100] text-white rounded-lg bg-slate-900 p-3 pr-4 shadow-lg shadow-slate-800"
+      className="fixed z-[50] text-white rounded-lg bg-slate-900 p-3 pr-4 shadow-lg shadow-slate-800"
       style={{
         x,
         y,

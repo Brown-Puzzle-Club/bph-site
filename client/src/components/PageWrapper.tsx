@@ -56,8 +56,7 @@ export const PageWrapper = ({ route }: { route: React.ReactElement }) => {
         reverseOrder={false}
         gutter={8}
         toastOptions={{
-          // Define default options
-          className: "bg-[#363636] text-white",
+          className: "text-white rounded-lg bg-slate-900 p-3 pr-4 shadow-md shadow-slate-800",
           duration: 5000,
         }}
       />
