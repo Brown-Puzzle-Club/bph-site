@@ -238,6 +238,9 @@ def handle_answer(
 
     correct = Puzzle.normalize_answer(answer) == sanitized_answer
 
+    if correct:
+        answer = puzzle.answer  # for consistent styling on the UI
+
     try:
         submission = AnswerSubmission.objects.create(
             team=django_context.team,
