@@ -1,7 +1,8 @@
-import { Button } from "@/components/ui/button";
-import { Round } from "@/utils/django_types";
 import axios from "axios";
 import { useEffect, useState } from "react";
+
+import { Button } from "@/components/ui/button";
+import type { Round } from "@/utils/django_types";
 
 export default function AdminPanel() {
   const [cases, setCases] = useState<Round[]>([]);

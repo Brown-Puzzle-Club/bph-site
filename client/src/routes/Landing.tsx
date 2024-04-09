@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
+
 import LandingInfo from "../components/landing/LandingInfo";
 import LandingSplash from "../components/landing/LandingSplash";
 
 const userAgent = navigator.userAgent.toLowerCase();
 const isMobileDevice = /iphone|ipad|ipod|android|blackberry|windows phone|iemobile|webos/i.test(
-  userAgent
+  userAgent,
 );
 
 export default function Landing() {

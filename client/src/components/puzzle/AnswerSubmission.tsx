@@ -1,15 +1,17 @@
-import { MajorCaseEnum } from "@/utils/constants";
-import axios from "axios";
-import { useForm } from "react-hook-form";
-import { Button } from "../ui/button";
-import { Form, FormControl, FormField, FormItem, FormMessage } from "../ui/form";
-
-import { AnswerSubmission, Puzzle } from "@/utils/django_types";
-import { cn } from "@/utils/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
 import { useEffect, useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
 import { BeatLoader } from "react-spinners";
 import { z } from "zod";
+
+import { MajorCaseEnum } from "@/utils/constants";
+import type { AnswerSubmission, Puzzle, PuzzleMessage } from "@/utils/django_types";
+import { cn } from "@/utils/utils";
+
+import { Button } from "../ui/button";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
 
 function sanitize_answer(answer: string) {
@@ -40,7 +42,6 @@ const AnswerSubmitRedThread = ({
   });
 
   const submit_answer = async (values: z.infer<typeof redThreadAnswerSchema>) => {
-    setSubmitting(true);
     const location = sanitize_answer(values.location);
     const cause = sanitize_answer(values.cause);
     const answer = `${cause}ON${location}ST`;
@@ -52,7 +53,13 @@ const AnswerSubmitRedThread = ({
       .then((response) => {
         console.log(response);
         if (response.data.status === "correct") {
-          alert("Correct answer!");
+          toast.success("Correct answer!", { duration: Infinity, position: "top-center" });
+        } else {
+          const guesses_left = response.data.guesses_left;
+          toast.error(`Incorrect answer. ${guesses_left} guesses left.`, {
+            duration: 5000,
+            position: "top-center",
+          });
         }
         const new_submission: AnswerSubmission = {
           id: 0,
@@ -67,9 +74,20 @@ const AnswerSubmitRedThread = ({
       .catch((error) => {
         console.log(error);
         if (error.response.data.error == "Answer submission failed") {
-          alert("Answer already submitted.");
+          toast.error("Answer already submitted.", {
+            duration: 5000,
+            position: "top-center",
+          });
+        } else if (error.response.error == "No guesses remaining") {
+          toast.error("You are out of guesses", {
+            duration: 5000,
+            position: "top-center",
+          });
         } else if (error.response.status == 403) {
-          alert("Not allowed to access puzzle.");
+          toast.error("You are unauthorized to see this puzzle.", {
+            duration: 5000,
+            position: "top-center",
+          });
         }
       })
       .finally(() => {
@@ -83,7 +101,7 @@ const AnswerSubmitRedThread = ({
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(submit_answer)}
-          className="text-white dark flex space-x-3"
+          className="text-white dark flex items-center space-x-3" // Changed flex class to include items-center
         >
           <p>The victim was</p>
           <FormField
@@ -148,7 +166,17 @@ const AnswerSubmitRegular = ({
       .then((response) => {
         console.log(response);
         if (response.data.status === "correct") {
-          alert("Correct answer!");
+          toast.success("Correct answer!", { duration: Infinity, position: "top-center" });
+        } else if (response.data.messages.length > 0) {
+          response.data.messages.forEach((message: PuzzleMessage) => {
+            toast.custom(message.response, { duration: 5000, position: "top-center" });
+          });
+        } else {
+          const guesses_left = response.data.guesses_left;
+          toast.error(`Incorrect answer. ${guesses_left} guesses left.`, {
+            duration: 5000,
+            position: "top-center",
+          });
         }
         const new_submission: AnswerSubmission = {
           id: 0,
@@ -161,9 +189,22 @@ const AnswerSubmitRegular = ({
         return response;
       })
       .catch((error) => {
-        // console.log(error);
+        console.log(error);
         if (error.response.data.error == "Answer submission failed") {
-          alert("Answer already submitted.");
+          toast.error("Answer already submitted.", {
+            duration: 5000,
+            position: "top-center",
+          });
+        } else if (error.response.error == "No guesses remaining") {
+          toast.error("You are out of guesses", {
+            duration: 5000,
+            position: "top-center",
+          });
+        } else if (error.response.status == 403) {
+          toast.error("You are not authorized to see this puzzle.", {
+            duration: 5000,
+            position: "top-center",
+          });
         }
       })
       .finally(() => {
@@ -205,27 +246,30 @@ const SubmissionHistory = ({ submissions }: { submissions: AnswerSubmission[] })
   if (!submissions || submissions.length == 0) return null;
 
   return (
-    <div className="flex justify-center h-full my-5 border border-slate-500 rounded lg:mx-[40vw] md:mx-[30vw] mx-[20vw] max-h-[12rem] overflow-y-auto">
-      <div className="">
-        <table className="table-auto">
-          <tbody>
-            {submissions.map((submission, i) => (
-              <tr key={`submission-${i}`}>
-                <td className="border-b border-slate-500 px-4 py-2">
-                  {submission.submitted_answer}
-                </td>
-                <td
-                  className={cn(
-                    "border-b border-slate-500 px-4 py-2 font-mono text-sm",
-                    submission.is_correct ? "text-green-100" : "text-red-100",
-                  )}
-                >
-                  {submission.is_correct ? "CORRECT" : "INCORRECT"}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+    <div className="flex justify-center h-full my-5 border border-slate-500 rounded lg:mx-[35vw] md:mx-[25vw] mx-[15vw] max-h-[12rem] ">
+      <div className="w-full">
+        <h3 className="text-center text-white dark border-b font-bold">SUBMISSIONS</h3>
+        <div className="max-h-[10rem] overflow-auto">
+          <table className="table-auto w-full">
+            <tbody>
+              {submissions.map((submission, i) => (
+                <tr key={`submission-${i}`}>
+                  <td className="border-b border-slate-500 px-4 py-2 text-left font-mono">
+                    {submission.submitted_answer}
+                  </td>
+                  <td
+                    className={cn(
+                      "border-b border-slate-500 px-4 py-2 font-mono text-sm text-right",
+                      submission.is_correct ? "text-green-100" : "text-red-100",
+                    )}
+                  >
+                    {submission.is_correct ? "CORRECT" : "INCORRECT"}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
@@ -255,7 +299,7 @@ export default function AnswerSubmit({
         <div className="text-white dark text-center">
           ANSWER: <span className="font-mono text-green-100">{PUZZLE_ANSWER}</span>
         </div>
-      ) : major_case === MajorCaseEnum.COLORED_THREAD ? (
+      ) : major_case === MajorCaseEnum.COLORED_THREAD && puzzle.is_meta ? (
         <AnswerSubmitRedThread puzzle_slug={puzzle.slug} setSubmissions={setSubmissions} />
       ) : (
         <AnswerSubmitRegular puzzle_slug={puzzle.slug} setSubmissions={setSubmissions} />

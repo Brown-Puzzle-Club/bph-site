@@ -1,4 +1,5 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
+
 import { SelectedPanel } from "../../../routes/major_cases/SocialDeduction";
 
 const TopbarSelector = ({

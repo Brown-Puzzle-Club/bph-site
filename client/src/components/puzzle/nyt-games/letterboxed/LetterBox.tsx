@@ -1,14 +1,17 @@
-import { LetterState, Puzzle } from "../../../../utils/minor_cases/nyt/LetterBoxedTypes";
+import type { Puzzle } from "../../../../utils/minor_cases/nyt/LetterBoxedTypes";
+import { LetterState } from "../../../../utils/minor_cases/nyt/LetterBoxedTypes";
 import Letter from "./Letter";
 
 export default function LetterBox({
   puzzle,
   solutionArr,
   onSelect,
+  solved,
 }: {
   puzzle: Puzzle;
   solutionArr: number[][];
   onSelect: (idx: number) => void;
+  solved: boolean;
 }) {
   /**
    * Returns a list of (x, y) coordinates of the vertices of a regular polygon with `sides` sides.
@@ -129,13 +132,13 @@ export default function LetterBox({
             angle={coords.angle}
             letter={letter.letter.toUpperCase()}
             key={idx}
-            onSelect={() => onSelect(idx)}
+            onSelect={() => (solved ? null : onSelect(idx))}
             uses={letter.uses}
             used={
               [puzzle.initialIdx].concat(solutionArr.flat()).filter((idx) => idx == letter.index)
                 .length
             }
-            state={getLetterState(idx, solutionArr)}
+            state={solved ? LetterState.LOCKED : getLetterState(idx, solutionArr)}
           />,
         );
       }
@@ -161,10 +164,10 @@ export default function LetterBox({
               y1={start.y}
               x2={end.x}
               y2={end.y}
-              stroke={i == words.length - 1 ? "#faa6a4" : "#ffe4e3"}
+              stroke={i == words.length - 1 && !solved ? "#faa6a4" : "#ffe4e3"}
               strokeWidth="5"
               key={i * 100 + j}
-              strokeDasharray={i == words.length - 1 ? "15,10" : "0"}
+              strokeDasharray={i == words.length - 1 && !solved ? "15,10" : "0"}
             />,
           );
         }

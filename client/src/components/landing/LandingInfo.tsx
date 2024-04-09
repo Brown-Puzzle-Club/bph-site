@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 import blueno_what from "@/assets/landing/blueno_what.svg";
 import blueno_when from "@/assets/landing/blueno_when.svg";
@@ -40,7 +40,7 @@ const LandingInfo: React.FC = () => {
           <h1 className="text-2xl font-bold">WHAT</h1>
           <div className="border-b border-sky-500 mx-auto mt-2 w-10"></div>
           <p className="text-muted-foreground leading-tight pt-6">
-            Brown's second annual puzzlehunt, run by{" "}
+            Brown&apos;s second annual puzzlehunt, run by{" "}
             <a className="underline font-semibold" href="/credits">
               Brown Puzzle Club
             </a>

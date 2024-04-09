@@ -34,6 +34,19 @@ class TeamViewSet(
         return Team.objects.filter(user=self.request.user)
 
 
+class TokenViewSet(
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet,
+):
+    serializer_class = TokenSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return Token.objects.filter(user=self.request.user)
+
+
 class BasicTeamViewSet(
     mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet
 ):
@@ -142,11 +155,19 @@ def get_puzzle(request: Request, puzzle_slug: str) -> Response:
         if context.is_admin:
             additional_fields["body"] = puzzle.body
             additional_fields["body_remote"] = puzzle.body_remote
+            additional_fields["clipboard"] = puzzle.clipboard
+            additional_fields["clipboard_remote"] = puzzle.clipboard_remote
+            additional_fields["solution"] = puzzle.solution
         else:
             additional_fields["body"] = (
                 puzzle.body
                 if context.team.in_person or puzzle.body_remote == ""
                 else puzzle.body_remote
+            )
+            additional_fields["clipboard"] = (
+                puzzle.clipboard
+                if context.team.in_person or puzzle.clipboard_remote == ""
+                else puzzle.clipboard_remote
             )
 
         complete_puzzle_data = {**serializer.data, **additional_fields}

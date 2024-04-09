@@ -1,5 +1,8 @@
-import {
-  DjangoContext,
+import axios from "axios";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
+
+import type {
+  DjangoContext as DjangoContextType,
   MinorCase,
   Puzzle,
   Team,
@@ -7,11 +10,9 @@ import {
   User,
   UserTeam,
 } from "@/utils/django_types";
-import axios from "axios";
-import { createContext, useCallback, useContext, useEffect, useState } from "react";
 
 // prolly doesn't need to be a context... TODO: make hooks for these all with useQuery??
-type DjangoContextType = {
+type DjangoReactContext = {
   FetchUser: () => Promise<User>;
   FetchTeam: () => Promise<UserTeam>;
   FetchTeamMembers: () => Promise<TeamMember[]>;
@@ -19,10 +20,10 @@ type DjangoContextType = {
   FetchCase: (round_id: number) => Promise<MinorCase>;
   FetchPuzzle: (puzzle_slug: string) => Promise<Puzzle>;
   // context on load is stored
-  context?: DjangoContext;
+  context?: DjangoContextType;
 };
 
-const DjangoContext = createContext<DjangoContextType>({
+const DjangoContext = createContext<DjangoReactContext>({
   FetchUser: async () => {
     return {} as User;
   },
@@ -45,11 +46,11 @@ const DjangoContext = createContext<DjangoContextType>({
 });
 
 export const DjangoContextProvider = ({ children }: { children: React.ReactNode }) => {
-  const [context, setContext] = useState({} as DjangoContext);
+  const [context, setContext] = useState({} as DjangoContextType);
 
   const FetchContext = useCallback(async () => {
     const response = await fetch("/api/context");
-    const context = (await response.json()) as DjangoContext;
+    const context = (await response.json()) as DjangoContextType;
     setContext(context);
     console.log(context);
     return context;

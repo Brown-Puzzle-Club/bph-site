@@ -35,5 +35,7 @@ register_converter(QuotedStringConverter, "quotedstr")
 urlpatterns = [
     re_path(r"^admin/", admin.site.urls),
     path("api/", include("puzzles.api.urls")),
+    # impersonate doesn't work cross origin :(
+    # re_path(r"^impersonate/", include("impersonate.urls")),
     # all other paths go to React client router
 ]

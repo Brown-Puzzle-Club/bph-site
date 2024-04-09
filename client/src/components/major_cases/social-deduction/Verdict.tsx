@@ -1,10 +1,12 @@
-import { MarkdownComponents } from "@/components/puzzle/MarkdownWrapper";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import ReactMarkdown from "react-markdown";
 import { BeatLoader } from "react-spinners";
 import remarkGfm from "remark-gfm";
+
+import { MarkdownComponents } from "@/components/puzzle/MarkdownComponent";
+
 import { InternalCharacter, Role } from "../../../utils/major_cases/social-deduction/constants";
 import CharacterRoleTooltip from "./CharacterRoleTooltip";
 

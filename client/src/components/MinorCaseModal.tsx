@@ -1,90 +1,118 @@
 // Modal.tsx
-import React, { useEffect } from "react";
-
-import manila from "@/assets/main/manila_open.png";
-import { Round } from "@/utils/django_types";
-import { CASE_ART_BY_ROUND_SLUG } from "@/utils/main/constants";
+import type React from "react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
+import manila from "@/assets/main/manila_open.png";
+import * as birb from "@/assets/minor_cases/birbs/teaser-1.png";
+import * as clip1 from "@/assets/minor_cases/clipping1.png";
+import * as clip2 from "@/assets/minor_cases/clipping2.png";
+import { CASE_PALETTE, type MajorCaseEnum } from "@/utils/constants";
+import type { Round } from "@/utils/django_types";
+import { getMinorCaseSolution } from "@/utils/utils";
+
+import { useDjangoContext } from "../hooks/useDjangoContext";
+import { Checkbox } from "./ui/checkbox";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
+
 interface ModalProps {
-  isOpen: boolean;
-  closeModal: () => void;
-  caseID: number;
-  onSubmit: (caseID: number) => void;
-  cur_case: Round | undefined;
+  setSelectedCase: (round: Round | null) => void;
+  selectedCase: Round | null;
+  selectedCases?: string[];
+  action: string | ((round: string) => void);
 }
 
 const MinorCaseModal: React.FC<ModalProps> = ({
-  isOpen,
-  closeModal,
-  caseID,
-  onSubmit,
-  cur_case,
+  setSelectedCase,
+  selectedCase,
+  selectedCases,
+  action,
 }) => {
+  const { context } = useDjangoContext();
+
   useEffect(() => {
-    console.log(cur_case?.id);
-  }, [cur_case]);
-
-  console.log(isOpen);
-  if (!isOpen) {
-    return null;
-  }
-
-  const cur_case_art: JSX.Element = cur_case ? CASE_ART_BY_ROUND_SLUG[cur_case?.id] : <></>;
-
-  function submitVote(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
-    //make some backend call to change the status of puzzle from incoming to active
-    //open minor case page
-    console.log(event);
-    throw new Error("Function not implemented.");
-  }
-
-  const handleSubmit = () => {
-    onSubmit(caseID);
-  };
+    console.log(selectedCase);
+  }, [selectedCase]);
 
   return (
-    <>
-      <div className="fixed inset-0 flex items-center justify-center text-[black]">
-        <div
-          className="flex h-auto w-3/5 flex-row rounded-md p-6 pl-8"
+    selectedCase &&
+    context && (
+      <Dialog open={true} onOpenChange={() => setSelectedCase(null)} modal>
+        <DialogContent
+          className="max-w-[60%] bg-transparent absolute grid grid-cols-1 grid-rows-2"
           style={{
+            aspectRatio: "16/9",
             backgroundImage: `url(${manila})`,
             backgroundSize: "cover",
             backgroundPosition: "center center",
-            width: "50rem",
           }}
         >
-          <div className="w-7/12">{cur_case_art}</div>
-          <div></div>
-          <div></div>
-          <div className="grid w-5/12 grid-cols-1 grid-rows-9">
-            {/*Div containg all puzzle info */}
-            <div className="row-span-1 mb-4 grid w-full grid-cols-4">
-              <h2 className="col-span-3 text-xl text-purple-500">{cur_case?.name}</h2>
-              <button className="col-span-1 flex justify-end self-end" onClick={closeModal}>
-                X
-              </button>
-            </div>
-            <h3 className="row-span-7">{cur_case?.description} description text</h3>{" "}
-            {/* className="row-span-7" */}
-            {/* Link to the minor case page */}
-            <Link className="text-xl text-purple-500" to={`/minorcase/${cur_case?.slug}`}>
-              Go to Minor Case Page
-            </Link>
-            <div className="flex justify-between">
-              {/* Container for centering */}
-              <div>{cur_case?.name}</div>
-              <button className="row-span-1 self-end" onClick={submitVote}>
-                Enter
-              </button>
+          <div>
+            <img
+              className="absolute shadow-lg aspect-square object-cover w-[8vw]"
+              style={{ left: "10%", top: "10%", rotate: "-27deg" }}
+              src={birb.default}
+            />
+            <img
+              className="absolute shadow-lg aspect-square object-cover w-[10vw]"
+              style={{ left: "8%", top: "55%", rotate: "15deg" }}
+              src={clip1.default}
+            />
+            <img
+              className="absolute shadow-lg aspect-square object-cover w-[8vw]"
+              style={{ left: "28%", top: "30%", rotate: "5deg" }}
+              src={clip2.default}
+            />
+            <img
+              className="absolute shadow-lg aspect-square object-cover w-[9vw]"
+              style={{ left: "30%", top: "60%", rotate: "-15deg" }}
+              src={birb.default}
+            />
+          </div>
 
-              <button onClick={handleSubmit}>Complete</button>
+          <DialogHeader
+            className="absolute max-w-[35%] grid gap-2"
+            style={{
+              left: "55%",
+              top: "3%",
+            }}
+          >
+            <DialogTitle className="text-[2vw]">{selectedCase.name}</DialogTitle>
+            <p className="text-[0.9vw]">{selectedCase.description}</p>
+          </DialogHeader>
+          <div
+            className="grid gap-4 absolute"
+            style={{
+              left: "55%",
+              top: "70%",
+            }}
+          >
+            <p
+              className="font-mono pt-1 text-[3vw]"
+              style={{
+                color: CASE_PALETTE[selectedCase.major_case.slug as MajorCaseEnum].answerColor,
+              }}
+            >
+              {getMinorCaseSolution(selectedCase, context) ?? "PLACEHOLDER"}
+            </p>
+            <div className="text-[0.9vw]">
+              {typeof action === "string" ? (
+                <Link to={action}>Go to Minor Case Page</Link>
+              ) : (
+                <div>
+                  <Checkbox
+                    id={selectedCase.name}
+                    checked={selectedCases && selectedCases.includes(selectedCase.name)}
+                    onClick={() => action(selectedCase.name)}
+                  />
+                  <label htmlFor={selectedCase.name}>Vote for {selectedCase.name}!</label>
+                </div>
+              )}
             </div>
           </div>
-        </div>
-      </div>
-    </>
+        </DialogContent>
+      </Dialog>
+    )
   );
 };
 

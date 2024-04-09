@@ -1,5 +1,9 @@
 import * as React from "react";
+import { useState } from "react";
+import Countdown from "react-countdown";
+import { BeatLoader } from "react-spinners";
 
+import bluenoir_logo from "@/assets/navbar_logo_head.png";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -9,17 +13,14 @@ import {
   NavigationMenuRight,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
-import { cn } from "@/utils/utils";
-import LoginNavbar from "./LoginNavbar";
-
 import { useAuth } from "@/hooks/useAuth";
 import { useDjangoContext } from "@/hooks/useDjangoContext";
-import Countdown from "react-countdown";
-import { BeatLoader } from "react-spinners";
-import TeamNavbar from "./TeamNavbar";
+import { useTheme } from "@/hooks/useTheme";
+import { DEFAULT_THEME } from "@/utils/themes";
+import { cn } from "@/utils/utils";
 
-import bluenoir_logo from "@/assets/navbar_logo_head.png";
-import { useState } from "react";
+import LoginNavbar from "./LoginNavbar";
+import TeamNavbar from "./TeamNavbar";
 
 const components: { title: string; href: string; description: string }[] = [
   {
@@ -47,6 +48,7 @@ const components: { title: string; href: string; description: string }[] = [
 export const ListItem = React.forwardRef<
   React.ElementRef<"a">,
   React.ComponentPropsWithoutRef<"a">
+  // eslint-disable-next-line react/prop-types
 >(({ className, title, children, ...props }, ref) => {
   return (
     <li>
@@ -67,7 +69,10 @@ export const ListItem = React.forwardRef<
   );
 });
 
+ListItem.displayName = "ListItem";
+
 const IconItem = React.forwardRef<React.ElementRef<"a">, React.ComponentPropsWithoutRef<"a">>(
+  // eslint-disable-next-line react/prop-types
   ({ className, title, ...props }, ref) => {
     return (
       <li>
@@ -88,6 +93,8 @@ const IconItem = React.forwardRef<React.ElementRef<"a">, React.ComponentPropsWit
     );
   },
 );
+
+IconItem.displayName = "IconItem";
 
 const hunt_start_timer = ({
   days,
@@ -219,12 +226,14 @@ const NavbarRight = () => {
   );
 };
 
-export default function Navbar({ navbarColor }: { navbarColor: string }) {
+export default function Navbar() {
+  const { theme } = useTheme();
+
   return (
     <div
       className={`navbar dark sticky top-0 z-40 w-full backdrop-blur-sm flex transition-colors duration-500 lg:z-50 lg:border-b lg:border-slate-900/10 dark:border-slate-50/[0.06] supports-backdrop-blur:bg-white/60 dark:bg-transparent`}
       style={{
-        backgroundColor: navbarColor,
+        backgroundColor: theme.navbar_color ? theme.navbar_color : DEFAULT_THEME.navbar_color,
       }}
     >
       <NavbarLeft />

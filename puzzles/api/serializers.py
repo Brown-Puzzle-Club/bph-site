@@ -8,6 +8,7 @@ from puzzles.models import (
     MinorCaseActive,
     MinorCaseCompleted,
     MinorCaseIncomingEvent,
+    MinorCaseVote,
     MinorCaseVoteEvent,
     Puzzle,
     PuzzleMessage,
@@ -19,6 +20,7 @@ from puzzles.models import (
     TeamMember,
 )
 from rest_framework import serializers
+from rest_framework.authtoken.models import Token
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -34,11 +36,10 @@ class PuzzleSerializer(serializers.ModelSerializer):
 
 
 class MajorCaseSerializer(serializers.ModelSerializer):
-    puzzle = PuzzleSerializer()
 
     class Meta:
         model = MajorCase
-        fields = "__all__"
+        fields = ["id", "name", "slug", "order"]
 
 
 class RoundSerializer(serializers.ModelSerializer):
@@ -72,6 +73,14 @@ class TeamSerializer(serializers.ModelSerializer):
         read_only_fields = ("id", "team_name", "is_hidden", "is_prerelease_testsolver")
 
 
+class TokenSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Token
+        fields = "__all__"
+        read_only_feilds = "key"
+
+
 class TeamBasicSerializer(serializers.ModelSerializer):
     class Meta:
         model = Team
@@ -91,7 +100,17 @@ class PuzzleUnlockSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class MinorCaseVoteSerializer(serializers.ModelSerializer):
+    minor_case = RoundSerializer()
+    class Meta:
+        model = MinorCaseVote
+        fields = "__all__"
+
+
 class MinorCaseIncomingEventSerializer(serializers.ModelSerializer):
+    incoming_cases = RoundSerializer(many=True)
+    votes = MinorCaseVoteSerializer(many=True)
+
     class Meta:
         model = MinorCaseIncomingEvent
         fields = "__all__"
@@ -138,6 +157,8 @@ class ExtraGuessGrantSerializer(serializers.ModelSerializer):
 
 
 class PuzzleMessageSerializer(serializers.ModelSerializer):
+    puzzle = PuzzleBasicSerializer()
+
     class Meta:
         model = PuzzleMessage
         fields = "__all__"
@@ -186,6 +207,7 @@ class TeamPuzzleContextSerializer(serializers.Serializer):
     )
     minor_case_active = MinorCaseActiveSerializer(many=True)
     minor_case_completed = MinorCaseCompletedSerializer(many=True)
+    solves = serializers.DictField(child=AnswerSubmissionSerializer())
     solves_by_case = serializers.DictField(
         child=serializers.DictField(
             child=serializers.DictField(child=AnswerSubmissionSerializer())
@@ -196,6 +218,10 @@ class TeamPuzzleContextSerializer(serializers.Serializer):
             child=serializers.DictField(child=PuzzleBasicSerializer())
         )
     )
+    case_unlocks = serializers.DictField(child=RoundSerializer())
+    major_case_unlocks = serializers.DictField(child=MajorCaseSerializer())
+    major_case_puzzles = serializers.DictField(child=PuzzleBasicSerializer())
+    current_incoming_event = MinorCaseIncomingEventSerializer()
 
 
 class HuntContextSerializer(serializers.Serializer):
@@ -229,10 +255,16 @@ class ContextSerializer(serializers.Serializer):
             [field.source for field in hunt_serializer.fields.values()]
         )
 
-        context_fields = dir(data)
-        for ctx in context_fields:
+        # context_fields = dir(data)
+        # from time import time
+
+        all_fields = hunt_context_fields.union(team_context_fields)
+        for ctx in all_fields:
             if ctx in hunt_context_fields:
+                # time_start = time()
                 hunt_context_data[ctx] = getattr(data, ctx)
+                # time_elapsed = time() - time_start
+                # print(f"took {time_elapsed} seconds to process")
             elif ctx in team_context_fields:
                 team_context_data[ctx] = getattr(data, ctx)
 

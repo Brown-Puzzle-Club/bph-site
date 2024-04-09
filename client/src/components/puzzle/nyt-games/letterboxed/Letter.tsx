@@ -1,4 +1,5 @@
-import { LetterState, Puzzle } from "../../../../utils/minor_cases/nyt/LetterBoxedTypes";
+import type { Puzzle } from "../../../../utils/minor_cases/nyt/LetterBoxedTypes";
+import { LetterState } from "../../../../utils/minor_cases/nyt/LetterBoxedTypes";
 
 /**
  * Draws the dots of how many uses are left
@@ -74,7 +75,7 @@ export default function Letter({
           textAnchor="middle"
           alignmentBaseline="middle"
           className={state == LetterState.CURRENT ? "font-extrabold" : "font-bold"}
-          fill={state == LetterState.NONE ? "white" : "black"}
+          fill={uses != used ? "white" : "black"}
           fontSize={0.15 * scale}
         >
           {letter}

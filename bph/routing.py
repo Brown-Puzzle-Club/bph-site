@@ -1,9 +1,28 @@
-from django.urls import re_path
+from django.urls import path, re_path
 
-from puzzles.messaging import TeamNotificationsConsumer, HintsConsumer, VotingConsumer
+from puzzles.messaging import VotingConsumer
+
+from channels.auth import AuthMiddlewareStack
+from channels.routing import URLRouter
+import django_eventstream
 
 websocket_urlpatterns = [
-    re_path('^ws/team$', TeamNotificationsConsumer.as_asgi()),
-    re_path('^ws/hints$', HintsConsumer.as_asgi()),
-    re_path('^ws/websocket-demo$', VotingConsumer.as_asgi()),
+    re_path("^ws/puzzles", VotingConsumer.as_asgi()),
+]
+
+eventstream_urlpatterns = [
+    path(
+        "notifications/<user_id>",
+        AuthMiddlewareStack(
+            URLRouter(django_eventstream.routing.urlpatterns),
+        ),
+        {"format-channels": ["_user-{user_id}"]},
+    ),
+    path(
+        "testevents/",
+        AuthMiddlewareStack(
+            URLRouter(django_eventstream.routing.urlpatterns),
+        ),
+        {"channels": ["test"]},
+    ),
 ]

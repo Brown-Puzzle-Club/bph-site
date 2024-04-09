@@ -1,7 +1,8 @@
-import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
 import { BeatLoader } from "react-spinners";
 import { useDebounce } from "use-debounce";
+
+import { Input } from "@/components/ui/input";
 
 interface VoiceRecording {
   uuid: string;

@@ -1,6 +1,7 @@
-import React, { CSSProperties, useState } from "react";
+import type { CSSProperties, ReactNode } from "react";
+import { useState } from "react";
 
-interface AssetProps {
+export interface AssetProps {
   imageSrc: string;
   linkTo?: string;
   hoverImageSrc?: string;
@@ -8,9 +9,10 @@ interface AssetProps {
   extraClasses?: string;
   onHover?: () => void;
   onLeave?: () => void;
+  children?: ReactNode;
 }
 
-const RelativeAsset: React.FC<AssetProps> = ({
+const RelativeAsset = ({
   imageSrc,
   linkTo,
   hoverImageSrc,
@@ -18,14 +20,15 @@ const RelativeAsset: React.FC<AssetProps> = ({
   extraClasses,
   onHover,
   onLeave,
-}) => {
+  children,
+}: AssetProps) => {
   const [isHovered, setIsHovered] = useState(false);
 
   const curImageSrc = isHovered && hoverImageSrc ? hoverImageSrc : imageSrc;
 
   return (
     <div
-      className={`relative-asset absolute${isHovered ? " hover-effect" : ""}${
+      className={`relative-asset w-full absolute${isHovered ? " hover-effect" : ""}${
         extraClasses ? " " + extraClasses : ""
       }`}
       onMouseEnter={() => {
@@ -41,6 +44,7 @@ const RelativeAsset: React.FC<AssetProps> = ({
       <a href={linkTo}>
         <img src={curImageSrc} alt="asset" className="w-full" />
       </a>
+      {children}
     </div>
   );
 };
