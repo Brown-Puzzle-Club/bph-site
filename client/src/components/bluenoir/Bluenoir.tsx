@@ -1,10 +1,11 @@
-import { motion, AnimatePresence, type Variants, useMotionValue, animate } from "framer-motion";
+import { AnimatePresence, animate, motion, useMotionValue, type Variants } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { useGesture } from "react-use-gesture";
 import Typewriter from "typewriter-effect";
 
+import test from "@/assets/bluenoir/bluenoir_neutral.png";
 import frame from "@/assets/bluenoir/frame.png";
-import test from "@/assets/bluenoir/test.jpeg";
+import frame_bg from "@/assets/bluenoir/frame_bg.png";
 import { cn } from "@/utils/utils";
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
@@ -20,13 +21,19 @@ const BluenoirFrame = ({ show, setShow }: BluenoirFrameProps) => {
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger>
-          <div className="cursor-pointer h-[80px] w-[80px]">
-            <div className="h-[55px] w-[55px] absolute mx-[12px] my-[12px]">
-              <img className="select-none" src={test} />
+          <div className="cursor-pointer h-[100px] w-[100px]">
+            <div className="h-[75px] w-[75px] absolute mx-[12px] my-[12px]">
+              <img
+                className="select-none"
+                src={test}
+                style={{
+                  backgroundImage: `url(${frame_bg})`,
+                }}
+              />
             </div>
             <div
               onDoubleClick={() => setShow(!show)}
-              className="h-[80px] w-[80px] absolute mx-auto my-auto"
+              className="h-[100px] w-[100px] absolute mx-auto my-auto"
             >
               <img className="select-none" src={frame} />
             </div>
@@ -78,7 +85,7 @@ interface BluenoirSpeechProps {
 
 const BluenoirSpeech = ({ show, setShow, isLeft }: BluenoirSpeechProps) => {
   const text =
-    "Nice work, kiddo. At this rate, you'll have the entire agency eating out of the palm of your hand.";
+    "Heya kiddo, these cases are starting to get out of hand... I'll talk to you at the funeral.";
 
   return (
     <motion.div
