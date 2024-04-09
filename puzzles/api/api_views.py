@@ -155,11 +155,19 @@ def get_puzzle(request: Request, puzzle_slug: str) -> Response:
         if context.is_admin:
             additional_fields["body"] = puzzle.body
             additional_fields["body_remote"] = puzzle.body_remote
+            additional_fields["clipboard"] = puzzle.clipboard
+            additional_fields["clipboard_remote"] = puzzle.clipboard_remote
+            additional_fields["solution"] = puzzle.solution
         else:
             additional_fields["body"] = (
                 puzzle.body
                 if context.team.in_person or puzzle.body_remote == ""
                 else puzzle.body_remote
+            )
+            additional_fields["clipboard"] = (
+                puzzle.clipboard
+                if context.team.in_person or puzzle.clipboard_remote == ""
+                else puzzle.clipboard_remote
             )
 
         complete_puzzle_data = {**serializer.data, **additional_fields}

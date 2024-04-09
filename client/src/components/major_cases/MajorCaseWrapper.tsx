@@ -47,6 +47,9 @@ function MajorCaseWrapper({ children }: { children: ReactNode }) {
         unlock_local_major: 0,
       },
       body_remote: "",
+      solution: "",
+      clipboard: "",
+      clipboard_remote: "",
     };
   }, [majorCase]);
 
