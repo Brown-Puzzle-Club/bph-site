@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { cloneElement } from "react";
+import { cloneElement, useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
 
 import Footer from "@/components/Footer";
@@ -12,7 +11,7 @@ import Bluenoir from "./bluenoir/Bluenoir";
 import CaseVoting from "./websockets/CaseVoting";
 
 const snapPositions = [
-  { x: 16, y: 48 },
+  { x: 16, y: 54 },
   { x: 0, y: 1 },
   { x: 1, y: 0 },
   { x: 1, y: 1 },
