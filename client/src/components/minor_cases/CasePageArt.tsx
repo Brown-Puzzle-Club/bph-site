@@ -189,7 +189,10 @@ export const ArtWrapper = ({
   return (
     <div className={outerClassName}>
       <div
-        className={cn("map relative left-1/2 transform -translate-x-1/2 w-full h-full", className)}
+        className={cn(
+          "map relative left-1/2 transform -translate-x-1/2 w-full h-full select-none",
+          className,
+        )}
       >
         {children}
         <img className="art-bg-img w-full" src={background_src} />

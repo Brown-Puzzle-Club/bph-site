@@ -12,8 +12,6 @@ interface Position {
 }
 
 export default function SVGBoard({
-  selectedThread,
-  selectedNode,
   setSelectedNode,
   links,
   setLinks,
@@ -214,9 +212,6 @@ export default function SVGBoard({
 
   return (
     <div className="absolute">
-      Selected Thread: {selectedThread}
-      <br />
-      Selected Node: {selectedNode?.id}
       <svg
         width="100%"
         height="600"

@@ -10,6 +10,7 @@ import pin8 from "@/assets/major_cases/colored-thread/pin8.png";
 import pin9 from "@/assets/major_cases/colored-thread/pin9.png";
 
 import RelativeAsset, { AssetProps } from "@/components/RelativeAsset";
+import { cn } from "@/utils/utils";
 import { CSSProperties } from "react";
 import { ILink, INode, NodeAnswer, ThreadType } from "./board_types";
 import { COLORED_GLOW } from "./consts";
@@ -69,14 +70,17 @@ export default function AnswerPins({
     return (
       <>
         <RelativeAsset
-          extraClasses={`hover:cursor-pointer ${selectedThread && selectedNode && selectedNode.id === props.id ? COLORED_GLOW[selectedThread] : `hover:${PIN_HOVER_GLOW}`}`}
+          extraClasses={cn(
+            `hover:cursor-pointer select-none`,
+            `${selectedThread && selectedNode && selectedNode.id === props.id ? COLORED_GLOW[selectedThread] : `hover:${PIN_HOVER_GLOW}`}`,
+          )}
           onClick={() => {
             if (selectedThread) handleNodeClick(node.node);
           }}
           {...props}
         >
           <p
-            className="absolute text-black font-mono font-bold text-[1.5vw] text-center"
+            className="absolute text-black font-mono font-bold text-[1.5vw] text-center select-none"
             style={props.textStyle ? props.textStyle : props.extraStyles}
           >
             {node.answer}
