@@ -72,7 +72,7 @@ export default function Data() {
             <ul>
               {results.map((result, index) => (
                 <>
-                  <li key={index} className="py-5">
+                  <li key={index} className="py-5 text-black">
                     <div className="flex justify-between " style={{}}>
                       <div
                         className="bg-contain bg-no-repeat aspect-ratio-[15/17] bg-right"
