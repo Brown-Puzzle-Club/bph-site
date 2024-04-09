@@ -51,6 +51,7 @@ function MinorCasePage() {
   }
 
   if (!MINOR_CASE_SLUG || !IS_MINOR_CASE_UNLOCKED(MINOR_CASE_SLUG)(context)) {
+    window.location.href = "/eventpage";
     return <Error404 />;
   }
 
