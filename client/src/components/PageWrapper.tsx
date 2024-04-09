@@ -11,10 +11,18 @@ import { DEFAULT_THEME } from "@/utils/themes";
 import Bluenoir from "./bluenoir/Bluenoir";
 import CaseVoting from "./websockets/CaseVoting";
 
+const snapPositions = [
+  { x: 16, y: 48 },
+  { x: 0, y: 1 },
+  { x: 1, y: 0 },
+  { x: 1, y: 1 },
+];
+
 export const PageWrapper = ({ route }: { route: React.ReactElement }) => {
   const { theme } = useTheme();
   const [votingOpen, setVotingOpen] = useState(false);
   const [blueNoirOpen, setBlueNoirOpen] = useState(false);
+  const [position, setPosition] = useState(snapPositions[0]);
   useNotification();
 
   useEffect(() => {
@@ -28,7 +36,12 @@ export const PageWrapper = ({ route }: { route: React.ReactElement }) => {
         backgroundColor: theme.bg_color ? theme.bg_color : DEFAULT_THEME.bg_color,
       }}
     >
-      <Bluenoir show={blueNoirOpen} setShow={(open) => setBlueNoirOpen(open)} />
+      <Bluenoir
+        show={blueNoirOpen}
+        setShow={(open) => setBlueNoirOpen(open)}
+        position={position}
+        setPosition={(pos) => setPosition(pos)}
+      />
       <Navbar />
       <div
         className="content min-h-[90vh] pb-2"
