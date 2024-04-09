@@ -7,6 +7,8 @@ import frame from "@/assets/bluenoir/frame.png";
 import test from "@/assets/bluenoir/test.jpeg";
 import { cn } from "@/utils/utils";
 
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
+
 interface BluenoirFrameProps {
   show: boolean;
   setShow: (show: boolean) => void;
@@ -15,17 +17,28 @@ interface BluenoirFrameProps {
 
 const BluenoirFrame = ({ show, setShow }: BluenoirFrameProps) => {
   return (
-    <div className="h-[80px] w-[80px]">
-      <div className="h-[55px] w-[55px] absolute mx-[12px] my-[12px]">
-        <img className="select-none" src={test} />
-      </div>
-      <div
-        onDoubleClick={() => setShow(!show)}
-        className="h-[80px] w-[80px] absolute mx-auto my-auto"
-      >
-        <img className="select-none" src={frame} />
-      </div>
-    </div>
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger>
+          <div className="cursor-pointer h-[80px] w-[80px]">
+            <div className="h-[55px] w-[55px] absolute mx-[12px] my-[12px]">
+              <img className="select-none" src={test} />
+            </div>
+            <div
+              onDoubleClick={() => setShow(!show)}
+              className="h-[80px] w-[80px] absolute mx-auto my-auto"
+            >
+              <img className="select-none" src={frame} />
+            </div>
+          </div>
+        </TooltipTrigger>
+        {!show && (
+          <TooltipContent className="bg-slate-900 text-white border-none">
+            <p>Double Click Me!</p>
+          </TooltipContent>
+        )}
+      </Tooltip>
+    </TooltipProvider>
   );
 };
 
