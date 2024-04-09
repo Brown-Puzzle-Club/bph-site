@@ -13,6 +13,7 @@ import RelativeAsset from "@/components/RelativeAsset";
 import ActiveCases from "@/components/main_page/ActiveCases";
 import CompletedCases from "@/components/main_page/CompletedCases";
 import IncomingCasesStack from "@/components/main_page/IncomingCasesStack";
+import Phone from "@/components/main_page/Phone";
 import { ArtWrapperInner } from "@/components/minor_cases/CasePageArt";
 import { useTheme } from "@/hooks/useTheme";
 import { MAIN_PAGE_THEME } from "@/utils/themes";
@@ -88,6 +89,7 @@ export default function EventPage({ setVotingOpen }: EventPage) {
               left: "65%",
             }}
           />
+          <Phone />
         </ArtWrapperInner>
       </div>
     </div>
