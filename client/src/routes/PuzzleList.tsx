@@ -1,5 +1,6 @@
+import { useLocalStorage } from "@uidotdev/usehooks";
 import type { SetStateAction } from "react";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 
 import { useDjangoContext } from "@/hooks/useDjangoContext";
 import { CASE_PALETTE, MAJOR_CASE_NAMES, MajorCaseEnum } from "@/utils/constants";
@@ -7,7 +8,12 @@ import { getMinorCases } from "@/utils/utils";
 
 export default function PuzzleList() {
   const { context } = useDjangoContext();
-  const [curTab, setTab] = useState<MajorCaseEnum>(MajorCaseEnum.COLORED_THREAD);
+  const [curTab, setTab] = useLocalStorage<MajorCaseEnum>(
+    "puzzles-tab",
+    MajorCaseEnum.COLORED_THREAD,
+  );
+
+  console.log(curTab);
 
   const handleTabChange = (tab: SetStateAction<string>) => {
     setTab(tab as MajorCaseEnum);

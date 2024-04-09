@@ -120,7 +120,6 @@ export function getMinorCaseSolution(round: Round, context: DjangoContext) {
   const meta_puzzle = Object.values(
     context.team_context.unlocks[round.major_case.slug][round.slug],
   ).find((puzzle) => puzzle.is_meta);
-  console.log("meta: ", meta_puzzle);
   if (
     meta_puzzle &&
     (submission =
