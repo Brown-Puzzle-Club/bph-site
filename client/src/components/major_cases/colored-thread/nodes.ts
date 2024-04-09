@@ -2,7 +2,7 @@ import type { DjangoContext } from "@/utils/django_types";
 
 import type { INode, NodeAnswer } from "./board_types";
 
-export const collectNodes = (context: DjangoContext) => {
+export const collectNodes = (context: DjangoContext | undefined) => {
   // TODO: fix coordinates
   const consistent_nodes: NodeAnswer[] = [
     { node: { id: "wasting-illness", x: 608, y: 90 }, answer: "WASTING ILLNESS" },
