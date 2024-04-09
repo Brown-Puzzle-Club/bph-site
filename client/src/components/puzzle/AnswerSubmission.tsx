@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
+import { motion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
@@ -169,7 +170,16 @@ const AnswerSubmitRegular = ({
           toast.success("Correct answer!", { duration: Infinity, position: "top-center" });
         } else if (response.data.messages.length > 0) {
           response.data.messages.forEach((message: PuzzleMessage) => {
-            toast.custom(message.response, { duration: 5000, position: "top-center" });
+            toast.custom(
+              <motion.div
+                initial={{ y: "-100%" }}
+                animate={{ y: 0 }}
+                className="text-white rounded-lg bg-slate-900 p-4 shadow-md shadow-slate-800"
+              >
+                <p>{message.response}</p>
+              </motion.div>,
+              { duration: 5000, position: "top-center" },
+            );
           });
         } else {
           const guesses_left = response.data.guesses_left;

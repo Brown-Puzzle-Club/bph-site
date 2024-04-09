@@ -91,6 +91,7 @@ export function getMinorCaseSolution(round: Round, context: DjangoContext) {
   if (
     !context?.team_context ||
     !round ||
+    !context.team_context.solves_by_case[round.major_case.slug] ||
     !context.team_context.solves_by_case[round.major_case.slug][round.slug] ||
     !context?.team_context.unlocks[round.major_case.slug] ||
     !context?.team_context.unlocks[round.major_case.slug][round.slug]

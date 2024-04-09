@@ -59,7 +59,7 @@ const VotingModal = ({
               <MinorCaseFolder
                 className={cn(
                   "max-w-fit hover:rotate-0",
-                  votedCases.includes(caseObj.round.name)
+                  votedCases.includes(caseObj.round?.name)
                     ? "drop-shadow-[0_12px_12px_rgba(135,172,100,0.5)]"
                     : "hover:drop-shadow-[0_12px_12px_rgba(255,196,100,0.5)]",
                 )}

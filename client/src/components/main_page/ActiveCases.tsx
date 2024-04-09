@@ -1,15 +1,13 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 import { useDjangoContext } from "@/hooks/useDjangoContext";
 import type { Round } from "@/utils/django_types";
 
+import MinorCaseModal from "../MinorCaseModal";
 import Cases from "./Cases";
 
-export default function ActiveCases({
-  setSelectedCase,
-}: {
-  setSelectedCase: (round: Round | null) => void;
-}) {
+export default function ActiveCases() {
+  const [selectedCase, setSelectedCase] = useState<Round | null>(null);
   const { context } = useDjangoContext();
 
   const active_cases = useMemo(() => {
@@ -24,8 +22,15 @@ export default function ActiveCases({
   }, [context]);
 
   return (
-    <div className="flex space-x-4">
-      {context ? <Cases casesRecord={active_cases} setSelectedCase={setSelectedCase} /> : null}
-    </div>
+    <>
+      <div className="flex space-x-4">
+        {context ? <Cases casesRecord={active_cases} setSelectedCase={setSelectedCase} /> : null}
+      </div>
+      <MinorCaseModal
+        setSelectedCase={setSelectedCase}
+        selectedCase={selectedCase}
+        action={`/minorcase/${selectedCase?.slug}`}
+      />
+    </>
   );
 }
