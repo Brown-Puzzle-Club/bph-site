@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 
 import background from "@/assets/main_page/Backdrop.png";
+import desk from "@/assets/main_page/MainPageNew.png";
 import shadow from "@/assets/main_page/Shadow.png";
-import desk from "@/assets/main_page/ShadowDesk.png";
 import ActiveCases from "@/components/main_page/ActiveCases";
 import CompletedCases from "@/components/main_page/CompletedCases";
 import IncomingCasesStack from "@/components/main_page/IncomingCasesStack";
