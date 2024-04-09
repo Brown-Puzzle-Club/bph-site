@@ -1,6 +1,8 @@
 import type { CSSProperties, ReactNode } from "react";
 import { useState } from "react";
 
+import { cn } from "@/utils/utils";
+
 export interface AssetProps {
   imageSrc: string;
   linkTo?: string;
@@ -28,9 +30,7 @@ const RelativeAsset = ({
 
   return (
     <div
-      className={`relative-asset w-full absolute${isHovered ? " hover-effect" : ""}${
-        extraClasses ? " " + extraClasses : ""
-      }`}
+      className={cn("relative-asset w-full absolute", extraClasses)}
       onMouseEnter={() => {
         setIsHovered(true);
         onHover ? onHover() : (() => {})();

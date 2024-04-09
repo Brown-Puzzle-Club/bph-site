@@ -27,7 +27,7 @@ export default function CompletedCases() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute rounded-xl p-4 align-center"
+            className="absolute rounded-xl p-4 align-center z-50"
             style={{ top: "20%", left: "29%", width: "50%", height: "37%" }}
           >
             <div className="flex flex-col items-center">
