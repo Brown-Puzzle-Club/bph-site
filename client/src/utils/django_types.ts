@@ -156,6 +156,7 @@ const TeamPuzzleContextSchema = z.object({
   is_admin: z.boolean(),
   is_superuser: z.boolean(),
   is_prerelease_testsolver: z.boolean(),
+  in_person: z.boolean(),
   num_hints_remaining: z.number(),
   num_free_answers_remaining: z.number(),
   minor_case_solves: z.record(z.record(AnswerSubmissionSchema)),
