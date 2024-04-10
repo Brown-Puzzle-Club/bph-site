@@ -1,10 +1,18 @@
-import { AnimatePresence, animate, motion, useMotionValue, type Variants } from "framer-motion";
-import { forwardRef, useEffect, useRef, useState } from "react";
+import {
+  AnimatePresence,
+  animate,
+  motion,
+  useMotionValue,
+  useMotionValueEvent,
+  type Variants,
+} from "framer-motion";
+import { forwardRef, useRef, useState } from "react";
 import { useGesture } from "react-use-gesture";
 import Typewriter from "typewriter-effect";
 
 import angry from "@/assets/bluenoir/angry.png";
 import frame from "@/assets/bluenoir/frame.png";
+import frame_bg from "@/assets/bluenoir/frame_bg.png";
 import useBPHStore from "@/stores/useBPHStore";
 import { cn } from "@/utils/utils";
 
@@ -20,7 +28,13 @@ const BluenoirFrame = forwardRef<HTMLDivElement>((_props, ref) => {
         <TooltipTrigger>
           <div ref={ref} className="cursor-pointer h-[100px] w-[100px]">
             <div className="h-[75px] w-[75px] absolute mx-[12px] my-[12px]">
-              <img className="select-none" src={angry} />
+              <img
+                className="select-none"
+                src={angry}
+                style={{
+                  backgroundImage: `url(${frame_bg})`,
+                }}
+              />
             </div>
             <div
               onDoubleClick={toggleOpen}
@@ -135,19 +149,19 @@ const Bluenoir = () => {
   const position = useBPHStore((state) => state.getBluenoirPosition());
   const setPosition = useBPHStore((state) => state.setBluenoirPosition);
   const getNearestSnapPoint = useBPHStore((state) => state.getNearestSnapPoint);
+  const dragRef = useRef<HTMLDivElement>(null);
+  const measureRef = useRef<HTMLDivElement>(null);
+
   const x = useMotionValue(position.x);
   const y = useMotionValue(position.y);
 
-  const ref = useRef<HTMLDivElement>(null);
   const [isLeft, setIsLeft] = useState(
-    x.get() < (window.innerWidth - (ref.current?.offsetWidth ?? 0)) / 2,
+    x.get() < (window.innerWidth - (measureRef.current?.offsetWidth ?? 0)) / 2,
   );
 
-  useEffect(() => {
-    x.on("change", (val) => {
-      setIsLeft(val < (window.innerWidth - (ref.current?.offsetWidth ?? 0)) / 2);
-    });
-  }, [x]);
+  useMotionValueEvent(x, "change", (val) => {
+    setIsLeft(val < (window.innerWidth - (measureRef.current?.offsetWidth ?? 0)) / 2);
+  });
 
   useGesture(
     {
@@ -155,7 +169,6 @@ const Bluenoir = () => {
         event.preventDefault();
         x.stop();
         y.stop();
-        if (!ref.current) return;
 
         x.set(dx);
         y.set(dy);
@@ -164,9 +177,9 @@ const Bluenoir = () => {
         console.log(x.get(), y.get());
         const snapPosition = getNearestSnapPoint({ x: x.get(), y: y.get() });
         const centeredPositionX =
-          snapPosition.x * window.innerWidth - (ref.current?.offsetWidth ?? 0) / 2;
+          snapPosition.x * window.innerWidth - (measureRef.current?.offsetWidth ?? 0) / 2;
         const centeredPositionY =
-          snapPosition.y * window.innerHeight - (ref.current?.offsetWidth ?? 0) / 2;
+          snapPosition.y * window.innerHeight - (measureRef.current?.offsetHeight ?? 0) / 2;
 
         console.log(centeredPositionX, centeredPositionY);
 
@@ -176,8 +189,8 @@ const Bluenoir = () => {
       },
     },
     {
-      drag: { initial: () => [x.get(), y.get()] },
-      domTarget: ref,
+      drag: { initial: () => [x.get(), y.get()], filterTaps: true },
+      domTarget: dragRef,
       eventOptions: { passive: false },
     },
   );
@@ -195,9 +208,10 @@ const Bluenoir = () => {
       }}
     >
       <div
+        ref={dragRef}
         className={cn("flex items-center select-none", isLeft ? "flex-row" : "flex-row-reverse")}
       >
-        <BluenoirFrame ref={ref} />
+        <BluenoirFrame ref={measureRef} />
         <BluenoirSpeech isLeft={isLeft} />
       </div>
     </motion.div>

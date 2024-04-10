@@ -8,10 +8,8 @@ interface BPHState {
   votingModalOpen: boolean;
 }
 
-const TOP_LEFT = { x: 0.04, y: 0.13 } as const;
-const TOP_RIGHT = { x: 0.94, y: 0.15 } as const;
-const BOTTOM_LEFT = { x: 0.04, y: 0.9 } as const;
-const BOTTOM_RIGHT = { x: 0.94, y: 0.9 } as const;
+const TOP_LEFT = { x: 0.05, y: 0.13 } as const;
+const BOTTOM_LEFT = { x: 0.05, y: 0.85 } as const;
 const CENTER = { x: 0.5, y: 0.5 } as const;
 
 interface Position {
@@ -19,12 +17,7 @@ interface Position {
   y: number;
 }
 
-type SnappablePosition =
-  | typeof TOP_LEFT
-  | typeof TOP_RIGHT
-  | typeof BOTTOM_LEFT
-  | typeof BOTTOM_RIGHT
-  | typeof CENTER;
+type SnappablePosition = typeof TOP_LEFT | typeof BOTTOM_LEFT | typeof CENTER;
 
 interface BPHActions {
   toggleBluenoirOpen: () => void;
@@ -61,7 +54,7 @@ const useBPHStore = create<BPHState & BPHActions>()(
       const normalizedPosition = { x: pos.x / window.innerWidth, y: pos.y / window.innerHeight };
 
       // find the closest snap point
-      const snapPoints = [TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT];
+      const snapPoints = [TOP_LEFT, BOTTOM_LEFT];
       const orderedSnapPoints = snapPoints.sort(
         (a, b) => distSq(a, normalizedPosition) - distSq(b, normalizedPosition),
       );
