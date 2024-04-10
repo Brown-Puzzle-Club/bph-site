@@ -6,23 +6,24 @@ import Footer from "@/components/Footer";
 import Navbar from "@/components/navbar/Navbar";
 import { useNotification } from "@/hooks/useNotification";
 import { useTheme } from "@/hooks/useTheme";
+import useBPHStore from "@/stores/useBPHStore";
 import { DEFAULT_THEME } from "@/utils/themes";
 
 import Bluenoir from "./bluenoir/Bluenoir";
 import CaseVoting from "./websockets/CaseVoting";
 
-const snapPositions = [
-  { x: 16, y: 48 },
-  { x: 0, y: 1 },
-  { x: 1, y: 0 },
-  { x: 1, y: 1 },
+const randomStrings = [
+  "Tch ... Just my luck, I get the rookies shoved off on me.",
+  "What's happening, kid? The name's Bluenoir. I'm in charge of the BIB's intern program this year. Though, I suppose you probably knew that already ...",
+  "Unfortunately, we can't exactly offer you a pretty first impression. BIB's been swamped up to our ears ever since Carberry bit the linoleum.",
+  "Seems like every bit of scum in the city decided to take the chief's 'leave of absence' as an invitation to dustup all the attractive scenery.",
+  "Yep, you heard it here first. Prison break. Not even Providence's finest hoosegows could contain the excitement of Carberry's untimely demise. Three of our most notorious serial killers are now out roaming the streets.",
 ];
 
 export const PageWrapper = ({ route }: { route: React.ReactElement }) => {
   const { theme } = useTheme();
   const [votingOpen, setVotingOpen] = useState(false);
-  const [blueNoirOpen, setBlueNoirOpen] = useState(false);
-  const [position, setPosition] = useState(snapPositions[0]);
+  const speak = useBPHStore((state) => state.bluenoirSpeak);
   useNotification();
 
   useEffect(() => {
@@ -36,12 +37,7 @@ export const PageWrapper = ({ route }: { route: React.ReactElement }) => {
         backgroundColor: theme.bg_color ? theme.bg_color : DEFAULT_THEME.bg_color,
       }}
     >
-      <Bluenoir
-        show={blueNoirOpen}
-        setShow={(open) => setBlueNoirOpen(open)}
-        position={position}
-        setPosition={(pos) => setPosition(pos)}
-      />
+      <Bluenoir />
       <Navbar />
       <div
         className="content min-h-[90vh] pb-2"
@@ -60,6 +56,12 @@ export const PageWrapper = ({ route }: { route: React.ReactElement }) => {
           duration: 5000,
         }}
       />
+      <button
+        className="bg-red-400"
+        onClick={() => speak(randomStrings[Math.floor(Math.random() * randomStrings.length)], true)}
+      >
+        test
+      </button>
       <CaseVoting
         path="ws/puzzles"
         open={votingOpen}

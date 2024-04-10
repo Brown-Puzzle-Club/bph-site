@@ -1,38 +1,33 @@
 import { motion, AnimatePresence, type Variants, useMotionValue, animate } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { forwardRef, useEffect, useRef, useState } from "react";
 import { useGesture } from "react-use-gesture";
 import Typewriter from "typewriter-effect";
 
+import angry from "@/assets/bluenoir/angry.png";
 import frame from "@/assets/bluenoir/frame.png";
-import test from "@/assets/bluenoir/test.jpeg";
+import useBPHStore from "@/stores/useBPHStore";
 import { cn } from "@/utils/utils";
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 
-interface BluenoirFrameProps {
-  show: boolean;
-  setShow: (show: boolean) => void;
-  isLeft: boolean;
-}
+const BluenoirFrame = forwardRef<HTMLDivElement>((_props, ref) => {
+  const open = useBPHStore((state) => state.bluenoirOpen);
+  const toggleOpen = useBPHStore((state) => state.toggleBluenoirOpen);
 
-const BluenoirFrame = ({ show, setShow }: BluenoirFrameProps) => {
   return (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger>
-          <div className="cursor-pointer h-[80px] w-[80px]">
-            <div className="h-[55px] w-[55px] absolute mx-[12px] my-[12px]">
-              <img className="select-none" src={test} />
+          <div ref={ref} className="cursor-pointer h-[80px] w-[80px]">
+            <div className="h55px] w-[55px] absolute mx-[12px] my-[12px]">
+              <img className="select-none" src={angry} />
             </div>
-            <div
-              onDoubleClick={() => setShow(!show)}
-              className="h-[80px] w-[80px] absolute mx-auto my-auto"
-            >
+            <div onDoubleClick={toggleOpen} className="h-[80px] w-[80px] absolute mx-auto my-auto">
               <img className="select-none" src={frame} />
             </div>
           </div>
         </TooltipTrigger>
-        {!show && (
+        {!open && (
           <TooltipContent className="bg-slate-900 text-white border-none">
             <p>Double Click Me!</p>
           </TooltipContent>
@@ -40,7 +35,8 @@ const BluenoirFrame = ({ show, setShow }: BluenoirFrameProps) => {
       </Tooltip>
     </TooltipProvider>
   );
-};
+});
+BluenoirFrame.displayName = "BluenoirFrame";
 
 const frameSlideInOut = 0.15;
 const textFadeInOut = 0.25;
@@ -71,24 +67,23 @@ const textVariants: Variants = {
 };
 
 interface BluenoirSpeechProps {
-  show: boolean;
-  setShow: (show: boolean) => void;
   isLeft: boolean;
 }
 
-const BluenoirSpeech = ({ show, setShow, isLeft }: BluenoirSpeechProps) => {
-  const text =
-    "Nice work, kiddo. At this rate, you'll have the entire agency eating out of the palm of your hand.";
+const BluenoirSpeech = ({ isLeft }: BluenoirSpeechProps) => {
+  const open = useBPHStore((state) => state.bluenoirOpen);
+  const setOpen = useBPHStore((state) => state.setBluenoirOpen);
+  const speechText = useBPHStore((state) => state.bluenoirText);
 
   return (
     <motion.div
       className="flex flex-col"
       variants={frameVariants}
       initial={false}
-      animate={show ? "visible" : "hidden"}
+      animate={open ? "visible" : "hidden"}
     >
       <AnimatePresence initial={false}>
-        {show && (
+        {open && (
           <motion.div
             className="px-4"
             variants={textVariants}
@@ -96,8 +91,10 @@ const BluenoirSpeech = ({ show, setShow, isLeft }: BluenoirSpeechProps) => {
             animate="visible"
             exit="hidden"
           >
-            <div className={cn("absolute text-slate-500 text-sm", isLeft ? "right-2" : "left-2")}>
-              <button onClick={() => setShow(false)}>✕</button>
+            <div
+              className={cn("absolute text-slate-500 text-sm top-1", isLeft ? "right-2" : "left-2")}
+            >
+              <button onClick={() => setOpen(false)}>✕</button>
             </div>
             <div
               className={cn(
@@ -108,13 +105,13 @@ const BluenoirSpeech = ({ show, setShow, isLeft }: BluenoirSpeechProps) => {
               Bluenoir
             </div>
             <div className="grid font-mono font-light max-w-xs text-xs">
-              <p className="text-slate-900 col-start-1 row-start-1">{text}</p>
-              <div className="w-full col-start-1 row-start-1">
+              <p className="text-slate-900 col-start-1 row-start-1">{speechText}</p>
+              <div className="w-full col-start-1 row-start-1" key={speechText}>
                 <Typewriter
                   onInit={(typewriter) => {
                     typewriter
                       .pauseFor(totalAnimationTime * 1000)
-                      .typeString(text)
+                      .typeString(speechText)
                       .start();
                   }}
                   options={{
@@ -131,29 +128,13 @@ const BluenoirSpeech = ({ show, setShow, isLeft }: BluenoirSpeechProps) => {
   );
 };
 
-const dampen = (val: number, [min, max]: [number, number]) => {
-  if (val > max) {
-    const extra = val - max;
-    const dampenedExtra = extra > 0 ? Math.sqrt(extra) : -Math.sqrt(-extra);
-    return max + dampenedExtra * 2;
-  } else if (val < min) {
-    const extra = val - min;
-    const dampenedExtra = extra > 0 ? Math.sqrt(extra) : -Math.sqrt(-extra);
-    return min + dampenedExtra * 2;
-  } else {
-    return val;
-  }
-};
-interface BluenoirProps {
-  show: boolean;
-  setShow: (show: boolean) => void;
-  position: { x: number; y: number };
-  setPosition: (position: { x: number; y: number }) => void;
-}
-
-const Bluenoir = ({ show, setShow, position, setPosition }: BluenoirProps) => {
+const Bluenoir = () => {
+  const position = useBPHStore((state) => state.getBluenoirPosition());
+  const setPosition = useBPHStore((state) => state.setBluenoirPosition);
+  const getNearestSnapPoint = useBPHStore((state) => state.getNearestSnapPoint);
   const x = useMotionValue(position.x);
   const y = useMotionValue(position.y);
+
   const ref = useRef<HTMLDivElement>(null);
   const [isLeft, setIsLeft] = useState(
     x.get() < (window.innerWidth - (ref.current?.offsetWidth ?? 0)) / 2,
@@ -173,25 +154,22 @@ const Bluenoir = ({ show, setShow, position, setPosition }: BluenoirProps) => {
         y.stop();
         if (!ref.current) return;
 
-        const [minX, maxX] = [
-          0.02 * window.innerWidth,
-          0.97 * window.innerWidth - ref.current.offsetWidth,
-        ];
-        const [minY, maxY] = [
-          0.1 * window.innerHeight,
-          0.95 * window.innerHeight - ref.current.offsetHeight,
-        ];
-
-        x.set(dampen(dx, [minX, maxX]));
-        y.set(dampen(dy, [minY, maxY]));
+        x.set(dx);
+        y.set(dy);
       },
       onDragEnd: () => {
-        const newPosition = { x: x.get(), y: y.get() };
-        // const snapPositions = [[], [], [], []];
+        console.log(x.get(), y.get());
+        const snapPosition = getNearestSnapPoint({ x: x.get(), y: y.get() });
+        const centeredPositionX =
+          snapPosition.x * window.innerWidth - (ref.current?.offsetWidth ?? 0) / 2;
+        const centeredPositionY =
+          snapPosition.y * window.innerHeight - (ref.current?.offsetWidth ?? 0) / 2;
 
-        animate(x, newPosition.x);
-        animate(y, newPosition.y);
-        setPosition(newPosition);
+        console.log(centeredPositionX, centeredPositionY);
+
+        animate(x, centeredPositionX);
+        animate(y, centeredPositionY);
+        setPosition(snapPosition);
       },
     },
     {
@@ -203,7 +181,6 @@ const Bluenoir = ({ show, setShow, position, setPosition }: BluenoirProps) => {
 
   return (
     <motion.div
-      ref={ref}
       className="fixed z-[50] text-white rounded-lg bg-slate-900 p-3 pr-4 shadow-lg shadow-slate-800"
       style={{
         x,
@@ -217,8 +194,8 @@ const Bluenoir = ({ show, setShow, position, setPosition }: BluenoirProps) => {
       <div
         className={cn("flex items-center select-none", isLeft ? "flex-row" : "flex-row-reverse")}
       >
-        <BluenoirFrame show={show} setShow={setShow} isLeft={isLeft} />
-        <BluenoirSpeech show={show} setShow={setShow} isLeft={isLeft} />
+        <BluenoirFrame ref={ref} />
+        <BluenoirSpeech isLeft={isLeft} />
       </div>
     </motion.div>
   );
