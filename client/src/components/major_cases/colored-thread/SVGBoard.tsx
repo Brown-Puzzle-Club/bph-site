@@ -63,7 +63,10 @@ export default function SVGBoard({
    */
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {
-      const svgCoords = screenToSvgCoords(e, svgEleRef.current);
+      const svgCoords = screenToSvgCoords(
+        e as unknown as React.MouseEvent<SVGImageElement, MouseEvent>,
+        svgEleRef.current,
+      );
       setSolutionPinPos((position) => {
         const xDiff = position.coords.x !== undefined ? position.coords.x - svgCoords.x : 0;
         const yDiff = position.coords.y !== undefined ? position.coords.y - svgCoords.y : 0;
