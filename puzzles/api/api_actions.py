@@ -341,7 +341,7 @@ def post_hint(request: Request, puzzle_slug: str) -> Response:
                 raise Puzzle.DoesNotExist
 
         # Ensure request.data is not empty and contains all required fields
-        required_fields = ["question"]
+        required_fields = ["question", "followup"]
         if not isinstance(request.data, dict) or not all(
             field in request.data for field in required_fields
         ):
@@ -352,7 +352,7 @@ def post_hint(request: Request, puzzle_slug: str) -> Response:
         hint = Hint.objects.create(
             puzzle=puzzle,
             team=context.team,
-            is_followup=(hints_count > 0),
+            is_followup=(request.data["followup"] and hints_count > 0),
             hint_question=request.data["question"],
         )
 
@@ -362,4 +362,6 @@ def post_hint(request: Request, puzzle_slug: str) -> Response:
     except Puzzle.DoesNotExist:
         return Response({"error": "Puzzle not found"}, status=404)
     except KeyError:
-        return Response({"error": "Missing required fields"}, status=400)
+        return Response(
+            {"error": f"Missing required fields {required_fields}"}, status=400
+        )
