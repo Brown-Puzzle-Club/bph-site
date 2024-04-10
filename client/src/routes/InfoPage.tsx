@@ -1,5 +1,6 @@
 import { FaCar } from "react-icons/fa";
 import { FaBus, FaLocationDot, FaTrain } from "react-icons/fa6";
+import { HashLink as Link } from "react-router-hash-link";
 
 import ProgressDocs from "@/components/ProgressDocs";
 
@@ -15,7 +16,6 @@ import rubix from "../assets/info/rubixdooble.svg";
 import salomon from "../assets/info/salomon_squiggle.png";
 import wiggle from "../assets/info/squigglydooble.svg";
 import waiver from "../assets/info/waiverdooble.svg";
-import { HashLink as Link } from "react-router-hash-link";
 
 const smoothScroll = (element_id: string) => {
   const element = document.getElementById(element_id);
@@ -54,11 +54,11 @@ const LocationBox = ({
         <h6 className="name text-xl md:text-3xl font-bold text-white tracking-wide">
           {location_name}
         </h6>
-        <a className="location" href={map_link}>
+        <Link className="location" to={map_link}>
           {!justify_left && <FaLocationDot className="inline-block" />}
           {location_addr}
           {justify_left && <FaLocationDot className="inline-block" />}
-        </a>
+        </Link>
         <div className="description text-[#94a3b8]">{location_desc}</div>
       </div>
       {!justify_left && (
@@ -341,13 +341,13 @@ export default function InfoPage() {
         <div>
           <p>
             Please describe the error in a <Link to="/contact">contact HQ</Link> submission and
-            we'll try to correct it.
+            we&apos;ll try to correct it.
           </p>
         </div>
         <h4>I have a question that&apos;s not on this list!</h4>
         <div>
           <p>
-            Please <Link to="/contact">contact HQ</Link> and we'll do our best to answer it.
+            Please <Link to="/contact">contact HQ</Link> and we&apos;ll do our best to answer it.
           </p>
         </div>
         <h1 id="on-campus">On-Campus</h1>
@@ -373,8 +373,8 @@ export default function InfoPage() {
           <p>
             Brown Puzzlehunt will not require you to do anything illegal, immoral, or untoward,
             including accessing unauthorized spaces. If you think that a puzzle is asking you to do
-            something dangerous, against the law, or disrespectful, stop and think. If you're really
-            not sure, please <Link to="/contact">contact us</Link> and check.
+            something dangerous, against the law, or disrespectful, stop and think. If you&apos;re
+            really not sure, please <Link to="/contact">contact us</Link> and check.
           </p>
           <p>
             Anyone who is attending on-campus will need to print and fill out{" "}
@@ -416,9 +416,9 @@ export default function InfoPage() {
             Some events and puzzles might use locations that require card swipe access, which is
             limited to current undergraduate or graduate students (or some faculty). Puzzles which
             require this will be kept to a minimum and, where applicable, clearly marked as such. If
-            you know ahead of time that you'll want to participate in these puzzles but have no
+            you know ahead of time that you&apos;ll want to participate in these puzzles but have no
             current students on your team, <Link to="/contact">contact us</Link> before the hunt and
-            we'll find a way to get that sorted.
+            we&apos;ll find a way to get that sorted.
           </p>
         </div>
         <h4>Getting to Providence</h4>
@@ -456,7 +456,7 @@ export default function InfoPage() {
               The visitor entrance is located at the intersection of Power and Thayer Streets.
               Parking costs $2.00 per hour over the weekend. If you want overnight parking or
               require a permit for more than one day, you can <Link to="/contact">contact us</Link>{" "}
-              and we'll try to help you out.
+              and we&apos;ll try to help you out.
             </span>
           </div>
         </div>

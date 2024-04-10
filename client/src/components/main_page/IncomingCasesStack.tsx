@@ -17,7 +17,7 @@ export default function IncomingCasesStack({ onClick }: IncomingCasesStackProps)
   if (!context || !context.team_context.current_incoming_event) return null;
 
   return (
-    <a
+    <div
       className="absolute hover:cursor-pointer transition-all duration-150 hover:drop-shadow-[0_12px_12px_rgba(255,196,100,0.5)] w-full"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -44,6 +44,6 @@ export default function IncomingCasesStack({ onClick }: IncomingCasesStackProps)
           }}
         />
       ))}
-    </a>
+    </div>
   );
 }

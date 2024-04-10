@@ -1,5 +1,6 @@
 import type { CSSProperties, ReactNode } from "react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 import { cn } from "@/utils/utils";
 
@@ -46,9 +47,13 @@ const RelativeAsset = ({
       }}
       style={extraStyles}
     >
-      <a href={linkTo}>
+      {linkTo ? (
+        <Link to={linkTo}>
+          <img src={curImageSrc} alt="asset" className="w-full" />
+        </Link>
+      ) : (
         <img src={curImageSrc} alt="asset" className="w-full" />
-      </a>
+      )}
       {children}
     </div>
   );

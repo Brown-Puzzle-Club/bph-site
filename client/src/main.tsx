@@ -3,7 +3,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, redirect, RouterProvider } from "react-router-dom";
 
 import { Locked } from "./components/LockedContent";
 import { PageWrapper } from "./components/PageWrapper";
@@ -51,7 +51,7 @@ const queryClient = new QueryClient({
 });
 
 const Redirect = ({ to }: { to: string }) => {
-  window.location.href = to;
+  redirect(to);
   return <Error404 />;
 };
 

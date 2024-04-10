@@ -294,14 +294,14 @@ export default function MyTeamPage() {
                   <div className="justify-center items-center flex">
                     <Dialog>
                       <DialogTrigger>
-                        <a
-                          className={`text-center justify-center align-center underline ${
+                        <div
+                          className={`text-center justify-center align-center underline cursor-pointer ${
                             membersError ? "text-[#d66464]" : "text-slate-400"
                           }`}
                           onClick={mutateTeam.reset}
                         >
                           ⚙️ edit team roster ⚙️
-                        </a>
+                        </div>
                       </DialogTrigger>
                       <DialogContent className="dark text-white">
                         <DialogHeader>

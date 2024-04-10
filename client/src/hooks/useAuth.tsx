@@ -9,6 +9,11 @@ const getMyTeam = async () => {
   const response = await axios.get<UserTeam[]>("/api/my-team");
   return response.data[0];
 };
+const getMyToken = async () => {
+  const response = await axios.get<[{ key: string; id: number }]>("/api/my-token");
+  console.log(response);
+  return response.data[0].key;
+};
 const getUser = async () => {
   const response = await axios.get<User[]>("/api/user");
   return response.data[0];
@@ -33,6 +38,10 @@ export const useAuth = () => {
     queryKey: ["user"],
     queryFn: getUser,
   });
+  const token = useQuery({
+    queryKey: ["my-token"],
+    queryFn: getMyToken,
+  });
   const login = useMutation({
     mutationKey: ["login"],
     mutationFn: postLogin,
@@ -54,5 +63,5 @@ export const useAuth = () => {
     mutationFn: postRegister,
   });
 
-  return { team, user, login, logout, register };
+  return { team, user, login, logout, register, token };
 };

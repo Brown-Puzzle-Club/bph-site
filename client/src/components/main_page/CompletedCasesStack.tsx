@@ -25,7 +25,7 @@ export default function CompletedCasesStack({
   };
 
   return (
-    <a
+    <div
       className={cn(
         "absolute hover:cursor-pointer transition-all duration-150 w-full",
         solvedCasesOpen
@@ -57,6 +57,6 @@ export default function CompletedCasesStack({
           }}
         />
       ))}
-    </a>
+    </div>
   );
 }
