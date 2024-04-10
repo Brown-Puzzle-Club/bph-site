@@ -1847,3 +1847,11 @@ def notify_on_hint_update(sender, instance, created, update_fields, **kwargs):
         #     instance.recipients(),
         # )
         # show_hint_notification(instance)
+
+
+class Dialog(models.Model):
+    """Represents a single point of dialog for"""
+
+    order = models.IntegerField(verbose_name=_("Order"))
+    transcript = models.TextField(verbose_name=_("Transcript"))
+    reaction = models.TextField(verbose_name=_("Reaction"))
