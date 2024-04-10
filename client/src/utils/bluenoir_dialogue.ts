@@ -1,14 +1,15 @@
-import angry from "../assets/bluenoir/angry.png";
-import curious from "../assets/bluenoir/curious.png";
-import embarassed from "../assets/bluenoir/embarrassed.png";
-import nervous from "../assets/bluenoir/nervous.png";
-import neutral from "../assets/bluenoir/neutral.png";
-import phone from "../assets/bluenoir/phone.png";
-import proud from "../assets/bluenoir/proud.png";
-import sad from "../assets/bluenoir/sad.png";
-import sensitive from "../assets/bluenoir/sensitive.png";
-import surprised from "../assets/bluenoir/surprised.png";
-import thinking from "../assets/bluenoir/thinking.png";
+import angry from "@/assets/bluenoir/angry.png";
+import curious from "@/assets/bluenoir/curious.png";
+import embarassed from "@/assets/bluenoir/embarrassed.png";
+import nervous from "@/assets/bluenoir/nervous.png";
+import neutral from "@/assets/bluenoir/neutral.png";
+import phone from "@/assets/bluenoir/phone.png";
+import proud from "@/assets/bluenoir/proud.png";
+import sad from "@/assets/bluenoir/sad.png";
+import sensitive from "@/assets/bluenoir/sensitive.png";
+import surprised from "@/assets/bluenoir/surprised.png";
+import thinking from "@/assets/bluenoir/thinking.png";
+
 import { MajorCaseEnum } from "./constants";
 import type { DjangoContext } from "./django_types";
 import { numberOfMajorCaseSolves } from "./utils";

@@ -6,6 +6,7 @@ import Navbar from "@/components/navbar/Navbar";
 import { useNotification } from "@/hooks/useNotification";
 import { useTheme } from "@/hooks/useTheme";
 import useBPHStore from "@/stores/useBPHStore";
+import { BluenoirReaction } from "@/utils/bluenoir_dialogue";
 import { DEFAULT_THEME } from "@/utils/themes";
 
 import Bluenoir from "./bluenoir/Bluenoir";
@@ -57,7 +58,15 @@ export const PageWrapper = ({ route }: { route: React.ReactElement }) => {
       />
       <button
         className="bg-red-400"
-        onClick={() => speak(randomStrings[Math.floor(Math.random() * randomStrings.length)], true)}
+        onClick={() =>
+          speak(
+            {
+              text: randomStrings[Math.floor(Math.random() * randomStrings.length)],
+              reaction: BluenoirReaction.SMUG,
+            },
+            true,
+          )
+        }
       >
         test
       </button>
