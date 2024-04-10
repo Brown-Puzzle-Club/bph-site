@@ -103,15 +103,17 @@ function PuzzleWrapper({ puzzle_slug }: { puzzle_slug: string }) {
             markdown={puzzleContent}
             puzzleStyle={toPuzzleStyle(puzzle?.round?.major_case.slug)}
           />
-          <Button
-            className="py-4 transition cursor-context-menu hover:bg-[white] hover:text-black"
-            onClick={() => {
-              navigator.clipboard.writeText(clipboard_content);
-              toast.success("Copied to clipboard");
-            }}
-          >
-            copy to clipboard
-          </Button>
+          {clipboard_content && (
+            <Button
+              className="py-4 transition cursor-context-menu hover:bg-[white] hover:text-black"
+              onClick={() => {
+                navigator.clipboard.writeText(clipboard_content);
+                toast.success("Copied to clipboard");
+              }}
+            >
+              copy to clipboard
+            </Button>
+          )}
         </div>
       )}
     </div>
