@@ -3,8 +3,8 @@ import { useEffect, useRef, useState } from "react";
 import { useGesture } from "react-use-gesture";
 import Typewriter from "typewriter-effect";
 
+import angry from "@/assets/bluenoir/angry.png";
 import frame from "@/assets/bluenoir/frame.png";
-import test from "@/assets/bluenoir/test.jpeg";
 import useBPHStore from "@/stores/useBPHStore";
 import { cn } from "@/utils/utils";
 
@@ -19,8 +19,8 @@ const BluenoirFrame = () => {
       <Tooltip>
         <TooltipTrigger>
           <div className="cursor-pointer h-[80px] w-[80px]">
-            <div className="h-[55px] w-[55px] absolute mx-[12px] my-[12px]">
-              <img className="select-none" src={test} />
+            <div className="h55px] w-[55px] absolute mx-[12px] my-[12px]">
+              <img className="select-none" src={angry} />
             </div>
             <div onDoubleClick={toggleOpen} className="h-[80px] w-[80px] absolute mx-auto my-auto">
               <img className="select-none" src={frame} />
@@ -70,11 +70,9 @@ interface BluenoirSpeechProps {
 }
 
 const BluenoirSpeech = ({ isLeft }: BluenoirSpeechProps) => {
-  const text =
-    "Nice work, kiddo. At this rate, you'll have the entire agency eating out of the palm of your hand.";
-
   const open = useBPHStore((state) => state.bluenoirOpen);
   const setOpen = useBPHStore((state) => state.setBluenoirOpen);
+  const speechText = useBPHStore((state) => state.bluenoirText);
 
   return (
     <motion.div
@@ -104,13 +102,13 @@ const BluenoirSpeech = ({ isLeft }: BluenoirSpeechProps) => {
               Bluenoir
             </div>
             <div className="grid font-mono font-light max-w-xs text-xs">
-              <p className="text-slate-900 col-start-1 row-start-1">{text}</p>
-              <div className="w-full col-start-1 row-start-1">
+              <p className="text-slate-900 col-start-1 row-start-1">{speechText}</p>
+              <div className="w-full col-start-1 row-start-1" key={speechText}>
                 <Typewriter
                   onInit={(typewriter) => {
                     typewriter
                       .pauseFor(totalAnimationTime * 1000)
-                      .typeString(text)
+                      .typeString(speechText)
                       .start();
                   }}
                   options={{
