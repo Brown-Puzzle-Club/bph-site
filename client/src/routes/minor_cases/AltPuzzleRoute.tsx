@@ -1,10 +1,11 @@
 import type { Puzzle } from "@/utils/django_types";
 
+import AlexGame from "./AlexGame";
+import LabyrinthBook from "./LabyrinthBook";
 import Connections from "./nyt-games/Connections";
 import LetterBoxedPuzzle from "./nyt-games/LetterBoxed";
 import Obituary from "./nyt-games/Obituary";
 import Wordle from "./nyt-games/Wordle";
-import AlexGame from "./red-thread/AlexGame";
 
 export function ALT_PUZZLE_ROUTES(puzzle: Puzzle): {
   [key: string]: JSX.Element;
@@ -17,6 +18,7 @@ export function ALT_PUZZLE_ROUTES(puzzle: Puzzle): {
     connection: <Connections />,
     wordle: <Wordle />,
     obituary: <Obituary />,
+    "labyrinth-puzz": <LabyrinthBook />,
   };
 }
 
