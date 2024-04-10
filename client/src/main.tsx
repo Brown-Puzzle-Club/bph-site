@@ -46,6 +46,7 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 1000 * 60, // 1 minute
+      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000), // 30 seconds
     },
   },
 });

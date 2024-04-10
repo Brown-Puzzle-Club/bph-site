@@ -147,7 +147,7 @@ export default function RegisterForm() {
 
   return (
     <div className="register-page">
-      {team ? (
+      {team.data ? (
         <h1 className="dark text-right pr-10 text-slate-400 fixed right-0 text-sm">
           <b>NOTE</b>: You are already registered ☝️
         </h1>

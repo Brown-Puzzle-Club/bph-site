@@ -207,7 +207,20 @@ const VotingInfoSchema = z.object({
 });
 interface VotingInfo extends z.infer<typeof VotingInfoSchema> {}
 
+type Token = { key: string; id: number };
+
+interface SuccessResponse<T> {
+  data: T;
+  success: true;
+}
+interface ErrorResponse {
+  error: string;
+  success: false;
+}
+type APIResponse<T> = SuccessResponse<T> | ErrorResponse;
+
 export type {
+  APIResponse,
   AnswerSubmission,
   DjangoContext,
   MajorCase,
@@ -221,6 +234,7 @@ export type {
   Round,
   Team,
   TeamMember,
+  Token,
   User,
   UserTeam,
   VotingInfo,

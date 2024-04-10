@@ -32,7 +32,7 @@ export default function Leaderboard() {
 
   useEffect(() => {
     const savedTab = Cookies.get("leaderboardTab");
-    if (team.isSuccess && !savedTab) {
+    if (team.data && !savedTab) {
       setTab(getTeamTab(team.data));
     }
   }, [team]);

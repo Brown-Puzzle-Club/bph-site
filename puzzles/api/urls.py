@@ -9,9 +9,6 @@ from rest_framework.authtoken.views import obtain_auth_token
 app_name = "puzzles-api"
 
 router = routers.DefaultRouter()
-router.register(r"user", api_views.UserViewSet, basename="user")
-router.register(r"my-team", api_views.TeamViewSet, basename="team")
-router.register(r"my-token", api_views.TokenViewSet, basename="token")
 router.register(r"teams", api_views.BasicTeamViewSet, basename="team")
 router.register(r"team-members", api_views.TeamMemberViewSet, basename="team-member")
 router.register(r"errata", api_views.ErrataViewSet, basename="erratum")
@@ -21,6 +18,9 @@ router.register(r"puzzles", api_views.PuzzleViewSet, basename="puzzles")
 
 urlpatterns = [
     path("", api_views.index, name="index"),
+    path("user/", api_views.get_my_user, name="get-my-user"),
+    path("my-team/", api_views.get_my_team, name="get-my-team"),
+    path("my-token/", api_views.get_my_token, name="get-my-token"),
     path("puzzle/", include(puzzle_handlers_urls)),
     path("", include(router.urls)),
     path("context", api_views.context, name="context"),

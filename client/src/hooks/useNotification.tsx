@@ -16,9 +16,9 @@ export const useNotification = () => {
   const { team } = useAuth();
 
   useEffect(() => {
-    if (!team) return;
+    if (!team.data) return;
 
-    const eventSource = new EventSource(`/notifications/${team?.data?.user}`);
+    const eventSource = new EventSource(`/notifications/${team.data.user}`);
 
     eventSource.onmessage = (e) => {
       console.log(e);
