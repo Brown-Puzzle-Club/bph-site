@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState } from "react";
-import { ILink, INode, NodeAnswer, ThreadType } from "./types/BoardTypes";
-import { THREAD_COLOR } from "./consts";
 import extraPinPng from "../../../assets/major_cases/colored-thread/extrapin.png";
+import { THREAD_COLOR } from "./consts";
+import { ILink, INode, NodeAnswer, ThreadType } from "./types/BoardTypes";
 
 interface Position {
   x: number;
@@ -25,11 +25,27 @@ export default function SVGBoard({
   setLinks: React.Dispatch<React.SetStateAction<ILink[]>>;
   nodes: NodeAnswer[];
 }) {
+  const svgEleRef = useRef<SVGSVGElement>(null);
   const [solutionPinPos, setSolutionPinPos] = useState<Position>({
     x: 22,
     y: 90,
     coords: {},
   });
+
+  /**
+   * Function that converts screen coordinates to SVG coordinates.
+   */
+  function screenToSvgCoords(
+    e: React.MouseEvent<SVGImageElement, MouseEvent>,
+    svgEl: SVGSVGElement | null,
+  ) {
+    if (!svgEl) return { x: 0, y: 0 };
+    let pt = svgEl.createSVGPoint();
+    pt.x = e.clientX;
+    pt.y = e.clientY;
+    pt = pt.matrixTransform(svgEl.getScreenCTM()!.inverse());
+    return { x: pt.x, y: pt.y };
+  }
 
   /**
    * Handler for when a link is clicked.
@@ -47,24 +63,14 @@ export default function SVGBoard({
    */
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {
+      const svgCoords = screenToSvgCoords(e, svgEleRef.current);
       setSolutionPinPos((position) => {
-        const xDiff = position.coords.x !== undefined ? position.coords.x - e.pageX : 0;
-        const yDiff = position.coords.y !== undefined ? position.coords.y - e.pageY : 0;
-        // if (
-        //   position.x - xDiff < 260 ||
-        //   position.x - xDiff > 715 ||
-        //   position.y - yDiff < 60 ||
-        //   position.y - yDiff > 510
-        // ) {
-        //   return position;
-        // }
+        const xDiff = position.coords.x !== undefined ? position.coords.x - svgCoords.x : 0;
+        const yDiff = position.coords.y !== undefined ? position.coords.y - svgCoords.y : 0;
         return {
           x: position.x - xDiff,
           y: position.y - yDiff,
-          coords: {
-            x: e.pageX,
-            y: e.pageY,
-          },
+          coords: svgCoords,
         };
       });
     },
@@ -75,13 +81,10 @@ export default function SVGBoard({
    * Handler for when the mouse is pressed down for the solution pin.
    */
   const handleMouseDown = (e: React.MouseEvent<SVGImageElement, MouseEvent>) => {
-    console.log("INSIDE MOUSE DOWN");
+    const svgCoords = screenToSvgCoords(e, svgEleRef.current);
     setSolutionPinPos((position) => ({
       ...position,
-      coords: {
-        x: e.pageX,
-        y: e.pageY,
-      },
+      coords: svgCoords,
     }));
     document.addEventListener("mousemove", handleMouseMove);
   };
@@ -157,6 +160,7 @@ export default function SVGBoard({
     return (
       <svg id="example1" xmlns="http://www.w3.org/2000/svg">
         <image
+          id="solution-pin"
           x={solutionPinPos.x}
           y={solutionPinPos.y}
           width="5"
@@ -175,7 +179,7 @@ export default function SVGBoard({
   return (
     <div className="absolute inset-0">
       <svg
-        id="svg-container"
+        ref={svgEleRef}
         width="100vw"
         height="100%"
         viewBox="0 0 100 100"
