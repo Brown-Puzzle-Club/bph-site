@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "react-hot-toast";
+import toast from "react-hot-toast";
 import validator from "validator";
 import { z } from "zod";
 
@@ -128,8 +128,8 @@ export default function RegisterForm() {
 
   const onSubmit = async (values: z.infer<typeof registerFormSchema>) => {
     setSubmitting(true);
-    await register(values).catch((error) => {
-      console.error(error.response.data);
+    await register.mutateAsync(values).catch((error) => {
+      console.error(error);
       toast.error(error.response.data.message, { duration: 5000 });
     });
     setSubmitting(false);

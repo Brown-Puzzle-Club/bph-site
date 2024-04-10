@@ -12,7 +12,7 @@ import CompletedCasesStack from "./CompletedCasesStack";
 export default function CompletedCases() {
   const [selectedCase, setSelectedCase] = useState<Round | null>(null);
   const [solvedCasesOpen, setSolvedCasesOpen] = useState(false);
-  const { context } = useDjangoContext();
+  const { data: context } = useDjangoContext();
 
   const solved_cases = useMemo(() => {
     if (!context) return [];

@@ -7,7 +7,7 @@ import { CASE_PALETTE, MAJOR_CASE_NAMES, MajorCaseEnum } from "@/utils/constants
 import { getMinorCases } from "@/utils/utils";
 
 export default function PuzzleList() {
-  const { context } = useDjangoContext();
+  const { data: context } = useDjangoContext();
   const [curTab, setTab] = useLocalStorage<MajorCaseEnum>(
     "puzzles-tab",
     MajorCaseEnum.COLORED_THREAD,

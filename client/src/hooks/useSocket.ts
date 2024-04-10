@@ -49,7 +49,7 @@ const useSocket = (path: string, callbacks: SocketCallbacks | undefined = undefi
 
   useEffect(() => {
     if (team) {
-      setSocketUrl(`${protocol}://${window.location.host}/${path}?token=${team.auth_token}`);
+      setSocketUrl(`${protocol}://${window.location.host}/${path}?token=${team.data?.auth_token}`);
     }
   }, [team, path, setSocketUrl, protocol]);
 

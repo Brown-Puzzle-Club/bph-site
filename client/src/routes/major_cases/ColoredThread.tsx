@@ -37,7 +37,7 @@ export default function ColoredThread() {
     setTheme(BROWN_THEME);
   });
 
-  const { context } = useDjangoContext();
+  const { data: context } = useDjangoContext();
 
   const nodes: NodeAnswer[] = useMemo(() => {
     const nodes = collectNodes(context);

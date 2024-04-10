@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import axios from "axios";
 import Cookies from "js-cookie";
 import * as React from "react";
@@ -7,8 +8,6 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Locked } from "./components/LockedContent";
 import { PageWrapper } from "./components/PageWrapper";
 import MajorCaseWrapper from "./components/major_cases/MajorCaseWrapper";
-import { AuthContextProvider } from "./hooks/useAuth";
-import { DjangoContextProvider } from "./hooks/useDjangoContext";
 import { ThemeContextProvider } from "./hooks/useTheme";
 import AdminPanel from "./routes/Admin";
 import Archive from "./routes/Archive";
@@ -42,6 +41,14 @@ try {
 } catch (e) {
   console.error("Error setting CSRF token in axios headers");
 }
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60, // 1 minute
+    },
+  },
+});
 
 const Redirect = ({ to }: { to: string }) => {
   window.location.href = to;
@@ -81,7 +88,7 @@ const router = createBrowserRouter([
         element: <PageWrapper route={<MyTeamPage />} />,
       },
       {
-        path: "/team/:team_id",
+        path: "/team/:teamId",
         element: <PageWrapper route={<TeamPage />} />,
       },
       {
@@ -202,12 +209,10 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <DjangoContextProvider>
-      <AuthContextProvider>
-        <ThemeContextProvider>
-          <RouterProvider router={router} />
-        </ThemeContextProvider>
-      </AuthContextProvider>
-    </DjangoContextProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeContextProvider>
+        <RouterProvider router={router} />
+      </ThemeContextProvider>
+    </QueryClientProvider>
   </React.StrictMode>,
 );

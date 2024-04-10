@@ -10,7 +10,7 @@ interface IncomingCasesStackProps {
 }
 
 export default function IncomingCasesStack({ onClick }: IncomingCasesStackProps) {
-  const { context } = useDjangoContext();
+  const { data: context } = useDjangoContext();
 
   const [isHovered, setIsHovered] = useState(false);
 

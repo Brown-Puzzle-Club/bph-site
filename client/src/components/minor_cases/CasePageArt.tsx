@@ -181,7 +181,7 @@ interface PuzzleAsset extends AssetProps {
 }
 
 const PuzzleIconWrapper = (props: PuzzleAsset) => {
-  const { context } = useDjangoContext();
+  const { data: context } = useDjangoContext();
   const { slug } = props;
 
   const puzzle_answer: PuzzleAnswer | null = useMemo(() => {
