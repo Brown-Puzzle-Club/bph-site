@@ -12,7 +12,7 @@ import pin9 from "@/assets/major_cases/colored-thread/pin9.png";
 import RelativeAsset, { AssetProps } from "@/components/RelativeAsset";
 import { cn } from "@/utils/utils";
 import { CSSProperties } from "react";
-import { ILink, INode, NodeAnswer, ThreadType } from "./board_types";
+import { ILink, INode, NodeAnswer, ThreadType } from "./types/BoardTypes";
 import { COLORED_GLOW } from "./consts";
 
 const PIN_HOVER_GLOW = "drop-shadow-[0_15px_15px_rgba(255,255,255,0.4)]";
@@ -125,7 +125,7 @@ export default function AnswerPins({
         }}
       />
       <Pin
-        id="trampled" // penny-puzz
+        id="penny-puzz"
         imageSrc={pin3}
         extraStyles={{
           top: "35%",
@@ -237,7 +237,7 @@ export default function AnswerPins({
         }}
       />
       <Pin
-        id="trampled" // birbs-at-brown
+        id="whaling-ships"
         imageSrc={pin10}
         extraStyles={{
           top: "72%",
@@ -253,7 +253,7 @@ export default function AnswerPins({
         }}
       />
       <Pin
-        id="trampled" // whaling-ships
+        id="birbs-at-brown"
         imageSrc={pin11}
         extraStyles={{
           top: "69%",

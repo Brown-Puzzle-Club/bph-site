@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { ILink, INode, NodeAnswer, ThreadType } from "./board_types";
+import { ILink, INode, NodeAnswer, ThreadType } from "./types/BoardTypes";
 import { THREAD_COLOR } from "./consts";
 
 interface Position {
@@ -33,25 +33,8 @@ export default function SVGBoard({
   /**
    * TODO: Fix this later by adding a scale factor.
    */
-  const svgWidth = 1000;
-  const svgHeight = 600;
-
-  // const threads: IThread[] = [
-  //   { color: "red", x: 576, y: 505 },
-  //   { color: "green", x: 622, y: 505 },
-  //   { color: "blue", x: 665, y: 505 },
-  // ];
-
-  /**
-   * Handler for when a thread is clicked.
-   */
-  // const handleThreadClick = (thread: IThread) => {
-  //   if (selectedThread?.color === thread.color) {
-  //     setSelectedThread(null);
-  //     return;
-  //   }
-  //   setSelectedThread(thread);
-  // };
+  const svgWidth = window.innerWidth;
+  const svgHeight = window.innerHeight;
 
   /**
    * Handler for when a link is clicked.
@@ -96,14 +79,13 @@ export default function SVGBoard({
   const handleMouseDown = (e: React.MouseEvent<SVGCircleElement, MouseEvent>) => {
     const pageX = e.pageX;
     const pageY = e.pageY;
-    setSolutionPinPos((position: Position) =>
-      Object.assign({}, position, {
-        coords: {
-          x: pageX,
-          y: pageY,
-        },
-      }),
-    );
+    setSolutionPinPos((position: Position) => ({
+      ...position,
+      coords: {
+        x: pageX,
+        y: pageY,
+      },
+    }));
     document.addEventListener("mousemove", handleMouseMove.current);
   };
 
@@ -112,7 +94,7 @@ export default function SVGBoard({
    */
   const handleMouseUp = () => {
     document.removeEventListener("mousemove", handleMouseMove.current);
-    setSolutionPinPos((position) => Object.assign({}, position, { coords: {} }));
+    setSolutionPinPos((position) => ({ ...position, coords: {} }));
     // Dynamically update any links that are connected to the solution pin
     const updatedLinks = links.map((link) => {
       if (link.to.id === "solution-pin") {
@@ -130,39 +112,42 @@ export default function SVGBoard({
    * Draw the nodes on the SVG board.
    */
   function drawNodes() {
-    return nodes.map((node, index) => (
-      <circle
-        key={index}
-        cx={node.node.x}
-        cy={node.node.y}
-        r="5"
-        fill="black"
-        style={{
-          cursor: "pointer",
-        }}
-      />
-    ));
+    return nodes.map((node) =>
+      node.node.id === "wasting-illness" ? (
+        <circle
+          key={node.node.id}
+          cx={node.node.x}
+          cy={node.node.y}
+          r={15}
+          fill="green"
+          stroke="yellow"
+          strokeWidth="1"
+          style={{
+            cursor: "pointer",
+          }}
+          onClick={() => {
+            setSelectedNode(node.node);
+          }}
+        />
+      ) : (
+        <circle
+          key={node.node.id}
+          cx={node.node.x}
+          cy={node.node.y}
+          r={15}
+          fill="white"
+          stroke="black"
+          strokeWidth="2"
+          style={{
+            cursor: "pointer",
+          }}
+          onClick={() => {
+            setSelectedNode(node.node);
+          }}
+        />
+      ),
+    );
   }
-
-  /**
-   * Draw the threads on the SVG board.
-   */
-  // function drawThreads() {
-  //   return threads.map((thread, index) => (
-  //     <rect
-  //       key={index}
-  //       x={thread.x}
-  //       y={thread.y}
-  //       width="30"
-  //       height="50"
-  //       fill={thread.color}
-  //       style={{
-  //         cursor: "pointer",
-  //       }}
-  //       onClick={() => handleThreadClick(thread)}
-  //     />
-  //   ));
-  // }
 
   /**
    * Draw the links on the SVG board.
@@ -170,7 +155,7 @@ export default function SVGBoard({
   function drawLinks() {
     return links.map((link, index) => (
       <line
-        key={index}
+        key={link.from.id + link.to.id + index}
         x1={link.from.x}
         y1={link.from.y}
         x2={link.to.x}
@@ -211,16 +196,15 @@ export default function SVGBoard({
   }
 
   return (
-    <div className="absolute">
+    <div className="absolute inset-0">
       <svg
-        width="100%"
-        height="600"
+        width="100vw"
+        height="100%"
         viewBox={`0 0 ${svgWidth} ${svgHeight}`}
         xmlns="http://www.w3.org/2000/svg"
       >
-        {/* <image href={background} width={svgWidth} height={svgHeight} /> */}
-        {drawNodes()}
-        {/* {drawThreads()} */}
+        <g>{drawNodes()}</g>
+
         {drawLinks()}
         {drawSolutionPin()}
       </svg>

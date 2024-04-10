@@ -11,7 +11,7 @@ import {
   INode,
   NodeAnswer,
   ThreadType,
-} from "@/components/major_cases/colored-thread/board_types";
+} from "@/components/major_cases/colored-thread/types/BoardTypes";
 import {
   HOVER_GLOW,
   THREAD_SELECTED_DOCTOR_GLOW,

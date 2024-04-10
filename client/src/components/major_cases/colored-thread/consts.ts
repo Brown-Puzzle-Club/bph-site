@@ -1,4 +1,4 @@
-import { ThreadType } from "./board_types";
+import { ThreadType } from "./types/BoardTypes";
 
 export const HOVER_GLOW = "drop-shadow-[0_15px_15px_rgba(255,255,255,0.4)]";
 

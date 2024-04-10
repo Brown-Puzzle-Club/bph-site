@@ -1,16 +1,38 @@
 import { DjangoContext } from "@/utils/django_types";
-import { INode, NodeAnswer } from "./board_types";
+import { INode, NodeAnswer } from "./types/BoardTypes";
 
 export const collectNodes = (context: DjangoContext | undefined) => {
+  const svgWidth = window.innerWidth;
+  const radius = 15;
+  const svgHeight = window.innerHeight;
+
+  const mapXStart = 330 / 1220;
+  const mapXMid = 625 / 1220;
+  const mapXEnd = 920 / 1220;
+  // const mapYStart =
+
+  // 370;
+  // 875;
+  // 1063
+
   // TODO: fix coordinates
   const consistent_nodes: NodeAnswer[] = [
-    { node: { id: "wasting-illness", x: 608, y: 90 }, answer: "WASTING ILLNESS" },
+    // { node: { id: "wasting-illness", x: 608, y: 90 }, answer: "WASTING ILLNESS" },
+    {
+      node: { id: "wasting-illness", x: svgWidth * 0.61, y: 140 },
+      answer: "WASTING ILLNESS",
+    },
     { node: { id: "trampled", x: 550, y: 350 }, answer: "TRAMPLED" },
     { node: { id: "ennui", x: 415, y: 342 }, answer: "ENNUI" },
     { node: { id: "internal-lacerations", x: 478, y: 435 }, answer: "INTERNAL LACERATIONS" },
     { node: { id: "shot-out-of-cannon", x: 478, y: 435 }, answer: "SHOT OUT OF CANNON" },
     { node: { id: "forced-regeneration", x: 528, y: 420 }, answer: "FORCED REGENERATION" },
     { node: { id: "crushed-neck", x: 580, y: 378 }, answer: "CRUSHED NECK" },
+
+    // TODO: GET RID OF THIS WHEN I AM READY TO PUSH
+    // { node: { id: "whaling-ships", x: 632, y: 245 }, answer: "LOST AT SEA" },
+    // { node: { id: "mr-cat", x: 335, y: 95 }, answer: "MAULED BY BEASTS" },
+    // { node: { id: "penny-puzz", x: 326, y: 235 }, answer: "SLEIGH ACCIDENT" },
   ];
 
   if (!context) {
