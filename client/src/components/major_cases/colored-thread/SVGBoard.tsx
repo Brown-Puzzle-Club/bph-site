@@ -67,9 +67,12 @@ export default function SVGBoard({
       setSolutionPinPos((position) => {
         const xDiff = position.coords.x !== undefined ? position.coords.x - svgCoords.x : 0;
         const yDiff = position.coords.y !== undefined ? position.coords.y - svgCoords.y : 0;
+        const newX = position.x - xDiff;
+        const newY = position.y - yDiff;
+        if (newX < 5 || newX > 85 || newY < 5 || newY > 85) return position;
         return {
-          x: position.x - xDiff,
-          y: position.y - yDiff,
+          x: newX,
+          y: newY,
           coords: svgCoords,
         };
       });
@@ -135,22 +138,30 @@ export default function SVGBoard({
    * Draw the links on the SVG board.
    */
   function drawLinks() {
-    return links.map((link, index) => (
-      <line
-        key={link.from.id + link.to.id + index}
-        x1={link.from.x}
-        y1={link.from.y}
-        x2={link.to.x}
-        y2={link.to.y}
-        stroke={THREAD_COLOR[link.thread]}
-        strokeWidth="0.5"
-        style={{
-          cursor: "pointer",
-          zIndex: 10,
-        }}
-        onClick={() => handleLinkClick(link.from, link.to)}
-      />
-    ));
+    return links.map((link, index) => {
+      // Adjust the coordinates if 'solution-pin' is involved
+      const x1 = link.from.id === "solution-pin" ? link.from.x + 2 : link.from.x;
+      const y1 = link.from.id === "solution-pin" ? link.from.y + 2 : link.from.y;
+      const x2 = link.to.id === "solution-pin" ? link.to.x + 2 : link.to.x;
+      const y2 = link.to.id === "solution-pin" ? link.to.y + 2 : link.to.y;
+
+      return (
+        <line
+          key={link.from.id + link.to.id + index}
+          x1={x1}
+          y1={y1}
+          x2={x2}
+          y2={y2}
+          stroke={THREAD_COLOR[link.thread]}
+          strokeWidth="0.5"
+          style={{
+            cursor: "pointer",
+            zIndex: 10,
+          }}
+          onClick={() => handleLinkClick(link.from, link.to)}
+        />
+      );
+    });
   }
 
   /**
@@ -171,6 +182,13 @@ export default function SVGBoard({
           style={{
             cursor: "pointer",
           }}
+          onClick={() =>
+            setSelectedNode({
+              id: "solution-pin",
+              x: solutionPinPos.x,
+              y: solutionPinPos.y,
+            })
+          }
         />
       </svg>
     );
