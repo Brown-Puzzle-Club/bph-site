@@ -248,7 +248,7 @@ class DiscordInterface:
             embed["color"] = 0xFF00FF  # type: ignore
             embed["author"]["name"] = _("U N C L A I M E D")  # type: ignore
             claim_url = hint.full_url(claim=True)
-            embed["title"] = _("Claim: ") + claim_url
+            embed["title"] = _("Click here to claim!") # type: ignore
             embed["url"] = claim_url
             debug = "unclaimed"
 
