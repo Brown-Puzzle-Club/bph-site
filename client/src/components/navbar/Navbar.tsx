@@ -1,6 +1,8 @@
 import * as React from "react";
 import { useState } from "react";
 import Countdown from "react-countdown";
+import type { HashLinkProps as LinkProps } from "react-router-hash-link";
+import { HashLink as Link } from "react-router-hash-link";
 import { BeatLoader } from "react-spinners";
 
 import bluenoir_logo from "@/assets/navbar_logo_head.png";
@@ -21,9 +23,6 @@ import { cn } from "@/utils/utils";
 
 import LoginNavbar from "./LoginNavbar";
 import TeamNavbar from "./TeamNavbar";
-
-
-import { HashLink as Link, HashLinkProps as LinkProps } from "react-router-hash-link";
 
 const components: { title: string; to: string; description: string }[] = [
   {
@@ -53,7 +52,8 @@ export const ListItem = React.forwardRef<React.ElementRef<typeof Link>, Omit<Lin
     return (
       <li>
         <NavigationMenuLink asChild>
-          <Link smooth
+          <Link
+            smooth
             ref={ref}
             className={cn(
               "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
@@ -69,6 +69,7 @@ export const ListItem = React.forwardRef<React.ElementRef<typeof Link>, Omit<Lin
     );
   },
 );
+ListItem.displayName = "ListItem";
 
 const IconItem = React.forwardRef<React.ElementRef<typeof Link>, Omit<LinkProps, "ref">>(
   ({ className, title, ...props }, ref) => {
@@ -76,7 +77,8 @@ const IconItem = React.forwardRef<React.ElementRef<typeof Link>, Omit<LinkProps,
       <li>
         {/* TODO: make icon float on left side */}
         <NavigationMenuLink asChild>
-          <Link smooth
+          <Link
+            smooth
             ref={ref}
             className={cn(
               "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
@@ -122,7 +124,8 @@ const HuntLogo = () => {
   const [hover, setHover] = useState(false);
 
   return (
-    <Link smooth
+    <Link
+      smooth
       to="/"
       className="text-white font-bold pl-3 pr-4 md:pr-1 whitespace-nowrap justify-center"
       onMouseEnter={() => {
@@ -162,7 +165,8 @@ const NavbarLeft = () => {
               <ul className="grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
                 <li className="row-span-4">
                   <NavigationMenuLink asChild>
-                    <Link smooth
+                    <Link
+                      smooth
                       className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
                       to="/"
                     >

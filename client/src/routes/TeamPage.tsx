@@ -55,7 +55,7 @@ export default function TeamPage() {
               <div className="justify-center items-center flex">
                 <div className="members pt-6 flex flex-wrap justify-center items-center">
                   {thisTeamMembers?.map((member, index) => (
-                    <p id={index.toString()} className="">
+                    <p key={index} id={index.toString()}>
                       {member.name}
                       {index < thisTeamMembers?.length - 1 ? ", " : ""}
                     </p>
