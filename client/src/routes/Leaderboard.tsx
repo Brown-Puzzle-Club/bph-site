@@ -1,6 +1,6 @@
 import TeamIcon from "@/components/team/TeamIcon";
 import { useAuth } from "@/hooks/useAuth";
-import { useTeams } from "@/hooks/useDjangoContext";
+import { useAllTeams } from "@/hooks/useDjangoContext";
 import { Team, UserTeam } from "@/utils/django_types";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
@@ -14,7 +14,7 @@ enum LeaderboardTab {
 
 export default function Leaderboard() {
   const { team } = useAuth();
-  const { data: teams } = useTeams();
+  const { data: teams } = useAllTeams();
   const [curTab, setTab] = useState<LeaderboardTab>(() => {
     const savedTab = Cookies.get("leaderboardTab");
     return savedTab ? (savedTab as LeaderboardTab) : LeaderboardTab.IN_PERSON;

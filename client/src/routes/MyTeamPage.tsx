@@ -34,14 +34,13 @@ import {
   PFP_COLOR_CHOICES,
 } from "@/utils/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaEye } from "react-icons/fa";
 import validator from "validator";
 import { z } from "zod";
 
-import { useTeamMembers } from "@/hooks/useDjangoContext";
+import { useMutateTeam, useMyTeamMembers } from "@/hooks/useDjangoContext";
 import { BeatLoader } from "react-spinners";
 import { HashLink as Link } from "react-router-hash-link";
 
@@ -91,13 +90,21 @@ const editTeamFormSchema = z
 
 export default function MyTeamPage() {
   const [memberCount, setMemberCount] = useState(1);
-  const [submitting, setSubmitting] = useState(false);
 
   const [emojiChoice, setEmojiChoice] = useState("");
   const [colorChoice, setColorChoice] = useState("#1e293ba1");
 
   const { team } = useAuth();
-  const { data: members, isLoading: membersLoading, isError: membersError } = useTeamMembers();
+  const mutateTeam = useMutateTeam(); 
+  const { data: members, isLoading: membersLoading, isError: membersError } = useMyTeamMembers();
+
+  const [draftMembers, setDraftMembers] = useState(members ?? []);
+  useEffect(() => {
+    if (members) {
+      setDraftMembers(members);
+      setMemberCount(members.length);
+    }
+  }, [members]);
 
   const form = useForm<z.infer<typeof editTeamFormSchema>>({
     resolver: zodResolver(editTeamFormSchema),
@@ -110,31 +117,16 @@ export default function MyTeamPage() {
   });
 
   const onSubmit = async (values: z.infer<typeof editTeamFormSchema>) => {
-    console.log("vals", values);
-    setSubmitting(true);
-    await axios
-      .post("/api/update-team", values)
-      .then((response) => {
-        console.log(response);
-        // force refresh
-        window.location.reload();
-      })
-      .catch((error) => {
-        console.error(error);
-        // only errors on member based error
-        alert("Team members must have valid emails and names. Please update your team roster.");
-        setMembersError(true);
-      });
-    setSubmitting(false);
+    mutateTeam.mutate(values);
   };
 
   const addMemberCount = () => {
     setMemberCount((count) => Math.min(count + 1, MEMBER_COUNT_MAX));
-    setMembers((members) => [...members, { name: "", email: "" }]);
+    setDraftMembers((members) => [...members, { name: "", email: "" }]);
   };
   const subtractMemberCount = () => {
     setMemberCount((count) => Math.max(count - 1, MEMBER_COUNT_MIN));
-    setMembers((members) => members.slice(0, memberCount - 1));
+    setDraftMembers((members) => members.slice(0, memberCount - 1));
     // Clear additional member fields
     const clearedMembers = form.getValues("members").slice(0, memberCount - 1);
     form.setValue("members", clearedMembers);
@@ -278,7 +270,7 @@ export default function MyTeamPage() {
             <h1 className="text-4xl font-bold text-center">{team.data?.team_name}</h1>
             <div className="flex justify-center items-center">
               {form.formState.isDirty ? (
-                !submitting ? (
+                !mutateTeam.isPending ? (
                   <Button type="submit">Submit Changes</Button>
                 ) : (
                   <Button type="submit" disabled>
@@ -306,7 +298,7 @@ export default function MyTeamPage() {
                           className={`text-center justify-center align-center underline ${
                             membersError ? "text-[#d66464]" : "text-slate-400"
                           }`}
-                          onClick={() => setMembersError(false)}
+                          onClick={mutateTeam.reset}
                         >
                           ⚙️ edit team roster ⚙️
                         </a>
@@ -337,13 +329,13 @@ export default function MyTeamPage() {
                                                     {...field}
                                                     onChange={(e) => {
                                                       field.onChange(e.target.value);
-                                                      const newMembers = [...members];
+                                                      const newMembers = [...draftMembers];
                                                       newMembers[index] = {
                                                         ...newMembers[index],
                                                         name: e.target.value,
                                                         email: newMembers[index].email,
                                                       };
-                                                      setMembers(newMembers);
+                                                      setDraftMembers(newMembers);
                                                     }}
                                                   />
                                                 </FormControl>
@@ -364,13 +356,13 @@ export default function MyTeamPage() {
                                                     {...field}
                                                     onChange={(e) => {
                                                       field.onChange(e.target.value);
-                                                      const newMembers = [...members];
+                                                      const newMembers = [...draftMembers];
                                                       newMembers[index] = {
                                                         ...newMembers[index],
                                                         name: newMembers[index].name,
                                                         email: e.target.value,
                                                       };
-                                                      setMembers(newMembers);
+                                                      setDraftMembers(newMembers);
                                                     }}
                                                   />
                                                 </FormControl>
@@ -409,7 +401,7 @@ export default function MyTeamPage() {
                     </Dialog>
                   </div>
                   <div className="members pt-6 flex flex-wrap justify-center items-center">
-                    {members.map((member, index) => (
+                    {draftMembers.map((member, index) => (
                       <span id={index.toString()} className="nowrap">
                         {member.name}
                         {index < memberCount - 1 ? ", " : ""}
