@@ -221,17 +221,17 @@ class DiscordInterface:
     # discord.Client().run(TOKEN)
 
     def update_hint(self, hint):
-        HintsConsumer.send_to_all(
-            json.dumps(
-                {
-                    "id": hint.id,
-                    "content": render_to_string(
-                        "hint_list_entry.html",
-                        {"hint": hint, "now": timezone.localtime()},
-                    ),
-                }
-            )
-        )
+        # HintsConsumer.send_to_all(
+        #     json.dumps(
+        #         {
+        #             "id": hint.id,
+        #             "content": render_to_string(
+        #                 "hint_list_entry.html",
+        #                 {"hint": hint, "now": timezone.localtime()},
+        #             ),
+        #         }
+        #     )
+        # )
         embed = collections.defaultdict(lambda: collections.defaultdict(dict))
         embed["author"]["url"] = hint.full_url()
         if hint.claimed_datetime:
@@ -328,13 +328,20 @@ discord_interface = DiscordInterface()
 @receiver(send_notification)
 def broadcast_notification(sender, notification_type, title, desc, team, **kwargs):
     print(f"broadcasting notification to {team}")
-    send_event(f"_user-{team}", "message", {
-        "type": notification_type,
-        "title": title,
-        "desc": desc,
-    })
+    send_event(
+        f"_user-{team}",
+        "message",
+        {
+            "type": notification_type,
+            "title": title,
+            "desc": desc,
+        },
+    )
+
 
 # A WebsocketConsumer subclass that can broadcast messages to a set of users.
+
+
 class BroadcastWebsocketConsumer(ABC, WebsocketConsumer):
     def connect(self):
         if self.is_ok():
@@ -483,7 +490,6 @@ class VotingConsumer(WebsocketConsumer):
         client_room = Room.objects.get(channel_name=self.get_room())
         content = json.loads(text_data)
 
-
         if content == "heartbeat":
             return
 
@@ -501,10 +507,7 @@ class VotingConsumer(WebsocketConsumer):
             incoming_event.vote(data["oldVote"], data["newVote"])
             response = {
                 "type": "vote",
-                "data": {
-                    "id": incoming_event.id,
-                    **incoming_event.get_votes()
-                }
+                "data": {"id": incoming_event.id, **incoming_event.get_votes()},
             }
             self.send_to_all(client_room, response)
 

@@ -1782,9 +1782,9 @@ class Hint(models.Model):
         return self.short_discord_message(1000) + (
             _("**Team:** {} ({})\n" "**Puzzle:** {} ({})\n")
         ).format(
-            settings.DOMAIN + "team/%s" % quote_plus(self.team.team_name, safe=""),
+            settings.DOMAIN + "team/%s" % self.team.id,
             settings.DOMAIN + "hints?team=%s" % self.team_id,
-            settings.DOMAIN + "solution/" + self.puzzle.slug,
+            settings.DOMAIN + "puzzle/" + self.puzzle.slug,
             settings.DOMAIN + "hints?puzzle=%s" % self.puzzle_id,
         )
 
