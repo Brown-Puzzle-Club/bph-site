@@ -1,6 +1,7 @@
 import { useLocalStorage } from "@uidotdev/usehooks";
 import type { SetStateAction } from "react";
 import { useMemo } from "react";
+import { Link } from "react-router-dom";
 
 import { useDjangoContext } from "@/hooks/useDjangoContext";
 import { CASE_PALETTE, MAJOR_CASE_NAMES, MajorCaseEnum } from "@/utils/constants";
@@ -102,13 +103,13 @@ export default function PuzzleList() {
                         }
                       >
                         <div className={`flex justify-between items-center`}>
-                          <a
-                            href={`/minorcase/${round}`}
+                          <Link
+                            to={`/minorcase/${round}`}
                             className="underline text-center text-xl font-extrabold tracking-wider"
                             style={{ color: CASE_PALETTE[curTab].textColor }}
                           >
                             {minor_cases[round] && minor_cases[round].minor_case.name}
-                          </a>
+                          </Link>
                         </div>
                         {/* ANSWER */}
                         <span

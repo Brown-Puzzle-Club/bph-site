@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { PartyPopper } from "lucide-react";
 import { useEffect } from "react";
@@ -14,9 +15,10 @@ const NotificationSchema = z.object({
 
 export const useNotification = () => {
   const { team } = useAuth();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
-    if (!team) return;
+    if (!team.data) return;
 
     const eventSource = new EventSource(`/notifications/${team?.data?.user}`);
 
@@ -25,6 +27,9 @@ export const useNotification = () => {
       const message = NotificationSchema.safeParse(JSON.parse(e.data));
       console.log(message);
       if (!message.success) return;
+
+      queryClient.invalidateQueries({ queryKey: ["context"] });
+      queryClient.invalidateQueries({ queryKey: ["puzzle"] });
 
       toast.custom(
         <motion.div

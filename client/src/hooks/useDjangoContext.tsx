@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
-import type { Puzzle, DjangoContext, Team, TeamMember } from "@/utils/django_types";
+import type { DjangoContext, Puzzle, Team, TeamMember } from "@/utils/django_types";
 
 const getMyTeamMembers = async () => {
   const response = await axios.get<TeamMember[]>("/api/team-members");

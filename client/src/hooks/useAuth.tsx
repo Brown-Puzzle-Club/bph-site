@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import type { z } from "zod";
 
@@ -8,6 +8,11 @@ import type { User, UserTeam } from "@/utils/django_types";
 const getMyTeam = async () => {
   const response = await axios.get<UserTeam[]>("/api/my-team");
   return response.data[0];
+};
+const getMyToken = async () => {
+  const response = await axios.get<[{ key: string; id: number }]>("/api/my-token");
+  console.log(response);
+  return response.data[0].key;
 };
 const getUser = async () => {
   const response = await axios.get<User[]>("/api/user");
@@ -25,6 +30,8 @@ const postRegister = async (values: z.infer<typeof registerFormSchema>) => {
 };
 
 export const useAuth = () => {
+  const queryClient = useQueryClient();
+
   const team = useQuery({
     queryKey: ["my-team"],
     queryFn: getMyTeam,
@@ -33,18 +40,25 @@ export const useAuth = () => {
     queryKey: ["user"],
     queryFn: getUser,
   });
+  const token = useQuery({
+    queryKey: ["my-token"],
+    queryFn: getMyToken,
+  });
   const login = useMutation({
     mutationKey: ["login"],
     mutationFn: postLogin,
     onSuccess: () => {
+      queryClient.invalidateQueries();
       team.refetch();
       user.refetch();
+      token.refetch();
     },
   });
   const logout = useMutation({
     mutationKey: ["logout"],
     mutationFn: postLogout,
     onSuccess: () => {
+      queryClient.invalidateQueries();
       team.refetch();
       user.refetch();
     },
@@ -54,5 +68,5 @@ export const useAuth = () => {
     mutationFn: postRegister,
   });
 
-  return { team, user, login, logout, register };
+  return { team, user, login, logout, register, token };
 };
