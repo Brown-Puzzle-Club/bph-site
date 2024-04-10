@@ -8,7 +8,7 @@ import Cases from "./Cases";
 
 export default function ActiveCases() {
   const [selectedCase, setSelectedCase] = useState<Round | null>(null);
-  const { context } = useDjangoContext();
+  const { data: context } = useDjangoContext();
 
   const active_cases = useMemo(() => {
     if (!context) return [];

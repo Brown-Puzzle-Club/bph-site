@@ -14,7 +14,7 @@ export function Locked({
   condition: (context: DjangoContext) => boolean;
   children: React.ReactElement;
 }) {
-  const { context } = useDjangoContext();
+  const { data: context } = useDjangoContext();
 
   if (!context?.team_context) {
     // LOADING

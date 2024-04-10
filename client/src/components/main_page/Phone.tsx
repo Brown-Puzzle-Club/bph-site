@@ -43,7 +43,7 @@ const NOTIFICATIONS: PhoneNotificationProps[] = [
 const SOON_AMOUNT_OF_HOURS = 2;
 
 const Phone = () => {
-  const { context } = useDjangoContext();
+  const { data: context } = useDjangoContext();
   const [isCenter, setIsCenter] = useState(false);
   const { minutes, hours } = useTime({});
 

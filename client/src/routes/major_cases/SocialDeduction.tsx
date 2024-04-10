@@ -30,8 +30,7 @@ export default function SocialDeduction() {
   });
 
   const [panel, setPanel] = useState<SelectedPanel>(SelectedPanel.RULES);
-
-  const { context } = useDjangoContext();
+  const { data: context } = useDjangoContext();
 
   const CHAR_NAMES = CHAR_NAME(context);
   const NUM_CASES_SOLVED = numberOfCasesSolves(context);

@@ -21,7 +21,7 @@ function MinorCasePage() {
   }, [setTheme]);
 
   const MINOR_CASE_SLUG = window.location.pathname.split("/").pop();
-  const { context } = useDjangoContext();
+  const { data: context } = useDjangoContext();
 
   const MAJOR_CASE_SLUG = useMemo(() => {
     // return the unlocks slug that contains the minor case MINOR_CASE_SLUG

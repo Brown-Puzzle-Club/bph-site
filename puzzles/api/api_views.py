@@ -14,38 +14,40 @@ def index(request: Request) -> Response:
     return Response({"Hello": "World"})
 
 
-class UserViewSet(viewsets.ReadOnlyModelViewSet):
-    serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
-        return User.objects.filter(id=self.request.user.id)  # type: ignore
-
-
-class TeamViewSet(
-    mixins.RetrieveModelMixin,
-    mixins.UpdateModelMixin,
-    mixins.ListModelMixin,
-    viewsets.GenericViewSet,
-):
-    serializer_class = TeamSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
-        return Team.objects.filter(user=self.request.user)
+@api_view(["GET"])
+def get_my_user(request: Request) -> Response:
+    if not request.user.is_authenticated:
+        return Response({"success": False, "error": "User not logged in"})
+    try:
+        user = User.objects.get(id=request.user.id)
+        serializer = UserSerializer(user)
+        return Response({"success": True, "data": serializer.data})
+    except User.DoesNotExist:
+        return Response({"success": False, "error": "User not found"})
 
 
-class TokenViewSet(
-    mixins.RetrieveModelMixin,
-    mixins.UpdateModelMixin,
-    mixins.ListModelMixin,
-    viewsets.GenericViewSet,
-):
-    serializer_class = TokenSerializer
-    permission_classes = [permissions.IsAuthenticated]
+@api_view(["GET"])
+def get_my_team(request: Request) -> Response:
+    if not request.user.is_authenticated:
+        return Response({"success": False, "error": "User not logged in"})
+    try:
+        team = Team.objects.get(id=request._request.context.team.id)  # type: ignore
+        serializer = TeamSerializer(team)
+        return Response({"success": True, "data": serializer.data})
+    except Team.DoesNotExist:
+        return Response({"success": False, "error": "Team not found"})
 
-    def get_queryset(self):
-        return Token.objects.filter(user=self.request.user)
+
+@api_view(["GET"])
+def get_my_token(request: Request) -> Response:
+    if not request.user.is_authenticated:
+        return Response({"success": False, "error": "User not logged in"})
+    try:
+        token = Token.objects.get(user=request.user)
+        serializer = TokenSerializer(token)
+        return Response({"success": True, "data": serializer.data})
+    except Token.DoesNotExist:
+        return Response({"success": False, "error": "Token not found"})
 
 
 class BasicTeamViewSet(

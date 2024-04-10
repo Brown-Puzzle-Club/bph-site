@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { BeatLoader } from "react-spinners";
 
 import { useAuth } from "@/hooks/useAuth";
@@ -24,13 +25,14 @@ export default function LoginNavbar() {
   const [formProgress, setFormProgress] = useState(false);
 
   const { login } = useAuth();
+  const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormProgress(true);
 
     try {
-      await login(username, password);
+      await login.mutateAsync({ username, password });
     } catch (error) {
       const e = error as CustomError;
       if (e.response && e.response.status === 401) {
@@ -51,7 +53,7 @@ export default function LoginNavbar() {
           {/* send to /register page */}
           <Button
             className="dark bg-[grey] hover:text-black font-bold"
-            onClick={() => (window.location.href = "/register")}
+            onClick={() => navigate("/register")}
           >
             Register
           </Button>

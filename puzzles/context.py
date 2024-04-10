@@ -253,7 +253,7 @@ class Context:
         return self.time_since_unlock.total_seconds() // 3600
 
     def in_person(self):
-        return self.team.in_person
+        return self.team and self.team.in_person
 
     def test(self, n):
         return n * 3

@@ -1,8 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaEye } from "react-icons/fa";
+import { HashLink as Link } from "react-router-hash-link";
 import { BeatLoader } from "react-spinners";
 import validator from "validator";
 import { z } from "zod";
@@ -36,14 +36,13 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { useAuth } from "@/hooks/useAuth";
-import { useDjangoContext } from "@/hooks/useDjangoContext";
+import { useMutateTeam, useMyTeamMembers } from "@/hooks/useDjangoContext";
 import {
   MEMBER_COUNT_MAX,
   MEMBER_COUNT_MIN,
   MURDER_WEAPON_EMOJIS,
   PFP_COLOR_CHOICES,
 } from "@/utils/constants";
-import type { TeamMember } from "@/utils/django_types";
 
 const editTeamFormSchema = z
   .object({
@@ -91,26 +90,21 @@ const editTeamFormSchema = z
 
 export default function MyTeamPage() {
   const [memberCount, setMemberCount] = useState(1);
-  const [submitting, setSubmitting] = useState(false);
 
   const [emojiChoice, setEmojiChoice] = useState("");
   const [colorChoice, setColorChoice] = useState("#1e293ba1");
 
-  const [members, setMembers] = useState<TeamMember[]>([{ name: "", email: "" }]);
-  const [membersLoading, setMembersLoading] = useState(true);
-  const [membersError, setMembersError] = useState(false);
-
   const { team } = useAuth();
+  const mutateTeam = useMutateTeam();
+  const { data: members, isLoading: membersLoading, isError: membersError } = useMyTeamMembers();
 
-  const { FetchTeamMembers } = useDjangoContext();
+  const [draftMembers, setDraftMembers] = useState(members ?? []);
   useEffect(() => {
-    setMembersLoading(true);
-    FetchTeamMembers().then((members) => {
-      setMembers(members);
+    if (members) {
+      setDraftMembers(members);
       setMemberCount(members.length);
-      setMembersLoading(false);
-    });
-  }, [FetchTeamMembers]);
+    }
+  }, [members]);
 
   const form = useForm<z.infer<typeof editTeamFormSchema>>({
     resolver: zodResolver(editTeamFormSchema),
@@ -123,31 +117,16 @@ export default function MyTeamPage() {
   });
 
   const onSubmit = async (values: z.infer<typeof editTeamFormSchema>) => {
-    console.log("vals", values);
-    setSubmitting(true);
-    await axios
-      .post("/api/update-team", values)
-      .then((response) => {
-        console.log(response);
-        // force refresh
-        window.location.reload();
-      })
-      .catch((error) => {
-        console.error(error);
-        // only errors on member based error
-        alert("Team members must have valid emails and names. Please update your team roster.");
-        setMembersError(true);
-      });
-    setSubmitting(false);
+    mutateTeam.mutate(values);
   };
 
   const addMemberCount = () => {
     setMemberCount((count) => Math.min(count + 1, MEMBER_COUNT_MAX));
-    setMembers((members) => [...members, { name: "", email: "" }]);
+    setDraftMembers((members) => [...members, { name: "", email: "" }]);
   };
   const subtractMemberCount = () => {
     setMemberCount((count) => Math.max(count - 1, MEMBER_COUNT_MIN));
-    setMembers((members) => members.slice(0, memberCount - 1));
+    setDraftMembers((members) => members.slice(0, memberCount - 1));
     // Clear additional member fields
     const clearedMembers = form.getValues("members").slice(0, memberCount - 1);
     form.setValue("members", clearedMembers);
@@ -155,10 +134,9 @@ export default function MyTeamPage() {
 
   const [valuesSet, setValuesSet] = useState(false);
   useEffect(() => {
-    if (form && team && members && !valuesSet) {
-      console.log("team:", team);
-      const emoji = team?.emoji_choice || "❓";
-      const color = team?.color_choice || "#1e293ba1";
+    if (form && team.data && members && !valuesSet) {
+      const emoji = team.data?.emoji_choice || "❓";
+      const color = team.data?.color_choice || "#1e293ba1";
       form.setValue("emoji_choice", emoji);
       form.setValue("color_choice", color);
       setEmojiChoice(emoji);
@@ -166,11 +144,11 @@ export default function MyTeamPage() {
 
       form.setValue("members", members);
 
-      form.setValue("in_person", team?.in_person || false);
-      form.setValue("num_brown_members", team?.num_brown_members || 0);
-      form.setValue("classroom_need", team?.classroom_need || false);
-      form.setValue("phone_number", team?.phone_number || "");
-      form.setValue("where_to_find", team?.where_to_find || "");
+      form.setValue("in_person", team.data?.in_person || false);
+      form.setValue("num_brown_members", team.data?.num_brown_members || 0);
+      form.setValue("classroom_need", team.data?.classroom_need || false);
+      form.setValue("phone_number", team.data?.phone_number || "");
+      form.setValue("where_to_find", team.data?.where_to_find || "");
       setValuesSet(true);
     }
   }, [form, team, members, valuesSet]);
@@ -180,8 +158,8 @@ export default function MyTeamPage() {
       <div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 text-white dark">
-            <a
-              href={`/team/${team?.id}`}
+            <Link
+              to={`/team/${team.data?.id}`}
               className="dark bg-muted/20 hover:bg-muted/80 btn-gradient-1 flex font-semibold items-center text-center justify-center my-5 mx-[33%] transition-colors duration-300 group"
             >
               <FaEye className="w-5 h-5 text-slate-400 group-hover:text-white transition-colors duration-300" />
@@ -189,7 +167,7 @@ export default function MyTeamPage() {
                 See page as visible to other teams
               </p>
               <FaEye className="w-5 h-5 text-slate-400 group-hover:text-white transition-colors duration-300" />
-            </a>
+            </Link>
             {/* center div */}
             <div className="team-icon dark justify-center items-center flex">
               <Dialog>
@@ -288,10 +266,10 @@ export default function MyTeamPage() {
                 </DialogContent>
               </Dialog>
             </div>
-            <h1 className="text-4xl font-bold text-center">{team?.team_name}</h1>
+            <h1 className="text-4xl font-bold text-center">{team.data?.team_name}</h1>
             <div className="flex justify-center items-center">
               {form.formState.isDirty ? (
-                !submitting ? (
+                !mutateTeam.isPending ? (
                   <Button type="submit">Submit Changes</Button>
                 ) : (
                   <Button type="submit" disabled>
@@ -315,14 +293,14 @@ export default function MyTeamPage() {
                   <div className="justify-center items-center flex">
                     <Dialog>
                       <DialogTrigger>
-                        <a
-                          className={`text-center justify-center align-center underline ${
+                        <div
+                          className={`text-center justify-center align-center underline cursor-pointer ${
                             membersError ? "text-[#d66464]" : "text-slate-400"
                           }`}
-                          onClick={() => setMembersError(false)}
+                          onClick={mutateTeam.reset}
                         >
                           ⚙️ edit team roster ⚙️
-                        </a>
+                        </div>
                       </DialogTrigger>
                       <DialogContent className="dark text-white">
                         <DialogHeader>
@@ -350,13 +328,13 @@ export default function MyTeamPage() {
                                                     {...field}
                                                     onChange={(e) => {
                                                       field.onChange(e.target.value);
-                                                      const newMembers = [...members];
+                                                      const newMembers = [...draftMembers];
                                                       newMembers[index] = {
                                                         ...newMembers[index],
                                                         name: e.target.value,
                                                         email: newMembers[index].email,
                                                       };
-                                                      setMembers(newMembers);
+                                                      setDraftMembers(newMembers);
                                                     }}
                                                   />
                                                 </FormControl>
@@ -377,13 +355,13 @@ export default function MyTeamPage() {
                                                     {...field}
                                                     onChange={(e) => {
                                                       field.onChange(e.target.value);
-                                                      const newMembers = [...members];
+                                                      const newMembers = [...draftMembers];
                                                       newMembers[index] = {
                                                         ...newMembers[index],
                                                         name: newMembers[index].name,
                                                         email: e.target.value,
                                                       };
-                                                      setMembers(newMembers);
+                                                      setDraftMembers(newMembers);
                                                     }}
                                                   />
                                                 </FormControl>
@@ -422,7 +400,7 @@ export default function MyTeamPage() {
                     </Dialog>
                   </div>
                   <div className="members pt-6 flex flex-wrap justify-center items-center">
-                    {members.map((member, index) => (
+                    {draftMembers.map((member, index) => (
                       <span key={index} id={index.toString()} className="nowrap">
                         {member.name}
                         {index < memberCount - 1 ? ", " : ""}
