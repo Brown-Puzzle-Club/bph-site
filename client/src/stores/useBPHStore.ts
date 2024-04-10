@@ -1,10 +1,14 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
+import { BluenoirReaction, type Dialogue } from "@/utils/bluenoir_dialogue";
+
 interface BPHState {
   bluenoirOpen: boolean;
-  bluenoirText: string;
+  bluenoirDialogue: Dialogue;
   bluenoirPositionPercentage: { x: number; y: number };
+  randomDialogueFunction: () => Dialogue;
+
   votingModalOpen: boolean;
 }
 
@@ -22,10 +26,12 @@ type SnappablePosition = typeof TOP_LEFT | typeof BOTTOM_LEFT | typeof CENTER;
 interface BPHActions {
   toggleBluenoirOpen: () => void;
   setBluenoirOpen: (open: boolean) => void;
-  bluenoirSpeak: (text: string, forceOpen?: boolean) => void;
+  bluenoirSpeak: (text?: Dialogue, forceOpen?: boolean) => void;
   getBluenoirPosition: () => Position;
   setBluenoirPosition: (position: SnappablePosition) => void;
   getNearestSnapPoint: (position?: Position) => SnappablePosition;
+  setRandomDialogueFunction: (dialogueFunction: () => Dialogue) => void;
+  getRandomDialogue: () => Dialogue;
   toggleVotingModalOpen: () => void;
   setVotingModalOpen: (open: boolean) => void;
 }
@@ -34,7 +40,8 @@ const initialBPHState: BPHState = {
   bluenoirOpen: false,
   votingModalOpen: false,
   bluenoirPositionPercentage: TOP_LEFT,
-  bluenoirText: "Hello!",
+  bluenoirDialogue: { text: "Hello!", reaction: BluenoirReaction.HAPPY },
+  randomDialogueFunction: () => ({ text: "Hello!", reaction: BluenoirReaction.HAPPY }),
 };
 
 const distSq = (p1: Position, p2: Position) => (p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2;
@@ -63,8 +70,15 @@ const useBPHStore = create<BPHState & BPHActions>()(
     },
     toggleVotingModalOpen: () => set((state) => ({ votingModalOpen: !state.bluenoirOpen })),
     setVotingModalOpen: (open) => set({ votingModalOpen: open }),
-    bluenoirSpeak: (text, forceOpen = false) =>
-      set({ bluenoirText: text, bluenoirOpen: get().bluenoirOpen || forceOpen }),
+    bluenoirSpeak: (text, forceOpen = false) => {
+      set({
+        bluenoirDialogue: text ?? get().randomDialogueFunction(),
+        bluenoirOpen: get().bluenoirOpen || forceOpen,
+      });
+    },
+    setRandomDialogueFunction: (dialogueFunction) =>
+      set({ randomDialogueFunction: dialogueFunction }),
+    getRandomDialogue: () => get().randomDialogueFunction(),
   })),
 );
 

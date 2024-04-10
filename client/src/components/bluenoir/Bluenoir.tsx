@@ -6,13 +6,13 @@ import {
   animate,
   useMotionValueEvent,
 } from "framer-motion";
-import { forwardRef, useRef, useState } from "react";
+import { forwardRef, useCallback, useEffect, useRef, useState } from "react";
 import { useGesture } from "react-use-gesture";
 import Typewriter from "typewriter-effect";
 
-import angry from "@/assets/bluenoir/angry.png";
 import frame from "@/assets/bluenoir/frame.png";
 import useBPHStore from "@/stores/useBPHStore";
+import { BluenoirReactionImage } from "@/utils/bluenoir_dialogue";
 import { cn } from "@/utils/utils";
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
@@ -20,6 +20,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/
 const BluenoirFrame = forwardRef<HTMLDivElement>((_props, ref) => {
   const open = useBPHStore((state) => state.bluenoirOpen);
   const toggleOpen = useBPHStore((state) => state.toggleBluenoirOpen);
+  const speechDialogue = useBPHStore((state) => state.bluenoirDialogue);
 
   return (
     <TooltipProvider>
@@ -27,7 +28,7 @@ const BluenoirFrame = forwardRef<HTMLDivElement>((_props, ref) => {
         <TooltipTrigger>
           <div ref={ref} className="cursor-pointer h-[80px] w-[80px]">
             <div className="h-[55px] w-[55px] absolute mx-[12px] my-[12px]">
-              <img className="select-none" src={angry} />
+              <img className="select-none" src={BluenoirReactionImage[speechDialogue.reaction]} />
             </div>
             <div onDoubleClick={toggleOpen} className="h-[80px] w-[80px] absolute mx-auto my-auto">
               <img className="select-none" src={frame} />
@@ -80,7 +81,43 @@ interface BluenoirSpeechProps {
 const BluenoirSpeech = ({ isLeft }: BluenoirSpeechProps) => {
   const open = useBPHStore((state) => state.bluenoirOpen);
   const setOpen = useBPHStore((state) => state.setBluenoirOpen);
-  const speechText = useBPHStore((state) => state.bluenoirText);
+  const speechDialogue = useBPHStore((state) => state.bluenoirDialogue);
+  const speak = useBPHStore((state) => state.bluenoirSpeak);
+
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const speechTimeout = useCallback(
+    () =>
+      setTimeout(() => {
+        speak(undefined, true);
+        console.log("timeout!");
+        timeoutRef.current = speechTimeout();
+      }, 5000),
+    [speak],
+  );
+
+  useEffect(() => {
+    timeoutRef.current = setTimeout(() => {
+      speechTimeout();
+    }, 5000);
+
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  });
+
+  useEffect(() => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    if (open) {
+      timeoutRef.current = speechTimeout();
+    }
+
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, [open, speechTimeout]);
 
   return (
     <motion.div
@@ -101,7 +138,15 @@ const BluenoirSpeech = ({ isLeft }: BluenoirSpeechProps) => {
             <div
               className={cn("absolute text-slate-500 text-sm top-1", isLeft ? "right-2" : "left-2")}
             >
-              <button onClick={() => setOpen(false)}>✕</button>
+              <button
+                onClick={() => {
+                  setOpen(false);
+                  if (timeoutRef.current) clearTimeout(timeoutRef.current);
+                  timeoutRef.current = speechTimeout();
+                }}
+              >
+                ✕
+              </button>
             </div>
             <div
               className={cn(
@@ -112,13 +157,13 @@ const BluenoirSpeech = ({ isLeft }: BluenoirSpeechProps) => {
               Bluenoir
             </div>
             <div className="grid font-mono font-light max-w-xs text-xs">
-              <p className="text-slate-900 col-start-1 row-start-1">{speechText}</p>
-              <div className="w-full col-start-1 row-start-1" key={speechText}>
+              <p className="text-slate-900 col-start-1 row-start-1">{speechDialogue.text}</p>
+              <div className="w-full col-start-1 row-start-1" key={speechDialogue.text}>
                 <Typewriter
                   onInit={(typewriter) => {
                     typewriter
                       .pauseFor(totalAnimationTime * 1000)
-                      .typeString(speechText)
+                      .typeString(speechDialogue.text)
                       .start();
                   }}
                   options={{
@@ -148,6 +193,16 @@ const Bluenoir = () => {
   const [isLeft, setIsLeft] = useState(
     x.get() < (window.innerWidth - (measureRef.current?.offsetWidth ?? 0)) / 2,
   );
+
+  useEffect(() => {
+    if (measureRef.current) {
+      const centeredPositionX = position.x - (measureRef.current.offsetWidth ?? 0) / 2;
+      const centeredPositionY = position.y - (measureRef.current.offsetHeight ?? 0) / 2;
+
+      x.set(centeredPositionX);
+      y.set(centeredPositionY);
+    }
+  });
 
   useMotionValueEvent(x, "change", (val) => {
     setIsLeft(val < (window.innerWidth - (measureRef.current?.offsetWidth ?? 0)) / 2);
