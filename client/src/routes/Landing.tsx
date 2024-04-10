@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 
+import useBPHStore from "@/stores/useBPHStore";
+import { BluenoirReaction, getMainPageIdleDialogue } from "@/utils/bluenoir_dialogue";
+
 import LandingInfo from "../components/landing/LandingInfo";
 import LandingSplash from "../components/landing/LandingSplash";
+import { useDjangoContext } from "../hooks/useDjangoContext";
 
 const userAgent = navigator.userAgent.toLowerCase();
 const isMobileDevice = /iphone|ipad|ipod|android|blackberry|windows phone|iemobile|webos/i.test(
@@ -10,6 +14,18 @@ const isMobileDevice = /iphone|ipad|ipod|android|blackberry|windows phone|iemobi
 
 export default function Landing() {
   const [visitedBefore, setVisitedBefore] = useState(false);
+  const setBluenoirDialogue = useBPHStore((state) => state.setRandomDialogueFunction);
+  const { context } = useDjangoContext();
+
+  useEffect(() => {
+    setBluenoirDialogue(() => {
+      if (context) return getMainPageIdleDialogue(context);
+      return {
+        text: "I'm a computer program, not a human. I can't talk to you.",
+        reaction: BluenoirReaction.EMBARRASSED,
+      };
+    });
+  }, [context, setBluenoirDialogue]);
 
   useEffect(() => {
     const hasVisitedBefore = localStorage.getItem("visitedBefore");
