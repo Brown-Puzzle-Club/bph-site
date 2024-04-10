@@ -39,7 +39,7 @@
         <tr>
             <td>
                 {% if hint.is_followup %}<em>({% translate "followup" %}){% endif %}
-                {% format_time hint.submitted_datetime 'DATE_AT_TIME' %}
+                {% format_time hint.submitted_datetime 'SHORT_DATETIME_FORMAT' %}
                 {% if hint.is_followup %}</em>{% endif %}
             </td>
             <td colspan="3">
@@ -62,7 +62,7 @@
         <tr>
             <th>
                 {% if hint.is_followup %}<em>({% translate "followup" %}){% endif %}
-                {% format_time hint.submitted_datetime 'DATE_AT_TIME' %}
+                {% format_time hint.submitted_datetime 'SHORT_DATETIME_FORMAT' %}
                 {% if hint.is_followup %}</em>{% endif %}
             </th>
             <th>

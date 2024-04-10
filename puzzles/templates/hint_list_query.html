@@ -21,7 +21,7 @@
             <th>
                 <a href="{% url 'hint' hint.id %}">
                     {% if hint.is_followup %}<em>({% translate "followup" %}){% endif %}
-                    {% format_time hint.submitted_datetime 'DATE_AT_TIME' %}
+                    {% format_time hint.submitted_datetime 'SHORT_DATETIME_FORMAT' %}
                     {% if hint.is_followup %}</em>{% endif %}
                 </a>
             </th>
