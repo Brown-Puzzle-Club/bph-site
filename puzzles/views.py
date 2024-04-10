@@ -43,10 +43,10 @@ def access_restrictor(check_request):
 
 @access_restrictor
 def require_admin(request):
-    raise Http404
+    return redirect("/")
 
 
-@require_GET
+@require_GET  # type: ignore
 @require_admin
 def hint_list(request):
     """For admins. By default, list popular and outstanding hint requests.
