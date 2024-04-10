@@ -1,6 +1,7 @@
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { ILink, INode, NodeAnswer, ThreadType } from "./types/BoardTypes";
 import { THREAD_COLOR } from "./consts";
+import extraPinPng from "../../../assets/major_cases/colored-thread/extrapin.png";
 
 interface Position {
   x: number;
@@ -25,16 +26,10 @@ export default function SVGBoard({
   nodes: NodeAnswer[];
 }) {
   const [solutionPinPos, setSolutionPinPos] = useState<Position>({
-    x: 300,
-    y: 540,
+    x: 22,
+    y: 90,
     coords: {},
   });
-
-  /**
-   * TODO: Fix this later by adding a scale factor.
-   */
-  const svgWidth = window.innerWidth;
-  const svgHeight = window.innerHeight;
 
   /**
    * Handler for when a link is clicked.
@@ -50,50 +45,52 @@ export default function SVGBoard({
   /**
    * Handler for when the mouse is moved for the solution pin.
    */
-  const handleMouseMove = useRef((e: MouseEvent) => {
-    setSolutionPinPos((position: Position) => {
-      const xDiff = position.coords.x !== undefined ? position.coords.x - e.pageX : 0;
-      const yDiff = position.coords.y !== undefined ? position.coords.y - e.pageY : 0;
-      if (
-        position.x - xDiff < 260 ||
-        position.x - xDiff > 715 ||
-        position.y - yDiff < 60 ||
-        position.y - yDiff > 510
-      ) {
-        return position;
-      }
-      return {
-        x: position.x - xDiff,
-        y: position.y - yDiff,
-        coords: {
-          x: e.pageX,
-          y: e.pageY,
-        },
-      };
-    });
-  });
+  const handleMouseMove = useCallback(
+    (e: MouseEvent) => {
+      setSolutionPinPos((position) => {
+        const xDiff = position.coords.x !== undefined ? position.coords.x - e.pageX : 0;
+        const yDiff = position.coords.y !== undefined ? position.coords.y - e.pageY : 0;
+        // if (
+        //   position.x - xDiff < 260 ||
+        //   position.x - xDiff > 715 ||
+        //   position.y - yDiff < 60 ||
+        //   position.y - yDiff > 510
+        // ) {
+        //   return position;
+        // }
+        return {
+          x: position.x - xDiff,
+          y: position.y - yDiff,
+          coords: {
+            x: e.pageX,
+            y: e.pageY,
+          },
+        };
+      });
+    },
+    [setSolutionPinPos],
+  );
 
   /**
    * Handler for when the mouse is pressed down for the solution pin.
    */
-  const handleMouseDown = (e: React.MouseEvent<SVGCircleElement, MouseEvent>) => {
-    const pageX = e.pageX;
-    const pageY = e.pageY;
-    setSolutionPinPos((position: Position) => ({
+  const handleMouseDown = (e: React.MouseEvent<SVGImageElement, MouseEvent>) => {
+    console.log("INSIDE MOUSE DOWN");
+    setSolutionPinPos((position) => ({
       ...position,
       coords: {
-        x: pageX,
-        y: pageY,
+        x: e.pageX,
+        y: e.pageY,
       },
     }));
-    document.addEventListener("mousemove", handleMouseMove.current);
+    document.addEventListener("mousemove", handleMouseMove);
   };
 
   /**
    * Handler for when the mouse is released for the solution pin.
    */
   const handleMouseUp = () => {
-    document.removeEventListener("mousemove", handleMouseMove.current);
+    document.removeEventListener("mousemove", handleMouseMove);
     setSolutionPinPos((position) => ({ ...position, coords: {} }));
     // Dynamically update any links that are connected to the solution pin
     const updatedLinks = links.map((link) => {
@@ -112,41 +109,23 @@ export default function SVGBoard({
    * Draw the nodes on the SVG board.
    */
   function drawNodes() {
-    return nodes.map((node) =>
-      node.node.id === "wasting-illness" ? (
-        <circle
-          key={node.node.id}
-          cx={node.node.x}
-          cy={node.node.y}
-          r={15}
-          fill="green"
-          stroke="yellow"
-          strokeWidth="1"
-          style={{
-            cursor: "pointer",
-          }}
-          onClick={() => {
-            setSelectedNode(node.node);
-          }}
-        />
-      ) : (
-        <circle
-          key={node.node.id}
-          cx={node.node.x}
-          cy={node.node.y}
-          r={15}
-          fill="white"
-          stroke="black"
-          strokeWidth="2"
-          style={{
-            cursor: "pointer",
-          }}
-          onClick={() => {
-            setSelectedNode(node.node);
-          }}
-        />
-      ),
-    );
+    return nodes.map((node) => (
+      <circle
+        key={node.node.id}
+        cx={node.node.x}
+        cy={node.node.y}
+        r={0}
+        fill="white"
+        stroke="black"
+        strokeWidth="2"
+        style={{
+          cursor: "pointer",
+        }}
+        onClick={() => {
+          setSelectedNode(node.node);
+        }}
+      />
+    ));
   }
 
   /**
@@ -161,9 +140,10 @@ export default function SVGBoard({
         x2={link.to.x}
         y2={link.to.y}
         stroke={THREAD_COLOR[link.thread]}
-        strokeWidth="2"
+        strokeWidth="0.5"
         style={{
           cursor: "pointer",
+          zIndex: 10,
         }}
         onClick={() => handleLinkClick(link.from, link.to)}
       />
@@ -175,36 +155,33 @@ export default function SVGBoard({
    */
   function drawSolutionPin() {
     return (
-      <circle
-        cx={solutionPinPos.x}
-        cy={solutionPinPos.y}
-        r={15}
-        fill="yellow"
-        stroke="yellow"
-        strokeWidth="1"
-        onMouseDown={handleMouseDown}
-        onMouseUp={handleMouseUp}
-        onClick={() => {
-          // TOOD: reimplement solution pin with image on AnswerPins side maybe?
-          // handleNodeClick({ id: "solution-pin", x: solutionPinPos.x, y: solutionPinPos.y });
-        }}
-        style={{
-          cursor: "pointer",
-        }}
-      />
+      <svg id="example1" xmlns="http://www.w3.org/2000/svg">
+        <image
+          x={solutionPinPos.x}
+          y={solutionPinPos.y}
+          width="5"
+          height="5"
+          href={extraPinPng}
+          onMouseUp={handleMouseUp}
+          onMouseDown={handleMouseDown}
+          style={{
+            cursor: "pointer",
+          }}
+        />
+      </svg>
     );
   }
 
   return (
     <div className="absolute inset-0">
       <svg
+        id="svg-container"
         width="100vw"
         height="100%"
-        viewBox={`0 0 ${svgWidth} ${svgHeight}`}
+        viewBox="0 0 100 100"
         xmlns="http://www.w3.org/2000/svg"
       >
-        <g>{drawNodes()}</g>
-
+        {drawNodes()}
         {drawLinks()}
         {drawSolutionPin()}
       </svg>
