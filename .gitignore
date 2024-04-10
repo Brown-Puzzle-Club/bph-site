@@ -4,5 +4,4 @@ __pycache__/
 logs/
 venv/
 db.sqlite3
-static/
 manage.py
