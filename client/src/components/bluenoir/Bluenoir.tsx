@@ -1,16 +1,17 @@
 import {
-  motion,
   AnimatePresence,
-  type Variants,
-  useMotionValue,
   animate,
+  motion,
+  useMotionValue,
   useMotionValueEvent,
+  type Variants,
 } from "framer-motion";
 import { forwardRef, useCallback, useEffect, useRef, useState } from "react";
 import { useGesture } from "react-use-gesture";
 import Typewriter from "typewriter-effect";
 
 import frame from "@/assets/bluenoir/frame.png";
+import frame_bg from "@/assets/bluenoir/frame_bg.png";
 import useBPHStore from "@/stores/useBPHStore";
 import { BluenoirReactionImage } from "@/utils/bluenoir_dialogue";
 import { cn } from "@/utils/utils";
@@ -28,9 +29,18 @@ const BluenoirFrame = forwardRef<HTMLDivElement>((_props, ref) => {
         <TooltipTrigger>
           <div ref={ref} className="cursor-pointer h-[80px] w-[80px]">
             <div className="h-[55px] w-[55px] absolute mx-[12px] my-[12px]">
-              <img className="select-none" src={BluenoirReactionImage[speechDialogue.reaction]} />
+              <img
+                className="select-none"
+                src={BluenoirReactionImage[speechDialogue.reaction]}
+                style={{
+                  backgroundImage: `url(${frame_bg})`,
+                }}
+              />
             </div>
-            <div onDoubleClick={toggleOpen} className="h-[80px] w-[80px] absolute mx-auto my-auto">
+            <div
+              onDoubleClick={toggleOpen}
+              className="h-[100px] w-[100px] absolute mx-auto my-auto"
+            >
               <img className="select-none" src={frame} />
             </div>
           </div>

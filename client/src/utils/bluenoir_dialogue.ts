@@ -1,8 +1,12 @@
 import angry from "../assets/bluenoir/angry.png";
 import curious from "../assets/bluenoir/curious.png";
+import embarassed from "../assets/bluenoir/embarrassed.png";
+import nervous from "../assets/bluenoir/nervous.png";
 import neutral from "../assets/bluenoir/neutral.png";
 import phone from "../assets/bluenoir/phone.png";
 import proud from "../assets/bluenoir/proud.png";
+import sad from "../assets/bluenoir/sad.png";
+import sensitive from "../assets/bluenoir/sensitive.png";
 import surprised from "../assets/bluenoir/surprised.png";
 import thinking from "../assets/bluenoir/thinking.png";
 import { MajorCaseEnum } from "./constants";
@@ -31,13 +35,13 @@ export enum BluenoirReaction {
 export const BluenoirReactionImage: Record<BluenoirReaction, string> = {
   [BluenoirReaction.NEUTRAL]: neutral,
   [BluenoirReaction.HAPPY]: neutral,
-  [BluenoirReaction.SAD]: neutral,
+  [BluenoirReaction.SAD]: sad,
   [BluenoirReaction.ANGRY]: angry,
   [BluenoirReaction.SURPRISED]: surprised,
-  [BluenoirReaction.EMBARRASSED]: neutral,
-  [BluenoirReaction.SENSITIVE]: neutral,
+  [BluenoirReaction.EMBARRASSED]: embarassed,
+  [BluenoirReaction.SENSITIVE]: sensitive,
   [BluenoirReaction.PROUD]: proud,
-  [BluenoirReaction.NERVOUS]: neutral,
+  [BluenoirReaction.NERVOUS]: nervous,
   [BluenoirReaction.THINKING]: thinking,
   [BluenoirReaction.TIRED]: neutral,
   [BluenoirReaction.SMUG]: neutral,
@@ -1424,6 +1428,8 @@ function randomChoice(idle_dialogue_options: Dialogue[]): Dialogue {
   const randomIndex = Math.floor(Math.random() * idle_dialogue_options.length);
   return idle_dialogue_options[randomIndex];
 }
+
+// dialog access:
 
 export const getMainPageIdleDialogue = (context: DjangoContext): Dialogue => {
   const case_solve_count = numberOfMajorCaseSolves(context);

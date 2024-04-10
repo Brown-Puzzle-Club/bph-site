@@ -12,7 +12,7 @@ interface BPHState {
   votingModalOpen: boolean;
 }
 
-const TOP_LEFT = { x: 0.05, y: 0.15 } as const;
+const TOP_LEFT = { x: 0.05, y: 0.13 } as const;
 const BOTTOM_LEFT = { x: 0.05, y: 0.85 } as const;
 const CENTER = { x: 0.5, y: 0.5 } as const;
 
