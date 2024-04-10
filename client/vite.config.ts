@@ -14,6 +14,8 @@ export default defineConfig({
     proxy: {
       "/notifications": "http://127.0.0.1:8000",
       "/api": "http://127.0.0.1:8000",
+      "/hints": "http://127.0.0.1:8000",
+      "/hint": "http://127.0.0.1:8000",
       "/ws": {
         target: `ws://127.0.0.1:8000`,
         changeOrigin: true,

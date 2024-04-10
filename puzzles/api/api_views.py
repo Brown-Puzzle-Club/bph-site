@@ -1,5 +1,6 @@
 from rest_framework import permissions, viewsets, mixins
 from puzzles import models
+from puzzles.api.api_guards import require_auth
 
 from .serializers import *
 
@@ -197,3 +198,24 @@ def major_case(request: Request, major_case_slug: str) -> Response:
         return Response(complete_puzzle_data)
     except MajorCase.DoesNotExist:
         return Response({"error": "MajorCase not found"}, status=404)
+
+
+@api_view(["GET"])
+@require_auth
+def get_hints_for_puzzle(request: Request, puzzle_slug: str) -> Response:
+    try:
+        context = request._request.context
+        puzzle = context.team.unlocks.get(puzzle_slug)
+
+        if puzzle is None:
+            if context.is_admin:
+                puzzle = Puzzle.objects.get(slug=puzzle_slug)
+            else:
+                raise Puzzle.DoesNotExist
+
+        hints = Hint.objects.filter(puzzle=puzzle)
+        serializer = HintSerializer(hints, many=True)
+
+        return Response(serializer.data)
+    except Puzzle.DoesNotExist:
+        return Response({"error": "Puzzle not found"}, status=404)

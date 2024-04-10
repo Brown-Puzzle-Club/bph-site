@@ -15,7 +15,7 @@ import Archive from "./routes/Archive";
 import Club from "./routes/Club";
 import Contact from "./routes/Contact";
 import Credits from "./routes/Credits";
-import ErrorPage from "./routes/ErrorPage";
+import ErrorPage, { Error404 } from "./routes/ErrorPage";
 import EventPage from "./routes/EventPage";
 import InfoPage from "./routes/InfoPage";
 import Landing from "./routes/Landing";
@@ -42,6 +42,11 @@ try {
 } catch (e) {
   console.error("Error setting CSRF token in axios headers");
 }
+
+const Redirect = ({ to }: { to: string }) => {
+  window.location.href = to;
+  return <Error404 />;
+};
 
 const router = createBrowserRouter([
   {
@@ -115,6 +120,19 @@ const router = createBrowserRouter([
           />
         ),
       },
+      // unhappy routes redirect to EventPage.
+      {
+        path: "/majorcase",
+        element: <PageWrapper route={<Redirect to={"/eventpage"} />} />,
+      },
+      {
+        path: "/minorcase",
+        element: <PageWrapper route={<Redirect to={"/eventpage"} />} />,
+      },
+      {
+        path: "/puzzle",
+        element: <PageWrapper route={<Redirect to={"/eventpage"} />} />,
+      },
 
       {
         path: "/minorcase/:slug",
@@ -123,18 +141,6 @@ const router = createBrowserRouter([
       {
         path: "/puzzle/:slug",
         element: <PageWrapper route={<PuzzlePage />} />,
-      },
-      {
-        path: "/solveadmin",
-        element: (
-          <PageWrapper
-            route={
-              <Locked condition={IS_ADMIN}>
-                <AdminPanel />
-              </Locked>
-            }
-          />
-        ),
       },
       {
         path: "/majorcase/social-deduction",
@@ -173,6 +179,18 @@ const router = createBrowserRouter([
                 <MajorCaseWrapper>
                   <Data />
                 </MajorCaseWrapper>
+              </Locked>
+            }
+          />
+        ),
+      },
+      {
+        path: "/solveadmin",
+        element: (
+          <PageWrapper
+            route={
+              <Locked condition={IS_ADMIN}>
+                <AdminPanel />
               </Locked>
             }
           />

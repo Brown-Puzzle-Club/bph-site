@@ -102,6 +102,7 @@ class PuzzleUnlockSerializer(serializers.ModelSerializer):
 
 class MinorCaseVoteSerializer(serializers.ModelSerializer):
     minor_case = RoundSerializer()
+
     class Meta:
         model = MinorCaseVote
         fields = "__all__"
@@ -200,6 +201,7 @@ class ErrataSerializer(serializers.ModelSerializer):
 class TeamPuzzleContextSerializer(serializers.Serializer):
     is_admin = serializers.BooleanField()
     is_superuser = serializers.BooleanField()
+    in_person = serializers.BooleanField()
     num_hints_remaining = serializers.IntegerField()
     num_free_answers_remaining = serializers.IntegerField()
     minor_case_solves = serializers.DictField(
@@ -261,10 +263,7 @@ class ContextSerializer(serializers.Serializer):
         all_fields = hunt_context_fields.union(team_context_fields)
         for ctx in all_fields:
             if ctx in hunt_context_fields:
-                # time_start = time()
                 hunt_context_data[ctx] = getattr(data, ctx)
-                # time_elapsed = time() - time_start
-                # print(f"took {time_elapsed} seconds to process")
             elif ctx in team_context_fields:
                 team_context_data[ctx] = getattr(data, ctx)
 

@@ -4,7 +4,7 @@ import PuzzleWrapper from "@/components/puzzle/PuzzleWrapper";
 import { useTheme } from "@/hooks/useTheme";
 import { DEFAULT_THEME } from "@/utils/themes";
 
-import ErrorPage from "./ErrorPage";
+import { Error404 } from "./ErrorPage";
 
 function PuzzlePage() {
   const puzzle_slug = useMemo(() => {
@@ -17,7 +17,8 @@ function PuzzlePage() {
   });
 
   if (!puzzle_slug) {
-    return <ErrorPage />;
+    window.location.href = "/eventpage";
+    return <Error404 />;
   }
 
   return <PuzzleWrapper puzzle_slug={puzzle_slug} />;

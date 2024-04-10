@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { cloneElement } from "react";
+import { cloneElement, useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
 
 import Footer from "@/components/Footer";
