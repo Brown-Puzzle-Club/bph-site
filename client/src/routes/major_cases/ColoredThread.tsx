@@ -1,3 +1,4 @@
+import { useLocalStorage } from "@uidotdev/usehooks";
 import { useEffect, useMemo, useState } from "react";
 
 import background from "@/assets/major_cases/colored-thread/background.jpg";
@@ -29,7 +30,7 @@ import { BROWN_THEME } from "@/utils/themes";
 export default function ColoredThread() {
   const [selectedThread, setSelectedThread] = useState<ThreadType | null>(null);
   const [selectedNode, setSelectedNode] = useState<INode | null>(null);
-  const [links, setLinks] = useState<ILink[]>([]);
+  const [links, setLinks] = useLocalStorage<ILink[]>("colored-thread-links", []);
 
   const { setTheme } = useTheme();
   useEffect(() => {
