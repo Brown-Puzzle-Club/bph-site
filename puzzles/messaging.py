@@ -248,7 +248,7 @@ class DiscordInterface:
             embed["color"] = 0xFF00FF  # type: ignore
             embed["author"]["name"] = _("U N C L A I M E D")  # type: ignore
             claim_url = hint.full_url(claim=True)
-            embed["title"] = _("Claim: ") + claim_url
+            embed["title"] = _("Click here to claim!") # type: ignore
             embed["url"] = claim_url
             debug = "unclaimed"
 
@@ -328,13 +328,20 @@ discord_interface = DiscordInterface()
 @receiver(send_notification)
 def broadcast_notification(sender, notification_type, title, desc, team, **kwargs):
     print(f"broadcasting notification to {team}")
-    send_event(f"_user-{team}", "message", {
-        "type": notification_type,
-        "title": title,
-        "desc": desc,
-    })
+    send_event(
+        f"_user-{team}",
+        "message",
+        {
+            "type": notification_type,
+            "title": title,
+            "desc": desc,
+        },
+    )
+
 
 # A WebsocketConsumer subclass that can broadcast messages to a set of users.
+
+
 class BroadcastWebsocketConsumer(ABC, WebsocketConsumer):
     def connect(self):
         if self.is_ok():
@@ -483,7 +490,6 @@ class VotingConsumer(WebsocketConsumer):
         client_room = Room.objects.get(channel_name=self.get_room())
         content = json.loads(text_data)
 
-
         if content == "heartbeat":
             return
 
@@ -501,10 +507,7 @@ class VotingConsumer(WebsocketConsumer):
             incoming_event.vote(data["oldVote"], data["newVote"])
             response = {
                 "type": "vote",
-                "data": {
-                    "id": incoming_event.id,
-                    **incoming_event.get_votes()
-                }
+                "data": {"id": incoming_event.id, **incoming_event.get_votes()},
             }
             self.send_to_all(client_room, response)
 

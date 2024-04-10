@@ -37,4 +37,10 @@ urlpatterns = [
     path("unlock-case/<str:round_slug>", api_actions.unlock_case, name="unlock-case"),
     path("major-case/<str:major_case_slug>", api_views.major_case, name="major-case"),
     path("token-auth", obtain_auth_token, name="api_token_auth"),
+    path(
+        "hints/<str:puzzle_slug>",
+        api_views.get_hints_for_puzzle,
+        name="get_hints_for_puzzle",
+    ),
+    path("hints/<str:puzzle_slug>/submit", api_actions.post_hint, name="post_hint"),
 ]

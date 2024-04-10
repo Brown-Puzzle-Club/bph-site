@@ -426,7 +426,6 @@ class Team(models.Model):
 
     def __str__(self):
         return self.team_name  # possibly return JSON of all safe fields?
-        return self.team_name  # possibly return JSON of all safe fields?
 
     def get_emails(self, with_names=False):
         return [
@@ -1770,8 +1769,9 @@ class Hint(models.Model):
         return url
 
     def short_discord_message(self, threshold=500):
-        return (_("{} requested on {} {} by {}\n" "```{}```\n")).format(
+        return (_("[{}](<{}>) requested on {} **{}** by {}\n" "```{}```\n")).format(
             _("*Followup hint*") if self.is_followup else _("Hint"),
+            self.full_url(),
             self.puzzle.emoji,
             self.puzzle,
             self.team,
@@ -1780,11 +1780,14 @@ class Hint(models.Model):
 
     def long_discord_message(self):
         return self.short_discord_message(1000) + (
-            _("**Team:** {} ({})\n" "**Puzzle:** {} ({})\n")
+            _(
+                "[View team](<{}>)  |  [View all hints from this team](<{}>)\n"
+                "[View puzzle](<{}>)  |  [View all puzzle hints](<{}>)\n"
+            )
         ).format(
-            settings.DOMAIN + "team/%s" % quote_plus(self.team.team_name, safe=""),
+            settings.DOMAIN + "team/%s" % self.team.id,
             settings.DOMAIN + "hints?team=%s" % self.team_id,
-            settings.DOMAIN + "solution/" + self.puzzle.slug,
+            settings.DOMAIN + "puzzle/" + self.puzzle.slug,
             settings.DOMAIN + "hints?puzzle=%s" % self.puzzle_id,
         )
 

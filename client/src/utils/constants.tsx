@@ -61,7 +61,7 @@ export enum PuzzleStyle {
 }
 
 export const MAJOR_CASE_NAMES: Record<MajorCaseEnum, string> = {
-  [MajorCaseEnum.COLORED_THREAD]: "Red Thread",
+  [MajorCaseEnum.COLORED_THREAD]: "Colored Thread",
   [MajorCaseEnum.SOCIAL_DEDUCTION]: "Social Deduction",
   [MajorCaseEnum.DATA]: "Data",
 };

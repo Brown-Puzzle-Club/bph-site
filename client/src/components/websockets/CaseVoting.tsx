@@ -1,6 +1,5 @@
 import useSocket from "@/hooks/useSocket";
 
-import Loader from "../Loader";
 import VotingModal from "./VotingModal";
 
 interface CaseVotingProps {
@@ -16,15 +15,15 @@ const CaseVoting = ({ path, open, onOpenChange }: CaseVotingProps) => {
     },
   });
 
-  return readyState != WebSocket.OPEN ? (
-    <Loader />
-  ) : (
-    <VotingModal
-      sendJsonMessage={sendJsonMessage}
-      votingInfo={votingInfo}
-      open={open}
-      onOpenChange={onOpenChange}
-    />
+  return (
+    readyState == WebSocket.OPEN && (
+      <VotingModal
+        sendJsonMessage={sendJsonMessage}
+        votingInfo={votingInfo}
+        open={open}
+        onOpenChange={onOpenChange}
+      />
+    )
   );
 };
 

@@ -188,24 +188,28 @@ const PuzzleIconWrapper = (props: PuzzleAsset) => {
           {...props}
           linkTo={`/puzzle/${slug}`}
         >
-          <p
-            className={` p-[0.2rem] font-bold text-center bg-slate-800 group-hover:bg-slate-600 rounded-xl ${props.meta ? "text-[1vw] border-2 border-sky-200" : "text-[0.65vw]"}`}
-          >
-            {puzzle_answer?.puzzle.name.toUpperCase()}
-          </p>
-          <p
-            className={cn(
-              `answer mt-1 p-[0.2rem] font-bold text-center font-mono drop-shadow ${props.meta ? "text-[1vw]" : "text-[0.8vw]"}`,
-              props.answer_bg ? "bg-[#262e3a87] rounded-xl" : "",
-            )}
-            style={{
-              color:
-                CASE_PALETTE[puzzle_answer.puzzle.round.major_case.slug as MajorCaseEnum]
-                  .answerColor,
-            }}
-          >
-            {puzzle_answer?.answer?.toUpperCase()}
-          </p>
+          <div className="flex flex-col items-center">
+            <span
+              className={` p-[0.2rem] font-bold text-center bg-slate-800 group-hover:bg-slate-600 rounded-xl ${props.meta ? "text-[1vw] border-2 border-sky-200" : "text-[0.65vw]"}`}
+            >
+              {puzzle_answer?.puzzle.name.toUpperCase()}
+            </span>
+          </div>
+          <div className="flex flex-col items-center">
+            <span
+              className={cn(
+                `answer mt-1 p-[0.2rem] font-bold text-center font-mono drop-shadow ${props.meta ? "text-[1vw]" : "text-[0.8vw]"}`,
+                props.answer_bg ? "bg-[#262e3a87] rounded-xl" : "",
+              )}
+              style={{
+                color:
+                  CASE_PALETTE[puzzle_answer.puzzle.round.major_case.slug as MajorCaseEnum]
+                    .answerColor,
+              }}
+            >
+              {puzzle_answer?.answer?.toUpperCase()}
+            </span>
+          </div>
         </RelativeAsset>
       )}
     </>

@@ -1,7 +1,7 @@
-export interface IThread {
-  color: string;
-  x: number;
-  y: number;
+export enum ThreadType {
+  DOCTOR = "doctor",
+  GOREY = "gorey",
+  PUSS = "puss",
 }
 
 export interface INode {
@@ -18,5 +18,5 @@ export interface NodeAnswer {
 export interface ILink {
   from: INode;
   to: INode;
-  thread: IThread;
+  thread: ThreadType;
 }
