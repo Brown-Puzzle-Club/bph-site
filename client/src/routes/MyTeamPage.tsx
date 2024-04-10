@@ -43,6 +43,7 @@ import { z } from "zod";
 
 import { useTeamMembers } from "@/hooks/useDjangoContext";
 import { BeatLoader } from "react-spinners";
+import { HashLink as Link } from "react-router-hash-link";
 
 const editTeamFormSchema = z
   .object({
@@ -50,7 +51,7 @@ const editTeamFormSchema = z
       z.object({
         name: z.string().optional(),
         email: z.string().optional(),
-      })
+      }),
     ),
     in_person: z.boolean(),
     num_brown_members: z.number().optional(),
@@ -73,7 +74,7 @@ const editTeamFormSchema = z
     {
       message: "Valid US phone number required.",
       path: ["phone_number"],
-    }
+    },
   )
   .refine(
     (data) => {
@@ -85,7 +86,7 @@ const editTeamFormSchema = z
     {
       message: "Required for in person teams that don't need a room reserved.",
       path: ["where_to_find"],
-    }
+    },
   );
 
 export default function MyTeamPage() {
@@ -166,8 +167,8 @@ export default function MyTeamPage() {
       <div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 text-white dark">
-            <a
-              href={`/team/${team.data?.id}`}
+            <Link
+              to={`/team/${team.data?.id}`}
               className="dark bg-muted/20 hover:bg-muted/80 btn-gradient-1 flex font-semibold items-center text-center justify-center my-5 mx-[33%] transition-colors duration-300 group"
             >
               <FaEye className="w-5 h-5 text-slate-400 group-hover:text-white transition-colors duration-300" />
@@ -175,7 +176,7 @@ export default function MyTeamPage() {
                 See page as visible to other teams
               </p>
               <FaEye className="w-5 h-5 text-slate-400 group-hover:text-white transition-colors duration-300" />
-            </a>
+            </Link>
             {/* center div */}
             <div className="team-icon dark justify-center items-center flex">
               <Dialog>

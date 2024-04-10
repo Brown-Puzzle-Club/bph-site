@@ -4,6 +4,7 @@ import { useTeams } from "@/hooks/useDjangoContext";
 import { Team, UserTeam } from "@/utils/django_types";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
+import { HashLink as Link } from "react-router-hash-link";
 import { BeatLoader } from "react-spinners";
 
 enum LeaderboardTab {
@@ -37,13 +38,13 @@ export default function Leaderboard() {
 
   const collectRemoteTeams = (teams: Team[]) => {
     return teams.filter(
-      (cur_team) => !cur_team.in_person && (!cur_team.is_hidden || cur_team.id === team.data?.id)
+      (cur_team) => !cur_team.in_person && (!cur_team.is_hidden || cur_team.id === team.data?.id),
     );
   };
 
   const collectInPersonTeams = (teams: Team[]) => {
     return teams.filter(
-      (cur_team) => cur_team.in_person && (!cur_team.is_hidden || cur_team.id === team.data?.id)
+      (cur_team) => cur_team.in_person && (!cur_team.is_hidden || cur_team.id === team.data?.id),
     );
   };
 
@@ -102,9 +103,9 @@ export default function Leaderboard() {
                   emoji={cur_team?.emoji_choice || "❓"}
                   emoji_cn="text-3xl"
                 />
-                <a className="truncate text-lg w-[80%]" href={`/team/${cur_team.id}`}>
+                <Link className="truncate text-lg w-[80%]" to={`/team/${cur_team.id}`}>
                   {cur_team.team_name}
-                </a>
+                </Link>
               </div>
             ))
           ) : (

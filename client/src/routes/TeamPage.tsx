@@ -4,6 +4,7 @@ import { Team, TeamMember } from "@/utils/django_types";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { FaCog } from "react-icons/fa";
+import { HashLink as Link } from "react-router-hash-link";
 import { BeatLoader } from "react-spinners";
 
 const TEAM_ID = window.location.pathname.split("/").pop();
@@ -45,8 +46,8 @@ export default function TeamPage() {
   return (
     <div className="teampage text-center text-white min-h-[90vh]">
       {IS_OWN_TEAM ? (
-        <a
-          href={`/my-team`}
+        <Link
+          to={`/my-team`}
           className="dark bg-muted/20 hover:bg-muted/80 btn-gradient-1 flex font-semibold items-center text-center justify-center my-5 mx-[33%] transition-colors duration-300 group"
         >
           <FaCog className="w-5 h-5 text-slate-400 group-hover:text-white transition-colors duration-300" />
@@ -54,7 +55,7 @@ export default function TeamPage() {
             Edit Team Info
           </p>
           <FaCog className="w-5 h-5 text-slate-400 group-hover:text-white transition-colors duration-300" />
-        </a>
+        </Link>
       ) : null}
       {loadingData ? (
         <BeatLoader className="justify-center content-center pr-2 pt-3" color={"#fff"} size={12} />

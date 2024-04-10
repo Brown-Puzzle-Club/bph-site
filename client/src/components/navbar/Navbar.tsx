@@ -20,73 +20,73 @@ import TeamNavbar from "./TeamNavbar";
 
 import bluenoir_logo from "@/assets/navbar_logo_head.png";
 import { useState } from "react";
+import { HashLink as Link, HashLinkProps as LinkProps } from "react-router-hash-link";
 
-const components: { title: string; href: string; description: string }[] = [
+const components: { title: string; to: string; description: string }[] = [
   {
     title: "Event Details",
-    href: "/info#important-info",
+    to: "/info#important-info",
     description: "Information on when, where, and how to participate in the event.",
   },
   {
     title: "In-Person Participation",
-    href: "/info#on-campus",
+    to: "/info#on-campus",
     description: "All are welcome to participate in-person! Find out more here.",
   },
   {
     title: "What is a puzzlehunt?",
-    href: "/info#FAQ",
+    to: "/info#FAQ",
     description: "Details on our event structure with examples and helpful links.",
   },
   {
     title: "I'm stuck! What do I do?",
-    href: "/info#stuck",
+    to: "/info#stuck",
     description: "Resources and tips for when you're lost.",
   },
 ];
 
-export const ListItem = React.forwardRef<
-  React.ElementRef<"a">,
-  React.ComponentPropsWithoutRef<"a">
->(({ className, title, children, ...props }, ref) => {
-  return (
-    <li>
-      <NavigationMenuLink asChild>
-        <a
-          ref={ref}
-          className={cn(
-            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-            className
-          )}
-          {...props}
-        >
-          <div className="text-sm font-medium leading-none truncate">{title}</div>
-          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">{children}</p>
-        </a>
-      </NavigationMenuLink>
-    </li>
-  );
-});
+export const ListItem = React.forwardRef<React.ElementRef<typeof Link>, Omit<LinkProps, "ref">>(
+  ({ className, title, children, ...props }, ref) => {
+    return (
+      <li>
+        <NavigationMenuLink asChild>
+          <Link smooth
+            ref={ref}
+            className={cn(
+              "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+              className,
+            )}
+            {...props}
+          >
+            <div className="text-sm font-medium leading-none truncate">{title}</div>
+            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">{children}</p>
+          </Link>
+        </NavigationMenuLink>
+      </li>
+    );
+  },
+);
 
-const IconItem = React.forwardRef<React.ElementRef<"a">, React.ComponentPropsWithoutRef<"a">>(
+const IconItem = React.forwardRef<React.ElementRef<typeof Link>, Omit<LinkProps, "ref">>(
   ({ className, title, ...props }, ref) => {
     return (
       <li>
         {/* TODO: make icon float on left side */}
         <NavigationMenuLink asChild>
-          <a
+          <Link smooth
             ref={ref}
             className={cn(
               "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-              className
+              className,
             )}
             {...props}
           >
             <div className="text-sm font-medium leading-none">{title}</div>
-          </a>
+          </Link>
         </NavigationMenuLink>
       </li>
     );
-  }
+  },
 );
 
 const hunt_start_timer = ({
@@ -117,8 +117,8 @@ const HuntLogo = () => {
   const [hover, setHover] = useState(false);
 
   return (
-    <a
-      href="/"
+    <Link smooth
+      to="/"
       className="text-white font-bold pl-3 pr-4 md:pr-1 whitespace-nowrap justify-center"
       onMouseEnter={() => {
         setHover(true);
@@ -137,7 +137,7 @@ const HuntLogo = () => {
         }}
       />
       <span>Brown Puzzlehunt</span>
-    </a>
+    </Link>
   );
 };
 
@@ -157,9 +157,9 @@ const NavbarLeft = () => {
               <ul className="grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
                 <li className="row-span-4">
                   <NavigationMenuLink asChild>
-                    <a
+                    <Link smooth
                       className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
-                      href="/"
+                      to="/"
                     >
                       <div className="mb-2 mt-4 text-xl font-bold">The Hunt</div>
                       <p className="text-sm leading-tight text-muted-foreground">
@@ -172,13 +172,13 @@ const NavbarLeft = () => {
                           />
                         )}
                       </p>
-                    </a>
+                    </Link>
                   </NavigationMenuLink>
                 </li>
-                <IconItem href="/leaderboard" title="Leaderboard" />
-                <IconItem href="/contact" title="Contact HQ" />
-                <IconItem href="/credits" title="Hunt Credits" />
-                <IconItem href="/archive" title="Past Hunts" />
+                <IconItem to="/leaderboard" title="Leaderboard" />
+                <IconItem to="/contact" title="Contact HQ" />
+                <IconItem to="/credits" title="Hunt Credits" />
+                <IconItem to="/archive" title="Past Hunts" />
                 {/* <IconItem href="/club" title="Club Info" /> */}
               </ul>
             </NavigationMenuContent>
@@ -188,7 +188,7 @@ const NavbarLeft = () => {
             <NavigationMenuContent>
               <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
                 {components.map((component) => (
-                  <ListItem key={component.title} title={component.title} href={component.href}>
+                  <ListItem key={component.title} title={component.title} to={component.to}>
                     {component.description}
                   </ListItem>
                 ))}

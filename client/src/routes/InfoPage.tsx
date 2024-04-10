@@ -15,6 +15,7 @@ import building from "../assets/info/kongdooble.svg";
 import rubix from "../assets/info/rubixdooble.svg";
 import wiggle from "../assets/info/squigglydooble.svg";
 import waiver from "../assets/info/waiverdooble.svg";
+import { HashLink as Link } from "react-router-hash-link";
 
 const smoothScroll = (element_id: string) => {
   const element = document.getElementById(element_id);
@@ -167,8 +168,8 @@ export default function InfoPage() {
           <p>Each answer is a string of letters A-Z. Answers are not case- or space-sensitive.</p>
           <p>
             You have <b>20 total guesses</b> for each puzzle. If you run out of guesses,{" "}
-            <a href="/contact">contact us</a>, and we would be happy to grant more. Random guessing
-            and brute-forcing are discouraged.
+            <Link to="/contact">contact us</Link>, and we would be happy to grant more. Random
+            guessing and brute-forcing are discouraged.
           </p>
         </div>
         <img className="h-72 invert float-left m-4" src={hooray} />
@@ -249,7 +250,7 @@ export default function InfoPage() {
           </p>
           <p>
             If you have any questions about these rules, or if you want to contact us for any
-            reason, feel free to <a href="/contact">contact us</a>.
+            reason, feel free to <Link to="/contact">contact us</Link>.
           </p>
         </div>
         <h1 id="FAQ">FAQs</h1>
@@ -277,7 +278,7 @@ export default function InfoPage() {
         <img className="h-36 invert float-right m-4" src={guy} />
         <div>
           <p>
-            Check out our <a href="/credits">Credits</a> page!
+            Check out our <Link to="/credits">Credits</Link> page!
           </p>
         </div>
         <h4>How hard will this hunt be? How long will it be?</h4>
@@ -338,14 +339,14 @@ export default function InfoPage() {
         <h4>I think there's a mistake in this puzzle!</h4>
         <div>
           <p>
-            Please describe the error in a <a href="/contact">contact HQ</a> submission and we'll
-            try to correct it.
+            Please describe the error in a <Link to="/contact">contact HQ</Link> submission and
+            we'll try to correct it.
           </p>
         </div>
         <h4>I have a question that's not on this list!</h4>
         <div>
           <p>
-            Please <a href="/contact">contact HQ</a> and we'll do our best to answer it.
+            Please <Link to="/contact">contact HQ</Link> and we'll do our best to answer it.
           </p>
         </div>
         <h1 id="on-campus">On-Campus</h1>
@@ -372,7 +373,7 @@ export default function InfoPage() {
             Brown Puzzlehunt will not require you to do anything illegal, immoral, or untoward,
             including accessing unauthorized spaces. If you think that a puzzle is asking you to do
             something dangerous, against the law, or disrespectful, stop and think. If you're really
-            not sure, please <a href="/contact">contact us</a> and check.
+            not sure, please <Link to="/contact">contact us</Link> and check.
           </p>
           <p>
             Anyone who is attending on-campus will need to print and fill out{" "}
@@ -415,7 +416,7 @@ export default function InfoPage() {
             limited to current undergraduate or graduate students (or some faculty). Puzzles which
             require this will be kept to a minimum and, where applicable, clearly marked as such. If
             you know ahead of time that you'll want to participate in these puzzles but have no
-            current students on your team, <a href="/contact">contact us</a> before the hunt and
+            current students on your team, <Link to="/contact">contact us</Link> before the hunt and
             we'll find a way to get that sorted.
           </p>
         </div>
@@ -453,8 +454,8 @@ export default function InfoPage() {
               Garage, also known as the Power Street Parking Garage, located at 111 Power Street.
               The visitor entrance is located at the intersection of Power and Thayer Streets.
               Parking costs $2.00 per hour over the weekend. If you want overnight parking or
-              require a permit for more than one day, you can <a href="/contact">contact us</a> and
-              we'll try to help you out.
+              require a permit for more than one day, you can <Link to="/contact">contact us</Link>{" "}
+              and we'll try to help you out.
             </span>
           </div>
         </div>
@@ -510,7 +511,8 @@ export default function InfoPage() {
         <h4>Other</h4>
         <div>
           <p>
-            If you have any other questions, please <a href="/contact">contact us</a> at any time!
+            If you have any other questions, please <Link to="/contact">contact us</Link> at any
+            time!
           </p>
         </div>
       </ProgressDocs>

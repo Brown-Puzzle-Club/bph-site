@@ -1,5 +1,6 @@
 import { useState } from "react";
 import cthulu_blueno from "../assets/landing/chibi_blueno.png";
+import { HashLink as Link } from "react-router-hash-link";
 
 const ArchiveCard = ({
   year,
@@ -35,8 +36,8 @@ const ArchiveCard = ({
         <h4 className="text-xl text-slate-400 pb-5">
           <strong className="font-bold text-white">BPH {year}</strong>
           {" - "}
-          <a
-            href={url}
+          <Link smooth
+            to={url}
             className="underline"
             onMouseEnter={() => {
               setHovered(true);
@@ -46,7 +47,7 @@ const ArchiveCard = ({
             }}
           >
             {title}
-          </a>
+          </Link>
         </h4>
         <p className="text-slate-400 text-lg">{desc}</p>
       </div>

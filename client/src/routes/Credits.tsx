@@ -1,9 +1,11 @@
+import { HashLink as Link } from "react-router-hash-link";
+
 export default function Credits() {
   return (
     <div className="credits bg-slate-900 text-white h-[90vh] overscroll-contain overflow-hidden overflow-y-auto ">
       <div className="credits-top text-center p-5">
         <p>
-          Brown Puzzlehunt is put together by <a href="/club">Brown Puzzle Club</a>.
+          Brown Puzzlehunt is put together by <Link to="/club">Brown Puzzle Club</Link>.
         </p>
       </div>
       <div className="credits-content text-center dark bg-gradient-to-b from-muted/50 to-muted/80 p-6 no-underline outline-none focus:shadow-md btn-gradient-1 relative mx-[5%] md:mx-[20%]">
@@ -183,7 +185,7 @@ export default function Credits() {
       <div className="credits-end text-center py-5">
         <p>
           We hope you enjoy our second annual hunt! If you are affiliated with Brown and are
-          interested in joining our team, please <a href="/club">join the club</a> and/or{" "}
+          interested in joining our team, please <Link to="/club">join the club</Link> and/or{" "}
           <a href="mailto:puzzle@brown.edu">email us</a>!
         </p>
       </div>
