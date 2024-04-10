@@ -1,4 +1,4 @@
-import { motion, AnimatePresence, type Variants, useMotionValue, animate } from "framer-motion";
+import { AnimatePresence, animate, motion, useMotionValue, type Variants } from "framer-motion";
 import { forwardRef, useEffect, useRef, useState } from "react";
 import { useGesture } from "react-use-gesture";
 import Typewriter from "typewriter-effect";
@@ -18,11 +18,14 @@ const BluenoirFrame = forwardRef<HTMLDivElement>((_props, ref) => {
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger>
-          <div ref={ref} className="cursor-pointer h-[80px] w-[80px]">
-            <div className="h55px] w-[55px] absolute mx-[12px] my-[12px]">
+          <div ref={ref} className="cursor-pointer h-[100px] w-[100px]">
+            <div className="h-[75px] w-[75px] absolute mx-[12px] my-[12px]">
               <img className="select-none" src={angry} />
             </div>
-            <div onDoubleClick={toggleOpen} className="h-[80px] w-[80px] absolute mx-auto my-auto">
+            <div
+              onDoubleClick={toggleOpen}
+              className="h-[100px] w-[100px] absolute mx-auto my-auto"
+            >
               <img className="select-none" src={frame} />
             </div>
           </div>

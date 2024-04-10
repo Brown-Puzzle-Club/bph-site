@@ -8,10 +8,10 @@ interface BPHState {
   votingModalOpen: boolean;
 }
 
-const TOP_LEFT = { x: 0.03, y: 0.1 } as const;
-const TOP_RIGHT = { x: 0.95, y: 0.1 } as const;
-const BOTTOM_LEFT = { x: 0.03, y: 0.9 } as const;
-const BOTTOM_RIGHT = { x: 0.95, y: 0.9 } as const;
+const TOP_LEFT = { x: 0.04, y: 0.13 } as const;
+const TOP_RIGHT = { x: 0.94, y: 0.15 } as const;
+const BOTTOM_LEFT = { x: 0.04, y: 0.9 } as const;
+const BOTTOM_RIGHT = { x: 0.94, y: 0.9 } as const;
 const CENTER = { x: 0.5, y: 0.5 } as const;
 
 interface Position {
