@@ -1,22 +1,33 @@
+from abc import ABC, abstractmethod
 import asyncio
 import collections
 import json
 import logging
 import requests
+import datetime
 import traceback
 
-from asgiref.sync import async_to_sync
-from channels.generic.websocket import WebsocketConsumer
+from asgiref.sync import async_to_sync, sync_to_async
+from channels.generic.websocket import (
+    WebsocketConsumer,
+    AsyncJsonWebsocketConsumer,
+    JsonWebsocketConsumer,
+)
+from channels_presence.models import Room
+from channels_presence.decorators import touch_presence
+from channels_presence.signals import presence_changed
 from channels.layers import get_channel_layer
 import discord
 
 from django.conf import settings
 from django.contrib import messages
 from django.core.mail.message import EmailMultiAlternatives
+from django.dispatch import receiver
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext as _
+from django.apps import apps
 
 from puzzles.context import Context
 from puzzles.hunt_config import (
@@ -24,8 +35,11 @@ from puzzles.hunt_config import (
     HUNT_ORGANIZERS,
     CONTACT_EMAIL,
     MESSAGING_SENDER_EMAIL,
-    RUNAROUND_SLUG,
 )
+from puzzles.signals import create_minor_case_incoming_event, send_notification
+
+from django_eventstream.channelmanager import DefaultChannelManager
+from django_eventstream import send_event
 
 logger = logging.getLogger("puzzles.messaging")
 
@@ -33,29 +47,30 @@ logger = logging.getLogger("puzzles.messaging")
 # Usernames that the bot will send messages to Discord with when various things
 # happen. It's really not important that these are different. It's just for
 # flavor.
-ALERT_DISCORD_USERNAME = "FIXME PH AlertBot"
-CORRECT_SUBMISSION_DISCORD_USERNAME = "FIXME PH WinBot"
-INCORRECT_SUBMISSION_DISCORD_USERNAME = "FIXME PH FailBot"
-FREE_ANSWER_DISCORD_USERNAME = "FIXME PH HelpBot"
-VICTORY_DISCORD_USERNAME = "FIXME PH CongratBot"
+ALERT_DISCORD_USERNAME = "Excited Bluenoir"
+MAJOR_CASE_SOLVE_DISCORD_USERNAME = "Brilliant Bluenoir"
+MINOR_CASE_SOLVE_DISCORD_USERNAME = "Genius Bluenoir"
+PUZZLE_SOLVE_DISCORD_USERNAME = "Smart Bluenoir"
+INCORRECT_SUBMISSION_DISCORD_USERNAME = "Confused Bluenoir"
 
 # Should be Discord webhook URLs that look like
 # https://discordapp.com/api/webhooks/(numbers)/(letters)
 # From a channel you can create them under Integrations > Webhooks.
 # They can be the same webhook if you don't care about keeping them in separate
 # channels.
-ALERT_WEBHOOK_URL = "FIXME"
-SUBMISSION_WEBHOOK_URL = "FIXME"
-FREE_ANSWER_WEBHOOK_URL = "FIXME"
-VICTORY_WEBHOOK_URL = "FIXME"
+ALERT_WEBHOOK_URL = "https://discord.com/api/webhooks/1226020530100895745/rm94xl2s-B-u9wOWKUDsw8dzxKratjn_YXL8CAJC2HSDzVgK5tXGschTG9FJwZHsRS-o"
+MAJOR_CASE_SOLVE_WEBHOOK_URL = "https://discord.com/api/webhooks/1226023886194212964/ebN1BkREGMfu0qFzYtTLeRLQcZ2bNe3RwTw-qoZkq4wbgXdxFH3O6OfHWc6iPvNoKxED"
+MINOR_CASE_SOLVE_WEBHOOK_URL = "https://discord.com/api/webhooks/1226022628607918181/naBVgpnx2Hj_gR-HK1or0zz4dE1YUdjessu0Ex7fxv01Xz61IsPKygvuREx-0-DdhbT8"
+PUZZLE_SOLVE_WEBHOOK_URL = "https://discord.com/api/webhooks/1226021486532362241/pyAHeoChtNlEGMRMMchsI_a40nJ_5Wqh-z_RR26Fm1aT6MV-mYTq-8-L_MQ-YYITZX9M"
+INCORRECT_SUBMISSION_WEBHOOK_URL = "https://discord.com/api/webhooks/1226021270290829412/8z25UEJXczxyGHAfeiJQIZGeCqIIlIFyUDBzuyBIEJCv1aSh73CI5cqV8K5iM1B-R2FH"
 
-DISCORD_TOGGLE = False  # Set to True to enable Discord integration
+DISCORD_TOGGLE = True if settings.DISCORD_TOKEN else False
 
 
 # Assuming you want messages on a messaging platform that's not Discord but
 # supports at least a vaguely similar API, change the following code
 # accordingly:
-def dispatch_discord_alert(webhook, content, username):
+def dispatch_discord_alert(webhook: str, content: str, username: str):
     content = "[{}] {}".format(timezone.localtime().strftime("%H:%M:%S"), content)
     if len(content) >= 2000:
         content = content[:1996] + "..."
@@ -66,27 +81,27 @@ def dispatch_discord_alert(webhook, content, username):
     requests.post(webhook, data={"username": username, "content": content})
 
 
-def dispatch_general_alert(content):
+def dispatch_general_alert(content: str):
     dispatch_discord_alert(ALERT_WEBHOOK_URL, content, ALERT_DISCORD_USERNAME)
 
 
-def dispatch_submission_alert(content, correct):
-    username = (
-        CORRECT_SUBMISSION_DISCORD_USERNAME
-        if correct
-        else INCORRECT_SUBMISSION_DISCORD_USERNAME
-    )
-    dispatch_discord_alert(SUBMISSION_WEBHOOK_URL, content, username)
+def dispatch_submission_alert(
+    content: str, correct: bool, is_minor_meta: bool, is_major_meta: bool
+):
+    if not correct:
+        username = INCORRECT_SUBMISSION_DISCORD_USERNAME
+        webhook_url = INCORRECT_SUBMISSION_WEBHOOK_URL
+    elif is_minor_meta:
+        username = MINOR_CASE_SOLVE_DISCORD_USERNAME
+        webhook_url = MINOR_CASE_SOLVE_WEBHOOK_URL
+    elif is_major_meta:
+        username = MAJOR_CASE_SOLVE_DISCORD_USERNAME
+        webhook_url = MAJOR_CASE_SOLVE_WEBHOOK_URL
+    else:
+        username = PUZZLE_SOLVE_DISCORD_USERNAME
+        webhook_url = PUZZLE_SOLVE_WEBHOOK_URL
 
-
-def dispatch_free_answer_alert(content):
-    dispatch_discord_alert(
-        FREE_ANSWER_WEBHOOK_URL, content, FREE_ANSWER_DISCORD_USERNAME
-    )
-
-
-def dispatch_victory_alert(content):
-    dispatch_discord_alert(VICTORY_WEBHOOK_URL, content, VICTORY_DISCORD_USERNAME)
+    dispatch_discord_alert(webhook_url, content, username)
 
 
 puzzle_logger = logging.getLogger("puzzles.puzzle")
@@ -146,12 +161,12 @@ def send_mail_wrapper(subject, template, context, recipients):
 
 
 class DiscordInterface:
-    TOKEN = None  # FIXME a long token from Discord
+    TOKEN = settings.DISCORD_TOKEN
 
     # the next two should be big decimal numbers; in Discord, you can right
     # click and Copy ID to get them
-    GUILD = "FIXME"
-    HINT_CHANNEL = "FIXME"
+    GUILD = "1226019500579885118"
+    HINT_CHANNEL = "1226041279994134629"
 
     # You also need to enable the "puzzles Members Intent" under the "Privileged
     # Gateway Intents" section of the "Bot" page of your application from the
@@ -175,7 +190,11 @@ class DiscordInterface:
             self.avatars = {}
             if self.client is not None:
                 members = [
-                    discord.Member(data=data, guild=None, state=self.client._connection)
+                    discord.Member(
+                        data=data,
+                        guild=self.GUILD,  # type: ignore
+                        state=self.client._connection,
+                    )
                     for data in self.client.loop.run_until_complete(
                         self.client.http.get_members(self.GUILD, limit=1000, after=None)
                     )
@@ -216,18 +235,20 @@ class DiscordInterface:
         embed = collections.defaultdict(lambda: collections.defaultdict(dict))
         embed["author"]["url"] = hint.full_url()
         if hint.claimed_datetime:
-            embed["color"] = 0xDDDDDD
+            embed["color"] = 0xDDDDDD  # type: ignore
             embed["timestamp"] = hint.claimed_datetime.isoformat()
-            embed["author"]["name"] = _("Claimed by {}").format(hint.claimer)
+            embed["author"]["name"] = _("Claimed by {}").format(  # type: ignore
+                hint.claimer
+            )
             avatar = self.get_avatar(hint.claimer)
             if avatar:
                 embed["author"]["icon_url"] = avatar
             debug = _("claimed by {}").format(hint.claimer)
         else:
-            embed["color"] = 0xFF00FF
-            embed["author"]["name"] = _("U N C L A I M E D")
+            embed["color"] = 0xFF00FF  # type: ignore
+            embed["author"]["name"] = _("U N C L A I M E D")  # type: ignore
             claim_url = hint.full_url(claim=True)
-            embed["title"] = _("Claim: ") + claim_url
+            embed["title"] = _("Click here to claim!") # type: ignore
             embed["url"] = claim_url
             debug = "unclaimed"
 
@@ -251,7 +272,7 @@ class DiscordInterface:
             try:
                 discord_id = self.client.loop.run_until_complete(
                     self.client.http.send_message(
-                        self.HINT_CHANNEL, message, embeds=[embed]
+                        self.HINT_CHANNEL, message, embeds=[embed]  # type: ignore
                     )
                 )["id"]
             except Exception:
@@ -272,12 +293,12 @@ class DiscordInterface:
 
             embed = collections.defaultdict(lambda: collections.defaultdict(dict))
             if hint.status == hint.ANSWERED:
-                embed["color"] = 0xAAFFAA
+                embed["color"] = 0xAAFFAA  # type: ignore
             elif hint.status == hint.REFUNDED:
-                embed["color"] = 0xCC6600
+                embed["color"] = 0xCC6600  # type: ignore
             # nothing for obsolete
 
-            embed["author"]["name"] = _("{} by {}").format(
+            embed["author"]["name"] = _("{} by {}").format(  # type: ignore
                 hint.get_status_display(), hint.claimer
             )
             embed["author"]["url"] = hint.full_url()
@@ -304,36 +325,38 @@ class DiscordInterface:
 discord_interface = DiscordInterface()
 
 
-# A WebsocketConsumer subclass that can exchange messages with a single
-# browser tab.
-class IndividualWebsocketConsumer(WebsocketConsumer):
-    def connect(self):
-        self.accept()
-
-    def get_context(self):
-        # We don't have a request, but we do have a user...
-        context = Context(None)
-        context.request_user = self.scope["user"]
-        return context
-
-    # Use the following inherited methods:
-    # def receive(self, text_data):
-    # def send(self, text_data):
+@receiver(send_notification)
+def broadcast_notification(sender, notification_type, title, desc, team, **kwargs):
+    print(f"broadcasting notification to {team}")
+    send_event(
+        f"_user-{team}",
+        "message",
+        {
+            "type": notification_type,
+            "title": title,
+            "desc": desc,
+        },
+    )
 
 
 # A WebsocketConsumer subclass that can broadcast messages to a set of users.
-class BroadcastWebsocketConsumer(WebsocketConsumer):
+
+
+class BroadcastWebsocketConsumer(ABC, WebsocketConsumer):
     def connect(self):
         if self.is_ok():
             self.group = self.get_group()
-            async_to_sync(self.channel_layer.group_add)(self.group, self.channel_name)
+            if self.channel_layer is not None:
+                async_to_sync(self.channel_layer.group_add)(
+                    self.group, self.channel_name
+                )
         # If not is_ok, still accept the connection to stop the client from
         # repeatedly retrying. But consider modifying the client to not open a
         # socket at all in this case since it's probably pointless to do so.
         self.accept()
 
     def disconnect(self, close_code):
-        if self.is_ok():
+        if self.is_ok() and self.channel_layer is not None:
             async_to_sync(self.channel_layer.group_discard)(
                 self.group, self.channel_name
             )
@@ -343,6 +366,14 @@ class BroadcastWebsocketConsumer(WebsocketConsumer):
             self.send(text_data=event["data"])
         except Exception:
             pass
+
+    @abstractmethod
+    def is_ok(self):
+        pass
+
+    @abstractmethod
+    def get_group(self):
+        pass
 
 
 class TeamWebsocketConsumer(BroadcastWebsocketConsumer):
@@ -356,16 +387,13 @@ class TeamWebsocketConsumer(BroadcastWebsocketConsumer):
         return "%s-%d" % (self.group_id, self.scope["user"].id)
 
     @classmethod
-    def send_to_team(cls, team, text_data):
-        # TODO: RE-ENABLE UNLOCK NOTIFICATIONS
-        return
-        # async_to_sync(get_channel_layer().group_send)(
-        #     '%s-%d' % (cls.group_id, team.user_id),
-        #     {'type': 'channel.receive_broadcast', 'data': text_data})
-
-
-class TeamNotificationsConsumer(TeamWebsocketConsumer):
-    group_id = "team"
+    def send_to_all(cls, text_data):
+        channel_layer = get_channel_layer()
+        if channel_layer is None:
+            return
+        async_to_sync(channel_layer.group_send)(
+            cls.group_id, {"type": "channel.receive_broadcast", "data": text_data}
+        )
 
 
 class AdminWebsocketConsumer(BroadcastWebsocketConsumer):
@@ -380,62 +408,187 @@ class AdminWebsocketConsumer(BroadcastWebsocketConsumer):
 
     @classmethod
     def send_to_all(cls, text_data):
-        async_to_sync(get_channel_layer().group_send)(
+        channel_layer = get_channel_layer()
+        if channel_layer is None:
+            return
+        async_to_sync(channel_layer.group_send)(
             cls.group_id, {"type": "channel.receive_broadcast", "data": text_data}
         )
+
+
+# class TeamNotificationsConsumer(WebsocketConsumer):
+#     def get_room(self):
+#         return f"notifications-{self.scope['user'].team.id}"
+
+#     def connect(self):
+#         print(f"connected a new user: {self.scope['user']} {self.channel_name=}")
+#         self.accept()
+#         Room.objects.add(self.get_room(), self.channel_name)  # type: ignore
+
+#     def disconnect(self, close_code):
+#         print(
+#             f"disconnected a user: {self.scope['user']} {self.channel_name=} with code {close_code}"
+#         )
+#         Room.objects.remove(self.get_room(), self.channel_name)  # type: ignore
+
+#     def receive(self, text_data):
+#         client_room = Room.objects.get(channel_name=self.get_room())
+#         content = json.loads(text_data)
+
+#         print(f"Notification Received: {content}")
+#         if content == "heartbeat":
+#             return
+
+#     def forward_message(self, event):
+#         self.send(text_data=event["data"])
+
+
+@receiver(create_minor_case_incoming_event)
+def broadcast_minor_case_incoming_event(sender, id, cases, team, max_choices, **kwargs):
+    print(f"broadcasting minor case incoming event to {team}")
+    room = Room.objects.get(channel_name=f"puzzles-{team}")
+
+    channel = get_channel_layer()
+    if channel is not None:
+        message = {
+            "type": "vote",
+            "data": {
+                "id": id,
+                "cases": cases,
+                "expiration_time": None,
+                "max_choices": max_choices,
+            },
+        }
+
+        channel_layer_message = {"type": "forward.message", "data": json.dumps(message)}
+
+        async_to_sync(channel.group_send)(room.channel_name, channel_layer_message)
+
+
+class VotingConsumer(WebsocketConsumer):
+    def get_room(self):
+        return f"{self.scope['path'].split('/')[-1]}-{self.scope['user'].team.id}"
+
+    def connect(self):
+        print(f"connected a new user: {self.scope['user']} {self.channel_name=}")
+        self.accept()
+        Room.objects.add(self.get_room(), self.channel_name)  # type: ignore
+
+    def disconnect(self, close_code):
+        print(
+            f"disconnected a user: {self.scope['user']} {self.channel_name=} with code {close_code}"
+        )
+        Room.objects.remove(self.get_room(), self.channel_name)  # type: ignore
+
+    def send_to_all(self, client_room, response):
+        channel = get_channel_layer()
+        if channel is not None:
+            response = {"type": "forward.message", "data": json.dumps(response)}
+            async_to_sync(channel.group_send)(client_room.channel_name, response)
+
+    def receive(self, text_data):
+        client_room = Room.objects.get(channel_name=self.get_room())
+        content = json.loads(text_data)
+
+        if content == "heartbeat":
+            return
+
+        print(f"Voting Received: {content}")
+
+        if content["type"] == "vote":
+            data = content["data"]
+            MinorCaseIncomingEvent = apps.get_model("puzzles", "MinorCaseIncomingEvent")
+            incoming_event = MinorCaseIncomingEvent.get_current_incoming_event(  # type: ignore
+                self.scope.get("user")
+            )
+            if not incoming_event:
+                return
+
+            incoming_event.vote(data["oldVote"], data["newVote"])
+            response = {
+                "type": "vote",
+                "data": {"id": incoming_event.id, **incoming_event.get_votes()},
+            }
+            self.send_to_all(client_room, response)
+
+        elif content["type"] == "finalizeVote":
+            MinorCaseIncomingEvent = apps.get_model("puzzles", "MinorCaseIncomingEvent")
+            incoming_event = MinorCaseIncomingEvent.get_current_incoming_event(  # type: ignore
+                self.scope.get("user")
+            )
+            if incoming_event:
+                response = {
+                    "type": "finalizeVote",
+                    "data": {"chosenCase": incoming_event.finalize_vote()},
+                }
+                self.send_to_all(client_room, response)
+
+    def forward_message(self, event):
+        self.send(text_data=event["data"])
 
 
 class HintsConsumer(AdminWebsocketConsumer):
     group_id = "hints"
 
 
-def show_unlock_notification(context, unlock):
-    data = json.dumps(
-        {
-            "title": str(unlock.puzzle),
-            "text": _("You’ve unlocked a new puzzle!"),
-            "link": reverse("puzzle", args=(unlock.puzzle.slug,)),
-        }
-    )
-    # There's an awkward edge case where the person/browser tab that actually
-    # triggered the notif is navigating between pages, so they don't have a
-    # websocket to send to... use messages.info to put it into the next page.
-    messages.info(context.request, data)
-    TeamNotificationsConsumer.send_to_team(unlock.team, data)
+# def show_unlock_notification(context, unlock):
+#     data = json.dumps(
+#         {
+#             "title": str(unlock.puzzle),
+#             "text": _("You’ve unlocked a new puzzle!"),
+#             "link": reverse("puzzle", args=(unlock.puzzle.slug,)),
+#         }
+#     )
+#     # There's an awkward edge case where the person/browser tab that actually
+#     # triggered the notif is navigating between pages, so they don't have a
+#     # websocket to send to... use messages.info to put it into the next page.
+#     messages.info(context.request, data)
+#     TeamNotificationsConsumer.send_to_all(data)  # type: ignore
 
 
-def show_solve_notification(submission):
-    if not submission.puzzle.is_meta or submission.puzzle.slug == RUNAROUND_SLUG:
-        return
-    data = json.dumps(
-        {
-            "title": str(submission.puzzle),
-            "text": _("You’ve solved a meta!"),
-            "link": reverse("puzzle", args=(submission.puzzle.slug,)),
-        }
-    )
-    # No need to worry here since whoever triggered this is already getting a
-    # [ANSWER is correct!] notification.
-    TeamNotificationsConsumer.send_to_team(submission.team, data)
+# def show_solve_notification(submission):
+#     if not submission.puzzle.is_meta:  # or submission.puzzle.slug == RUNAROUND_SLUG:
+#         return
+#     data = json.dumps(
+#         {
+#             "title": str(submission.puzzle),
+#             "text": _("You’ve solved a meta!"),
+#             "link": reverse("puzzle", args=(submission.puzzle.slug,)),
+#         }
+#     )
+#     # No need to worry here since whoever triggered this is already getting a
+#     # [ANSWER is correct!] notification.
+#     TeamNotificationsConsumer.send_to_all(data)  # type: ignore
 
 
-def show_victory_notification(context):
-    data = json.dumps(
-        {
-            "title": "Congratulations!",
-            "text": _("You’ve finished the %s!") % HUNT_TITLE,
-            "link": reverse("victory"),
-        }
-    )
-    TeamNotificationsConsumer.send_to_team(context.team, data)
+# def show_victory_notification(context):
+#     data = json.dumps(
+#         {
+#             "title": "Congratulations!",
+#             "text": _("You’ve finished the %s!") % HUNT_TITLE,
+#             "link": reverse("victory"),
+#         }
+#     )
+#     TeamNotificationsConsumer.send_to_all(data)  # type: ignore
 
 
-def show_hint_notification(hint):
-    data = json.dumps(
-        {
-            "title": str(hint.puzzle),
-            "text": _("Hint answered!"),
-            "link": reverse("hints", args=(hint.puzzle.slug,)),
-        }
-    )
-    TeamNotificationsConsumer.send_to_team(hint.team, data)
+# def show_hint_notification(hint):
+#     data = json.dumps(
+#         {
+#             "title": str(hint.puzzle),
+#             "text": _("Hint answered!"),
+#             "link": reverse("hints", args=(hint.puzzle.slug,)),
+#         }
+#     )
+#     TeamNotificationsConsumer.send_to_all(data)  # type: ignore
+
+
+# DJANGO EVENTSTREAM BELOW:
+
+
+class AuthChannelManager(DefaultChannelManager):
+    def can_read_channel(self, user, channel):
+        # print(channel, user.id)
+        if channel.startswith("_") and (user is None or channel[6:] != str(user.id)):
+            return False
+        return True

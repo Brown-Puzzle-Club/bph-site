@@ -1,14 +1,8 @@
-import pfpDaisycula from "../../../assets/major_cases/social-deduction/pfp-daisycula.png";
-import pfpGorgon from "../../../assets/major_cases/social-deduction/pfp-gorgon.png";
-import pfpGreenribbon from "../../../assets/major_cases/social-deduction/pfp-greenribbon.png";
-import pfpInvisiguy from "../../../assets/major_cases/social-deduction/pfp-invisiguy.png";
-import pfpWolfguy from "../../../assets/major_cases/social-deduction/pfp-wolfguy.png";
+import type { DjangoContext } from "@/utils/django_types";
 
-import deadProfile from "../../../assets/major_cases/social-deduction/dead.png";
-
-import { DjangoContext } from "@/utils/django_types";
 import assasinProfile from "../../../assets/major_cases/social-deduction/assassin.png";
 import bodyguardProfile from "../../../assets/major_cases/social-deduction/bodyguard.png";
+import deadProfile from "../../../assets/major_cases/social-deduction/dead.png";
 import doctorProfile from "../../../assets/major_cases/social-deduction/doctor.png";
 import enchanterProfile from "../../../assets/major_cases/social-deduction/enchanter.png";
 import foolProfile from "../../../assets/major_cases/social-deduction/fool.png";
@@ -16,6 +10,11 @@ import gossipProfile from "../../../assets/major_cases/social-deduction/gossip.p
 import headhunterProfile from "../../../assets/major_cases/social-deduction/headhunter.png";
 import investigatorProfile from "../../../assets/major_cases/social-deduction/investigator.png";
 import loverProfile from "../../../assets/major_cases/social-deduction/lover.png";
+import pfpDaisycula from "../../../assets/major_cases/social-deduction/pfp-daisycula.png";
+import pfpGorgon from "../../../assets/major_cases/social-deduction/pfp-gorgon.png";
+import pfpGreenribbon from "../../../assets/major_cases/social-deduction/pfp-greenribbon.png";
+import pfpInvisiguy from "../../../assets/major_cases/social-deduction/pfp-invisiguy.png";
+import pfpWolfguy from "../../../assets/major_cases/social-deduction/pfp-wolfguy.png";
 import resurrectedProfile from "../../../assets/major_cases/social-deduction/resurrected.png";
 import silencerProfile from "../../../assets/major_cases/social-deduction/silencer.png";
 import telepathProfile from "../../../assets/major_cases/social-deduction/telepath.png";
@@ -32,17 +31,17 @@ function titleCase(s: string): string {
 // TODO: update with actual puzzle slugs
 // puzzle slugs are techincally safe for anyone to see, but we should still keep them secret
 const NUM_TO_SLUG: { [key: number]: string } = {
-  0: "sd-mc-1",
-  1: "sd-mc-2",
-  2: "sd-mc-3",
-  3: "sd-mc-4",
-  4: "sd-mc-5",
+  0: "nomenclept",
+  1: "twiqh",
+  2: "god-of-the-labyrinth",
+  3: "nyt",
+  4: "exile",
 };
 
 export function fetchMinorCaseCharacterName(context: DjangoContext | undefined, n: number): string {
   return titleCase(
     context?.team_context?.minor_case_solves?.["social-deduction"]?.[NUM_TO_SLUG[n]]
-      ?.submitted_answer ?? MISS_TEXT
+      ?.submitted_answer ?? MISS_TEXT,
   );
 }
 
@@ -78,7 +77,7 @@ export enum InternalCharacter {
 }
 
 export const CHAR_NAME = (
-  context: DjangoContext | undefined
+  context: DjangoContext | undefined,
 ): { [key in InternalCharacter]: string } => ({
   NONE: "",
   INVISIGUY: "Ghoulsby",

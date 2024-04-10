@@ -1,11 +1,12 @@
-import TeamIcon from "@/components/team/TeamIcon";
-import { useAuth } from "@/hooks/useAuth";
-import { useAllTeams } from "@/hooks/useDjangoContext";
-import { Team, UserTeam } from "@/utils/django_types";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { HashLink as Link } from "react-router-hash-link";
 import { BeatLoader } from "react-spinners";
+
+import TeamIcon from "@/components/team/TeamIcon";
+import { useAuth } from "@/hooks/useAuth";
+import { useAllTeams } from "@/hooks/useDjangoContext";
+import type { Team, UserTeam } from "@/utils/django_types";
 
 enum LeaderboardTab {
   IN_PERSON = "In Person",

@@ -1,46 +1,54 @@
-import { ErrorResponse, isRouteErrorResponse, useRouteError } from "react-router-dom";
+import type { ErrorResponse } from "react-router-dom";
+import { isRouteErrorResponse, useRouteError } from "react-router-dom";
 
-export const Error404 = ({ statusText }: { statusText: string }) => {
+const DefaultError = ({ error }: { error: ErrorResponse }) => {
   return (
-    <div className="min-h-[90%] flex items-center justify-center">
+    <div className="h-[90vh] flex items-center justify-center">
       <div className="text-center text-muted-foreground text-5xl">
         <h1 className="text-[10rem] pb-20">🔎 ?</h1>
         <h2>
-          <b>404:</b> {statusText}
+          <b>{error.status}:</b> {error.statusText}
         </h2>
       </div>
     </div>
   );
 };
 
-const DefaultError = ({ statusText }: { statusText: string }) => {
-  return (
-    <div>
-      <h1>Something went wrong</h1>
-      <p>{statusText}</p>
-    </div>
-  );
-};
-
 const UnknownError = () => {
   return (
-    <div>
-      <h1>An unknown error has occurred</h1>
+    <div className="h-[90vh] flex items-center justify-center">
+      <div className="text-center text-muted-foreground text-5xl">
+        <h1 className="text-[10rem] pb-20">🔎 ?</h1>
+        <h2>
+          <b>Unknown Error</b>
+        </h2>
+      </div>
     </div>
   );
 };
 
-export default function ErrorPage() {
+export default function ErrorPage({ custom_error }: { custom_error?: ErrorResponse }) {
+  // RouteError comes from react router. It labels error pages as 404 etc.
   const error = useRouteError();
-  if (!isRouteErrorResponse(error)) {
-    return <UnknownError />;
+  if (!custom_error) {
+    if (!isRouteErrorResponse(error)) {
+      return <UnknownError />;
+    }
+    const error_response = error as ErrorResponse;
+    return <DefaultError error={error_response} />;
   }
-  const errorResponse = error as ErrorResponse;
 
-  switch (errorResponse.status) {
-    case 404:
-      return <Error404 statusText={errorResponse.statusText} />;
-    default:
-      return <DefaultError statusText={errorResponse.statusText} />;
-  }
+  return <DefaultError error={custom_error} />;
 }
+
+export const Error404 = () => {
+  return (
+    <DefaultError
+      error={{
+        status: 404,
+        statusText: "Not Found",
+        data: {},
+      }}
+    />
+  );
+};

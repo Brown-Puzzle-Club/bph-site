@@ -17,7 +17,7 @@ from puzzles.hunt_config import (
     HUNT_END_TIME,
     HUNT_CLOSE_TIME,
     HUNT_SOLUTION_TIME,
-    META_SLUGS,
+    MAJOR_CASE_SLUGS,
 )
 from puzzles import models
 from puzzles.shortcuts import get_shortcuts
@@ -136,11 +136,11 @@ class BaseContext:
     def hunt_is_closed(self):
         return self.now >= self.close_time
 
-    def hunt_solutions_open(self):  # TODO: change this to be if the solution
+    def hunt_solutions_open(self):
         return self.now >= self.solution_time
 
     def num_metas(self):
-        return len(META_SLUGS)
+        return len(MAJOR_CASE_SLUGS)
 
 
 # Also include the constants from hunt_config.
@@ -169,7 +169,8 @@ class Context:
         self.request = request
 
     def request_user(self):
-        return self.request.user
+        user = self.request.user
+        return user
 
     def is_admin(self):
         # print("checking if admin:", self.request_user.is_staff)
@@ -177,6 +178,9 @@ class Context:
 
     def is_superuser(self):
         return self.request_user.is_superuser
+
+    def is_prerelease_testsolver(self):
+        return self.team.is_prerelease_testsolver if self.team else False
 
     def team(self):
         return getattr(self.request_user, "team", None)
@@ -191,7 +195,26 @@ class Context:
         return self.team.num_free_answers_remaining if self.team else 0
 
     def unlocks(self):
-        return models.Team.compute_unlocks(self)
+        return self.team.unlocks_by_case if self.team else {}
+
+    def case_unlocks(self):
+        if not self.team:
+            return {}
+        case_unlocks = self.team.case_unlocks
+        models.Team.compute_unlocks(case_unlocks, self)
+        return case_unlocks
+
+    def major_case_unlocks(self):
+        if not self.team:
+            return {}
+
+        return self.team.major_case_unlocks
+
+    def major_case_puzzles(self):
+        if not self.team:
+            return {}
+
+        return self.team.major_case_puzzles
 
     #
     # def completed_hunt(self):
@@ -230,7 +253,7 @@ class Context:
         return self.time_since_unlock.total_seconds() // 3600
 
     def in_person(self):
-        return self.team.in_person
+        return self.team and self.team.in_person
 
     def test(self, n):
         return n * 3
@@ -256,6 +279,8 @@ class Context:
         return False
 
     # BPH 2024 context
+    def solves(self):
+        return self.team.solves if self.team else {}
 
     def solves_by_case(self):
         return self.team.solves_by_case if self.team else {}
@@ -263,11 +288,14 @@ class Context:
     def minor_case_solves(self):
         return self.team.minor_case_solves if self.team else {}
 
-    def minor_case_incoming(self):
-        return self.team.db_minor_case_incoming if self.team else {}
+    def current_incoming_event(self):
+        return models.MinorCaseIncomingEvent.get_current_incoming_event(self)
 
     def minor_case_active(self):
         return self.team.db_minor_case_active if self.team else {}
+
+    def minor_case_completed(self):
+        return self.team.db_minor_case_completed if self.team else {}
 
     # The purpose of this logic is to keep archive links current. For example,
     # https://2019.galacticpuzzlehunt.com/archive is a page that exists but only

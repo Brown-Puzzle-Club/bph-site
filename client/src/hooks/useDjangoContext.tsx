@@ -1,6 +1,7 @@
-import { DjangoContext, Team, TeamMember } from "@/utils/django_types";
-import axios from "axios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
+
+import type { Puzzle, DjangoContext, Team, TeamMember } from "@/utils/django_types";
 
 const getMyTeamMembers = async () => {
   const response = await axios.get<TeamMember[]>("/api/team-members");
@@ -20,6 +21,10 @@ const getSpecificTeam = async (teamId: string) => {
 };
 const getSpecificTeamMembers = async (teamId: string) => {
   const response = await axios.get<TeamMember[]>(`/api/teams/${teamId}/members`);
+  return response.data;
+};
+const getPuzzle = async (puzzleSlug: string) => {
+  const response = await axios.get<Puzzle>(`/api/puzzle/${puzzleSlug}`);
   return response.data;
 };
 
@@ -55,6 +60,13 @@ export const useSpecificTeamMembers = (teamId: string) => {
   return useQuery({
     queryKey: ["team-members", teamId],
     queryFn: () => getSpecificTeamMembers(teamId),
+  });
+};
+
+export const usePuzzle = (puzzleSlug: string) => {
+  return useQuery({
+    queryKey: ["puzzle", puzzleSlug],
+    queryFn: () => getPuzzle(puzzleSlug),
   });
 };
 

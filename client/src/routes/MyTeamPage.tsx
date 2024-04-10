@@ -1,3 +1,12 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { FaEye } from "react-icons/fa";
+import { HashLink as Link } from "react-router-hash-link";
+import { BeatLoader } from "react-spinners";
+import validator from "validator";
+import { z } from "zod";
+
 import TeamIcon from "@/components/team/TeamIcon";
 import { Button } from "@/components/ui/button";
 import {
@@ -27,22 +36,13 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { useAuth } from "@/hooks/useAuth";
+import { useMutateTeam, useMyTeamMembers } from "@/hooks/useDjangoContext";
 import {
   MEMBER_COUNT_MAX,
   MEMBER_COUNT_MIN,
   MURDER_WEAPON_EMOJIS,
   PFP_COLOR_CHOICES,
 } from "@/utils/constants";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { FaEye } from "react-icons/fa";
-import validator from "validator";
-import { z } from "zod";
-
-import { useMutateTeam, useMyTeamMembers } from "@/hooks/useDjangoContext";
-import { BeatLoader } from "react-spinners";
-import { HashLink as Link } from "react-router-hash-link";
 
 const editTeamFormSchema = z
   .object({
@@ -83,7 +83,7 @@ const editTeamFormSchema = z
       return true;
     },
     {
-      message: "Required for in person teams that don't need a room reserved.",
+      message: "Required for in person teams that don&apos;t need a room reserved.",
       path: ["where_to_find"],
     },
   );
@@ -95,7 +95,7 @@ export default function MyTeamPage() {
   const [colorChoice, setColorChoice] = useState("#1e293ba1");
 
   const { team } = useAuth();
-  const mutateTeam = useMutateTeam(); 
+  const mutateTeam = useMutateTeam();
   const { data: members, isLoading: membersLoading, isError: membersError } = useMyTeamMembers();
 
   const [draftMembers, setDraftMembers] = useState(members ?? []);
@@ -155,7 +155,7 @@ export default function MyTeamPage() {
   }, [form, team, members, valuesSet]);
 
   return (
-    <div className="register-page min-h-[87vh]">
+    <div className="register-page">
       <div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 text-white dark">
@@ -209,9 +209,9 @@ export default function MyTeamPage() {
                                     </SelectTrigger>
                                   </FormControl>
                                   <SelectContent className="dark">
-                                    {MURDER_WEAPON_EMOJIS.map((emoji) => {
+                                    {MURDER_WEAPON_EMOJIS.map((emoji, idx) => {
                                       return (
-                                        <SelectItem value={emoji} className="text-xl">
+                                        <SelectItem key={idx} value={emoji} className="text-xl">
                                           {emoji}
                                         </SelectItem>
                                       );
@@ -244,9 +244,9 @@ export default function MyTeamPage() {
                                     </SelectTrigger>
                                   </FormControl>
                                   <SelectContent className="dark">
-                                    {PFP_COLOR_CHOICES.map((color) => {
+                                    {PFP_COLOR_CHOICES.map((color, idx) => {
                                       return (
-                                        <SelectItem value={color} className="text-xl">
+                                        <SelectItem key={idx} value={color} className="text-xl">
                                           <div
                                             className="w-10 h-10 border-2 border-slate-800 rounded"
                                             style={{ backgroundColor: color }}
@@ -402,7 +402,7 @@ export default function MyTeamPage() {
                   </div>
                   <div className="members pt-6 flex flex-wrap justify-center items-center">
                     {draftMembers.map((member, index) => (
-                      <span id={index.toString()} className="nowrap">
+                      <span key={index} id={index.toString()} className="nowrap">
                         {member.name}
                         {index < memberCount - 1 ? ", " : ""}
                       </span>
@@ -423,7 +423,7 @@ export default function MyTeamPage() {
                         <div className="space-y-0.5">
                           <FormLabel>In Person Participation</FormLabel>
                           <FormDescription>
-                            Are you planning on participating in the hunt on Brown University's
+                            Are you planning on participating in the hunt on Brown University&apos;s
                             campus?
                           </FormDescription>
                         </div>
@@ -502,7 +502,8 @@ export default function MyTeamPage() {
                                   render={({ field }) => (
                                     <FormItem>
                                       <FormLabel>
-                                        Where can we best find you while you're solving puzzles?
+                                        Where can we best find you while you&apos;re solving
+                                        puzzles?
                                       </FormLabel>
                                       <FormControl>
                                         <Input type="text" {...field} />

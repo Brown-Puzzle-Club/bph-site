@@ -26,6 +26,8 @@ os.makedirs(LOGS_DIR, exist_ok=True)
 
 SECRET_KEY = os.environ.get("SECRET_KEY", "FIXME_SECRET_KEY_HERE")
 
+DISCORD_TOKEN = os.environ.get("DISCORD_TOKEN", None)
+
 RECAPTCHA_SITEKEY = None
 RECAPTCHA_SECRETKEY = None
 
@@ -48,6 +50,8 @@ INSTALLED_APPS = [
     "mathfilters",
     "puzzles",
     "channels",
+    "django_eventstream",
+    "bph.apps.CustomRoomsConfig",
     "rest_framework",
     "rest_framework.authtoken",
 ]
@@ -67,26 +71,30 @@ MIDDLEWARE = [
     "puzzles.context.context_middleware",
 ]
 
-redis_url = os.environ.get("REDISCLOUD_URL")
+# redis_url = os.environ.get("REDISCLOUD_URL")
 
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels_redis.core.RedisChannelLayer",
+#         "CONFIG": {
+#             "hosts": [{"address": redis_url}],
+#         },
+#     }
+# }
+
+# FROM DEV:
 CACHES = {
     "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": redis_url,
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        },
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+    }
+}
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
     }
 }
 
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [{"address": redis_url}],
-        },
-    }
-}
+EVENTSTREAM_CHANNELMANAGER_CLASS = "puzzles.messaging.AuthChannelManager"
 
 SESSION_ENGINE = "django.contrib.sessions.backends.db"
 SESSION_CACHE_ALIAS = "default"
@@ -145,9 +153,9 @@ AUTH_PASSWORD_VALIDATORS = []
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
 
-LANGUAGE_CODE = "en-us"  # FIXME
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "America/New_York"  # FIXME
+TIME_ZONE = "America/New_York"
 
 USE_I18N = True
 
@@ -198,7 +206,7 @@ LOGGING = {
     "disable_existing_loggers": False,
     "formatters": {
         "django": {
-            "format": "%(asctime)s (PID %(process)d) [%(levelname)s] %(module)s\n%(message)s"
+            "format": "%(asctime)s (PID %(process)d) [%(levelname)s] %(module)s %(message)s"
         },
         "puzzles": {
             "format": "%(asctime)s (PID %(process)d) [%(levelname)s] %(name)s %(message)s"
@@ -231,25 +239,34 @@ LOGGING = {
             "stream": sys.stdout,
             "formatter": "puzzles",
         },
+        "file": {
+            "level": "INFO",
+            "class": "logging.handlers.TimedRotatingFileHandler",
+            "filename": os.path.join(LOGS_DIR, "django.log"),
+            "when": "H",
+            "interval": 3,
+            "backupCount": 36,
+            "formatter": "django",
+        },
     },
     "loggers": {
         "django": {
-            "handlers": ["django"],
+            "handlers": ["django", "file"],
             "level": "INFO",
             "propagate": True,
         },
         "puzzles": {
-            "handlers": ["general"],
+            "handlers": ["general", "file"],
             "level": "INFO",
             "propagate": True,
         },
         "puzzles.puzzle": {
-            "handlers": ["puzzle"],
+            "handlers": ["puzzle", "file"],
             "level": "INFO",
             "propagate": False,
         },
         "puzzles.request": {
-            "handlers": ["request"],
+            "handlers": ["request", "file"],
             "level": "INFO",
             "propagate": False,
         },

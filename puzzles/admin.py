@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import reverse
 from django import forms
-
+from channels_presence.models import Room, Presence
 from puzzles.models import (
     MajorCase,
     Round,
@@ -10,31 +10,42 @@ from puzzles.models import (
     TeamMember,
     PuzzleUnlock,
     MinorCaseActive,
-    MinorCaseIncoming,
+    MinorCaseIncomingEvent,
+    MinorCaseVote,
+    MinorCaseVoteEvent,
+    MinorCaseCompleted,
     AnswerSubmission,
     ExtraGuessGrant,
     PuzzleMessage,
     Erratum,
     Survey,
     Hint,
+    VoiceRecording,
 )
 
 
 class MajorCaseAdmin(admin.ModelAdmin):
-    def view_on_site(self, obj):
-        return reverse("major_case", args=(obj.slug,))
 
     ordering = ("order",)
     list_display = ("name", "slug", "order")
 
 
 class RoundAdmin(admin.ModelAdmin):
-    def view_on_site(self, obj):
-        return reverse("round", args=(obj.slug,))
+
+    ordering = ("order",)
 
     ordering = ("order",)
 
     list_display = ("name", "slug", "major_case", "meta_answer", "order")
+
+
+class RoomAdmin(admin.ModelAdmin):
+    list_display = ("channel_name",)
+
+
+class PresenceAdmin(admin.ModelAdmin):
+    list_display = ("room", "channel_name", "user", "last_seen")
+    list_filter = ("room", "user")
 
 
 class PuzzleMessageInline(admin.TabularInline):
@@ -42,8 +53,6 @@ class PuzzleMessageInline(admin.TabularInline):
 
 
 class PuzzleAdmin(admin.ModelAdmin):
-    def view_on_site(self, obj):
-        return reverse("puzzle", args=(obj.slug,))
 
     inlines = [PuzzleMessageInline]
     ordering = ("round__order", "order")
@@ -74,9 +83,6 @@ class TeamMemberInline(admin.TabularInline):
 class TeamAdmin(admin.ModelAdmin):
     inlines = [TeamMemberInline]
 
-    def view_on_site(self, obj):
-        return reverse("team", args=(obj.team_name,))
-
     # You can't sort by this column but meh.
     def is_prerelease_testsolver_short(self, obj):
         return obj.is_prerelease_testsolver
@@ -90,6 +96,9 @@ class TeamAdmin(admin.ModelAdmin):
         "creation_time",
         "is_prerelease_testsolver_short",
         "is_hidden",
+        "in_person",
+        "brown_team",
+        "classroom_need",
     )
     list_filter = ("is_prerelease_testsolver", "is_hidden")
     search_fields = ("team_name",)
@@ -100,13 +109,33 @@ class PuzzleUnlockAdmin(admin.ModelAdmin):
     list_filter = ("puzzle", "puzzle__round", "team")
 
 
-class MinorCaseIncomingAdmin(admin.ModelAdmin):
-    list_display = ("team", "minor_case_round", "incoming_datetime")
-    list_filter = ("minor_case_round", "minor_case_round__major_case", "team")
+class MinorCaseIncomingEventAdmin(admin.ModelAdmin):
+    list_display = ("team", "timestamp", "expiration", "final_vote")
+    list_filter = ("team", "timestamp", "expiration", "final_vote")
+
+
+class MinorCaseVoteAdmin(admin.ModelAdmin):
+    list_display = ("team", "minor_case", "num_votes")
+    list_filter = ("minor_case", "team")
+
+
+class MinorCaseVoteEventAdmin(admin.ModelAdmin):
+    list_display = ("team", "timestamp")
+    list_filter = ("team", "timestamp")
 
 
 class MinorCaseActiveAdmin(admin.ModelAdmin):
     list_display = ("team", "minor_case_round", "active_datetime")
+    list_filter = ("minor_case_round", "minor_case_round__major_case", "team")
+
+
+class MinorCaseCompletedAdmin(admin.ModelAdmin):
+    list_display = ("team", "minor_case_round", "completed_datetime")
+    list_filter = ("minor_case_round", "minor_case_round__major_case", "team")
+
+
+class MinorCaseCompletedAdmin(admin.ModelAdmin):
+    list_display = ("team", "minor_case_round", "completed_datetime")
     list_filter = ("minor_case_round", "minor_case_round__major_case", "team")
 
 
@@ -141,8 +170,6 @@ class SurveyAdmin(admin.ModelAdmin):
 
 
 class HintAdmin(admin.ModelAdmin):
-    def view_on_site(self, obj):
-        return reverse("hint", args=(obj.id,))
 
     list_display = (
         "team",
@@ -158,16 +185,29 @@ class HintAdmin(admin.ModelAdmin):
     search_fields = ("hint_question", "response")
 
 
+class VoiceRecordingAdmin(admin.ModelAdmin):
+    list_display = ("transcript", "hour", "characters")
+    list_filter = ("hour",)
+    search_fields = ("transcript", "characters")
+
+
 admin.site.register(MajorCase, MajorCaseAdmin)
 admin.site.register(Round, RoundAdmin)
 admin.site.register(Puzzle, PuzzleAdmin)
 admin.site.register(Team, TeamAdmin)
 admin.site.register(TeamMember, TeamMemberAdmin)
 admin.site.register(PuzzleUnlock, PuzzleUnlockAdmin)
-admin.site.register(MinorCaseIncoming, MinorCaseIncomingAdmin)
+
+admin.site.register(MinorCaseIncomingEvent, MinorCaseIncomingEventAdmin)
+admin.site.register(MinorCaseVoteEvent, MinorCaseVoteEventAdmin)
 admin.site.register(MinorCaseActive, MinorCaseActiveAdmin)
+admin.site.register(MinorCaseCompleted, MinorCaseCompletedAdmin)
+
 admin.site.register(AnswerSubmission, AnswerSubmissionAdmin)
 admin.site.register(ExtraGuessGrant, ExtraGuessGrantAdmin)
 admin.site.register(Erratum, ErratumAdmin)
 admin.site.register(Survey, SurveyAdmin)
 admin.site.register(Hint, HintAdmin)
+admin.site.register(Room, RoomAdmin)
+admin.site.register(Presence, PresenceAdmin)
+admin.site.register(VoiceRecording, VoiceRecordingAdmin)

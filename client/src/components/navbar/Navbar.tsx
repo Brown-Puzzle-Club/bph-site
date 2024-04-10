@@ -1,5 +1,9 @@
 import * as React from "react";
+import { useState } from "react";
+import Countdown from "react-countdown";
+import { BeatLoader } from "react-spinners";
 
+import bluenoir_logo from "@/assets/navbar_logo_head.png";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -9,17 +13,16 @@ import {
   NavigationMenuRight,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
-import { cn } from "@/lib/utils";
-import LoginNavbar from "./LoginNavbar";
-
 import { useAuth } from "@/hooks/useAuth";
 import { useDjangoContext } from "@/hooks/useDjangoContext";
-import Countdown from "react-countdown";
-import { BeatLoader } from "react-spinners";
+import { useTheme } from "@/hooks/useTheme";
+import { DEFAULT_THEME } from "@/utils/themes";
+import { cn } from "@/utils/utils";
+
+import LoginNavbar from "./LoginNavbar";
 import TeamNavbar from "./TeamNavbar";
 
-import bluenoir_logo from "@/assets/navbar_logo_head.png";
-import { useState } from "react";
+
 import { HashLink as Link, HashLinkProps as LinkProps } from "react-router-hash-link";
 
 const components: { title: string; to: string; description: string }[] = [
@@ -88,6 +91,8 @@ const IconItem = React.forwardRef<React.ElementRef<typeof Link>, Omit<LinkProps,
     );
   },
 );
+
+IconItem.displayName = "IconItem";
 
 const hunt_start_timer = ({
   days,
@@ -163,11 +168,11 @@ const NavbarLeft = () => {
                     >
                       <div className="mb-2 mt-4 text-xl font-bold">The Hunt</div>
                       <p className="text-sm leading-tight text-muted-foreground">
-                        {context?.hunt_context.hunt_has_started ? (
+                        {context?.hunt_context?.hunt_has_started ? (
                           "The hunt has started! Good luck!"
                         ) : (
                           <Countdown
-                            date={context?.hunt_context.start_time}
+                            date={context?.hunt_context?.start_time}
                             renderer={hunt_start_timer}
                           />
                         )}
@@ -221,12 +226,14 @@ const NavbarRight = () => {
   );
 };
 
-export default function Navbar({ navbarColor }: { navbarColor: string }) {
+export default function Navbar() {
+  const { theme } = useTheme();
+
   return (
     <div
       className={`navbar dark sticky top-0 z-40 w-full backdrop-blur-sm flex transition-colors duration-500 lg:z-50 lg:border-b lg:border-slate-900/10 dark:border-slate-50/[0.06] supports-backdrop-blur:bg-white/60 dark:bg-transparent`}
       style={{
-        backgroundColor: navbarColor,
+        backgroundColor: theme.navbar_color ? theme.navbar_color : DEFAULT_THEME.navbar_color,
       }}
     >
       <NavbarLeft />

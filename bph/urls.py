@@ -19,6 +19,8 @@ from urllib.parse import quote_plus, unquote_plus
 from django.urls import path, re_path, include, register_converter
 from django.contrib import admin
 
+from puzzles import views
+
 
 class QuotedStringConverter:
     regex = "[^/]+"
@@ -35,5 +37,10 @@ register_converter(QuotedStringConverter, "quotedstr")
 urlpatterns = [
     re_path(r"^admin/", admin.site.urls),
     path("api/", include("puzzles.api.urls")),
+    # Hints
+    path("hints", views.hint_list, name="hint-list"),
+    path("hint/<int:id>", views.hint, name="hint"),
+    # impersonate doesn't work cross origin :(
+    # re_path(r"^impersonate/", include("impersonate.urls")),
     # all other paths go to React client router
 ]

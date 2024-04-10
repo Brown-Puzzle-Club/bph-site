@@ -1,8 +1,9 @@
-import { registerFormSchema } from "@/routes/Register";
-import { User, UserTeam } from "@/utils/django_types";
-import axios from "axios";
-import { z } from "zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import type { z } from "zod";
+
+import type { registerFormSchema } from "@/routes/Register";
+import type { User, UserTeam } from "@/utils/django_types";
 
 const getMyTeam = async () => {
   const response = await axios.get<UserTeam[]>("/api/my-team");
@@ -35,11 +36,18 @@ export const useAuth = () => {
   const login = useMutation({
     mutationKey: ["login"],
     mutationFn: postLogin,
-    onSuccess: () => team.refetch(),
+    onSuccess: () => {
+      team.refetch();
+      user.refetch();
+    },
   });
   const logout = useMutation({
     mutationKey: ["logout"],
     mutationFn: postLogout,
+    onSuccess: () => {
+      team.refetch();
+      user.refetch();
+    },
   });
   const register = useMutation({
     mutationKey: ["register"],

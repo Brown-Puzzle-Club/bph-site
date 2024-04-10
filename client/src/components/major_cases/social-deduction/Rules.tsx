@@ -1,4 +1,5 @@
 import { GiBatwingEmblem } from "react-icons/gi";
+
 import {
   EVIL_TEXT_COLOR,
   GOOD_TEXT_COLOR,
@@ -10,23 +11,21 @@ import CharacterRoleTooltip from "./CharacterRoleTooltip";
 export default function Rules() {
   return (
     <div className="rules content px-20 pb-10">
-      <div className="flavor-card bg-[#bcb193] rounded-sm m-6 border-2 border-[#00000054] text-slate-950 flex flex-col items-center">
-        <GiBatwingEmblem className="mt-4" />
-        <p className="p-5 text-center font-serif">
+      <div className="flavor-card bg-[#ded5c0] rounded-sm m-6 border-2 border-[#00000054] text-slate-950 flex flex-col items-center px-20">
+        <GiBatwingEmblem className="mt-5 text-3xl" />
+        <p className="p-5 text-center">
           You are cordially invited to witness the game of a lifetime (or the end of many).
           <br />
-          Hotel Ghoulsby is hosting the 10th annual Assassin's Tournament whereby 10 lucky players
-          will take on their chosen roles in a game of intrigue, lies, and horribly difficult
-          deductions. It's the last night of the game and you must determine which guest is
-          masquerading as which role in order to help the village win.
           <br />
-          Be there or be scared.
-          <br />
+          Hotel Ghoulsby is hosting their 10th annual Assassin&apos;s Tournament, whereby 10 lucky
+          players will take on their chosen roles in a game of intrigue, lies, and horribly
+          difficult deductions. But this year the tournament has turned out more lethal than
+          they&apos;ve intended.
           <br />
           <br />
-          B.Y.O.M.
-          <br />
-          (Bring your own moonshine)
+          It&apos;s the last night of the game, and you must determine which guest is masquerading
+          as which role in order to help the village win. Once you&apos;ve done that, you&apos;ll
+          need to work out: <b>who&apos;s been turning the game into a bloodbath?</b>
         </p>
       </div>
       <div className="text-break h-1 w-50 bg-[#80808024] mx-auto mb-5 mt-5 rounded-md"></div>
@@ -37,11 +36,11 @@ export default function Rules() {
           phase.
         </li>
         <li>
-          Night Phase 1 is a set-up round. Each player will be assigned a role in secret and no
-          roles will be duplicated, though some roles will remain unused. During night 1, every
-          player except the <CharacterRoleTooltip char_role={Role.ASSASSIN} scale={false} /> will be
-          able to perform their role-designated action if they have one. No one will be killed by
-          the <CharacterRoleTooltip char_role={Role.ASSASSIN} scale={false} /> on the first night.
+          Night Phase 1 is a set-up round. Each player will be assigned a role in secret, with no
+          duplicate roles, though some roles will remain unused. During night 1, every player except
+          the <CharacterRoleTooltip char_role={Role.ASSASSIN} scale={false} /> will be able to
+          perform their role-designated action if they have one. No one will be killed by the{" "}
+          <CharacterRoleTooltip char_role={Role.ASSASSIN} scale={false} /> on the first night.
         </li>
         <li>
           Every role belongs to one of three designations:{" "}
@@ -51,7 +50,7 @@ export default function Rules() {
           <b style={{ color: GOOD_TEXT_COLOR }}>Village</b> players are trying to work together to
           identify the <CharacterRoleTooltip char_role={Role.ASSASSIN} scale={false} /> and exile
           them by voting. The <b style={{ color: EVIL_TEXT_COLOR }}>Evil</b> players are trying to
-          kill all the <b style={{ color: GOOD_TEXT_COLOR }}>Village</b> and{" "}
+          kill all <b style={{ color: GOOD_TEXT_COLOR }}>Village</b> and{" "}
           <b style={{ color: SOLO_TEXT_COLOR }}>Solo</b> players. Any{" "}
           <b style={{ color: SOLO_TEXT_COLOR }}>Solo</b> player is on their own team (
           <b style={{ color: SOLO_TEXT_COLOR }}>Solo</b> players do not work together) and has a
@@ -63,7 +62,7 @@ export default function Rules() {
         </li>
         <li>
           During the night phase, if a player has a nighttime ability, they will perform that action
-          in the following order
+          in the following order:
           <ul className="list-[circle] list-outside ps-10 space-y-1">
             <li>
               <CharacterRoleTooltip char_role={Role.SILENCER} scale={false} />,{" "}
@@ -88,7 +87,7 @@ export default function Rules() {
           </ul>
         </li>
         <li>All players must use their action if they are able to.</li>
-        <li>All players on the evil team will know each other and what roles they are.</li>
+        <li>All players on the evil team will know each other and what roles they have.</li>
         <li>
           During the day phase, all characters can talk to each other. After discussion, any player
           can accuse any other player of being evil. All accused players will have a chance to
@@ -100,12 +99,13 @@ export default function Rules() {
         <li>
           After votes are tallied and anyone voted out has been exiled, a new night phase begins.
         </li>
-        <li>Once a player has been killed/exiled they can no longer talk or vote.</li>
+        <li>Once a player has been killed/exiled, they can no longer talk or vote.</li>
         <li>
           The <b style={{ color: GOOD_TEXT_COLOR }}>Village</b> team wins once the{" "}
           <CharacterRoleTooltip char_role={Role.ASSASSIN} scale={false} /> has been exiled by the{" "}
-          <b style={{ color: GOOD_TEXT_COLOR }}>Village</b>. It does not matter if other{" "}
-          <b style={{ color: EVIL_TEXT_COLOR }}>Evil</b> players are still alive.
+          <b style={{ color: GOOD_TEXT_COLOR }}>Village</b> or killed for any other reason. It does
+          not matter if other <b style={{ color: EVIL_TEXT_COLOR }}>Evil</b> players are still
+          alive.
         </li>
         <li>
           The <b style={{ color: EVIL_TEXT_COLOR }}>Evil</b> team wins when the{" "}

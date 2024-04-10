@@ -1,15 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+
+import { useDjangoContext } from "@/hooks/useDjangoContext";
+import { useTheme } from "@/hooks/useTheme";
+import { CHAR_NAME, numberOfCasesSolves } from "@/utils/major_cases/social-deduction/constants";
+import { BROWN_THEME } from "@/utils/themes";
+
 import Characters from "../../components/major_cases/social-deduction/Characters";
 import Chronology from "../../components/major_cases/social-deduction/Chronology";
 import Roles from "../../components/major_cases/social-deduction/Roles";
 import Rules from "../../components/major_cases/social-deduction/Rules";
 import TopbarSelector from "../../components/major_cases/social-deduction/TopbarSelector";
 import Verdict from "../../components/major_cases/social-deduction/Verdict";
-
-import { useDjangoContext } from "@/hooks/useDjangoContext";
-import { CHAR_NAME, numberOfCasesSolves } from "@/utils/major_cases/social-deduction/constants";
 
 export enum SelectedPanel {
   RULES,
@@ -19,6 +22,13 @@ export enum SelectedPanel {
 }
 
 export default function SocialDeduction() {
+  const { setTheme } = useTheme();
+
+  useEffect(() => {
+    console.log("setting the theme");
+    setTheme(BROWN_THEME);
+  });
+
   const [panel, setPanel] = useState<SelectedPanel>(SelectedPanel.RULES);
   const { data: context } = useDjangoContext();
 

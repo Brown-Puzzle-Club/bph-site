@@ -1,3 +1,10 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import validator from "validator";
+import { z } from "zod";
+
 import TeamIcon from "@/components/team/TeamIcon";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,11 +32,6 @@ import {
   MURDER_WEAPON_EMOJIS,
   PFP_COLOR_CHOICES,
 } from "@/utils/constants";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import validator from "validator";
-import { z } from "zod";
 
 export const registerFormSchema = z
   .object({
@@ -51,7 +53,7 @@ export const registerFormSchema = z
         email: z.string().email({
           message: "Invalid email address.",
         }),
-      })
+      }),
     ),
     in_person: z.boolean(),
     num_brown_members: z.number().optional(),
@@ -68,10 +70,11 @@ export const registerFormSchema = z
     {
       message: "Passwords do not match.",
       path: ["retype_password"],
-    }
+    },
   )
   .refine(
     (data) => {
+      console.log("refining phone number:", data.phone_number);
       if (data.in_person) {
         return (
           (data.phone_number ?? "") !== "" &&
@@ -83,19 +86,21 @@ export const registerFormSchema = z
     {
       message: "Valid US phone number required.",
       path: ["phone_number"],
-    }
+    },
   )
   .refine(
     (data) => {
+      console.log("refining where to find:", data);
       if (data.in_person && data.classroom_need === false) {
-        return data.where_to_find !== "";
+        console.log(data.where_to_find !== "");
+        return data.where_to_find && data.where_to_find !== "";
       }
       return true;
     },
     {
-      message: "Required for in person teams that don't need a room reserved.",
+      message: "Required for in person teams that don&apos;t need a room reserved.",
       path: ["where_to_find"],
-    }
+    },
   );
 
 export default function RegisterForm() {
@@ -106,7 +111,6 @@ export default function RegisterForm() {
   const [colorChoice, setColorChoice] = useState("#1e293ba1");
 
   const { register, team } = useAuth();
-  // console.log(team)
 
   const form = useForm<z.infer<typeof registerFormSchema>>({
     resolver: zodResolver(registerFormSchema),
@@ -126,7 +130,7 @@ export default function RegisterForm() {
     setSubmitting(true);
     await register.mutateAsync(values).catch((error) => {
       console.error(error);
-      alert("Team username and/or team name already taken. Please choose a different one.");
+      toast.error(error.response.data.message, { duration: 5000 });
     });
     setSubmitting(false);
   };
@@ -195,7 +199,9 @@ export default function RegisterForm() {
                     <FormControl>
                       <Input type="password" placeholder="Enter team password" {...field} />
                     </FormControl>
-                    <FormDescription>You'll probably share this with your team.</FormDescription>
+                    <FormDescription>
+                      You&apos;ll probably share this with your team.
+                    </FormDescription>
                     <FormMessage className="text-right" />
                   </FormItem>
                 )}
@@ -219,7 +225,8 @@ export default function RegisterForm() {
               <h1 className="text-center font-bold text-xl">Team Members</h1>
               <h4 className="text-center text-slate-400 text-sm">
                 <b>We recommend teams to be around 7 to 10 people</b>. The maximum team size is 12
-                people, but there's no minimum team size — you can still have fun with a team of 2!
+                people, but there&apos;s no minimum team size — you can still have fun with a team
+                of 2!
               </h4>
               <h4 className="text-center text-slate-400 text-sm">
                 <b>Team membership is modifiable at any time before the hunt</b>
@@ -297,7 +304,8 @@ export default function RegisterForm() {
               </h4>
               <h4 className="text-center text-slate-400 text-sm">
                 <b>
-                  Your teams' in-person / remote status is modifiable at any time before the hunt.
+                  Your teams&apos; in-person / remote status is modifiable at any time before the
+                  hunt.
                 </b>
               </h4>
               <FormField
@@ -310,7 +318,7 @@ export default function RegisterForm() {
                         <div className="space-y-0.5">
                           <FormLabel>In Person Participation</FormLabel>
                           <FormDescription>
-                            Are you planning on participating in the hunt on Brown University's
+                            Are you planning on participating in the hunt on Brown University&apos;s
                             campus?
                           </FormDescription>
                         </div>
@@ -389,7 +397,8 @@ export default function RegisterForm() {
                                   render={({ field }) => (
                                     <FormItem>
                                       <FormLabel>
-                                        Where can we best find you while you're solving puzzles?
+                                        Where can we best find you while you&apos;re solving
+                                        puzzles?
                                       </FormLabel>
                                       <FormControl>
                                         <Input type="text" {...field} />
@@ -441,9 +450,9 @@ export default function RegisterForm() {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent className="dark">
-                            {MURDER_WEAPON_EMOJIS.map((emoji) => {
+                            {MURDER_WEAPON_EMOJIS.map((emoji, idx) => {
                               return (
-                                <SelectItem value={emoji} className="text-xl">
+                                <SelectItem key={idx} value={emoji} className="text-xl">
                                   {emoji}
                                 </SelectItem>
                               );
@@ -476,9 +485,9 @@ export default function RegisterForm() {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent className="dark">
-                            {PFP_COLOR_CHOICES.map((color) => {
+                            {PFP_COLOR_CHOICES.map((color, idx) => {
                               return (
-                                <SelectItem value={color} className="text-xl">
+                                <SelectItem key={idx} value={color} className="text-xl">
                                   {/* square div with color as the background color */}
                                   <div
                                     className="w-10 h-10 border-2 border-slate-800 rounded"

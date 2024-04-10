@@ -33,6 +33,7 @@ const UserTeamSchema = z.object({
   user: z.number(),
   emoji_choice: z.string(),
   color_choice: z.string(),
+  auth_token: z.string(),
 });
 type UserTeam = z.infer<typeof UserTeamSchema>;
 
@@ -61,15 +62,57 @@ const AnswerSubmissionSchema = z.object({
 });
 type AnswerSubmission = z.infer<typeof AnswerSubmissionSchema>;
 
-const RoundSchema = z.object({
+const MajorCaseSchema = z.object({
+  id: z.number(),
   name: z.string(),
   order: z.number(),
-  major_case: z.string().nullable(),
+  slug: z.string(),
+  puzzle: z.object({
+    // TODO: don't know how to type this yet. import cycle with other schemas, so shallow typing quick solution.
+    name: z.string(),
+    slug: z.string(),
+    submissions: z.array(AnswerSubmissionSchema),
+  }),
+  submissions: z.array(AnswerSubmissionSchema),
+});
+type MajorCase = z.infer<typeof MajorCaseSchema>;
+
+export const RoundSchema = z.object({
+  id: z.number(),
+  slug: z.string(),
+  name: z.string(),
+  order: z.number(),
+  major_case: MajorCaseSchema,
   description: z.string(),
   unlock_global_minor: z.number(),
   unlock_local_major: z.number(),
 });
 type Round = z.infer<typeof RoundSchema>;
+
+const PuzzleSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  slug: z.string(),
+  order: z.number(),
+  is_meta: z.boolean(),
+  is_major_meta: z.boolean(),
+  round: RoundSchema,
+  body: z.string(),
+  body_remote: z.string(),
+  solution: z.string(),
+  clipboard: z.string(),
+  clipboard_remote: z.string(),
+  submissions: z.array(AnswerSubmissionSchema),
+});
+type Puzzle = z.infer<typeof PuzzleSchema>;
+
+const PuzzleMessageSchema = z.object({
+  id: z.number(),
+  guess: z.string(),
+  response: z.string(),
+  puzzle: PuzzleSchema,
+});
+type PuzzleMessage = z.infer<typeof PuzzleMessageSchema>;
 
 const MinorCaseIncomingSchema = z.object({
   id: z.number(),
@@ -78,6 +121,12 @@ const MinorCaseIncomingSchema = z.object({
 });
 type MinorCaseIncoming = z.infer<typeof MinorCaseIncomingSchema>;
 
+const MinorCaseVote = z.object({
+  id: z.number(),
+  minor_case: RoundSchema,
+  num_votes: z.number(),
+});
+
 const MinorCaseActiveSchema = z.object({
   id: z.number(),
   active_datetime: z.date(),
@@ -85,16 +134,42 @@ const MinorCaseActiveSchema = z.object({
 });
 type MinorCaseActive = z.infer<typeof MinorCaseActiveSchema>;
 
+const MinorCaseCompletedSchema = z.object({
+  id: z.number(),
+  completed_datetime: z.date(),
+  minor_case_round: RoundSchema,
+});
+type MinorCaseCompleted = z.infer<typeof MinorCaseCompletedSchema>;
+
+const MinorCaseIncomingEventSchema = z.object({
+  id: z.number(),
+  team: TeamSchema,
+  timestamp: z.date(),
+  incoming_cases: z.array(RoundSchema),
+  votes: z.array(MinorCaseVote),
+  is_initialized: z.boolean(),
+  total_user_votes: z.number(),
+});
+type MinorCaseIncomingEvent = z.infer<typeof MinorCaseIncomingEventSchema>;
+
 const TeamPuzzleContextSchema = z.object({
   is_admin: z.boolean(),
   is_superuser: z.boolean(),
+  is_prerelease_testsolver: z.boolean(),
+  in_person: z.boolean(),
   num_hints_remaining: z.number(),
   num_free_answers_remaining: z.number(),
-  solves_by_case: z.record(z.record(z.record(AnswerSubmissionSchema))),
   minor_case_solves: z.record(z.record(AnswerSubmissionSchema)),
   minor_case_incoming: z.array(MinorCaseIncomingSchema),
   minor_case_active: z.array(MinorCaseActiveSchema),
-  unlocks: z.record(z.date()),
+  minor_case_completed: z.array(MinorCaseCompletedSchema),
+  solves: z.record(AnswerSubmissionSchema),
+  solves_by_case: z.record(z.record(z.record(AnswerSubmissionSchema))), // major_case -> case_id -> puzzle_id -> answer submission
+  unlocks: z.record(z.record(z.record(PuzzleSchema))), // major_case_id -> case_id -> puzzle_id -> puzzle
+  case_unlocks: z.record(RoundSchema),
+  major_case_unlocks: z.record(MajorCaseSchema),
+  major_case_puzzles: z.record(PuzzleSchema),
+  current_incoming_event: MinorCaseIncomingEventSchema,
 });
 
 const HuntContextSchema = z.object({
@@ -116,14 +191,38 @@ const ContextSchema = z.object({
 });
 type DjangoContext = z.infer<typeof ContextSchema>;
 
+const MinorCaseSchema = z.object({
+  name: z.string(),
+  description: z.string(),
+  slug: z.string(),
+  major_case: MajorCaseSchema,
+  //
+});
+type MinorCase = z.infer<typeof MinorCaseSchema>;
+
+const VotingInfoSchema = z.object({
+  id: z.number(),
+  cases: z.record(z.object({ round: RoundSchema, count: z.number().nonnegative() })),
+  expiration_time: z.string().nullable(),
+  max_choices: z.number().nonnegative(),
+});
+interface VotingInfo extends z.infer<typeof VotingInfoSchema> {}
+
 export type {
   AnswerSubmission,
   DjangoContext,
+  MajorCase,
+  MinorCase,
   MinorCaseActive,
+  MinorCaseCompleted,
   MinorCaseIncoming,
+  MinorCaseIncomingEvent,
+  Puzzle,
+  PuzzleMessage,
   Round,
   Team,
   TeamMember,
   User,
   UserTeam,
+  VotingInfo,
 };

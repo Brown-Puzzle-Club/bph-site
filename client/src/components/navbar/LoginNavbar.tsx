@@ -1,7 +1,9 @@
-import { useAuth } from "@/hooks/useAuth";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BeatLoader } from "react-spinners";
+
+import { useAuth } from "@/hooks/useAuth";
+
 import { Button } from "../ui/button";
 import {
   NavigationMenuContent,

@@ -47,7 +47,7 @@ export default function Roles() {
         <TextBreak />
         <li>
           <RoleDisplay role={Role.DOCTOR} /> The noble doctor has devoted their work to saving
-          other's lives, but now their own is at stake. This obligation to the Hippocratic oath
+          other&apos;s lives, but now their own is at stake. This obligation to the Hippocratic oath
           means their work must continue even during a well-needed vacation at Hotel Ghoulsby and
           they can <i>choose one player to protect each night of the game</i>. If that player is
           attacked, neither the doctor nor the player are injured. However, the Doctor may not
@@ -71,7 +71,7 @@ export default function Roles() {
             <b style={{ color: GOOD_TEXT_COLOR }}>Village</b>
           </i>
           , but do not win if they are killed by the <b style={{ color: EVIL_TEXT_COLOR }}>Evil</b>{" "}
-          team because, coincidentally, they'll never escape if they're dead.
+          team because, coincidentally, they&apos;ll never escape if they&apos;re dead.
         </li>
         <TextBreak />
         <li>
@@ -79,8 +79,9 @@ export default function Roles() {
           that plague the halls of Hotel Ghoulsby. As a member of the villager team,{" "}
           <i>
             they have the ability to learn that a certain role is played by one of two players at
-            the beginning of the game.
+            the beginning of the game
           </i>
+          . They do not get to pick which role they learn about.
         </li>
         <TextBreak />
         <li>
@@ -94,7 +95,7 @@ export default function Roles() {
         <li>
           <RoleDisplay role={Role.INVESTIGATOR} /> Ever the observer, the Investigator was brought
           into the game to help the villagers crack the case… or die trying.{" "}
-          <i>Each night, they learn whether any two players are on the same team</i> (ie{" "}
+          <i>Each night, they learn whether any two players are on the same team</i> (i.e.{" "}
           <b style={{ color: GOOD_TEXT_COLOR }}>Village</b>,{" "}
           <b style={{ color: EVIL_TEXT_COLOR }}>Evil</b>, or{" "}
           <b style={{ color: SOLO_TEXT_COLOR }}>Solo</b>). They do not learn which team the players
@@ -105,8 +106,8 @@ export default function Roles() {
         <TextBreak />
         <li>
           <RoleDisplay role={Role.LOVER} /> An all-around loving person with more to share. As a
-          member of the villager team the Lover visits one player each night. Unfortunately, they're
-          not always the best at choosing their company.{" "}
+          member of the villager team the Lover visits one player each night. Unfortunately,
+          they&apos;re not always the best at choosing their company.{" "}
           <i>
             If the player they visit is evil OR if that player is killed by the Assassin on that
             night, the Lover will die.
@@ -121,13 +122,14 @@ export default function Roles() {
           </span>
           <br></br> An indecisive villager with a serial killer gene. The Resurrected{" "}
           <i>
-            acts as a villager until they are killed by the Assassin, at which point they join the
-            evil team.
+            acts and reads as a member of the <b style={{ color: GOOD_TEXT_COLOR }}>Village</b>{" "}
+            team, until they are killed by the Assassin, at which point they join the{" "}
+            <b style={{ color: EVIL_TEXT_COLOR }}>Evil</b> team.
           </i>
         </li>
         <TextBreak />
         <li>
-          <RoleDisplay role={Role.SILENCER} /> It's always the quiet ones.{" "}
+          <RoleDisplay role={Role.SILENCER} /> It&apos;s always the quiet ones.{" "}
           <i>
             The Silencer can choose one player each night who will not be able to use their
             night-time action on that night.
@@ -137,7 +139,7 @@ export default function Roles() {
         <TextBreak />
         <li>
           <RoleDisplay role={Role.TELEPATH} /> Not as hot as Edward Cullen, but just as talented at
-          reading minds. The Telepath <i>can view the aura of one player each night</i> (ie{" "}
+          reading minds. The Telepath <i>can view the aura of one player each night</i> (i.e.{" "}
           <b style={{ color: GOOD_TEXT_COLOR }}>Village</b>,{" "}
           <b style={{ color: EVIL_TEXT_COLOR }}>Evil</b>,{" "}
           <b style={{ color: SOLO_TEXT_COLOR }}>Solo</b>). Watch out for the Enchanter, as this may
@@ -150,8 +152,8 @@ export default function Roles() {
         </li>
         <TextBreak />
         <li>
-          <RoleDisplay role={Role.ZEALOT} /> It's nice to be a bigshot in a small town. The Zealot
-          is more influential than their fellow villagers. When voting,{" "}
+          <RoleDisplay role={Role.ZEALOT} /> It&apos;s nice to be a bigshot in a small town. The
+          Zealot is more influential than their fellow villagers. When voting,{" "}
           <i>their vote carries twice the weight.</i>{" "}
         </li>
       </ul>

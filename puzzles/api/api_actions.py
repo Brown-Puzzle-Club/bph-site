@@ -1,5 +1,9 @@
+from datetime import datetime
 from django.contrib.auth import authenticate, login, logout
+from django.db import IntegrityError
+from puzzles import models
 
+from puzzles.api.api_guards import require_admin, require_auth
 from puzzles.api.form_serializers import (
     TeamUpdateSerializer,
     UserRegistrationSerializer,
@@ -8,8 +12,13 @@ from puzzles.api.form_serializers import (
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.decorators import api_view
+from rest_framework.authtoken.models import Token
+
+from puzzles.signals import send_notification
 
 from .serializers import *
+
+from django.db import DataError
 
 
 @api_view(["POST"])
@@ -17,6 +26,7 @@ def login_action(request: Request) -> Response:
     username = request.data.get("username")
     password = request.data.get("password")
     user = authenticate(request, username=username, password=password)
+    Token.objects.get_or_create(user=user)
 
     if user is not None:
         login(request._request, user)
@@ -39,40 +49,67 @@ def register_action(request):
 
     if serializer.is_valid():
 
-        user = User.objects.create_user(
-            serializer.validated_data.get("team_id"),
-            password=serializer.validated_data.get("password"),
-            first_name=serializer.validated_data.get("team_name"),
-        )
-
-        team = Team.objects.create(
-            user=user,
-            team_name=serializer.validated_data.get("team_name"),
-            in_person=serializer.validated_data.get("in_person", False),
-            brown_team=(
-                serializer.validated_data.get("num_brown_members") is not None
-                and serializer.validated_data.get("num_brown_members") > 0
-            ),
-            num_brown_members=serializer.validated_data.get("num_brown_members", 0),
-            classroom_need=serializer.validated_data.get("classroom_need", False),
-            where_to_find=serializer.validated_data.get("where_to_find", ""),
-            phone_number=serializer.validated_data.get("phone_number", ""),
-            color_choice=serializer.validated_data.get("color_choice", ""),
-            emoji_choice=serializer.validated_data.get("emoji_choice", ""),
-        )
-
-        for team_member in serializer.validated_data.get("members"):
-            TeamMember.objects.create(
-                team=team,
-                name=team_member.get("name"),
-                email=team_member.get("email"),
+        try:
+            user = User.objects.create_user(
+                serializer.validated_data.get("team_id"),
+                password=serializer.validated_data.get("password"),
+                first_name=serializer.validated_data.get("team_name"),
             )
 
-        # Log in the newly registered user
-        login(request._request, user)
+            team = Team.objects.create(
+                user=user,
+                team_name=serializer.validated_data.get("team_name"),
+                in_person=serializer.validated_data.get("in_person", False),
+                brown_team=(
+                    serializer.validated_data.get("num_brown_members") is not None
+                    and serializer.validated_data.get("num_brown_members") > 0
+                ),
+                num_brown_members=serializer.validated_data.get("num_brown_members", 0),
+                classroom_need=serializer.validated_data.get("classroom_need", False),
+                where_to_find=serializer.validated_data.get("where_to_find", ""),
+                phone_number=serializer.validated_data.get("phone_number", ""),
+                color_choice=serializer.validated_data.get("color_choice", ""),
+                emoji_choice=serializer.validated_data.get("emoji_choice", ""),
+            )
 
-        # Return the serialized user data
-        return Response(TeamSerializer(team).data)
+            for team_member in serializer.validated_data.get("members"):
+                TeamMember.objects.create(
+                    team=team,
+                    name=team_member.get("name"),
+                    email=team_member.get("email"),
+                )
+
+            # Log in the newly registered user
+            login(request._request, user)
+
+            # Return the serialized user data
+            return Response(TeamSerializer(team).data)
+        # duplicate key
+        except IntegrityError as e:
+            return Response(
+                {"error": "Username and/or team name have already been taken."},
+                status=400,
+            )
+        except DataError as e:
+            # print type of exception
+            print(type(e))
+            return Response(
+                {
+                    "error": "Your input is either too long or too short. Please make sure all required fields are filled, and of reasonable size.",
+                    "error_dump": str(e),
+                },
+                status=400,
+            )
+        # input too long, etc.
+        except Exception as e:
+            # print type of exception
+            return Response(
+                {
+                    "error": "An unknown error has occured. Please make sure all required fields are filled, and of reasonable size.",
+                    "error_dump": str(e),
+                },
+                status=400,
+            )
     else:
         # Return errors if registration fails
         return Response(serializer.errors, status=400)
@@ -119,3 +156,212 @@ def update_team(request: Request) -> Response:
         return Response(serializer.data)
     else:
         return Response(serializer.errors, status=400)
+
+
+@api_view(["POST"])
+def move_minor_case(request: Request, round_id):
+    "move minor case state"
+    # print("attempted to move minor case")
+    try:
+        # print("team", request._request.context.team)
+        # print("round_id", round_id)
+        incoming_case = MinorCaseActive.objects.get(
+            team=request._request.context.team, minor_case_round__id=round_id
+        )
+        # print(incoming_case)
+        # for case in incoming_case:
+        #     print(case.minor_case_round.id)
+    except MinorCaseActive.DoesNotExist:
+        return Response({"error": "MinorCaseIncoming not found"}, status=404)
+
+    try:
+        active_case = models.MinorCaseCompleted.objects.create(
+            team=incoming_case.team,
+            minor_case_round=incoming_case.minor_case_round,
+            completed_datetime=incoming_case.active_datetime,
+        )
+        active_case.save()
+    except:
+        # Extract the error message from the exception
+        return Response({"error": "MinorCase already completed"}, status=400)
+
+    return Response({"success": "Move operation successful"}, status=200)
+
+
+@require_admin
+@api_view(["POST"])
+def create_vote_event(request: Request) -> Response:
+    serializer = VoteEventSerializer(data=request.data)
+    team = request._request.context.team
+
+    if serializer.is_valid():
+        vote_event = MinorCaseVoteEvent.objects.create(
+            timestamp=datetime.now(),
+            team=team,
+            selected_case=serializer.validated_data.get("selected_case"),
+            incoming_event=serializer.validated_data.get("incoming_event"),
+        )
+        vote_event.save()
+
+        return Response(serializer.data)
+    else:
+        return Response(serializer.errors, status=400)
+
+
+def handle_answer(
+    answer: str | None, request_context, django_context, puzzle_slug: str
+) -> Response:
+    print(
+        f"submitting for puzzle: {puzzle_slug} with answer: {answer} for team: {django_context.team}"
+    )
+
+    puzzle = django_context.team.unlocks.get(puzzle_slug)
+    if not puzzle:
+        if django_context.is_admin:
+            puzzle = Puzzle.objects.get(slug=puzzle_slug)
+        else:
+            return Response({"error": "Puzzle not unlocked"}, status=403)
+
+    guesses_left = request_context.team.guesses_remaining(puzzle)
+    if guesses_left <= 0:
+        return Response({"error": "No guesses remaining"}, status=400)
+
+    sanitized_answer = "".join(
+        [char for char in puzzle.answer if char.isalpha()]
+    ).upper()
+    semicleaned_guess = PuzzleMessage.semiclean_guess(answer)
+    puzzle_messages = [
+        message
+        for message in puzzle.puzzlemessage_set.all()
+        if semicleaned_guess == message.semicleaned_guess
+    ]
+
+    correct = Puzzle.normalize_answer(answer) == sanitized_answer
+
+    if correct:
+        answer = puzzle.answer  # for consistent styling on the UI
+
+    try:
+        submission = AnswerSubmission.objects.create(
+            team=django_context.team,
+            puzzle=puzzle,
+            submitted_answer=answer,
+            is_correct=correct,
+            used_free_answer=False,
+        )
+        submission.save()
+    except Exception as e:
+        if not puzzle_messages:
+            return Response(
+                {"error": "Answer submission failed", "error_body": str(e)},
+                status=500,
+            )
+
+    # if this submission solves the minor case:
+    if correct:
+        print(f"Correct answer! ({sanitized_answer})")
+        send_notification.send(
+            None,
+            notification_type="solve",
+            team=django_context.team.user.id,
+            title="Congratulations! Case Solved!",
+            desc=f"Team {django_context.team} has solved a case! {puzzle.name}!",
+        )
+
+        if not request_context.hunt_is_over:
+            django_context.team.last_solve_time = request_context.now
+            django_context.team.save()
+
+        if puzzle.is_meta:
+            print("Solved the minor case!")
+            minor_case = puzzle.round
+            completed = MinorCaseCompleted.objects.create(
+                team=django_context.team,
+                minor_case_round=minor_case,
+                completed_datetime=request_context.now,
+            )
+            completed.save()
+        elif puzzle.is_major_meta:
+            print("Solved the major case!")
+            # TODO: major case completion
+
+    return Response(
+        {
+            "status": "correct" if correct else "incorrect",
+            "guesses_left": guesses_left,
+            "messages": PuzzleMessageSerializer(puzzle_messages, many=True).data,
+        },
+        status=200,
+    )
+
+
+@api_view(["POST"])
+def submit_answer(request: Request, puzzle_slug: str) -> Response:
+    try:
+        django_context = request._request.context
+        request_context = request.context
+        # answer is a query parameter:
+        answer = request.query_params.get("answer")
+        return handle_answer(answer, request_context, django_context, puzzle_slug)
+
+    except Puzzle.DoesNotExist:
+        return Response({"error": "Puzzle not found"}, status=404)
+
+
+TESTSOLVE_TEAM = "shhh2"
+
+
+@api_view(["POST"])
+def unlock_case(request: Request, round_slug: str) -> Response:
+    try:
+        context = request._request.context
+
+        case = Round.objects.get(slug=round_slug)
+        team = Team.objects.get(team_name=TESTSOLVE_TEAM)
+
+        Team.unlock_case(team, case, context.now)
+
+        return Response({"status": "success"})
+    except Exception as e:
+        print(e)
+        return Response({"error": "Could not unlock"}, status=404)
+
+
+@api_view(["POST"])
+@require_auth
+def post_hint(request: Request, puzzle_slug: str) -> Response:
+    try:
+        context = request._request.context
+        puzzle = context.team.unlocks.get(puzzle_slug)
+
+        if puzzle is None:
+            if context.is_admin:
+                puzzle = Puzzle.objects.get(slug=puzzle_slug)
+            else:
+                raise Puzzle.DoesNotExist
+
+        # Ensure request.data is not empty and contains all required fields
+        required_fields = ["question", "followup"]
+        if not isinstance(request.data, dict) or not all(
+            field in request.data for field in required_fields
+        ):
+            raise KeyError
+
+        hints_count = Hint.objects.filter(puzzle=puzzle).count()
+
+        hint = Hint.objects.create(
+            puzzle=puzzle,
+            team=context.team,
+            is_followup=(request.data["followup"] and hints_count > 0),
+            hint_question=request.data["question"],
+        )
+
+        serializer = HintSerializer(hint)
+
+        return Response(serializer.data)
+    except Puzzle.DoesNotExist:
+        return Response({"error": "Puzzle not found"}, status=404)
+    except KeyError:
+        return Response(
+            {"error": f"Missing required fields {required_fields}"}, status=400
+        )

@@ -1,11 +1,13 @@
+import { FaCog } from "react-icons/fa";
+import { useParams } from "react-router-dom";
+import { HashLink as Link } from "react-router-hash-link";
+import { BeatLoader } from "react-spinners";
+
 import TeamIcon from "@/components/team/TeamIcon";
 import { useAuth } from "@/hooks/useAuth";
-import { FaCog } from "react-icons/fa";
-import { HashLink as Link } from "react-router-hash-link";
-import { useParams } from 'react-router-dom';
-import { BeatLoader } from "react-spinners";
 import { useSpecificTeam, useSpecificTeamMembers } from "@/hooks/useDjangoContext";
-import { Error404 } from "./ErrorPage";
+
+import ErrorPage from "./ErrorPage";
 
 export default function TeamPage() {
   const { teamId } = useParams();
@@ -17,7 +19,7 @@ export default function TeamPage() {
   const { data: thisTeamMembers } = useSpecificTeamMembers(teamId ?? "");
 
   if (isError) {
-    return <Error404 statusText={"Team not found"} />;
+    return <ErrorPage custom_error={{ status: 404, statusText: "Team not found", data: null }} />;
   }
 
   return (

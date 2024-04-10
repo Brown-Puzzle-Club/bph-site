@@ -2,7 +2,7 @@ import { HashLink as Link } from "react-router-hash-link";
 
 export default function Credits() {
   return (
-    <div className="credits bg-slate-900 text-white h-[90vh] overscroll-contain overflow-hidden overflow-y-auto ">
+    <div className="credits bg-slate-900 text-white overscroll-contain overflow-hidden overflow-y-auto ">
       <div className="credits-top text-center p-5">
         <p>
           Brown Puzzlehunt is put together by <Link to="/club">Brown Puzzle Club</Link>.
@@ -13,22 +13,22 @@ export default function Credits() {
           <h4 className="text-5xl font-bold pb-5">Leadership</h4>
           <ul>
             <li>
-              <b>General Director:</b> <strong>Nishka Pant</strong> ('24)
+              <b>General Director:</b> <strong>Nishka Pant</strong> (&apos;24)
             </li>
             <li>
-              <b>Puzzle Construction Director:</b> <strong>Thomas Gordon</strong> ('26)
+              <b>Puzzle Construction Director:</b> <strong>Thomas Gordon</strong> (&apos;26)
             </li>
             <li>
-              <b>Puzzle Test Director:</b> <strong>Ian Rider</strong> ('24)
+              <b>Puzzle Test Director:</b> <strong>Ian Rider</strong> (&apos;24)
             </li>
             <li>
-              <b>Tech + Design Director:</b> <strong>Orion Bloomfield</strong> ('24)
+              <b>Tech + Design Director:</b> <strong>Orion Bloomfield</strong> (&apos;24)
             </li>
             <li>
-              <b>Art Director:</b> <strong>Jaclyn Cohen</strong> ('26)
+              <b>Art Director:</b> <strong>Jaclyn Cohen</strong> (&apos;26)
             </li>
             <li>
-              <b>Story Director:</b> <strong>Aren Guralp</strong> ('27)
+              <b>Story Director:</b> <strong>Aren Guralp</strong> (&apos;27)
             </li>
           </ul>
         </div>
@@ -37,64 +37,64 @@ export default function Credits() {
           <h4 className="text-2xl font-bold pb-3">Puzzle Writers / HQ</h4>
           <ul>
             <li>
-              <strong>Sierra Bornheim</strong> ('24)
+              <strong>Sierra Bornheim</strong> (&apos;24)
             </li>
             <li>
-              <strong>Orion Bloomfield</strong> ('24)
+              <strong>Orion Bloomfield</strong> (&apos;24)
             </li>
             <li>
-              <strong>Jiahua Chen</strong> ('24)
+              <strong>Jiahua Chen</strong> (&apos;24)
             </li>
             <li>
-              <strong>Alex Duchnowski</strong> ('24)
+              <strong>Alex Duchnowski</strong> (&apos;24)
             </li>
             <li>
-              <strong>Lorenzo Mahoney</strong> ('24)
+              <strong>Lorenzo Mahoney</strong> (&apos;24)
             </li>
             <li>
-              <strong>Abigail Nelkin</strong> ('24)
+              <strong>Abigail Nelkin</strong> (&apos;24)
             </li>
             <li>
-              <strong>Nishka Pant</strong> ('24)
+              <strong>Nishka Pant</strong> (&apos;24)
             </li>
             <li>
-              <strong>Ian Rider</strong> ('24)
+              <strong>Ian Rider</strong> (&apos;24)
             </li>
             <li>
-              <strong>Jay Sarva</strong> ('24.5)
+              <strong>Jay Sarva</strong> (&apos;24.5)
             </li>
             <li>
-              <strong>Jeremy Fleming</strong> ('25)
+              <strong>Jeremy Fleming</strong> (&apos;25)
             </li>
             <li>
-              <strong>Zach Gottshall</strong> ('25)
+              <strong>Zach Gottshall</strong> (&apos;25)
             </li>
             <li>
-              <strong>Megan Carlson</strong> ('26)
+              <strong>Megan Carlson</strong> (&apos;26)
             </li>
             <li>
-              <strong>Thomas Gordon</strong> ('26)
+              <strong>Thomas Gordon</strong> (&apos;26)
             </li>
             <li>
-              <strong>Bailey Merlino</strong> ('26)
+              <strong>Bailey Merlino</strong> (&apos;26)
             </li>
             <li>
-              <strong>Phil Avilov</strong> (RISD '27)
+              <strong>Phil Avilov</strong> (RISD &apos;27)
             </li>
             <li>
-              <strong>Audrey Feigin</strong> ('27)
+              <strong>Audrey Feigin</strong> (&apos;27)
             </li>
             <li>
-              <strong>Erin Finn</strong> ('27)
+              <strong>Erin Finn</strong> (&apos;27)
             </li>
             <li>
-              <strong>Eliot Geer</strong> ('27)
+              <strong>Eliot Geer</strong> (&apos;27)
             </li>
             <li>
-              <strong>Aren Guralp</strong> ('27)
+              <strong>Aren Guralp</strong> (&apos;27)
             </li>
             <li>
-              <strong>Alex Wang</strong> ('27)
+              <strong>Alex Wang</strong> (&apos;27)
             </li>
             <li>
               <strong>Alex DelFranco</strong>
@@ -112,22 +112,22 @@ export default function Credits() {
           <h4 className="text-2xl font-bold pb-3">Art Team</h4>
           <ul>
             <li>
-              (<b>Team Lead</b>) <strong>Jaclyn Cohen</strong> ('26)
+              (<b>Team Lead</b>) <strong>Jaclyn Cohen</strong> (&apos;26)
             </li>
             <li>
-              <strong>Lucid Clairvoyant</strong> ('24)
+              <strong>Lucid Clairvoyant</strong> (&apos;24)
             </li>
             <li>
-              <strong>Christine Wang</strong> (RISD '24)
+              <strong>Christine Wang</strong> (RISD &apos;24)
             </li>
             <li>
-              <strong>Eliot Geer</strong> ('27)
+              <strong>Eliot Geer</strong> (&apos;27)
             </li>
             <li>
-              <strong>Annie Johnson</strong> ('27)
+              <strong>Annie Johnson</strong> (&apos;27)
             </li>
             <li>
-              <strong>Phil Avilov</strong> (RISD '27)
+              <strong>Phil Avilov</strong> (RISD &apos;27)
             </li>
             <li>
               <strong>
@@ -141,28 +141,28 @@ export default function Credits() {
           <h4 className="text-2xl font-bold pb-3">Tech Team</h4>
           <ul>
             <li>
-              (<b>Team Lead</b>) <strong>Orion Bloomfield</strong> ('24)
+              (<b>Team Lead</b>) <strong>Orion Bloomfield</strong> (&apos;24)
             </li>
             <li>
-              <strong>Nick Bottone</strong> ('24)
+              <strong>Nick Bottone</strong> (&apos;24)
             </li>
             <li>
-              <strong>Hammad Izhar</strong> ('24)
+              <strong>Hammad Izhar</strong> (&apos;24)
             </li>
             <li>
-              <strong>Andrew Li</strong> ('24)
+              <strong>Andrew Li</strong> (&apos;24)
             </li>
             <li>
-              <strong>Ryan Huang</strong> ('26)
+              <strong>Ryan Huang</strong> (&apos;26)
             </li>
             <li>
-              <strong>Owen Carson</strong> ('25) (design)
+              <strong>Owen Carson</strong> (&apos;25) (design)
             </li>
             <li>
-              <strong>Tenzin Choezin</strong> ('25) (design)
+              <strong>Tenzin Choezin</strong> (&apos;25) (design)
             </li>
             <li>
-              <strong>Laurence Nunes</strong> ('27) (design)
+              <strong>Laurence Nunes</strong> (&apos;27) (design)
             </li>
           </ul>
         </div>

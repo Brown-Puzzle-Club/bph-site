@@ -1,8 +1,8 @@
-import React from "react";
+import type React from "react";
+import { HashLink as Link } from "react-router-hash-link";
 
 import blueno_what from "@/assets/landing/blueno_what.svg";
 import blueno_when from "@/assets/landing/blueno_when.svg";
-import { HashLink as Link } from "react-router-hash-link";
 
 const SVG_FILTER =
   "invert(100%) sepia(0%) saturate(0%) hue-rotate(158deg) brightness(104%) contrast(102%)";
@@ -41,8 +41,8 @@ const LandingInfo: React.FC = () => {
           <h1 className="text-2xl font-bold">WHAT</h1>
           <div className="border-b border-sky-500 mx-auto mt-2 w-10"></div>
           <p className="text-muted-foreground leading-tight pt-6">
-            Brown's second annual puzzlehunt, run by{" "}
-            <Link smooth className="underline font-semibold" to="/credits">
+            Brown&apos;s second annual puzzlehunt, run by{" "}
+            <Link className="underline font-semibold" to="/credits">
               Brown Puzzle Club
             </Link>
             , offering experiences for both in-person and remote solvers. We are a novice-friendly
