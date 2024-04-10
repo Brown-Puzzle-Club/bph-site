@@ -25,11 +25,12 @@ export default function TeamNavbar() {
         </NavigationMenuTrigger>
         <NavigationMenuContent>
           <ul className="grid w-[300px] gap-3 p-4 md:grid-cols-1">
-            <ListItem href={"/my-team"} className="truncate" title={team.data?.team_name} />
+            <ListItem to={"/my-team"} className="truncate" title={team.data?.team_name} />
             <ListItem
               className="bg-gradient-to-b from-muted/80 to-muted cursor-pointer"
               onClick={() => logout.mutate()}
-              title={"Logout"}
+              title="Logout"
+              to="/"
             />
           </ul>
         </NavigationMenuContent>

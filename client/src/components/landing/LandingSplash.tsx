@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import bear_regular from "../../assets/landing/bear_regular.png";
 import bear_wave from "../../assets/landing/bear_wave.png";
@@ -14,6 +15,8 @@ const LandingSplash: React.FC = () => {
   const [blimpPosition, setBlimpPosition] = useState(20);
   const blimpHoverInterval = 2000;
   const blimpHoverHeight = 2;
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     // parallax, blimp height
@@ -109,7 +112,7 @@ const LandingSplash: React.FC = () => {
               bear.src = bear_regular;
             }}
             onClick={() => {
-              window.location.href = "/register";
+              navigate("/register");
             }}
             src={blimp}
           />

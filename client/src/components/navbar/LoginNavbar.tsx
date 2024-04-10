@@ -1,5 +1,6 @@
 import { useAuth } from "@/hooks/useAuth";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { BeatLoader } from "react-spinners";
 import { Button } from "../ui/button";
 import {
@@ -22,6 +23,7 @@ export default function LoginNavbar() {
   const [formProgress, setFormProgress] = useState(false);
 
   const { login } = useAuth();
+  const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,7 +51,7 @@ export default function LoginNavbar() {
           {/* send to /register page */}
           <Button
             className="dark bg-[grey] hover:text-black font-bold"
-            onClick={() => (window.location.href = "/register")}
+            onClick={() => navigate("/register")}
           >
             Register
           </Button>
