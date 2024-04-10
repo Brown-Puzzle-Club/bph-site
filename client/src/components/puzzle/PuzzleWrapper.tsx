@@ -69,37 +69,36 @@ function PuzzleWrapper({ puzzle_slug }: { puzzle_slug: string }) {
         )}
       </div>
 
-      {puzzle && (
-        <>
-          {puzzle?.slug && !NO_ANSWER_SUBMIT.has(puzzle.slug) ? (
-            <AnswerSubmit
-              puzzle={puzzle}
-              major_case={puzzle?.round?.major_case.slug as MajorCaseEnum}
+      {puzzle && !NO_ANSWER_SUBMIT.has(puzzle.slug) ? (
+        <AnswerSubmit
+          puzzle={puzzle}
+          major_case={puzzle?.round?.major_case.slug as MajorCaseEnum}
+        />
+      ) : (
+        <p className="text-center py-4">Completion of the game will solve this puzzle</p>
+      )}
+      {puzzle &&
+        (ALT_PUZZLE_ROUTES(puzzle)[puzzle_slug] ? (
+          <AltPuzzleRoute puzzle={puzzle} />
+        ) : (
+          <div className="flex flex-col items-center">
+            <MarkdownWrapper
+              markdown={puzzleContent || ""}
+              puzzleStyle={toPuzzleStyle(puzzle.round.major_case.slug)}
             />
-          ) : (
-            <p className="text-center py-4">Completion of the game will solve this puzzle</p>
-          )}
-          {ALT_PUZZLE_ROUTES(puzzle)[puzzle_slug] ? (
-            <AltPuzzleRoute puzzle={puzzle} />
-          ) : (
-            <div className="flex flex-col items-center">
-              <MarkdownWrapper
-                markdown={puzzleContent || ""}
-                puzzleStyle={toPuzzleStyle(puzzle?.round?.major_case.slug)}
-              />
+            {clipboard_content && (
               <Button
                 className="py-4 transition cursor-context-menu hover:bg-[white] hover:text-black"
                 onClick={() => {
-                  navigator.clipboard.writeText(clipboard_content || "");
+                  navigator.clipboard.writeText(clipboard_content);
                   toast.success("Copied to clipboard");
                 }}
               >
                 copy to clipboard
               </Button>
-            </div>
-          )}
-        </>
-      )}
+            )}
+          </div>
+        ))}
     </div>
   );
 }

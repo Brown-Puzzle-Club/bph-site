@@ -14,10 +14,10 @@ import type { AssetProps } from "@/components/RelativeAsset";
 import RelativeAsset from "@/components/RelativeAsset";
 import { cn } from "@/utils/utils";
 
-import type { ILink, INode, NodeAnswer, ThreadType } from "./board_types";
 import { COLORED_GLOW } from "./consts";
+import type { ILink, INode, NodeAnswer, ThreadType } from "./types/BoardTypes";
 
-const PIN_HOVER_GLOW = "drop-shadow-[0_15px_15px_rgba(255,255,255,0.4)]";
+export const PIN_HOVER_GLOW = "drop-shadow-[0_15px_15px_rgba(255,255,255,0.4)]";
 
 interface AnswerPin extends AssetProps {
   id: string;
@@ -65,6 +65,13 @@ export default function AnswerPins({
     }
   };
 
+  const formatAnswer = (answer: string) => {
+    // remove everything after the word ON, if it exists
+    const answer_upper = answer.toUpperCase();
+    const index = answer_upper.indexOf(" ON");
+    return index === -1 ? answer : answer_upper.substring(0, index);
+  };
+
   const Pin = (props: AnswerPin) => {
     const node = nodes.find((node) => node.node.id === props.id);
     if (!node) return null;
@@ -74,7 +81,7 @@ export default function AnswerPins({
         <RelativeAsset
           extraClasses={cn(
             `hover:cursor-pointer select-none`,
-            `${selectedThread && selectedNode && selectedNode.id === props.id ? COLORED_GLOW[selectedThread] : `hover:${PIN_HOVER_GLOW}`}`,
+            `${selectedThread && selectedNode && selectedNode.id === props.id ? COLORED_GLOW[selectedThread] : `hover:drop-shadow-[0_15px_15px_rgba(255,255,255,0.4)]`}`,
           )}
           onClick={() => {
             if (selectedThread) handleNodeClick(node.node);
@@ -82,10 +89,10 @@ export default function AnswerPins({
           {...props}
         >
           <p
-            className="absolute text-black font-mono font-bold text-[1.5vw] text-center select-none"
+            className="absolute text-[#000000e6] font-mono font-bold text-[1.5vw] text-center select-none"
             style={props.textStyle ? props.textStyle : props.extraStyles}
           >
-            {node.answer}
+            {formatAnswer(node.answer)}
           </p>
         </RelativeAsset>
       </>
@@ -107,7 +114,7 @@ export default function AnswerPins({
           top: "49%",
           left: "40%",
           transform: "translate(-50%, -50%) rotate(354deg)",
-          fontSize: "1.1vw",
+          fontSize: "0.9vw",
         }}
       />
       <Pin
@@ -127,7 +134,7 @@ export default function AnswerPins({
         }}
       />
       <Pin
-        id="trampled" // penny-puzz
+        id="penny-puzz"
         imageSrc={pin3}
         extraStyles={{
           top: "35%",
@@ -136,10 +143,10 @@ export default function AnswerPins({
           zIndex: 3,
         }}
         textStyle={{
-          top: "49%",
-          left: "40%",
-          transform: "translate(-50%, -50%) rotate(354deg)",
-          fontSize: "1.1vw",
+          top: "59%",
+          left: "34%",
+          transform: "translate(-50%, -50%) rotate(6deg)",
+          fontSize: "0.9vw",
         }}
       />
       <Pin
@@ -180,14 +187,14 @@ export default function AnswerPins({
         extraStyles={{
           top: "52%",
           left: "50%",
-          width: "10%",
+          width: "9%",
           zIndex: 3,
         }}
         textStyle={{
-          top: "49%",
-          left: "40%",
+          top: "67%",
+          left: "35%",
           transform: "translate(-50%, -50%) rotate(354deg)",
-          fontSize: "1.1vw",
+          fontSize: "1.3vw",
         }}
       />
       <Pin
@@ -239,7 +246,7 @@ export default function AnswerPins({
         }}
       />
       <Pin
-        id="trampled" // birbs-at-brown
+        id="whaling-ships"
         imageSrc={pin10}
         extraStyles={{
           top: "72%",
@@ -248,14 +255,14 @@ export default function AnswerPins({
           zIndex: 3,
         }}
         textStyle={{
-          top: "49%",
+          top: "59%",
           left: "40%",
-          transform: "translate(-50%, -50%) rotate(354deg)",
+          transform: "translate(-50%, -50%) rotate(2deg)",
           fontSize: "1.1vw",
         }}
       />
       <Pin
-        id="trampled" // whaling-ships
+        id="birbs-at-brown"
         imageSrc={pin11}
         extraStyles={{
           top: "69%",
@@ -264,10 +271,10 @@ export default function AnswerPins({
           zIndex: 3,
         }}
         textStyle={{
-          top: "49%",
-          left: "40%",
-          transform: "translate(-50%, -50%) rotate(354deg)",
-          fontSize: "1.1vw",
+          top: "55%",
+          left: "63%",
+          transform: "translate(-50%, -50%) rotate(355deg)",
+          fontSize: "0.9vw",
         }}
       />
     </>

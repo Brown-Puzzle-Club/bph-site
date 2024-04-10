@@ -1,3 +1,4 @@
+import { useLocalStorage } from "@uidotdev/usehooks";
 import { useEffect, useMemo, useState } from "react";
 
 import background from "@/assets/major_cases/colored-thread/background.jpg";
@@ -8,8 +9,6 @@ import puss from "@/assets/major_cases/colored-thread/thread-puss.png";
 import RelativeAsset from "@/components/RelativeAsset";
 import AnswerPins from "@/components/major_cases/colored-thread/AnswerPins";
 import SVGBoard from "@/components/major_cases/colored-thread/SVGBoard";
-import type { ILink, INode, NodeAnswer } from "@/components/major_cases/colored-thread/board_types";
-import { ThreadType } from "@/components/major_cases/colored-thread/board_types";
 import {
   HOVER_GLOW,
   THREAD_SELECTED_DOCTOR_GLOW,
@@ -17,6 +16,12 @@ import {
   THREAD_SELECTED_PUSS_GLOW,
 } from "@/components/major_cases/colored-thread/consts";
 import { collectNodes } from "@/components/major_cases/colored-thread/nodes";
+import type {
+  ILink,
+  INode,
+  NodeAnswer,
+} from "@/components/major_cases/colored-thread/types/BoardTypes";
+import { ThreadType } from "@/components/major_cases/colored-thread/types/BoardTypes";
 import { ArtWrapper } from "@/components/minor_cases/CasePageArt";
 import { useDjangoContext } from "@/hooks/useDjangoContext";
 import { useTheme } from "@/hooks/useTheme";
@@ -25,7 +30,7 @@ import { BROWN_THEME } from "@/utils/themes";
 export default function ColoredThread() {
   const [selectedThread, setSelectedThread] = useState<ThreadType | null>(null);
   const [selectedNode, setSelectedNode] = useState<INode | null>(null);
-  const [links, setLinks] = useState<ILink[]>([]);
+  const [links, setLinks] = useLocalStorage<ILink[]>("colored-thread-links", []);
 
   const { setTheme } = useTheme();
   useEffect(() => {
@@ -101,7 +106,7 @@ export default function ColoredThread() {
 
   return (
     <div>
-      <ArtWrapper background_src={background}>
+      <ArtWrapper className="select-none" background_src={background}>
         <RelativeAsset imageSrc={board} />
         <Threads />
         <AnswerPins {...state} />
@@ -110,3 +115,5 @@ export default function ColoredThread() {
     </div>
   );
 }
+
+// .current
