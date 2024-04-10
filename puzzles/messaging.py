@@ -221,17 +221,17 @@ class DiscordInterface:
     # discord.Client().run(TOKEN)
 
     def update_hint(self, hint):
-        # HintsConsumer.send_to_all(
-        #     json.dumps(
-        #         {
-        #             "id": hint.id,
-        #             "content": render_to_string(
-        #                 "hint_list_entry.html",
-        #                 {"hint": hint, "now": timezone.localtime()},
-        #             ),
-        #         }
-        #     )
-        # )
+        HintsConsumer.send_to_all(
+            json.dumps(
+                {
+                    "id": hint.id,
+                    "content": render_to_string(
+                        "hint_list_entry.html",
+                        {"hint": hint, "now": timezone.localtime()},
+                    ),
+                }
+            )
+        )
         embed = collections.defaultdict(lambda: collections.defaultdict(dict))
         embed["author"]["url"] = hint.full_url()
         if hint.claimed_datetime:
