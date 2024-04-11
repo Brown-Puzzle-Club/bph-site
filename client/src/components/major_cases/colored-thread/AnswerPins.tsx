@@ -43,7 +43,7 @@ const Pin = ({ nodes, selectedThread, selectedNode, handleNodeClick, ...props }:
     <RelativeAsset
       extraClasses={cn(
         "select-none",
-        selectedThread && "hover:cursor-pointer",
+        selectedThread ? "hover:cursor-pointer" : "pointer-events-none",
         selectedThread &&
           (selectedNode && selectedNode.id === props.id
             ? COLORED_GLOW[selectedThread]
@@ -80,7 +80,7 @@ export default function AnswerPins(props: AnswerPinsProps) {
         imageSrc={pin1}
         extraStyles={{
           top: "9%",
-          left: "28%",
+          left: "30%",
           width: "9%",
           zIndex: 3,
         }}
@@ -97,7 +97,7 @@ export default function AnswerPins(props: AnswerPinsProps) {
         imageSrc={pin2}
         extraStyles={{
           top: "9%",
-          left: "54%",
+          left: "51.7%",
           width: "9%",
           zIndex: 3,
         }}
