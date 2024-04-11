@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 import { BeatLoader } from "react-spinners";
 
 import MarkdownWrapper from "@/components/puzzle/MarkdownWrapper";
@@ -56,6 +57,8 @@ function PuzzleWrapper({ puzzle_slug }: { puzzle_slug: string }) {
     setPuzzleContent(puzzle?.body);
   }, [puzzle]);
 
+  const navigate = useNavigate();
+
   const ADMIN_REMOTE_VISIBLE = useMemo(() => {
     // if the body_remote exists in the fetch, this means that the user has admin access. This saves a query :P
     return puzzle?.body_remote && puzzle.body_remote != "";
@@ -72,7 +75,7 @@ function PuzzleWrapper({ puzzle_slug }: { puzzle_slug: string }) {
   }, [puzzle, puzzleContent]);
 
   if (isError) {
-    window.location.href = "/eventpage";
+    navigate("/eventpage");
     return <Error404 />;
   }
 

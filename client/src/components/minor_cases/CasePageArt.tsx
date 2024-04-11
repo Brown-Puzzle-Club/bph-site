@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { useEffect, useMemo } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import birb_bg from "@/assets/minor_cases/birbs/birb_bg.png";
 import thebirb from "@/assets/minor_cases/birbs/thebirb.png";
@@ -243,13 +243,14 @@ const PuzzleIconWrapper = (props: PuzzleAsset) => {
   const { data: context } = useDjangoContext();
   const { slug } = props;
 
+  const { pathname } = useLocation();
   const puzzle_answer: PuzzleAnswer | null = useMemo(() => {
-    const case_slug = window.location.pathname.split("/").pop();
-    if (!context?.team_context || !case_slug) {
+    const caseSlug = pathname.split("/").pop();
+    if (!context?.team_context || !caseSlug) {
       return null;
     }
-    return getUnlockedPuzzle(slug, context, case_slug);
-  }, [context, slug]);
+    return getUnlockedPuzzle(slug, context, caseSlug);
+  }, [context, slug, pathname]);
 
   return (
     <>

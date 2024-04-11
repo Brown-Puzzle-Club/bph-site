@@ -1,4 +1,5 @@
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 import PuzzleWrapper from "@/components/puzzle/PuzzleWrapper";
 import { useTheme } from "@/hooks/useTheme";
@@ -7,21 +8,20 @@ import { DEFAULT_THEME } from "@/utils/themes";
 import { Error404 } from "./ErrorPage";
 
 function PuzzlePage() {
-  const puzzle_slug = useMemo(() => {
-    return window.location.pathname.split("/").pop();
-  }, []);
+  const { slug } = useParams();
+  const navigate = useNavigate();
 
   const { setTheme } = useTheme();
   useEffect(() => {
     setTheme(DEFAULT_THEME);
   });
 
-  if (!puzzle_slug) {
-    window.location.href = "/eventpage";
+  if (!slug) {
+    navigate("/eventpage");
     return <Error404 />;
   }
 
-  return <PuzzleWrapper puzzle_slug={puzzle_slug} />;
+  return <PuzzleWrapper puzzle_slug={slug} />;
 }
 
 export default PuzzlePage;
