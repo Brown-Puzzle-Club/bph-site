@@ -3,7 +3,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
-import { createBrowserRouter, redirect, RouterProvider } from "react-router-dom";
+import { RouterProvider, createBrowserRouter, redirect } from "react-router-dom";
 
 import { Locked } from "./components/LockedContent";
 import { PageWrapper } from "./components/PageWrapper";
@@ -123,6 +123,18 @@ const router = createBrowserRouter([
             route={
               <Locked condition={HUNT_HAS_STARTED}>
                 <EventPage />
+              </Locked>
+            }
+          />
+        ),
+      },
+      {
+        path: "/markdown-test",
+        element: (
+          <PageWrapper
+            route={
+              <Locked condition={IS_ADMIN}>
+                <MarkdownTest />
               </Locked>
             }
           />

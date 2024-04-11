@@ -29,18 +29,19 @@ export const MarkdownComponents: object = {
       const image = node.children[0];
       const metastring = image.properties.alt;
       const alt = metastring?.replace(/ *\{[^)]*\} */g, "");
-      const metaWidth = metastring.match(/{([^}]+)x/);
-      const metaHeight = metastring.match(/x([^}]+)}/);
-      const width = metaWidth ? metaWidth[1] : "768";
-      const height = metaHeight ? metaHeight[1] : "432";
+
+      // const metaWidth = metastring.match(/{([^}]+)x/);
+      // const metaHeight = metastring.match(/x([^}]+)}/);
+      // console.log(metastring, metaWidth ? metaWidth[1]:"", metaHeight ?  metaHeight[1]:"")
+      // const width = metaWidth ? metaWidth[1] : "768";
+      // const height = metaHeight ? metaHeight[1] : "432";
       const hasCaption = metastring?.toLowerCase().includes("{caption:");
       const caption = metastring?.match(/{caption: (.*?)}/)?.pop();
       return (
         <div className="postImgWrapper">
           <img
             src={formatGDriveImageUrl(image.properties.src)}
-            width={width}
-            height={height}
+            style={parseStyle(metastring)}
             alt={alt}
           ></img>
           {hasCaption ? (
