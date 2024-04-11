@@ -1,5 +1,6 @@
 import type { Puzzle } from "@/utils/django_types";
 
+import IllicitAffairsPano from "./exile/IllicitAffairsPano";
 import LabyrinthBook from "./labyrinth/LabyrinthBook";
 import Connections from "./nyt-games/Connections";
 import LetterBoxedPuzzle from "./nyt-games/LetterBoxed";
@@ -18,6 +19,7 @@ export function ALT_PUZZLE_ROUTES(puzzle: Puzzle): {
     wordle: <Wordle />,
     obituary: <Obituary />,
     "labyrinth-puzz": <LabyrinthBook />,
+    "illicit-affairs": <IllicitAffairsPano />,
   };
 }
 

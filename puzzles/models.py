@@ -442,7 +442,11 @@ class Team(models.Model):
     def puzzle_answer(self, puzzle):
         return puzzle.answer if puzzle.id in self.solves else None
 
+    INFINITE_GUESS_SLUGS = set(["illicit-affairs"])
+
     def guesses_remaining(self, puzzle):
+        if puzzle.slug in self.INFINITE_GUESS_SLUGS:
+            return 69420
         wrong_guesses = sum(
             1
             for submission in self.puzzle_submissions(puzzle)
