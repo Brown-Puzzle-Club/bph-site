@@ -163,10 +163,16 @@ const SolutionPin = ({
     // Dynamically update any links that are connected to the solution pin
     const updatedLinks = links.map((link) => {
       if (link.to.id === "solution-pin") {
-        return { ...link, to: { id: "solution-pin", x: solutionPinPos.x, y: solutionPinPos.y } };
+        return {
+          ...link,
+          to: { id: "solution-pin", x: solutionPinPos.x + 2.8, y: solutionPinPos.y - 0.4 },
+        };
       }
       if (link.from.id === "solution-pin") {
-        return { ...link, from: { id: "solution-pin", x: solutionPinPos.x, y: solutionPinPos.y } };
+        return {
+          ...link,
+          from: { id: "solution-pin", x: solutionPinPos.x + 2.8, y: solutionPinPos.y - 0.4 },
+        };
       }
       return link;
     });
@@ -177,7 +183,6 @@ const SolutionPin = ({
     <svg id="example1" xmlns="http://www.w3.org/2000/svg">
       <image
         id="solution-pin"
-        // GLOW DOES NOT WORK :(
         className={cn(
           `cursor-pointer select-none`,
           `${selectedThread && selectedNode && selectedNode.id === "solution-pin" ? COLORED_GLOW[selectedThread] : `hover:drop-shadow-[0_15px_15px_rgba(255,255,255,0.4)]`}`,
@@ -196,8 +201,8 @@ const SolutionPin = ({
           if (selectedThread) {
             handleNodeClick({
               id: "solution-pin",
-              x: solutionPinPos.x,
-              y: solutionPinPos.y,
+              x: solutionPinPos.x + 2.8,
+              y: solutionPinPos.y - 0.4,
             });
           }
         }}

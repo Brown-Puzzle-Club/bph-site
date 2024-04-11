@@ -154,8 +154,6 @@ export default function ColoredThread() {
         const isLinked = (link: ILink) =>
           [selectedNode.id, targetNode.id].every((id) => link.from.id === id || link.to.id === id);
 
-        console.log(linkCounts[selectedThread], MAX_LINKS[selectedThread]);
-
         if (!links.some(isLinked) && linkCounts[selectedThread] < MAX_LINKS[selectedThread]) {
           // Link the two nodes
           setLinks([...links, { from: selectedNode, to: targetNode, thread: selectedThread }]);
@@ -169,6 +167,33 @@ export default function ColoredThread() {
 
   return (
     <ArtWrapper key={remountCounter} className="select-none" background_src={background}>
+      <div
+        className="bg-white/80 absolute w-[25vw] p-4 rounded-lg"
+        style={{ top: "20%", left: "74%" }}
+      >
+        <div className="text-black font-mono grid gap-2 text-[0.8vw] max-w-md">
+          <p>Greetings, detectives.</p>
+          <p>
+            An elusive serial killer with ties to the Cult of Lucifer has been killing people across
+            Providence. We think the killer may be trying to construct a Sigil representing Lucifer
+            in some way.
+          </p>
+          <p>
+            Additionally, their murder methods are intentional, with “subsequent” methods of murder
+            being connected with thread to form the sigil.
+          </p>
+          <p>
+            We believe only one killing remains to complete the sigil. If we can work out where and
+            how the last murder will happen, we can stop the killer and save the final victim.
+          </p>
+          <p className="font-bold">
+            How is the final victim going to be killed?
+            <br />
+            Where are they going to be killed?
+          </p>
+        </div>
+      </div>
+
       <RelativeAsset imageSrc={board} />
       <Threads
         linkCounts={linkCounts}
