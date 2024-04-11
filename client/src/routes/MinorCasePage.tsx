@@ -21,7 +21,7 @@ function MinorCasePage() {
   }, [setTheme]);
 
   const MINOR_CASE_SLUG = window.location.pathname.split("/").pop();
-  const { context } = useDjangoContext();
+  const { data: context } = useDjangoContext();
 
   const MAJOR_CASE_SLUG = useMemo(() => {
     // return the unlocks slug that contains the minor case MINOR_CASE_SLUG
@@ -36,6 +36,8 @@ function MinorCasePage() {
     }
   }, [MINOR_CASE_SLUG, context?.team_context]);
 
+  console.log(MAJOR_CASE_SLUG);
+
   const unlocked_puzzles: PuzzleAnswer[] | null = useMemo(() => {
     if (!MAJOR_CASE_SLUG || !MINOR_CASE_SLUG || !context?.team_context) {
       return null;
@@ -48,7 +50,8 @@ function MinorCasePage() {
     return <BeatLoader className="justify-center content-center p-4" color={"#fff"} size={12} />;
   }
 
-  if (!MINOR_CASE_SLUG || IS_MINOR_CASE_UNLOCKED(MINOR_CASE_SLUG)(context) === false) {
+  if (!MINOR_CASE_SLUG || !IS_MINOR_CASE_UNLOCKED(MINOR_CASE_SLUG)(context)) {
+    window.location.href = "/eventpage";
     return <Error404 />;
   }
 

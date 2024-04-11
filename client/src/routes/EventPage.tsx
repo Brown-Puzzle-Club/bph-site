@@ -1,19 +1,53 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect } from "react";
+import { FaCheck } from "react-icons/fa";
 
 import background from "@/assets/main_page/Backdrop.png";
+import cassette from "@/assets/main_page/D1.png";
+import cassetteHover from "@/assets/main_page/D2.png";
+import desk from "@/assets/main_page/MainPageNew.png";
+import thread from "@/assets/main_page/RT1.png";
+import threadHover from "@/assets/main_page/RT2.png";
+import letter from "@/assets/main_page/SD1.png";
+import letterHover from "@/assets/main_page/SD2.png";
 import shadow from "@/assets/main_page/Shadow.png";
-import desk from "@/assets/main_page/ShadowDesk.png";
-import MinorCaseModal from "@/components/MinorCaseModal";
+import type { AssetProps } from "@/components/RelativeAsset";
+import RelativeAsset from "@/components/RelativeAsset";
 import ActiveCases from "@/components/main_page/ActiveCases";
 import CompletedCases from "@/components/main_page/CompletedCases";
-import CompletedCasesStack from "@/components/main_page/CompletedCasesStack";
 import IncomingCasesStack from "@/components/main_page/IncomingCasesStack";
+import Phone from "@/components/main_page/Phone";
 import { ArtWrapperInner } from "@/components/minor_cases/CasePageArt";
 import { useDjangoContext } from "@/hooks/useDjangoContext";
 import { useTheme } from "@/hooks/useTheme";
-import type { Round } from "@/utils/django_types";
+import { MajorCaseEnum } from "@/utils/constants";
 import { MAIN_PAGE_THEME } from "@/utils/themes";
-import { mostRecentSolves } from "@/utils/utils";
+
+interface MajorCaseIconProps extends AssetProps {
+  majorCase: MajorCaseEnum;
+}
+
+const MajorCaseIcon = (props: MajorCaseIconProps) => {
+  const { data: context } = useDjangoContext();
+  return (
+    context?.team_context &&
+    context.team_context.major_case_puzzles[props.majorCase] && (
+      <RelativeAsset linkTo={`/majorcase/${props.majorCase}`} {...props}>
+        {context.team_context.solves[
+          context.team_context.major_case_puzzles[props.majorCase].slug
+        ] && (
+          <FaCheck
+            className="absolute select-none hover:cursor-pointer text-[5vw] text-[#ffffff80]"
+            style={{
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+            }}
+          />
+        )}
+      </RelativeAsset>
+    )
+  );
+};
 
 interface EventPage {
   setVotingOpen?: (open: boolean) => void;
@@ -24,16 +58,6 @@ export default function EventPage({ setVotingOpen }: EventPage) {
   useEffect(() => {
     setTheme(MAIN_PAGE_THEME);
   }, [setTheme]);
-
-  const [selectedCase, setSelectedCase] = useState<Round | null>(null);
-  const [solvedCasesOpen, setSolvedCasesOpen] = useState(false);
-
-  const { context } = useDjangoContext();
-
-  const solved_cases = useMemo(() => {
-    if (!context) return [];
-    return mostRecentSolves(context);
-  }, [context]);
 
   return (
     <div
@@ -48,7 +72,7 @@ export default function EventPage({ setVotingOpen }: EventPage) {
           backgroundImage: `url(${shadow})`,
         }}
       >
-        <ArtWrapperInner background_src={desk} className="relative max-w-screen-xl">
+        <ArtWrapperInner background_src={desk} className="max-w-screen-xl">
           <div
             className="absolute rounded-xl p-4 align-center"
             style={{ top: "35%", left: "83%", width: "14%", height: "29%" }}
@@ -59,39 +83,48 @@ export default function EventPage({ setVotingOpen }: EventPage) {
               }}
             />
           </div>
-          <div
-            className="absolute rounded-xl p-4 align-center"
-            style={{ top: "20%", left: "29%", width: "50%", height: "37%" }}
-          >
-            <CompletedCases
-              completed_cases={solved_cases}
-              solvedCasesOpen={solvedCasesOpen}
-              setSelectedCase={setSelectedCase}
-            />
-          </div>
-          <div
-            className="absolute rounded-xl p-4 align-center"
-            style={{ top: "35%", left: "1%", width: "14%", height: "29%" }}
-          >
-            <CompletedCasesStack
-              completed_cases={solved_cases}
-              solvedCasesOpen={solvedCasesOpen}
-              setSolvedCasesOpen={setSolvedCasesOpen}
-            />
-          </div>
+          <CompletedCases />
           <div
             className="absolute bg-[#f5f5f51f] rounded-xl p-4 align-center"
             style={{ top: "71%", left: "19%", width: "61%", height: "23%" }}
           >
-            <ActiveCases setSelectedCase={setSelectedCase} />
+            <ActiveCases />
           </div>
+          <MajorCaseIcon
+            majorCase={MajorCaseEnum.DATA}
+            imageSrc={cassette}
+            hoverImageSrc={cassetteHover}
+            linkTo="/majorcase/data"
+            extraClasses="w-[15%] drop-shadow-[0_4px_4px_rgba(121,22,159,1)] hover:drop-shadow-[0_16px_16px_rgba(121,22,159,1)]"
+            extraStyles={{
+              top: "12%",
+              left: "45%",
+            }}
+          />
+          <MajorCaseIcon
+            majorCase={MajorCaseEnum.COLORED_THREAD}
+            imageSrc={thread}
+            hoverImageSrc={threadHover}
+            extraClasses="w-[15%] drop-shadow-[0_4px_4px_rgba(255,0,0,1)] hover:drop-shadow-[0_16px_16px_rgba(255,0,0,1)]"
+            extraStyles={{
+              top: "23%",
+              left: "80%",
+            }}
+          />
+          <MajorCaseIcon
+            majorCase={MajorCaseEnum.SOCIAL_DEDUCTION}
+            imageSrc={letter}
+            hoverImageSrc={letterHover}
+            linkTo="/majorcase/social-deduction"
+            extraClasses="w-[15%] rotate-[-23deg] drop-shadow-[0_4px_4px_rgba(48,205,93,1)] hover:drop-shadow-[0_16px_16px_rgba(48,205,93,1)]"
+            extraStyles={{
+              top: "15%",
+              left: "65%",
+            }}
+          />
+          <Phone />
         </ArtWrapperInner>
       </div>
-      <MinorCaseModal
-        setSelectedCase={setSelectedCase}
-        selectedCase={selectedCase}
-        action={`/minorcase/${selectedCase?.slug}`}
-      />
     </div>
   );
 }

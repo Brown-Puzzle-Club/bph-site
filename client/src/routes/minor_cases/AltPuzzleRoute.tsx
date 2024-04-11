@@ -1,22 +1,23 @@
 import type { Puzzle } from "@/utils/django_types";
 
+import LabyrinthBook from "./labyrinth/LabyrinthBook";
 import Connections from "./nyt-games/Connections";
 import LetterBoxedPuzzle from "./nyt-games/LetterBoxed";
 import Obituary from "./nyt-games/Obituary";
 import Wordle from "./nyt-games/Wordle";
-import AlexGame from "./red-thread/AlexGame";
 
 export function ALT_PUZZLE_ROUTES(puzzle: Puzzle): {
   [key: string]: JSX.Element;
 } {
+  console.log(puzzle);
   // if any puzzle has no markdown, it will attempt to route using this
   // puzzle_slug -> JSX.Element
   return {
-    "alex-game": <AlexGame puzzle={puzzle} />,
     lettertroxd: <LetterBoxedPuzzle />,
     connection: <Connections />,
     wordle: <Wordle />,
     obituary: <Obituary />,
+    "labyrinth-puzz": <LabyrinthBook />,
   };
 }
 

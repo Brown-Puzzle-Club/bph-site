@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from puzzles import models
 
-from puzzles.api.api_guards import require_admin
+from puzzles.api.api_guards import require_admin, require_auth
 from puzzles.api.form_serializers import (
     TeamUpdateSerializer,
     UserRegistrationSerializer,
@@ -238,6 +238,9 @@ def handle_answer(
 
     correct = Puzzle.normalize_answer(answer) == sanitized_answer
 
+    if correct:
+        answer = puzzle.answer  # for consistent styling on the UI
+
     try:
         submission = AnswerSubmission.objects.create(
             team=django_context.team,
@@ -322,3 +325,43 @@ def unlock_case(request: Request, round_slug: str) -> Response:
     except Exception as e:
         print(e)
         return Response({"error": "Could not unlock"}, status=404)
+
+
+@api_view(["POST"])
+@require_auth
+def post_hint(request: Request, puzzle_slug: str) -> Response:
+    try:
+        context = request._request.context
+        puzzle = context.team.unlocks.get(puzzle_slug)
+
+        if puzzle is None:
+            if context.is_admin:
+                puzzle = Puzzle.objects.get(slug=puzzle_slug)
+            else:
+                raise Puzzle.DoesNotExist
+
+        # Ensure request.data is not empty and contains all required fields
+        required_fields = ["question", "followup"]
+        if not isinstance(request.data, dict) or not all(
+            field in request.data for field in required_fields
+        ):
+            raise KeyError
+
+        hints_count = Hint.objects.filter(puzzle=puzzle).count()
+
+        hint = Hint.objects.create(
+            puzzle=puzzle,
+            team=context.team,
+            is_followup=(request.data["followup"] and hints_count > 0),
+            hint_question=request.data["question"],
+        )
+
+        serializer = HintSerializer(hint)
+
+        return Response(serializer.data)
+    except Puzzle.DoesNotExist:
+        return Response({"error": "Puzzle not found"}, status=404)
+    except KeyError:
+        return Response(
+            {"error": f"Missing required fields {required_fields}"}, status=400
+        )

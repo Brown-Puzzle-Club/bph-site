@@ -426,7 +426,6 @@ class Team(models.Model):
 
     def __str__(self):
         return self.team_name  # possibly return JSON of all safe fields?
-        return self.team_name  # possibly return JSON of all safe fields?
 
     def get_emails(self, with_names=False):
         return [
@@ -902,7 +901,12 @@ class Team(models.Model):
                 new_unlocks.append(round)
 
         for new_unlock in new_unlocks:
-            Team.unlock_case(context.team, new_unlock, context.now)
+            # Team.unlock_case(context.team, new_unlock, context.now)
+            unlock = MinorCaseActive.objects.get_or_create(
+                team=context.team,
+                minor_case_round=new_unlock,
+                active_datetime=context.now,
+            )
 
         new_puzzle_unlocks = []
         for puzzle in context.all_puzzles:
@@ -998,21 +1002,12 @@ class Team(models.Model):
         print(
             f"EVENT: unlocking case {minor_case} for team {team} at {unlock_datetime}"
         )
-
-        try:
-            unlock = MinorCaseActive.objects.get_or_create(
-                team=team, minor_case_round=minor_case, active_datetime=unlock_datetime
-            )
-        except:
-            print(f"Case {minor_case} already set active for team {team}.")
-            return None
-
-        # unlock all puzzles in the minor case
         puzzle_unlocks = []
         for puzzle in Puzzle.objects.filter(round=minor_case):
             try:
                 # unlock all puzzles that don't require local solves.
                 if puzzle.unlock_local < 0:
+                    print(f"EVENT: unlocking puzzle {puzzle} for team {team}")
                     PuzzleUnlock.objects.get_or_create(
                         team=team, puzzle=puzzle, unlock_datetime=unlock_datetime
                     )
@@ -1021,7 +1016,7 @@ class Team(models.Model):
                 print(f"Puzzle {puzzle} already unlocked for team {team}. Skipping.")
                 pass
 
-        return unlock, puzzle_unlocks
+        return puzzle_unlocks
 
 
 @receiver(post_save, sender=Team)
@@ -1254,7 +1249,10 @@ class MinorCaseIncomingEvent(models.Model):
                 desc=f"Team {self.team.team_name} has unlocked a new case: {case.name}!",
             )
             print(f"EVENT: Unlocking case {case.name} for team {self.team}")
-            Team.unlock_case(self.team, case, self.timestamp)
+            # Team.unlock_case(self.team, case, self.timestamp)
+            unlock = MinorCaseActive.objects.get_or_create(
+                team=self.team, minor_case_round=case, active_datetime=self.timestamp
+            )
 
         return [
             {
@@ -1329,6 +1327,11 @@ class MinorCaseActive(models.Model):
         unique_together = ("team", "minor_case_round")
         verbose_name = _("minor case active")
         verbose_name_plural = _("minor cases active")
+
+    def save(self, *args, **kwargs):
+        super(MinorCaseActive, self).save(*args, **kwargs)
+
+        Team.unlock_case(self.team, self.minor_case_round, self.active_datetime)
 
 
 class MinorCaseCompleted(models.Model):
@@ -1770,8 +1773,9 @@ class Hint(models.Model):
         return url
 
     def short_discord_message(self, threshold=500):
-        return (_("{} requested on {} {} by {}\n" "```{}```\n")).format(
+        return (_("[{}](<{}>) requested on {} **{}** by {}\n" "```{}```\n")).format(
             _("*Followup hint*") if self.is_followup else _("Hint"),
+            self.full_url(),
             self.puzzle.emoji,
             self.puzzle,
             self.team,
@@ -1780,11 +1784,14 @@ class Hint(models.Model):
 
     def long_discord_message(self):
         return self.short_discord_message(1000) + (
-            _("**Team:** {} ({})\n" "**Puzzle:** {} ({})\n")
+            _(
+                "[View team](<{}>)  |  [View all hints from this team](<{}>)\n"
+                "[View puzzle](<{}>)  |  [View all puzzle hints](<{}>)\n"
+            )
         ).format(
-            settings.DOMAIN + "team/%s" % quote_plus(self.team.team_name, safe=""),
+            settings.DOMAIN + "team/%s" % self.team.id,
             settings.DOMAIN + "hints?team=%s" % self.team_id,
-            settings.DOMAIN + "solution/" + self.puzzle.slug,
+            settings.DOMAIN + "puzzle/" + self.puzzle.slug,
             settings.DOMAIN + "hints?puzzle=%s" % self.puzzle_id,
         )
 

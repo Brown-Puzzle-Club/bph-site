@@ -1,5 +1,6 @@
 from rest_framework import permissions, viewsets, mixins
 from puzzles import models
+from puzzles.api.api_guards import require_auth
 
 from .serializers import *
 
@@ -13,38 +14,40 @@ def index(request: Request) -> Response:
     return Response({"Hello": "World"})
 
 
-class UserViewSet(viewsets.ReadOnlyModelViewSet):
-    serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
-        return User.objects.filter(id=self.request.user.id)  # type: ignore
-
-
-class TeamViewSet(
-    mixins.RetrieveModelMixin,
-    mixins.UpdateModelMixin,
-    mixins.ListModelMixin,
-    viewsets.GenericViewSet,
-):
-    serializer_class = TeamSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
-        return Team.objects.filter(user=self.request.user)
+@api_view(["GET"])
+def get_my_user(request: Request) -> Response:
+    if not request.user.is_authenticated:
+        return Response({"success": False, "error": "User not logged in"})
+    try:
+        user = User.objects.get(id=request.user.id)
+        serializer = UserSerializer(user)
+        return Response({"success": True, "data": serializer.data})
+    except User.DoesNotExist:
+        return Response({"success": False, "error": "User not found"})
 
 
-class TokenViewSet(
-    mixins.RetrieveModelMixin,
-    mixins.UpdateModelMixin,
-    mixins.ListModelMixin,
-    viewsets.GenericViewSet,
-):
-    serializer_class = TokenSerializer
-    permission_classes = [permissions.IsAuthenticated]
+@api_view(["GET"])
+def get_my_team(request: Request) -> Response:
+    if not request.user.is_authenticated:
+        return Response({"success": False, "error": "User not logged in"})
+    try:
+        team = Team.objects.get(id=request._request.context.team.id)  # type: ignore
+        serializer = TeamSerializer(team)
+        return Response({"success": True, "data": serializer.data})
+    except Team.DoesNotExist:
+        return Response({"success": False, "error": "Team not found"})
 
-    def get_queryset(self):
-        return Token.objects.filter(user=self.request.user)
+
+@api_view(["GET"])
+def get_my_token(request: Request) -> Response:
+    if not request.user.is_authenticated:
+        return Response({"success": False, "error": "User not logged in"})
+    try:
+        token = Token.objects.get(user=request.user)
+        serializer = TokenSerializer(token)
+        return Response({"success": True, "data": serializer.data})
+    except Token.DoesNotExist:
+        return Response({"success": False, "error": "Token not found"})
 
 
 class BasicTeamViewSet(
@@ -197,3 +200,24 @@ def major_case(request: Request, major_case_slug: str) -> Response:
         return Response(complete_puzzle_data)
     except MajorCase.DoesNotExist:
         return Response({"error": "MajorCase not found"}, status=404)
+
+
+@api_view(["GET"])
+@require_auth
+def get_hints_for_puzzle(request: Request, puzzle_slug: str) -> Response:
+    try:
+        context = request._request.context
+        puzzle = context.team.unlocks.get(puzzle_slug)
+
+        if puzzle is None:
+            if context.is_admin:
+                puzzle = Puzzle.objects.get(slug=puzzle_slug)
+            else:
+                raise Puzzle.DoesNotExist
+
+        hints = Hint.objects.filter(puzzle=puzzle)
+        serializer = HintSerializer(hints, many=True)
+
+        return Response(serializer.data)
+    except Puzzle.DoesNotExist:
+        return Response({"error": "Puzzle not found"}, status=404)

@@ -1,21 +1,20 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import axios from "axios";
 import Cookies from "js-cookie";
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, redirect, RouterProvider } from "react-router-dom";
 
 import { Locked } from "./components/LockedContent";
 import { PageWrapper } from "./components/PageWrapper";
 import MajorCaseWrapper from "./components/major_cases/MajorCaseWrapper";
-import { AuthContextProvider } from "./hooks/useAuth";
-import { DjangoContextProvider } from "./hooks/useDjangoContext";
 import { ThemeContextProvider } from "./hooks/useTheme";
 import AdminPanel from "./routes/Admin";
 import Archive from "./routes/Archive";
 import Club from "./routes/Club";
 import Contact from "./routes/Contact";
 import Credits from "./routes/Credits";
-import ErrorPage from "./routes/ErrorPage";
+import ErrorPage, { Error404 } from "./routes/ErrorPage";
 import EventPage from "./routes/EventPage";
 import InfoPage from "./routes/InfoPage";
 import Landing from "./routes/Landing";
@@ -42,6 +41,20 @@ try {
 } catch (e) {
   console.error("Error setting CSRF token in axios headers");
 }
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60, // 1 minute
+      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000), // 30 seconds
+    },
+  },
+});
+
+const Redirect = ({ to }: { to: string }) => {
+  redirect(to);
+  return <Error404 />;
+};
 
 const router = createBrowserRouter([
   {
@@ -76,7 +89,7 @@ const router = createBrowserRouter([
         element: <PageWrapper route={<MyTeamPage />} />,
       },
       {
-        path: "/team/:team_id",
+        path: "/team/:teamId",
         element: <PageWrapper route={<TeamPage />} />,
       },
       {
@@ -115,6 +128,19 @@ const router = createBrowserRouter([
           />
         ),
       },
+      // unhappy routes redirect to EventPage.
+      {
+        path: "/majorcase",
+        element: <PageWrapper route={<Redirect to={"/eventpage"} />} />,
+      },
+      {
+        path: "/minorcase",
+        element: <PageWrapper route={<Redirect to={"/eventpage"} />} />,
+      },
+      {
+        path: "/puzzle",
+        element: <PageWrapper route={<Redirect to={"/eventpage"} />} />,
+      },
 
       {
         path: "/minorcase/:slug",
@@ -123,18 +149,6 @@ const router = createBrowserRouter([
       {
         path: "/puzzle/:slug",
         element: <PageWrapper route={<PuzzlePage />} />,
-      },
-      {
-        path: "/solveadmin",
-        element: (
-          <PageWrapper
-            route={
-              <Locked condition={IS_ADMIN}>
-                <AdminPanel />
-              </Locked>
-            }
-          />
-        ),
       },
       {
         path: "/majorcase/social-deduction",
@@ -178,18 +192,28 @@ const router = createBrowserRouter([
           />
         ),
       },
+      {
+        path: "/solveadmin",
+        element: (
+          <PageWrapper
+            route={
+              <Locked condition={IS_ADMIN}>
+                <AdminPanel />
+              </Locked>
+            }
+          />
+        ),
+      },
     ],
   },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <DjangoContextProvider>
-      <AuthContextProvider>
-        <ThemeContextProvider>
-          <RouterProvider router={router} />
-        </ThemeContextProvider>
-      </AuthContextProvider>
-    </DjangoContextProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeContextProvider>
+        <RouterProvider router={router} />
+      </ThemeContextProvider>
+    </QueryClientProvider>
   </React.StrictMode>,
 );

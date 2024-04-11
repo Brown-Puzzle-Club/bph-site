@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 // Import useEffect
 import { FaBars, FaSearch } from "react-icons/fa";
 import ReactMarkdown from "react-markdown";
+import { Link } from "react-router-dom";
 
 import nytImage from "@/assets/minor_cases/nyt/nyt-image.png";
 import nytLogo from "@/assets/minor_cases/nyt/nyt-logo.png";
@@ -48,12 +49,12 @@ function Obituary() {
         <nav className="bg-white py-3 px-4 flex justify-between items-center relative z-10">
           {/* Left section */}
           <div className="flex items-center">
-            <a href="#" className="text-black font-semibold text-lg">
+            <Link to="#" className="text-black font-semibold text-lg">
               <FaBars />
-            </a>
-            <a href="#" className="ml-6 text-black">
+            </Link>
+            <Link to="#" className="ml-6 text-black">
               <FaSearch />
-            </a>
+            </Link>
           </div>
 
           {/* Center section */}

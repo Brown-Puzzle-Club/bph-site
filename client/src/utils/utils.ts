@@ -87,10 +87,28 @@ export function getUnlockedPuzzle(slug: string, context: DjangoContext, case_slu
   };
 }
 
+// slug -> {Round, answer: string}
+export function getMinorCases(
+  context: DjangoContext,
+): Record<string, { minor_case: Round; answer: string | null }> {
+  return Object.fromEntries(
+    Object.values(context?.team_context?.case_unlocks).map((minor_case: Round) => {
+      return [
+        minor_case.slug,
+        {
+          minor_case: minor_case,
+          answer: getMinorCaseSolution(minor_case, context),
+        },
+      ];
+    }),
+  );
+}
+
 export function getMinorCaseSolution(round: Round, context: DjangoContext) {
   if (
     !context?.team_context ||
     !round ||
+    !context.team_context.solves_by_case[round.major_case.slug] ||
     !context.team_context.solves_by_case[round.major_case.slug][round.slug] ||
     !context?.team_context.unlocks[round.major_case.slug] ||
     !context?.team_context.unlocks[round.major_case.slug][round.slug]
@@ -102,7 +120,6 @@ export function getMinorCaseSolution(round: Round, context: DjangoContext) {
   const meta_puzzle = Object.values(
     context.team_context.unlocks[round.major_case.slug][round.slug],
   ).find((puzzle) => puzzle.is_meta);
-  console.log("meta: ", meta_puzzle);
   if (
     meta_puzzle &&
     (submission =

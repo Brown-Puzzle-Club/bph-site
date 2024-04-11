@@ -4,7 +4,7 @@
   "printWidth": 100,
   "trailingComma": "all",
   "semi": true,
-  "importOrder": ["<THIRD_PARTY_MODULES>", "^@/", "^[./]"],
+  "importOrder": ["^@/", "^[./]"],
   "importOrderSeparation": true,
   "plugins": ["prettier-plugin-tailwindcss", "@trivago/prettier-plugin-sort-imports"]
 }

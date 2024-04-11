@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { useEffect, useMemo } from "react";
+import { Link } from "react-router-dom";
 
 import birb_bg from "@/assets/minor_cases/birbs/birb_bg.png";
 import thebirb from "@/assets/minor_cases/birbs/thebirb.png";
@@ -8,6 +9,7 @@ import exile_bg from "@/assets/minor_cases/exile/exile_bg.png";
 import painting from "@/assets/minor_cases/exile/painting.png";
 import victrola from "@/assets/minor_cases/exile/victrola.png";
 import wine from "@/assets/minor_cases/exile/wine.png";
+import labyrinth_cover from "@/assets/minor_cases/labyrinth/labyrinth.png";
 import whale_bg from "@/assets/minor_cases/whales/background_whale2.png";
 import flowers from "@/assets/minor_cases/whales/flowers.png";
 import parrot from "@/assets/minor_cases/whales/parrot.png";
@@ -162,6 +164,16 @@ const BirbsArt = () => {
   );
 };
 
+const LabyrinthArt = () => {
+  return (
+    <ArtWrapper
+      className="max-w-[400px] pt-2 left-1/2 transform -translate-x-1/2 drop-shadow-[0_15px_15px_rgba(255,255,255,0.3)]"
+      background_src={labyrinth_cover}
+      linkTo="/puzzle/labyrinth-puzz"
+    />
+  );
+};
+
 interface PuzzleAsset extends AssetProps {
   slug: string;
   meta?: boolean;
@@ -169,7 +181,7 @@ interface PuzzleAsset extends AssetProps {
 }
 
 const PuzzleIconWrapper = (props: PuzzleAsset) => {
-  const { context } = useDjangoContext();
+  const { data: context } = useDjangoContext();
   const { slug } = props;
 
   const puzzle_answer: PuzzleAnswer | null = useMemo(() => {
@@ -188,24 +200,28 @@ const PuzzleIconWrapper = (props: PuzzleAsset) => {
           {...props}
           linkTo={`/puzzle/${slug}`}
         >
-          <p
-            className={` p-[0.2rem] font-bold text-center bg-slate-800 group-hover:bg-slate-600 rounded-xl ${props.meta ? "text-[1vw] border-2 border-sky-200" : "text-[0.65vw]"}`}
-          >
-            {puzzle_answer?.puzzle.name.toUpperCase()}
-          </p>
-          <p
-            className={cn(
-              `answer mt-1 p-[0.2rem] font-bold text-center font-mono drop-shadow ${props.meta ? "text-[1vw]" : "text-[0.8vw]"}`,
-              props.answer_bg ? "bg-[#262e3a87] rounded-xl" : "",
-            )}
-            style={{
-              color:
-                CASE_PALETTE[puzzle_answer.puzzle.round.major_case.slug as MajorCaseEnum]
-                  .answerColor,
-            }}
-          >
-            {puzzle_answer?.answer?.toUpperCase()}
-          </p>
+          <div className="flex flex-col items-center">
+            <span
+              className={` p-[0.2rem] font-bold text-center bg-slate-800 group-hover:bg-slate-600 rounded-xl ${props.meta ? "text-[1vw] border-2 border-sky-200" : "text-[0.65vw]"}`}
+            >
+              {puzzle_answer?.puzzle.name.toUpperCase()}
+            </span>
+          </div>
+          <div className="flex flex-col items-center">
+            <span
+              className={cn(
+                `answer mt-1 p-[0.2rem] font-bold text-center font-mono drop-shadow ${props.meta ? "text-[1vw]" : "text-[0.8vw]"}`,
+                props.answer_bg ? "bg-[#262e3a87] rounded-xl" : "",
+              )}
+              style={{
+                color:
+                  CASE_PALETTE[puzzle_answer.puzzle.round.major_case.slug as MajorCaseEnum]
+                    .answerColor,
+              }}
+            >
+              {puzzle_answer?.answer?.toUpperCase()}
+            </span>
+          </div>
         </RelativeAsset>
       )}
     </>
@@ -235,11 +251,16 @@ export const ArtWrapper = (props: {
   background_src: string;
   children?: ReactNode;
   verticalCenter?: boolean;
+  linkTo?: string;
 }) => {
-  return (
+  return !props.linkTo ? (
     <div className={props.outerClassName}>
       <ArtWrapperInner {...props} />
     </div>
+  ) : (
+    <Link to={props.linkTo} className={props.outerClassName}>
+      <ArtWrapperInner {...props} />
+    </Link>
   );
 };
 
@@ -247,6 +268,7 @@ const CASE_ART_COMPONENT: { [key: string]: JSX.Element } = {
   exile: <ExileArt />,
   whales: <WhaleArt />,
   "birbs-at-brown": <BirbsArt />,
+  "god-of-the-labyrinth": <LabyrinthArt />,
 };
 
 export default function CasePageArt({ case_slug }: { case_slug: string }) {

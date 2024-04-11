@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { cloneElement } from "react";
+import { cloneElement, useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
 
 import Footer from "@/components/Footer";
@@ -8,11 +7,21 @@ import { useNotification } from "@/hooks/useNotification";
 import { useTheme } from "@/hooks/useTheme";
 import { DEFAULT_THEME } from "@/utils/themes";
 
+import Bluenoir from "./bluenoir/Bluenoir";
 import CaseVoting from "./websockets/CaseVoting";
+
+const snapPositions = [
+  { x: 16, y: 54 },
+  { x: 0, y: 1 },
+  { x: 1, y: 0 },
+  { x: 1, y: 1 },
+];
 
 export const PageWrapper = ({ route }: { route: React.ReactElement }) => {
   const { theme } = useTheme();
   const [votingOpen, setVotingOpen] = useState(false);
+  const [blueNoirOpen, setBlueNoirOpen] = useState(false);
+  const [position, setPosition] = useState(snapPositions[0]);
   useNotification();
 
   useEffect(() => {
@@ -26,6 +35,12 @@ export const PageWrapper = ({ route }: { route: React.ReactElement }) => {
         backgroundColor: theme.bg_color ? theme.bg_color : DEFAULT_THEME.bg_color,
       }}
     >
+      <Bluenoir
+        show={blueNoirOpen}
+        setShow={(open) => setBlueNoirOpen(open)}
+        position={position}
+        setPosition={(pos) => setPosition(pos)}
+      />
       <Navbar />
       <div
         className="content min-h-[90vh] pb-2"
@@ -40,8 +55,7 @@ export const PageWrapper = ({ route }: { route: React.ReactElement }) => {
         reverseOrder={false}
         gutter={8}
         toastOptions={{
-          // Define default options
-          className: "bg-[#363636] text-white",
+          className: "text-white rounded-lg bg-slate-900 p-3 pr-4 shadow-md shadow-slate-800",
           duration: 5000,
         }}
       />

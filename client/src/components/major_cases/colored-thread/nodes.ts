@@ -1,17 +1,19 @@
 import type { DjangoContext } from "@/utils/django_types";
 
-import type { INode, NodeAnswer } from "./board_types";
+import type { INode, NodeAnswer } from "./types/BoardTypes";
 
-export const collectNodes = (context: DjangoContext) => {
-  // TODO: fix coordinates
+export const collectNodes = (context: DjangoContext | undefined) => {
   const consistent_nodes: NodeAnswer[] = [
-    { node: { id: "wasting-illness", x: 608, y: 90 }, answer: "WASTING ILLNESS" },
-    { node: { id: "trampled", x: 550, y: 350 }, answer: "TRAMPLED" },
-    { node: { id: "ennui", x: 415, y: 342 }, answer: "ENNUI" },
-    { node: { id: "internal-lacerations", x: 478, y: 435 }, answer: "INTERNAL LACERATIONS" },
-    { node: { id: "shot-out-of-cannon", x: 478, y: 435 }, answer: "SHOT OUT OF CANNON" },
-    { node: { id: "forced-regeneration", x: 528, y: 420 }, answer: "FORCED REGENERATION" },
-    { node: { id: "crushed-neck", x: 580, y: 378 }, answer: "CRUSHED NECK" },
+    {
+      node: { id: "wasting-illness", x: 68.7, y: 13.5 },
+      answer: "WASTING ILLNESS",
+    },
+    { node: { id: "trampled", x: 73.5, y: 41 }, answer: "TRAMPLED" },
+    { node: { id: "ennui", x: 62, y: 58 }, answer: "ENNUI" },
+    { node: { id: "forced-regeneration", x: 62, y: 65 }, answer: "FORCED REGENERATION" },
+    { node: { id: "internal-lacerations", x: 34, y: 58 }, answer: "INTERNAL LACERATIONS" },
+    { node: { id: "shot-out-of-cannon", x: 27, y: 66 }, answer: "SHOT OUT OF CANNON" },
+    { node: { id: "crushed-neck", x: 36, y: 74 }, answer: "CRUSHED NECK" },
   ];
 
   if (!context) {
@@ -20,10 +22,10 @@ export const collectNodes = (context: DjangoContext) => {
 
   // ids here are the slugs for the puzzles
   const puzzle_nodes: INode[] = [
-    { id: "whaling-ships", x: 632, y: 245 },
-    { id: "mr-cat", x: 335, y: 95 },
-    { id: "birbs-at-brown", x: 418, y: 420 },
-    { id: "penny-puzz", x: 326, y: 235 },
+    { id: "whaling-ships", x: 47, y: 77 },
+    { id: "mr-cat", x: 21, y: 15 },
+    { id: "penny-puzz", x: 19, y: 39 },
+    { id: "birbs-at-brown", x: 54, y: 73 },
   ];
 
   const answered_puzzle_nodes: NodeAnswer[] = [];
