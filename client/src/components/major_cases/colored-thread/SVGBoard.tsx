@@ -179,7 +179,7 @@ const SolutionPin = ({
         id="solution-pin"
         // GLOW DOES NOT WORK :(
         className={cn(
-          `hover:scale-125 hover:cursor-pointer select-none`,
+          `cursor-pointer select-none`,
           `${selectedThread && selectedNode && selectedNode.id === "solution-pin" ? COLORED_GLOW[selectedThread] : `hover:drop-shadow-[0_15px_15px_rgba(255,255,255,0.4)]`}`,
         )}
         x={solutionPinPos.x}
