@@ -11,6 +11,7 @@ import painting from "@/assets/minor_cases/exile/painting.png";
 import victrola from "@/assets/minor_cases/exile/victrola.png";
 import wine from "@/assets/minor_cases/exile/wine.png";
 import labyrinth_cover from "@/assets/minor_cases/labyrinth/labyrinth.png";
+import lockbox from "@/assets/minor_cases/maze/lockbox.png";
 import goodreads from "@/assets/minor_cases/microinfluencer/goodreads.svg";
 import instagram from "@/assets/minor_cases/microinfluencer/instagram.svg";
 import letterboxd from "@/assets/minor_cases/microinfluencer/letterboxd.svg";
@@ -189,6 +190,16 @@ const MrCatArt = () => {
   );
 };
 
+const MazeArt = () => {
+  return (
+    <ArtWrapper
+      className="max-w-[400px] pt-2 left-1/2 transform -translate-x-1/2 drop-shadow-[0_15px_15px_rgba(255,255,255,0.3)]"
+      background_src={lockbox}
+      linkTo="/puzzle/lockbox"
+    />
+  );
+};
+
 const MicroinfluencerArt = () => {
   return (
     <div className="aspect-w-4 aspect-h-3 max-w-screen-xl">
@@ -319,6 +330,7 @@ const CASE_ART_COMPONENT: { [key: string]: JSX.Element } = {
   "god-of-the-labyrinth": <LabyrinthArt />,
   cats: <MrCatArt />,
   microinfluencer: <MicroinfluencerArt />,
+  maze: <MazeArt />,
 };
 
 export default function CasePageArt({ case_slug }: { case_slug: string }) {

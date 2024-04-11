@@ -7,6 +7,8 @@ import LetterBoxedPuzzle from "./nyt-games/LetterBoxed";
 import Obituary from "./nyt-games/Obituary";
 import Wordle from "./nyt-games/Wordle";
 
+// import PennyPDF from "./penny/PennyPDF";
+
 export function ALT_PUZZLE_ROUTES(puzzle: Puzzle): {
   [key: string]: JSX.Element;
 } {
@@ -20,6 +22,7 @@ export function ALT_PUZZLE_ROUTES(puzzle: Puzzle): {
     obituary: <Obituary />,
     "labyrinth-puzz": <LabyrinthBook />,
     "illicit-affairs": <IllicitAffairsPano />,
+    // "penny-puzz": <PennyPDF />,
   };
 }
 

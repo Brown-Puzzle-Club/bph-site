@@ -15,6 +15,41 @@ import { Button } from "../ui/button";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
 
+const CUSTOM_CASE_QUESTIONS: Record<string, string> = {
+  "blues-clues": "What's a clue that can tell us when the crime was committed?",
+  cats: "How did the victim lose one of their nine lives? And where?",
+};
+const DEFAULT_CASE_QUESTIONS: Record<MajorCaseEnum, string> = {
+  [MajorCaseEnum.COLORED_THREAD]: "How did the victim die? And where?",
+  [MajorCaseEnum.SOCIAL_DEDUCTION]: "What was the name of the victim?",
+  [MajorCaseEnum.DATA]: "What’s a clue that can tell us when the victim died?",
+};
+
+const CaseQuestion = ({
+  major_case,
+  case_slug,
+}: {
+  major_case: MajorCaseEnum;
+  case_slug: string;
+}) => {
+  let message;
+  if (CUSTOM_CASE_QUESTIONS[case_slug]) {
+    message = CUSTOM_CASE_QUESTIONS[case_slug];
+  } else {
+    message = DEFAULT_CASE_QUESTIONS[major_case];
+  }
+  return (
+    <p
+      className="flex flex-col items-center"
+      style={{
+        textShadow: "0 0 10px #fff",
+      }}
+    >
+      {message}
+    </p>
+  );
+};
+
 function sanitize_answer(answer: string) {
   const answer_only_letters = answer.replace(/[^a-zA-Z]/g, "");
   return answer_only_letters.trim().toUpperCase();
@@ -308,10 +343,17 @@ export default function AnswerSubmit({
         <div className="text-white dark text-center">
           ANSWER: <span className="font-mono text-green-100">{PUZZLE_ANSWER}</span>
         </div>
-      ) : major_case === MajorCaseEnum.COLORED_THREAD && puzzle.is_meta ? (
-        <AnswerSubmitRedThread puzzle_slug={puzzle.slug} setSubmissions={setSubmissions} />
       ) : (
-        <AnswerSubmitRegular puzzle_slug={puzzle.slug} setSubmissions={setSubmissions} />
+        <div>
+          {puzzle.is_meta && major_case && (
+            <CaseQuestion major_case={major_case as MajorCaseEnum} case_slug={puzzle.round.slug} />
+          )}
+          {major_case === MajorCaseEnum.COLORED_THREAD && puzzle.is_meta ? (
+            <AnswerSubmitRedThread puzzle_slug={puzzle.slug} setSubmissions={setSubmissions} />
+          ) : (
+            <AnswerSubmitRegular puzzle_slug={puzzle.slug} setSubmissions={setSubmissions} />
+          )}
+        </div>
       )}
       <SubmissionHistory submissions={submissions} />
     </div>

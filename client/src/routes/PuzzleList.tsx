@@ -1,13 +1,20 @@
 import { useLocalStorage } from "@uidotdev/usehooks";
 import type { SetStateAction } from "react";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 
 import { useDjangoContext } from "@/hooks/useDjangoContext";
+import { useTheme } from "@/hooks/useTheme";
 import { CASE_PALETTE, MAJOR_CASE_NAMES, MajorCaseEnum } from "@/utils/constants";
+import { DEFAULT_THEME } from "@/utils/themes";
 import { getMinorCases } from "@/utils/utils";
 
 export default function PuzzleList() {
+  const { setTheme } = useTheme();
+  useEffect(() => {
+    setTheme(DEFAULT_THEME);
+  });
+
   const { data: context } = useDjangoContext();
   const [curTab, setTab] = useLocalStorage<MajorCaseEnum>(
     "puzzles-tab",
