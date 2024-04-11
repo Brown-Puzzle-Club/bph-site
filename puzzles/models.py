@@ -1608,6 +1608,17 @@ class Erratum(models.Model):
             errata.append(erratum)
         return errata
 
+    @staticmethod
+    def get_puzzle_erata(context, puzzle_slug):
+        errata = []
+        for erratum in Erratum.objects.filter(puzzle__slug=puzzle_slug).order_by(
+            "timestamp"
+        ):
+            if not context.is_superuser and not erratum.published:
+                continue
+            errata.append(erratum)
+        return errata
+
     def get_emails(self):
         teams = (
             PuzzleUnlock.objects.filter(puzzle=self.puzzle)

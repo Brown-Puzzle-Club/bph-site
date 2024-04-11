@@ -52,6 +52,14 @@ const TeamMemberSchema = z.object({
 });
 type TeamMember = z.infer<typeof TeamMemberSchema>;
 
+const ErratumSchema = z.object({
+  id: z.number(),
+  updates_text: z.string(),
+  timestamp: z.date(),
+  published: z.boolean(),
+});
+type Erratum = z.infer<typeof ErratumSchema>;
+
 const AnswerSubmissionSchema = z.object({
   id: z.number(),
   submitted_answer: z.string(),
@@ -102,6 +110,7 @@ const PuzzleSchema = z.object({
   clipboard: z.string(),
   clipboard_remote: z.string(),
   submissions: z.array(AnswerSubmissionSchema),
+  errata: z.array(ErratumSchema),
 });
 type Puzzle = z.infer<typeof PuzzleSchema>;
 
@@ -244,6 +253,7 @@ export type {
   APIResponse,
   AnswerSubmission,
   DjangoContext,
+  Erratum,
   EventCompletion,
   InPersonEvent,
   MajorCase,

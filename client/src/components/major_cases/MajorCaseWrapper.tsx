@@ -50,6 +50,7 @@ function MajorCaseWrapper({ children }: { children: ReactNode }) {
       solution: "",
       clipboard: "",
       clipboard_remote: "",
+      errata: [],
     };
   }, [majorCase]);
 

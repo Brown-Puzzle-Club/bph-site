@@ -156,7 +156,7 @@ function MinorCasePage() {
                 <AlertDialog>
                   <AlertDialogTrigger>
                     <Button className="btn btn-primary transition hover:bg-slate-200 hover:text-[black]">
-                      💣 Solve minor case 💣
+                      💣 Solve Case 💣
                     </Button>
                   </AlertDialogTrigger>
                   <AlertDialogContent>

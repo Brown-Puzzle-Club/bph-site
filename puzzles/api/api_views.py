@@ -159,11 +159,14 @@ def get_puzzle(request: Request, puzzle_slug: str) -> Response:
 
         # answer history
         submissions = context.team.puzzle_submissions(puzzle)
-
         additional_fields["submissions"] = AnswerSubmissionSerializer(
             submissions, many=True
         ).data
 
+        # errata
+        errata = Erratum.get_puzzle_erata(context=context, puzzle_slug=puzzle.slug)
+        additional_fields["errata"] = ErrataSerializer(errata, many=True).data
+        
         # puzzle body
         if context.is_admin:
             additional_fields["body"] = puzzle.body

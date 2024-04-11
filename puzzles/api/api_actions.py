@@ -1,4 +1,5 @@
 from datetime import datetime
+import traceback
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from puzzles import models
@@ -427,4 +428,6 @@ def voucher_case(request: Request, round_slug: str) -> Response:
         )
     except Exception as e:
         print(e)
+        tb = traceback.format_exc()
+        print(tb)
         return Response({"error": "Could not voucher"}, status=404)
