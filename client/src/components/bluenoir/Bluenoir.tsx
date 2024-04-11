@@ -161,7 +161,7 @@ const BluenoirSpeech = () => {
                   }}
                   options={{
                     cursor: "",
-                    delay: 30,
+                    delay: 10,
                   }}
                 />
               </div>
