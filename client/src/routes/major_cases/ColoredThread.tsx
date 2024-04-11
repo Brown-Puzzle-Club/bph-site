@@ -29,6 +29,7 @@ import { Button } from "@/components/ui/button";
 import { useDjangoContext } from "@/hooks/useDjangoContext";
 import { useTheme } from "@/hooks/useTheme";
 import { BROWN_THEME } from "@/utils/themes";
+import { cn } from "@/utils/utils";
 
 interface ThreadsProps {
   selectedThread: ThreadType | null;
@@ -41,7 +42,10 @@ const Threads = ({ selectedThread, toggleThread, linkCounts }: ThreadsProps) => 
     <>
       <RelativeAsset
         imageSrc={doctor}
-        extraClasses={`${selectedThread == ThreadType.DOCTOR ? THREAD_SELECTED_DOCTOR_GLOW : `hover:${HOVER_GLOW}`} hover:cursor-pointer`}
+        extraClasses={cn(
+          "grid place-items-center select-none",
+          `${selectedThread == ThreadType.DOCTOR ? THREAD_SELECTED_DOCTOR_GLOW : `hover:${HOVER_GLOW}`} hover:cursor-pointer`,
+        )}
         extraStyles={{
           top: "86%",
           left: "57%",
@@ -52,13 +56,17 @@ const Threads = ({ selectedThread, toggleThread, linkCounts }: ThreadsProps) => 
           toggleThread(ThreadType.DOCTOR);
         }}
       >
-        <span className="absolute bg-[#7D6723]" style={{ left: "25%", bottom: "-25%" }}>
+        <span className="shadow-lg py-1 px-2 rounded-lg bg-[#7D6723]">
           {linkCounts[ThreadType.DOCTOR]}/{MAX_LINKS[ThreadType.DOCTOR]}
         </span>
       </RelativeAsset>
+
       <RelativeAsset
         imageSrc={gorey}
-        extraClasses={`${selectedThread == ThreadType.GOREY ? THREAD_SELECTED_GOREY_GLOW : `hover:${HOVER_GLOW}`} hover:cursor-pointer`}
+        extraClasses={cn(
+          "grid place-items-center select-none",
+          `${selectedThread == ThreadType.GOREY ? THREAD_SELECTED_GOREY_GLOW : `hover:${HOVER_GLOW}`} hover:cursor-pointer`,
+        )}
         extraStyles={{
           top: "86%",
           left: "62%",
@@ -69,13 +77,19 @@ const Threads = ({ selectedThread, toggleThread, linkCounts }: ThreadsProps) => 
           toggleThread(ThreadType.GOREY);
         }}
       >
-        <span className="absolute bg-[#7D6723]" style={{ left: "25%", bottom: "-20%" }}>
+        <span
+          className="shadow-lg py-1 px-2 rounded-lg bg-[#7D6723]"
+          style={{ left: "25%", bottom: "-20%" }}
+        >
           {linkCounts[ThreadType.GOREY]}/{MAX_LINKS[ThreadType.GOREY]}
         </span>
       </RelativeAsset>
       <RelativeAsset
         imageSrc={puss}
-        extraClasses={`${selectedThread == ThreadType.PUSS ? THREAD_SELECTED_PUSS_GLOW : `hover:${HOVER_GLOW}`} hover:cursor-pointer`}
+        extraClasses={cn(
+          "grid place-items-center select-none",
+          `${selectedThread == ThreadType.PUSS ? THREAD_SELECTED_PUSS_GLOW : `hover:${HOVER_GLOW}`} hover:cursor-pointer`,
+        )}
         extraStyles={{
           top: "86%",
           left: "67%",
@@ -86,7 +100,7 @@ const Threads = ({ selectedThread, toggleThread, linkCounts }: ThreadsProps) => 
           toggleThread(ThreadType.PUSS);
         }}
       >
-        <span className="absolute bg-[#7D6723]" style={{ left: "25%", bottom: "-30%" }}>
+        <span className="shadow-lg py-1 px-2 rounded-lg bg-[#7D6723]">
           {linkCounts[ThreadType.PUSS]}/{MAX_LINKS[ThreadType.PUSS]}
         </span>
       </RelativeAsset>
@@ -141,29 +155,27 @@ export default function ColoredThread() {
   const state = { nodes, selectedThread, selectedNode, setSelectedNode, handleNodeClick };
 
   return (
-    <div>
-      <ArtWrapper className="select-none" background_src={background}>
-        <RelativeAsset imageSrc={board} />
-        <Threads
-          linkCounts={linkCounts}
-          selectedThread={selectedThread}
-          toggleThread={(thread) =>
-            setSelectedThread((currThread) => (currThread === thread ? null : thread))
-          }
-        />
-        <AnswerPins {...state} />
-        <SVGBoard {...state} links={links} setLinks={setLinks} />
-        <Button
-          className="absolute"
-          onClick={() => {
-            setSelectedThread(null);
-            setSelectedNode(null);
-            setLinks([]);
-          }}
-        >
-          Reset
-        </Button>
-      </ArtWrapper>
-    </div>
+    <ArtWrapper className="select-none" background_src={background}>
+      <RelativeAsset imageSrc={board} />
+      <Threads
+        linkCounts={linkCounts}
+        selectedThread={selectedThread}
+        toggleThread={(thread) =>
+          setSelectedThread((currThread) => (currThread === thread ? null : thread))
+        }
+      />
+      <AnswerPins {...state} />
+      <SVGBoard {...state} links={links} setLinks={setLinks} />
+      <Button
+        className="absolute"
+        onClick={() => {
+          setSelectedThread(null);
+          setSelectedNode(null);
+          setLinks([]);
+        }}
+      >
+        Reset
+      </Button>
+    </ArtWrapper>
   );
 }
