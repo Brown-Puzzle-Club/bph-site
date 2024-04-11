@@ -76,7 +76,10 @@ const Pin = ({
     <RelativeAsset
       extraClasses={cn(
         `hover:cursor-pointer select-none`,
-        `${selectedThread && selectedNode && selectedNode.id === props.id ? COLORED_GLOW[selectedThread] : `hover:drop-shadow-[0_15px_15px_rgba(255,255,255,0.4)]`}`,
+        selectedThread &&
+          (selectedNode && selectedNode.id === props.id
+            ? COLORED_GLOW[selectedThread]
+            : `hover:drop-shadow-[0_15px_15px_rgba(255,255,255,0.4)]`),
       )}
       onClick={() => {
         if (selectedThread) handleNodeClick(node.node);

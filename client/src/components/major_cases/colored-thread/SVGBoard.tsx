@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { useCallback, useRef, useState } from "react";
 
 import { cn } from "@/utils/utils";
@@ -27,6 +28,18 @@ interface Position {
   };
 }
 
+const lineVariants = {
+  hidden: { pathLength: 0, opacity: 0 },
+  visible: {
+    pathLength: 1,
+    opacity: 1,
+    transition: {
+      pathLength: { type: "spring", duration: 1.5, bounce: 0 },
+      opacity: { duration: 0.01 },
+    },
+  },
+};
+
 interface LinksProps {
   links: ILink[];
   handleLinkClick: (sourceNode: INode, targetNode: INode) => void;
@@ -41,7 +54,10 @@ const Links = ({ links, handleLinkClick }: LinksProps) => {
     const y2 = link.to.id === "solution-pin" ? link.to.y + 2 : link.to.y;
 
     return (
-      <line
+      <motion.line
+        variants={lineVariants}
+        initial="hidden"
+        animate="visible"
         className="cursor-not-allowed"
         key={link.from.id + link.to.id + index}
         {...{ x1, y1, x2, y2 }}
