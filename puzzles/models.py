@@ -1912,9 +1912,8 @@ class StorylineUnlock(models.Model):
 
     def save(self, *args, **kwargs):
         super(StorylineUnlock, self).save(*args, **kwargs)
-        # TODO: add story notification / SSE to move bluenoir
+        send_notification.send(None, notification_type="storyline_unlock", title=self.storyline, desc=self.storyline, team=self.team.user.id)
 
     @staticmethod
     def activate_non_storyline_dialogue(storyline_slug: str):
-        # TODO: add story notification / SSE to make bluenoir talk
-        return
+        send_notification.send(None, notification_type="storyline_unlock", title=storyline_slug, desc=storyline_slug, team=self.team.user.id)

@@ -1,18 +1,11 @@
-import {
-  AnimatePresence,
-  animate,
-  motion,
-  useMotionValue,
-  useMotionValueEvent,
-  type Variants,
-} from "framer-motion";
-import { forwardRef, useCallback, useEffect, useRef, useState } from "react";
+import { AnimatePresence, animate, motion, useMotionValue, type Variants } from "framer-motion";
+import { forwardRef, useEffect, useRef } from "react";
 import { useGesture } from "react-use-gesture";
 import Typewriter from "typewriter-effect";
 
 import frame from "@/assets/bluenoir/frame.png";
 import frame_bg from "@/assets/bluenoir/frame_bg.png";
-import useBPHStore from "@/stores/useBPHStore";
+import useBPHStore, { CENTER } from "@/stores/useBPHStore";
 import { BluenoirReactionImage } from "@/utils/bluenoir_dialogue";
 import { cn } from "@/utils/utils";
 
@@ -27,8 +20,8 @@ const BluenoirFrame = forwardRef<HTMLDivElement>((_props, ref) => {
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger>
-          <div ref={ref} className="cursor-pointer h-[80px] w-[80px]">
-            <div className="h-[55px] w-[55px] absolute mx-[12px] my-[12px]">
+          <div ref={ref} className="cursor-pointer h-[100px] w-[100px]">
+            <div className="h-[70px] w-[70px] absolute mx-[12px] my-[12px]">
               <img
                 className="select-none"
                 src={BluenoirReactionImage[speechDialogue.reaction]}
@@ -84,18 +77,14 @@ const textVariants: Variants = {
   },
 };
 
-interface BluenoirSpeechProps {
-  isLeft: boolean;
-}
-
-const BluenoirSpeech = ({ isLeft }: BluenoirSpeechProps) => {
+const BluenoirSpeech = () => {
   const open = useBPHStore((state) => state.bluenoirOpen);
   const setOpen = useBPHStore((state) => state.setBluenoirOpen);
   const speechDialogue = useBPHStore((state) => state.bluenoirDialogue);
-  const speak = useBPHStore((state) => state.bluenoirSpeak);
 
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  // const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  /*
   const speechTimeout = useCallback(
     () =>
       setTimeout(() => {
@@ -128,6 +117,7 @@ const BluenoirSpeech = ({ isLeft }: BluenoirSpeechProps) => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
   }, [open, speechTimeout]);
+  */
 
   return (
     <motion.div
@@ -145,25 +135,18 @@ const BluenoirSpeech = ({ isLeft }: BluenoirSpeechProps) => {
             animate="visible"
             exit="hidden"
           >
-            <div
-              className={cn("absolute text-slate-500 text-sm top-1", isLeft ? "right-2" : "left-2")}
-            >
+            <div className={cn("absolute text-slate-500 text-sm top-1 right-2")}>
               <button
                 onClick={() => {
                   setOpen(false);
-                  if (timeoutRef.current) clearTimeout(timeoutRef.current);
-                  timeoutRef.current = speechTimeout();
+                  // if (timeoutRef.current) clearTimeout(timeoutRef.current);
+                  //          timeoutRef.current = speechTimeout();
                 }}
               >
                 ✕
               </button>
             </div>
-            <div
-              className={cn(
-                "font-extrabold font-mono text-sm underline underline-offset-2",
-                !isLeft && "text-right",
-              )}
-            >
+            <div className={cn("font-extrabold font-mono text-sm underline underline-offset-2")}>
               Bluenoir
             </div>
             <div className="grid font-mono font-light max-w-xs text-xs">
@@ -192,17 +175,15 @@ const BluenoirSpeech = ({ isLeft }: BluenoirSpeechProps) => {
 
 const Bluenoir = () => {
   const position = useBPHStore((state) => state.getBluenoirPosition());
+  const previousPosition = useBPHStore((state) => state.getPreviousPosition());
   const setPosition = useBPHStore((state) => state.setBluenoirPosition);
+  const centered = useBPHStore((state) => state.centered);
   const getNearestSnapPoint = useBPHStore((state) => state.getNearestSnapPoint);
   const dragRef = useRef<HTMLDivElement>(null);
   const measureRef = useRef<HTMLDivElement>(null);
 
   const x = useMotionValue(position.x);
   const y = useMotionValue(position.y);
-
-  const [isLeft, setIsLeft] = useState(
-    x.get() < (window.innerWidth - (measureRef.current?.offsetWidth ?? 0)) / 2,
-  );
 
   useEffect(() => {
     if (measureRef.current) {
@@ -214,9 +195,19 @@ const Bluenoir = () => {
     }
   });
 
-  useMotionValueEvent(x, "change", (val) => {
-    setIsLeft(val < (window.innerWidth - (measureRef.current?.offsetWidth ?? 0)) / 2);
-  });
+  useEffect(() => {
+    const position = centered ? CENTER : previousPosition;
+
+    const centeredPositionX =
+      position.x * window.innerWidth - (measureRef.current?.offsetWidth ?? 0) / 2;
+    const centeredPositionY =
+      position.y * window.innerHeight - (measureRef.current?.offsetHeight ?? 0) / 2;
+
+    animate(x, centeredPositionX);
+    animate(y, centeredPositionY);
+    setPosition(position);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [centered, setPosition, x, y]);
 
   useGesture(
     {
@@ -229,18 +220,18 @@ const Bluenoir = () => {
         y.set(dy);
       },
       onDragEnd: () => {
-        console.log(x.get(), y.get());
-        const snapPosition = getNearestSnapPoint({ x: x.get(), y: y.get() });
+        const snappedPosition = centered ? CENTER : getNearestSnapPoint({ x: x.get(), y: y.get() });
         const centeredPositionX =
-          snapPosition.x * window.innerWidth - (measureRef.current?.offsetWidth ?? 0) / 2;
+          snappedPosition.x * window.innerWidth - (measureRef.current?.offsetWidth ?? 0) / 2;
         const centeredPositionY =
-          snapPosition.y * window.innerHeight - (measureRef.current?.offsetHeight ?? 0) / 2;
+          snappedPosition.y * window.innerHeight - (measureRef.current?.offsetHeight ?? 0) / 2;
 
         console.log(centeredPositionX, centeredPositionY);
 
         animate(x, centeredPositionX);
         animate(y, centeredPositionY);
-        setPosition(snapPosition);
+
+        setPosition(snappedPosition);
       },
     },
     {
@@ -262,12 +253,9 @@ const Bluenoir = () => {
         WebkitUserSelect: "none",
       }}
     >
-      <div
-        ref={dragRef}
-        className={cn("flex items-center select-none", isLeft ? "flex-row" : "flex-row-reverse")}
-      >
+      <div ref={dragRef} className={cn("flex items-center select-none")}>
         <BluenoirFrame ref={measureRef} />
-        <BluenoirSpeech isLeft={isLeft} />
+        <BluenoirSpeech />
       </div>
     </motion.div>
   );

@@ -23,7 +23,9 @@ const randomStrings = [
 export const PageWrapper = ({ route }: { route: React.ReactElement }) => {
   const { theme } = useTheme();
   const [votingOpen, setVotingOpen] = useState(false);
+  const toggleCentered = useBPHStore((state) => state.toggleCentered);
   const speak = useBPHStore((state) => state.bluenoirSpeak);
+
   useNotification();
 
   useEffect(() => {
@@ -58,15 +60,16 @@ export const PageWrapper = ({ route }: { route: React.ReactElement }) => {
       />
       <button
         className="bg-red-400"
-        onClick={() =>
+        onClick={() => {
+          toggleCentered();
           speak(
             {
               text: randomStrings[Math.floor(Math.random() * randomStrings.length)],
               reaction: BluenoirReaction.SMUG,
             },
             true,
-          )
-        }
+          );
+        }}
       >
         test
       </button>

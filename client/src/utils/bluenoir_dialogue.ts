@@ -1,6 +1,6 @@
 import angry from "@/assets/bluenoir/angry.png";
 import curious from "@/assets/bluenoir/curious.png";
-import embarassed from "@/assets/bluenoir/embarrassed.png";
+import embarassed from "@/assets/bluenoir/embarassed.png";
 import nervous from "@/assets/bluenoir/nervous.png";
 import neutral from "@/assets/bluenoir/neutral.png";
 import phone from "@/assets/bluenoir/phone.png";
@@ -395,6 +395,7 @@ export const BluenoirStories: Record<string, Story> = {
       },
     ],
   },
+  // these downwards are NON NOTIFICATION, NON CENTER
   "colored-thread-verdict": {
     slug: "colored-thread-verdict",
     dialogues: [

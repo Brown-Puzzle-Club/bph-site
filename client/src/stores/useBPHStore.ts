@@ -3,18 +3,9 @@ import { immer } from "zustand/middleware/immer";
 
 import { BluenoirReaction, type Dialogue } from "@/utils/bluenoir_dialogue";
 
-interface BPHState {
-  bluenoirOpen: boolean;
-  bluenoirDialogue: Dialogue;
-  bluenoirPositionPercentage: { x: number; y: number };
-  randomDialogueFunction: () => Dialogue;
-
-  votingModalOpen: boolean;
-}
-
-const TOP_LEFT = { x: 0.05, y: 0.13 } as const;
-const BOTTOM_LEFT = { x: 0.05, y: 0.85 } as const;
-const CENTER = { x: 0.5, y: 0.5 } as const;
+export const TOP_LEFT = { x: 0.05, y: 0.13 } as const;
+export const BOTTOM_LEFT = { x: 0.05, y: 0.85 } as const;
+export const CENTER = { x: 0.4, y: 0.4 } as const;
 
 interface Position {
   x: number;
@@ -23,15 +14,28 @@ interface Position {
 
 type SnappablePosition = typeof TOP_LEFT | typeof BOTTOM_LEFT | typeof CENTER;
 
+interface BPHState {
+  bluenoirOpen: boolean;
+  bluenoirDialogue: Dialogue;
+  bluenoirPositionPercentage: { x: number; y: number };
+  previousPosition: Position;
+  randomDialogueFunction: () => Dialogue;
+  centered: boolean;
+
+  votingModalOpen: boolean;
+}
+
 interface BPHActions {
   toggleBluenoirOpen: () => void;
   setBluenoirOpen: (open: boolean) => void;
   bluenoirSpeak: (text?: Dialogue, forceOpen?: boolean) => void;
   getBluenoirPosition: () => Position;
-  setBluenoirPosition: (position: SnappablePosition) => void;
+  getPreviousPosition: () => Position;
+  setBluenoirPosition: (position: Position) => void;
   getNearestSnapPoint: (position?: Position) => SnappablePosition;
   setRandomDialogueFunction: (dialogueFunction: () => Dialogue) => void;
   getRandomDialogue: () => Dialogue;
+  toggleCentered: () => void;
   toggleVotingModalOpen: () => void;
   setVotingModalOpen: (open: boolean) => void;
 }
@@ -39,7 +43,9 @@ interface BPHActions {
 const initialBPHState: BPHState = {
   bluenoirOpen: false,
   votingModalOpen: false,
+  centered: false,
   bluenoirPositionPercentage: TOP_LEFT,
+  previousPosition: TOP_LEFT,
   bluenoirDialogue: { text: "Hello!", reaction: BluenoirReaction.HAPPY },
   randomDialogueFunction: () => ({ text: "Hello!", reaction: BluenoirReaction.HAPPY }),
 };
@@ -55,7 +61,15 @@ const useBPHStore = create<BPHState & BPHActions>()(
       x: get().bluenoirPositionPercentage.x * window.innerWidth,
       y: get().bluenoirPositionPercentage.y * window.innerHeight,
     }),
-    setBluenoirPosition: (position) => set({ bluenoirPositionPercentage: position }),
+    setBluenoirPosition: (position) => {
+      const currentPreviousPosition = get().previousPosition;
+      const currentPosition = get().bluenoirPositionPercentage;
+
+      set({
+        bluenoirPositionPercentage: position,
+        previousPosition: position == currentPosition ? currentPreviousPosition : currentPosition,
+      });
+    },
     getNearestSnapPoint: (position) => {
       const pos = position ?? get().getBluenoirPosition();
       const normalizedPosition = { x: pos.x / window.innerWidth, y: pos.y / window.innerHeight };
@@ -79,6 +93,8 @@ const useBPHStore = create<BPHState & BPHActions>()(
     setRandomDialogueFunction: (dialogueFunction) =>
       set({ randomDialogueFunction: dialogueFunction }),
     getRandomDialogue: () => get().randomDialogueFunction(),
+    getPreviousPosition: () => get().previousPosition,
+    toggleCentered: () => set((state) => ({ centered: !state.centered })),
   })),
 );
 
