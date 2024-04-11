@@ -835,6 +835,14 @@ class Team(models.Model):
                 ] = submit
         return out
 
+    def major_case_solves(self):
+        solves = self.solves
+        out = {}
+        for slug in MAJOR_CASE_SLUGS:
+            if slug in solves:
+                out[slug] = solves[slug]
+        return out
+
     def db_minor_case_active(self):
         return [
             active
@@ -1825,6 +1833,53 @@ class VoiceRecording(models.Model):
                 name="transcript_trgm_idx",
             )
         ]
+
+
+class Event(models.Model):
+    """An event that occurs during the hunt."""
+
+    slug = models.SlugField(unique=True, verbose_name=_("Slug"))
+    name = models.CharField(max_length=255, verbose_name=_("Name"))
+    timestamp = models.DateTimeField(verbose_name=_("Timestamp"), null=True, blank=True)
+    message = models.TextField(verbose_name=_("Message"))
+    location = models.CharField(max_length=255, verbose_name=_("Location"))
+    is_final_runaround = models.BooleanField(
+        default=False, verbose_name=_("Is final runaround")
+    )
+    answer = models.CharField(max_length=255, verbose_name=_("Answer"), blank=True)
+
+    class Meta:
+        verbose_name = _("event")
+        verbose_name_plural = _("events")
+
+    def __str__(self):
+        return "%s: %s" % (self.timestamp, self.message)
+
+    def solve_event(self, team):
+        return EventCompletion.objects.get_or_create(
+            team=team, event=self, completion_datetime=timezone.now()
+        )
+
+
+class EventCompletion(models.Model):
+    """A record of a team completing an event."""
+
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_("team"))
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, verbose_name=_("event"))
+    completion_datetime = models.DateTimeField(
+        auto_now=True, verbose_name=_("Completion datetime")
+    )
+
+    def __str__(self):
+        return "%s -> %s @ %s" % (
+            self.team,
+            self.event,
+            self.completion_datetime,
+        )
+
+    class Meta:
+        verbose_name = _("event completion")
+        verbose_name_plural = _("event completions")
 
 
 @receiver(post_save, sender=Hint)

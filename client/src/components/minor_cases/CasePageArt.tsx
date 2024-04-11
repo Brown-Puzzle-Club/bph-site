@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 
 import birb_bg from "@/assets/minor_cases/birbs/birb_bg.png";
 import thebirb from "@/assets/minor_cases/birbs/thebirb.png";
+import mr_cat from "@/assets/minor_cases/cats/mr_cat.jpg";
 import bottle from "@/assets/minor_cases/exile/bottle.png";
 import exile_bg from "@/assets/minor_cases/exile/exile_bg.png";
 import painting from "@/assets/minor_cases/exile/painting.png";
@@ -174,6 +175,16 @@ const LabyrinthArt = () => {
   );
 };
 
+const MrCatArt = () => {
+  return (
+    <ArtWrapper
+      className="max-w-[400px] pt-2 left-1/2 transform -translate-x-1/2 drop-shadow-[0_15px_15px_rgba(255,255,255,0.3)]"
+      background_src={mr_cat}
+      linkTo="/puzzle/mr-cat"
+    />
+  );
+};
+
 interface PuzzleAsset extends AssetProps {
   slug: string;
   meta?: boolean;
@@ -269,6 +280,7 @@ const CASE_ART_COMPONENT: { [key: string]: JSX.Element } = {
   whales: <WhaleArt />,
   "birbs-at-brown": <BirbsArt />,
   "god-of-the-labyrinth": <LabyrinthArt />,
+  cats: <MrCatArt />,
 };
 
 export default function CasePageArt({ case_slug }: { case_slug: string }) {

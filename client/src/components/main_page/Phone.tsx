@@ -28,13 +28,13 @@ const NOTIFICATIONS: PhoneNotificationProps[] = [
   {
     icon: "🔭",
     name: "Gaze at the Stars",
-    time: new Date("4/9 12:00 2024"),
+    time: new Date("4/10 20:00 2024"),
     location: "Barus & Holley 7th Floor",
     instructions: "Bring ",
   },
   {
     icon: "🔎",
-    name: "Interrogate the Criminal",
+    name: "An Interrogation",
     time: new Date("4/13 8:00 2024"),
     location: "Somewhere",
   },
@@ -91,12 +91,13 @@ const Phone = () => {
             </motion.div>
           )}
           <div
-            className="absolute grid place-items-center gap-1 -translate-x-1/2 left-1/2 w-full"
+            className="absolute grid place-items-center gap-[0.2rem] -translate-x-1/2 left-1/2 w-full"
             style={{ top: "20%" }}
           >
             <p className="font-bold text-white font-sans text-[0.8vw]">
               {hours}:{minutes.toLocaleString("en-US", { minimumIntegerDigits: 2 })}
             </p>
+
             {NOTIFICATIONS.map((notification, i) => (
               <PhoneNotification key={i} {...notification} />
             ))}

@@ -2,6 +2,8 @@ from django.contrib.auth.models import User
 from puzzles.models import (
     AnswerSubmission,
     Erratum,
+    Event,
+    EventCompletion,
     ExtraGuessGrant,
     Hint,
     MajorCase,
@@ -195,6 +197,28 @@ class ErrataSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class EventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
+        fields = [
+            "slug",
+            "name",
+            "timestamp",
+            "message",
+            "location",
+            "is_final_runaround",
+        ]
+
+
+class EventCompletionSerializer(serializers.ModelSerializer):
+    event = EventSerializer()
+    team = TeamSerializer()
+
+    class Meta:
+        model = EventCompletion
+        fields = "__all__"
+
+
 # a single context call for all of a team's puzzle and solve progression data
 # IMPORTANT NOTE: This serializer contains the frontent context payload, so must be safe for a team to view
 # (all information should be unlocked to the team, not like "all puzzles" or something like that)
@@ -207,6 +231,7 @@ class TeamPuzzleContextSerializer(serializers.Serializer):
     minor_case_solves = serializers.DictField(
         child=serializers.DictField(child=AnswerSubmissionSerializer())
     )
+    major_case_solves = serializers.DictField(child=AnswerSubmissionSerializer())
     minor_case_active = MinorCaseActiveSerializer(many=True)
     minor_case_completed = MinorCaseCompletedSerializer(many=True)
     solves = serializers.DictField(child=AnswerSubmissionSerializer())

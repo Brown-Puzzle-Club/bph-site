@@ -168,6 +168,7 @@ const TeamPuzzleContextSchema = z.object({
   case_unlocks: z.record(RoundSchema),
   major_case_unlocks: z.record(MajorCaseSchema),
   major_case_puzzles: z.record(PuzzleSchema),
+  major_case_solves: z.record(AnswerSubmissionSchema),
   current_incoming_event: MinorCaseIncomingEventSchema,
 });
 
@@ -207,6 +208,24 @@ const VotingInfoSchema = z.object({
 });
 interface VotingInfo extends z.infer<typeof VotingInfoSchema> {}
 
+const EventSchema = z.object({
+  slug: z.string(),
+  name: z.string(),
+  timestamp: z.date().nullable(),
+  message: z.string(),
+  location: z.string(),
+  is_final_runaround: z.boolean(),
+  answer: z.string(),
+});
+interface Event extends z.infer<typeof EventSchema> {}
+
+const EventCompletionSchema = z.object({
+  team: TeamSchema,
+  event: EventSchema,
+  completion_datetime: z.date(),
+});
+interface EventCompletion extends z.infer<typeof EventCompletionSchema> {}
+
 type Token = { key: string; id: number };
 
 interface SuccessResponse<T> {
@@ -223,6 +242,8 @@ export type {
   APIResponse,
   AnswerSubmission,
   DjangoContext,
+  Event,
+  EventCompletion,
   MajorCase,
   MinorCase,
   MinorCaseActive,

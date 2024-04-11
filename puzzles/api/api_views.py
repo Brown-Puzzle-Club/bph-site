@@ -1,6 +1,7 @@
 from rest_framework import permissions, viewsets, mixins
 from puzzles import models
 from puzzles.api.api_guards import require_auth
+from puzzles.hunt_config import MAJOR_CASE_SLUGS
 
 from .serializers import *
 
@@ -104,6 +105,15 @@ class PuzzleViewSet(viewsets.ModelViewSet):
             return Puzzle.objects.all()
 
         return self.request._request.context.team.unlocks.values()
+
+
+class EventCompletionViewSet(viewsets.ModelViewSet):
+    queryset = EventCompletion.objects.all()
+    serializer_class = EventCompletionSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return EventCompletion.objects.filter(team=self.request._request.context.team)
 
 
 @api_view(["GET"])
@@ -221,3 +231,17 @@ def get_hints_for_puzzle(request: Request, puzzle_slug: str) -> Response:
         return Response(serializer.data)
     except Puzzle.DoesNotExist:
         return Response({"error": "Puzzle not found"}, status=404)
+
+
+@api_view(["GET"])
+@require_auth
+def get_events(request: Request) -> Response:
+    context = request._request.context
+
+    if len(context.major_case_solves) >= len(MAJOR_CASE_SLUGS):
+        events = Event.objects.all()
+    else:
+        events = Event.objects.filter(is_final_runaround=False)
+    serializer = EventSerializer(events, many=True)
+
+    return Response(serializer.data)

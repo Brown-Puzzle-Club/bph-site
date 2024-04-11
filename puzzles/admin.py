@@ -11,6 +11,8 @@ from puzzles.models import (
     PuzzleUnlock,
     MinorCaseActive,
     MinorCaseIncomingEvent,
+    Event,
+    EventCompletion,
     MinorCaseVote,
     MinorCaseVoteEvent,
     MinorCaseCompleted,
@@ -191,6 +193,22 @@ class VoiceRecordingAdmin(admin.ModelAdmin):
     search_fields = ("transcript", "characters")
 
 
+class EventAdmin(admin.ModelAdmin):
+    list_display = (
+        "name",
+        "slug",
+        "timestamp",
+        "is_final_runaround",
+        "answer",
+    )
+    list_filter = ("timestamp", "is_final_runaround")
+
+
+class EventCompletionAdmin(admin.ModelAdmin):
+    list_display = ("team", "completion_datetime")
+    list_filter = ("team", "completion_datetime")
+
+
 admin.site.register(MajorCase, MajorCaseAdmin)
 admin.site.register(Round, RoundAdmin)
 admin.site.register(Puzzle, PuzzleAdmin)
@@ -211,3 +229,6 @@ admin.site.register(Hint, HintAdmin)
 admin.site.register(Room, RoomAdmin)
 admin.site.register(Presence, PresenceAdmin)
 admin.site.register(VoiceRecording, VoiceRecordingAdmin)
+
+admin.site.register(Event, EventAdmin)
+admin.site.register(EventCompletion, EventCompletionAdmin)

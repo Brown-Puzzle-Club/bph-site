@@ -14,6 +14,9 @@ router.register(r"team-members", api_views.TeamMemberViewSet, basename="team-mem
 router.register(r"errata", api_views.ErrataViewSet, basename="erratum")
 router.register(r"rounds", api_views.RoundsViewSet, basename="rounds")
 router.register(r"puzzles", api_views.PuzzleViewSet, basename="puzzles")
+router.register(
+    r"events/completed", api_views.EventCompletionViewSet, basename="events-completed"
+)
 
 
 urlpatterns = [
@@ -43,4 +46,5 @@ urlpatterns = [
         name="get_hints_for_puzzle",
     ),
     path("hints/<str:puzzle_slug>/submit", api_actions.post_hint, name="post_hint"),
+    path("events", api_views.get_events, name="get_events"),
 ]

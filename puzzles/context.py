@@ -288,6 +288,9 @@ class Context:
     def minor_case_solves(self):
         return self.team.minor_case_solves if self.team else {}
 
+    def major_case_solves(self):
+        return self.team.major_case_solves if self.team else {}
+
     def current_incoming_event(self):
         return models.MinorCaseIncomingEvent.get_current_incoming_event(self)
 
