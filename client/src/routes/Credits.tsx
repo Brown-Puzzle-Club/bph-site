@@ -73,6 +73,9 @@ export default function Credits() {
               <strong>Megan Carlson</strong> (&apos;26)
             </li>
             <li>
+              <strong>Julia Ceccarelli</strong> (&apos;26)
+            </li>
+            <li>
               <strong>Thomas Gordon</strong> (&apos;26)
             </li>
             <li>
@@ -95,9 +98,6 @@ export default function Credits() {
             </li>
             <li>
               <strong>Alex Wang</strong> (&apos;27)
-            </li>
-            <li>
-              <strong>Alex DelFranco</strong>
             </li>
             <li>
               <strong>Thomas Mowen</strong>

@@ -88,7 +88,7 @@ const WhaleArt = () => {
   return (
     <ArtWrapper className="" background_src={whale_bg}>
       <PuzzleIconWrapper
-        slug="underwater-flora"
+        slug="the-flowers"
         imageSrc={flowers}
         extraStyles={{
           top: "40%",

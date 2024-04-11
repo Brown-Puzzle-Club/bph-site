@@ -13,7 +13,7 @@ const getMyTeam = async () => {
 const getMyToken = async () => {
   console.log("getMyToken");
   const response = await axios.get<APIResponse<Token>>("/api/my-token/");
-  return response.data.success ? response.data.data : null;
+  return response.data.success ? response.data.data["key"] : null;
 };
 const getUser = async () => {
   console.log("getUser");
