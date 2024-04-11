@@ -130,7 +130,7 @@ export default function RegisterForm() {
     setSubmitting(true);
     await register.mutateAsync(values).catch((error) => {
       console.error(error);
-      toast.error(error.response.data.message, { duration: 5000 });
+      toast.error(error.response.data.error, { duration: 5000 });
     });
     setSubmitting(false);
   };
