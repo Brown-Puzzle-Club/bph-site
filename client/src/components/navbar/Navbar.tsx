@@ -21,6 +21,7 @@ import { useTheme } from "@/hooks/useTheme";
 import { DEFAULT_THEME } from "@/utils/themes";
 import { cn } from "@/utils/utils";
 
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 import LoginNavbar from "./LoginNavbar";
 import TeamNavbar from "./TeamNavbar";
 
@@ -217,10 +218,54 @@ const NavbarMiddle = () => {
 const NavbarRight = () => {
   const { team } = useAuth();
   const { isLoading, data: teamData } = team;
+  const { data: context } = useDjangoContext();
 
   return (
     <div className="right flex justify-end w-1/3">
       <NavigationMenuRight>
+        <div className="space-x-2">
+          {context?.team_context.num_hints_remaining &&
+          context?.team_context.num_hints_remaining > 0 ? (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <div className="flex justify-center items-center text-white">
+                    <span className="text-xs bg-white text-accent rounded-full p-1">
+                      {context?.team_context.num_hints_remaining}
+                      <b>H</b>
+                    </span>
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent className="bg-slate-900 text-white border-none">
+                  <p>
+                    Puzzle <b className="font-extrabold">H</b>ints Available Every{" "}
+                    {context.hunt_context.hours_per_hint} Hours
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          ) : null}
+          {context?.team_context.num_free_answers_remaining &&
+          context?.team_context.num_free_answers_remaining > 0 ? (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <div className="flex justify-center items-center text-white">
+                    <span className="text-xs bg-white text-accent rounded-full p-1">
+                      {context?.team_context.num_free_answers_remaining}
+                      <b>V</b>
+                    </span>
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent className="bg-slate-900 text-white border-none">
+                  <p>
+                    Free Case <b className="font-extrabold">V</b>ouchers
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          ) : null}
+        </div>
         {(isLoading && (
           <BeatLoader className="justify-center content-center pr-2" color={"#fff"} size={12} />
         )) ||

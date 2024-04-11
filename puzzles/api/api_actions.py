@@ -209,18 +209,17 @@ def create_vote_event(request: Request) -> Response:
 
 
 def handle_answer(
-    answer: str | None, request_context, django_context, puzzle_slug: str
+    answer: str | None, request_context, django_context, puzzle_slug: str, voucher=False
 ) -> Response:
     print(
         f"submitting for puzzle: {puzzle_slug} with answer: {answer} for team: {django_context.team}"
     )
 
-    puzzle = django_context.team.unlocks.get(puzzle_slug)
-    if not puzzle:
-        if django_context.is_admin:
-            puzzle = Puzzle.objects.get(slug=puzzle_slug)
-        else:
-            return Response({"error": "Puzzle not unlocked"}, status=403)
+    puzzle = Puzzle.objects.get(slug=puzzle_slug)
+    unlock = PuzzleUnlock.objects.filter(team=django_context.team, puzzle=puzzle)
+
+    if not unlock and not django_context.is_admin:
+        return Response({"error": "Puzzle not unlocked"}, status=403)
 
     guesses_left = request_context.team.guesses_remaining(puzzle)
     if guesses_left <= 0:
@@ -247,7 +246,7 @@ def handle_answer(
             puzzle=puzzle,
             submitted_answer=answer,
             is_correct=correct,
-            used_free_answer=False,
+            used_free_answer=voucher,
         )
         submission.save()
     except Exception as e:
@@ -288,6 +287,7 @@ def handle_answer(
     return Response(
         {
             "status": "correct" if correct else "incorrect",
+            "guess": answer,
             "guesses_left": guesses_left,
             "messages": PuzzleMessageSerializer(puzzle_messages, many=True).data,
         },
@@ -394,3 +394,37 @@ def submit_event_answer(request: Request) -> Response:
         )
     except Event.DoesNotExist:
         return Response({"error": "Event not found"}, status=404)
+
+
+@api_view(["POST"])
+@require_auth
+def voucher_case(request: Request, round_slug: str) -> Response:
+    try:
+        django_context = request._request.context
+        request_context = request.context
+
+        case = Round.objects.get(slug=round_slug)
+        case_meta = case.meta
+
+        team = django_context.team
+
+        if team.num_free_answers_remaining <= 0:
+            return Response({"error": "No free answers remaining"}, status=400)
+
+        if case_meta.slug in team.solves:
+            return Response({"error": "Case already solved."}, status=400)
+
+        if case_meta.slug not in team.unlocks:
+            # If the puzzle is not unlocked, unlock it
+            unlock = PuzzleUnlock.objects.create(
+                team=team, puzzle=case_meta, unlock_datetime=request_context.now
+            )
+            unlock.save()
+
+        answer = case_meta.answer
+        return handle_answer(
+            answer, request_context, django_context, case_meta.slug, voucher=True
+        )
+    except Exception as e:
+        print(e)
+        return Response({"error": "Could not voucher"}, status=404)

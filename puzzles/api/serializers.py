@@ -263,6 +263,7 @@ class HuntContextSerializer(serializers.Serializer):
     hunt_is_closed = serializers.BooleanField()
     max_guesses_per_puzzle = serializers.IntegerField()
     max_members_per_team = serializers.IntegerField()
+    hours_per_hint = serializers.IntegerField()
 
 
 class ContextSerializer(serializers.Serializer):

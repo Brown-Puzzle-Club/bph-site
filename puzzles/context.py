@@ -13,6 +13,7 @@ from django.utils import timezone
 
 from puzzles import hunt_config
 from puzzles.hunt_config import (
+    HOURS_PER_HINT,
     HUNT_START_TIME,
     HUNT_END_TIME,
     HUNT_CLOSE_TIME,
@@ -193,6 +194,9 @@ class Context:
 
     def num_free_answers_remaining(self):
         return self.team.num_free_answers_remaining if self.team else 0
+
+    def hours_per_hint(self):
+        return HOURS_PER_HINT
 
     def unlocks(self):
         return self.team.unlocks_by_case if self.team else {}

@@ -202,6 +202,7 @@ const HuntContextSchema = z.object({
   hunt_is_closed: z.boolean(),
   max_guesses_per_puzzle: z.number(),
   max_members_per_team: z.number(),
+  hours_per_hint: z.number(),
 });
 
 const ContextSchema = z.object({

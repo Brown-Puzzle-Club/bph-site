@@ -48,4 +48,5 @@ urlpatterns = [
     path("hints/<str:puzzle_slug>/submit", api_actions.post_hint, name="post_hint"),
     path("events", api_views.get_events, name="get_events"),
     path("events/submit_answer", api_actions.submit_event_answer, name="submit_answer"),
+    path("rounds/<str:round_slug>/voucher", api_actions.voucher_case, name="get_round"),
 ]

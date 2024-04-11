@@ -641,7 +641,7 @@ class Team(models.Model):
         """
         Compute the total number of hints (used + remaining) available to this team.
         """
-        FREE_HINT_CNT = 2
+        FREE_HINT_CNT = 0
         if not HINTS_ENABLED or self.hunt_is_over:
             return 0
         if self.now < self.creation_time + TEAM_AGE_BEFORE_HINTS:
@@ -671,18 +671,11 @@ class Team(models.Model):
         return self.num_hints_total - self.num_hints_used
 
     def num_free_answers_total(self):
-        if not FREE_ANSWERS_ENABLED or self.hunt_is_over:
-            return 0
-        # TODO: FREE ANSWERS (VOUCHER) : count the number of puzzles in event that a team has
-        # print(self.main_round_solves[1]['events'])
-        event_solve_cnt = self.main_round_solves[1]["events"]
+        # if not FREE_ANSWERS_ENABLED or self.hunt_is_over:
+        #     return 0
+        # TODO: NUMBER OF EVENT SOLVES
+        event_solve_cnt = len(self.event_solves)
         return self.total_free_answers_awarded + event_solve_cnt
-
-        # OLD IMPLEMNTATION: based on auto unlock time.. If need to reassess, we can comment this back in and force feed hints.
-        # if self.now < self.creation_time + TEAM_AGE_BEFORE_FREE_ANSWERS:
-        #     return self.total_free_answers_awarded
-        # days = max(0, (self.now - (FREE_ANSWER_TIME - self.start_offset)).days + 1)
-        # return self.total_free_answers_awarded + sum(FREE_ANSWERS_PER_DAY[:days])
 
     def num_free_answers_used(self):
         return sum(1 for submission in self.submissions if submission.used_free_answer)
@@ -842,6 +835,12 @@ class Team(models.Model):
             if slug in solves:
                 out[slug] = solves[slug]
         return out
+
+    def event_solves(self):
+        return [
+            event_completion
+            for event_completion in self.eventcompletion_set.select_related("event")
+        ]
 
     def db_minor_case_active(self):
         return [
