@@ -17,3 +17,15 @@ export const THREAD_COLOR: Record<ThreadType, string> = {
   [ThreadType.GOREY]: "red",
   [ThreadType.PUSS]: "orange",
 };
+
+export const MAX_LINKS: Record<ThreadType, number> = {
+  [ThreadType.DOCTOR]: 3,
+  [ThreadType.GOREY]: 4,
+  [ThreadType.PUSS]: 4,
+};
+
+export const emptyCounts = {
+  [ThreadType.DOCTOR]: 0,
+  [ThreadType.GOREY]: 0,
+  [ThreadType.PUSS]: 0,
+};

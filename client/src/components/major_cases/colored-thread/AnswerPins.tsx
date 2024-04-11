@@ -15,7 +15,7 @@ import RelativeAsset from "@/components/RelativeAsset";
 import { cn } from "@/utils/utils";
 
 import { COLORED_GLOW } from "./consts";
-import type { ILink, INode, NodeAnswer, ThreadType } from "./types/BoardTypes";
+import type { INode, NodeAnswer, ThreadType } from "./types/BoardTypes";
 
 export const PIN_HOVER_GLOW = "drop-shadow-[0_15px_15px_rgba(255,255,255,0.4)]";
 
@@ -24,9 +24,7 @@ interface AnswerPin extends AssetProps {
   nodes: NodeAnswer[];
   selectedThread: ThreadType | null;
   selectedNode: INode | null;
-  setSelectedNode: (node: INode | null) => void;
-  links: ILink[];
-  setLinks: (links: ILink[]) => void;
+  handleNodeClick: (node: INode) => void;
   textStyle?: CSSProperties;
 }
 
@@ -37,49 +35,19 @@ const formatAnswer = (answer: string) => {
   return index === -1 ? answer : answer_upper.substring(0, index);
 };
 
-const Pin = ({
-  nodes,
-  selectedThread,
-  setSelectedNode,
-  selectedNode,
-  links,
-  setLinks,
-  ...props
-}: AnswerPin) => {
-  const handleNodeClick = (targetNode: INode) => {
-    if (selectedThread) {
-      if (!selectedNode) {
-        // Select the node
-        setSelectedNode(targetNode);
-        return;
-      }
-      // Check if the two nodes are not the same and there is no existing link between them
-      if (
-        selectedNode.id !== targetNode.id &&
-        !links.some(
-          (link) =>
-            (link.from.id === selectedNode.id && link.to.id === targetNode.id) ||
-            (link.from.id === targetNode.id && link.to.id === selectedNode.id),
-        )
-      ) {
-        // Link the two nodes
-        setLinks([...links, { from: selectedNode, to: targetNode, thread: selectedThread }]);
-        setSelectedNode(null);
-      }
-    }
-  };
-
+const Pin = ({ nodes, selectedThread, selectedNode, handleNodeClick, ...props }: AnswerPin) => {
   const node = nodes.find((node) => node.node.id === props.id);
   if (!node) return null;
 
   return (
     <RelativeAsset
       extraClasses={cn(
-        `hover:cursor-pointer select-none`,
+        "select-none",
+        selectedThread && "hover:cursor-pointer",
         selectedThread &&
           (selectedNode && selectedNode.id === props.id
             ? COLORED_GLOW[selectedThread]
-            : `hover:drop-shadow-[0_15px_15px_rgba(255,255,255,0.4)]`),
+            : "hover:drop-shadow-[0_15px_15px_rgba(255,255,255,0.4)]"),
       )}
       onClick={() => {
         if (selectedThread) handleNodeClick(node.node);
@@ -100,9 +68,7 @@ interface AnswerPinsProps {
   nodes: NodeAnswer[];
   selectedThread: ThreadType | null;
   selectedNode: INode | null;
-  setSelectedNode: React.Dispatch<React.SetStateAction<INode | null>>;
-  links: ILink[];
-  setLinks: React.Dispatch<React.SetStateAction<ILink[]>>;
+  handleNodeClick: (node: INode) => void;
 }
 
 export default function AnswerPins(props: AnswerPinsProps) {

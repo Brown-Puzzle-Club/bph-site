@@ -11,9 +11,11 @@ import AnswerPins from "@/components/major_cases/colored-thread/AnswerPins";
 import SVGBoard from "@/components/major_cases/colored-thread/SVGBoard";
 import {
   HOVER_GLOW,
+  MAX_LINKS,
   THREAD_SELECTED_DOCTOR_GLOW,
   THREAD_SELECTED_GOREY_GLOW,
   THREAD_SELECTED_PUSS_GLOW,
+  emptyCounts,
 } from "@/components/major_cases/colored-thread/consts";
 import { collectNodes } from "@/components/major_cases/colored-thread/nodes";
 import type {
@@ -31,9 +33,10 @@ import { BROWN_THEME } from "@/utils/themes";
 interface ThreadsProps {
   selectedThread: ThreadType | null;
   toggleThread: (thread: ThreadType) => void;
+  linkCounts: Record<ThreadType, number>;
 }
 
-const Threads = ({ selectedThread, toggleThread }: ThreadsProps) => {
+const Threads = ({ selectedThread, toggleThread, linkCounts }: ThreadsProps) => {
   return (
     <>
       <RelativeAsset
@@ -48,7 +51,11 @@ const Threads = ({ selectedThread, toggleThread }: ThreadsProps) => {
         onClick={() => {
           toggleThread(ThreadType.DOCTOR);
         }}
-      />
+      >
+        <span className="absolute bg-[#7D6723]" style={{ left: "25%", bottom: "-25%" }}>
+          {linkCounts[ThreadType.DOCTOR]}/{MAX_LINKS[ThreadType.DOCTOR]}
+        </span>
+      </RelativeAsset>
       <RelativeAsset
         imageSrc={gorey}
         extraClasses={`${selectedThread == ThreadType.GOREY ? THREAD_SELECTED_GOREY_GLOW : `hover:${HOVER_GLOW}`} hover:cursor-pointer`}
@@ -61,7 +68,11 @@ const Threads = ({ selectedThread, toggleThread }: ThreadsProps) => {
         onClick={() => {
           toggleThread(ThreadType.GOREY);
         }}
-      />
+      >
+        <span className="absolute bg-[#7D6723]" style={{ left: "25%", bottom: "-20%" }}>
+          {linkCounts[ThreadType.GOREY]}/{MAX_LINKS[ThreadType.GOREY]}
+        </span>
+      </RelativeAsset>
       <RelativeAsset
         imageSrc={puss}
         extraClasses={`${selectedThread == ThreadType.PUSS ? THREAD_SELECTED_PUSS_GLOW : `hover:${HOVER_GLOW}`} hover:cursor-pointer`}
@@ -74,7 +85,11 @@ const Threads = ({ selectedThread, toggleThread }: ThreadsProps) => {
         onClick={() => {
           toggleThread(ThreadType.PUSS);
         }}
-      />
+      >
+        <span className="absolute bg-[#7D6723]" style={{ left: "25%", bottom: "-30%" }}>
+          {linkCounts[ThreadType.PUSS]}/{MAX_LINKS[ThreadType.PUSS]}
+        </span>
+      </RelativeAsset>
     </>
   );
 };
@@ -85,26 +100,59 @@ export default function ColoredThread() {
   const [links, setLinks] = useLocalStorage<ILink[]>("colored-thread-links", []);
   const { data: context } = useDjangoContext();
   const { setTheme } = useTheme();
+  const nodes: NodeAnswer[] = useMemo(() => collectNodes(context), [context]);
+  const linkCounts = useMemo(() => {
+    return links.reduce(
+      (acc, link) => {
+        acc[link.thread] += 1;
+        return acc;
+      },
+      { ...emptyCounts },
+    );
+  }, [links]);
 
   useEffect(() => {
     setTheme(BROWN_THEME);
   });
 
-  const nodes: NodeAnswer[] = useMemo(() => collectNodes(context), [context]);
-  const state = { nodes, selectedThread, selectedNode, setSelectedNode, links, setLinks };
+  const handleNodeClick = (targetNode: INode) => {
+    if (selectedThread) {
+      if (!selectedNode) {
+        // Select the node
+        setSelectedNode(targetNode);
+      } else if (targetNode.id === selectedNode.id) {
+        // Deselect the node
+        setSelectedNode(null);
+      } else {
+        const isLinked = (link: ILink) =>
+          [selectedNode.id, targetNode.id].every((id) => link.from.id === id || link.to.id === id);
+
+        console.log(linkCounts[selectedThread], MAX_LINKS[selectedThread]);
+
+        if (!links.some(isLinked) && linkCounts[selectedThread] < MAX_LINKS[selectedThread]) {
+          // Link the two nodes
+          setLinks([...links, { from: selectedNode, to: targetNode, thread: selectedThread }]);
+          setSelectedNode(targetNode);
+        }
+      }
+    }
+  };
+
+  const state = { nodes, selectedThread, selectedNode, setSelectedNode, handleNodeClick };
 
   return (
     <div>
       <ArtWrapper className="select-none" background_src={background}>
         <RelativeAsset imageSrc={board} />
         <Threads
+          linkCounts={linkCounts}
           selectedThread={selectedThread}
           toggleThread={(thread) =>
             setSelectedThread((currThread) => (currThread === thread ? null : thread))
           }
         />
         <AnswerPins {...state} />
-        <SVGBoard {...state} />
+        <SVGBoard {...state} links={links} setLinks={setLinks} />
         <Button
           className="absolute"
           onClick={() => {

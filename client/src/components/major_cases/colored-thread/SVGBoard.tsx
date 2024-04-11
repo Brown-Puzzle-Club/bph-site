@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useRef, useState } from "react";
 
 import { cn } from "@/utils/utils";
@@ -46,27 +46,32 @@ interface LinksProps {
 }
 
 const Links = ({ links, handleLinkClick }: LinksProps) => {
-  return links.map((link, index) => {
-    // Adjust the coordinates if 'solution-pin' is involved
-    const x1 = link.from.id === "solution-pin" ? link.from.x + 2 : link.from.x;
-    const y1 = link.from.id === "solution-pin" ? link.from.y + 2 : link.from.y;
-    const x2 = link.to.id === "solution-pin" ? link.to.x + 2 : link.to.x;
-    const y2 = link.to.id === "solution-pin" ? link.to.y + 2 : link.to.y;
+  return (
+    <AnimatePresence>
+      {links.map((link) => {
+        // Adjust the coordinates if 'solution-pin' is involved
+        const x1 = link.from.id === "solution-pin" ? link.from.x + 2 : link.from.x;
+        const y1 = link.from.id === "solution-pin" ? link.from.y + 2 : link.from.y;
+        const x2 = link.to.id === "solution-pin" ? link.to.x + 2 : link.to.x;
+        const y2 = link.to.id === "solution-pin" ? link.to.y + 2 : link.to.y;
 
-    return (
-      <motion.line
-        variants={lineVariants}
-        initial="hidden"
-        animate="visible"
-        className="cursor-not-allowed"
-        key={link.from.id + link.to.id + index}
-        {...{ x1, y1, x2, y2 }}
-        stroke={THREAD_COLOR[link.thread]}
-        strokeWidth="0.5"
-        onClick={() => handleLinkClick(link.from, link.to)}
-      />
-    );
-  });
+        return (
+          <motion.line
+            variants={lineVariants}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+            className="cursor-not-allowed"
+            key={link.from.id + link.to.id}
+            {...{ x1, y1, x2, y2 }}
+            stroke={THREAD_COLOR[link.thread]}
+            strokeWidth="0.5"
+            onClick={() => handleLinkClick(link.from, link.to)}
+          />
+        );
+      })}
+    </AnimatePresence>
+  );
 };
 
 interface NodesProps {
@@ -96,7 +101,7 @@ const Nodes = ({ nodes, setSelectedNode }: NodesProps) => {
 interface SolutionPinProps {
   selectedThread: ThreadType | null;
   selectedNode: INode | null;
-  setSelectedNode: (node: INode | null) => void;
+  handleNodeClick: (node: INode) => void;
   links: ILink[];
   setLinks: (links: ILink[]) => void;
   svgEleRef: React.RefObject<SVGSVGElement>;
@@ -105,35 +110,12 @@ interface SolutionPinProps {
 const SolutionPin = ({
   selectedThread,
   selectedNode,
-  setSelectedNode,
+  handleNodeClick,
   links,
   setLinks,
   svgEleRef,
 }: SolutionPinProps) => {
   const [solutionPinPos, setSolutionPinPos] = useState<Position>({ x: 22, y: 90, coords: {} });
-
-  const handleNodeClick = (targetNode: INode) => {
-    if (selectedThread) {
-      if (!selectedNode) {
-        // Select the node
-        setSelectedNode(targetNode);
-        return;
-      }
-      // Check if the two nodes are not the same and there is no existing link between them
-      if (
-        selectedNode.id !== targetNode.id &&
-        !links.some(
-          (link) =>
-            (link.from.id === selectedNode.id && link.to.id === targetNode.id) ||
-            (link.from.id === targetNode.id && link.to.id === selectedNode.id),
-        )
-      ) {
-        // Link the two nodes
-        setLinks([...links, { from: selectedNode, to: targetNode, thread: selectedThread }]);
-        setSelectedNode(null);
-      }
-    }
-  };
 
   /**
    * Handler for when the mouse is moved for the solution pin.
@@ -228,6 +210,7 @@ interface SVGBoardProps {
   selectedThread: ThreadType | null;
   selectedNode: INode | null;
   setSelectedNode: React.Dispatch<React.SetStateAction<INode | null>>;
+  handleNodeClick: (node: INode) => void;
   links: ILink[];
   setLinks: React.Dispatch<React.SetStateAction<ILink[]>>;
   nodes: NodeAnswer[];
@@ -237,6 +220,7 @@ export default function SVGBoard({
   selectedThread,
   selectedNode,
   setSelectedNode,
+  handleNodeClick,
   links,
   setLinks,
   nodes,
@@ -264,7 +248,7 @@ export default function SVGBoard({
         <SolutionPin
           selectedThread={selectedThread}
           selectedNode={selectedNode}
-          setSelectedNode={setSelectedNode}
+          handleNodeClick={handleNodeClick}
           links={links}
           setLinks={setLinks}
           svgEleRef={svgEleRef}
