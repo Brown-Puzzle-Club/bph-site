@@ -104,7 +104,6 @@ const AnswerSubmitRedThread = ({
           onSubmit={form.handleSubmit(submit_answer)}
           className="text-white dark flex items-center space-x-3" // Changed flex class to include items-center
         >
-          <p>The victim was</p>
           <FormField
             control={form.control}
             name="cause"
