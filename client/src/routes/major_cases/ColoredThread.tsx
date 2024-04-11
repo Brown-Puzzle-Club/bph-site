@@ -111,6 +111,7 @@ const Threads = ({ selectedThread, toggleThread, linkCounts }: ThreadsProps) => 
 export default function ColoredThread() {
   const [selectedThread, setSelectedThread] = useState<ThreadType | null>(null);
   const [selectedNode, setSelectedNode] = useState<INode | null>(null);
+  const [remountCounter, setRemountCounter] = useState(0);
   const [links, setLinks] = useLocalStorage<ILink[]>("colored-thread-links", []);
   const { data: context } = useDjangoContext();
   const { setTheme } = useTheme();
@@ -155,7 +156,7 @@ export default function ColoredThread() {
   const state = { nodes, selectedThread, selectedNode, setSelectedNode, handleNodeClick };
 
   return (
-    <ArtWrapper className="select-none" background_src={background}>
+    <ArtWrapper key={remountCounter} className="select-none" background_src={background}>
       <RelativeAsset imageSrc={board} />
       <Threads
         linkCounts={linkCounts}
@@ -168,10 +169,15 @@ export default function ColoredThread() {
       <SVGBoard {...state} links={links} setLinks={setLinks} />
       <Button
         className="absolute"
+        style={{
+          top: "93%",
+          left: "47%",
+        }}
         onClick={() => {
           setSelectedThread(null);
           setSelectedNode(null);
           setLinks([]);
+          setRemountCounter((count) => count + 1);
         }}
       >
         Reset
