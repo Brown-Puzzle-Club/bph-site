@@ -83,10 +83,6 @@ export const BluenoirStories: Record<string, Story> = {
         reaction: BluenoirReaction.ANGRY,
       },
       {
-        text: "Yep, you heard it here first. Prison break. Not even Providence's finest hoosegows could contain the excitement of Carberry's untimely demise. Three of our most notorious serial killers are now out roaming the streets.",
-        reaction: BluenoirReaction.NEUTRAL,
-      },
-      {
         text: "On top of it, there's all the 'Detective of the Month' malarkey going on. Everybody's doubly desperate to prove their salt now that Carberry's gone. Backstabbers and mooks everywhere you turn.",
         reaction: BluenoirReaction.TIRED,
       },
@@ -172,7 +168,7 @@ export const BluenoirStories: Record<string, Story> = {
         reaction: BluenoirReaction.PROUD,
       },
       {
-        text: "Eh, speaking of ... Sorry if my welcome wasn't exactly the 'warmest' back at new member orientation.",
+        text: "Eh, speaking of ... Sorry if my welcome wasn't exactly the 'warmest' back at new employee orientation.",
         reaction: BluenoirReaction.EMBARRASSED,
       },
       {
@@ -354,7 +350,7 @@ export const BluenoirStories: Record<string, Story> = {
         reaction: BluenoirReaction.EXCITED,
       },
       {
-        text: "They're swearing me in tonight at [].",
+        text: "They're swearing me in later today.",
         reaction: BluenoirReaction.HAPPY,
       },
       {
@@ -392,6 +388,10 @@ export const BluenoirStories: Record<string, Story> = {
       {
         text: "So, the time has come to figure out the big question that I'm sure's been tickling your brain: which of these knuckleheaded goons killed Josiah Carberry?",
         reaction: BluenoirReaction.SMUG,
+      },
+      {
+        text: "Well, I'll let you stew on it a little longer! I'm coming by to talk to you in person. Expect a call from me.",
+        reaction: BluenoirReaction.EXCITED,
       },
     ],
   },
@@ -635,10 +635,6 @@ export const BluenoirStories: Record<string, Story> = {
   "nomenclept-case-solve": {
     slug: "nomenclept-case-solve",
     dialogues: [
-      {
-        text: "Must've been fun signing letters to each other, huh?",
-        reaction: BluenoirReaction.SMUG,
-      },
       {
         text: "Ah, I remember now! Gourd Wilson used to be a good friend of mine.",
         reaction: BluenoirReaction.SMUG,
@@ -1287,6 +1283,7 @@ const MINOR_CASE_IDLE_BY_CASE: Record<string, Dialogue[]> = {
   ],
   // (Special: this ellipsis should be the only bit of idle dialogue bluenoir has access to for this one)
   //  ^- orion note: I am confused on why this is the vibe for the pokemon puzzle?
+  //  ^- aren explanation: there is a lore dump once showdown is complete, he's being coy about it
   showdown: [
     {
       text: "...",
