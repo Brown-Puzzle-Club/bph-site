@@ -205,7 +205,7 @@ class EventAdmin(admin.ModelAdmin):
 
 
 class EventCompletionAdmin(admin.ModelAdmin):
-    list_display = ("team", "completion_datetime")
+    list_display = ("team", "completion_datetime", "event")
     list_filter = ("team", "completion_datetime")
 
 

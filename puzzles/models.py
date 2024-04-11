@@ -1853,7 +1853,7 @@ class Event(models.Model):
         verbose_name_plural = _("events")
 
     def __str__(self):
-        return "%s: %s" % (self.timestamp, self.message)
+        return "(%s) %s" % (self.slug, self.name)
 
     def solve_event(self, team):
         return EventCompletion.objects.get_or_create(
@@ -1880,6 +1880,14 @@ class EventCompletion(models.Model):
     class Meta:
         verbose_name = _("event completion")
         verbose_name_plural = _("event completions")
+        unique_together = ("team", "event")
+
+    @staticmethod
+    def get_completed_events(team):
+        return {
+            eventcompletion.event.slug: eventcompletion
+            for eventcompletion in EventCompletion.objects.filter(team=team)
+        }
 
 
 @receiver(post_save, sender=Hint)

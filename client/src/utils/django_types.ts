@@ -151,6 +151,24 @@ const MinorCaseIncomingEventSchema = z.object({
 });
 type MinorCaseIncomingEvent = z.infer<typeof MinorCaseIncomingEventSchema>;
 
+const EventSchema = z.object({
+  slug: z.string(),
+  name: z.string(),
+  timestamp: z.date().nullable(),
+  message: z.string(),
+  location: z.string(),
+  is_final_runaround: z.boolean(),
+  answer: z.string(),
+});
+interface InPersonEvent extends z.infer<typeof EventSchema> {}
+
+const EventCompletionSchema = z.object({
+  team: TeamSchema,
+  event: EventSchema,
+  completion_datetime: z.date(),
+});
+interface EventCompletion extends z.infer<typeof EventCompletionSchema> {}
+
 const TeamPuzzleContextSchema = z.object({
   is_admin: z.boolean(),
   is_superuser: z.boolean(),
@@ -170,6 +188,7 @@ const TeamPuzzleContextSchema = z.object({
   major_case_puzzles: z.record(PuzzleSchema),
   major_case_solves: z.record(AnswerSubmissionSchema),
   current_incoming_event: MinorCaseIncomingEventSchema,
+  completed_events: z.record(EventCompletionSchema),
 });
 
 const HuntContextSchema = z.object({
@@ -208,24 +227,6 @@ const VotingInfoSchema = z.object({
 });
 interface VotingInfo extends z.infer<typeof VotingInfoSchema> {}
 
-const EventSchema = z.object({
-  slug: z.string(),
-  name: z.string(),
-  timestamp: z.date().nullable(),
-  message: z.string(),
-  location: z.string(),
-  is_final_runaround: z.boolean(),
-  answer: z.string(),
-});
-interface Event extends z.infer<typeof EventSchema> {}
-
-const EventCompletionSchema = z.object({
-  team: TeamSchema,
-  event: EventSchema,
-  completion_datetime: z.date(),
-});
-interface EventCompletion extends z.infer<typeof EventCompletionSchema> {}
-
 type Token = { key: string; id: number };
 
 interface SuccessResponse<T> {
@@ -242,8 +243,8 @@ export type {
   APIResponse,
   AnswerSubmission,
   DjangoContext,
-  Event,
   EventCompletion,
+  InPersonEvent,
   MajorCase,
   MinorCase,
   MinorCaseActive,

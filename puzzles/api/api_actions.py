@@ -365,3 +365,32 @@ def post_hint(request: Request, puzzle_slug: str) -> Response:
         return Response(
             {"error": f"Missing required fields {required_fields}"}, status=400
         )
+
+
+@api_view(["POST"])
+@require_auth
+def submit_event_answer(request: Request) -> Response:
+    try:
+        context = request._request.context
+        event_slug = request.data["event_slug"]
+        answer = request.data["answer"]
+
+        event = Event.objects.get(slug=event_slug)
+
+        sanitized_answer = "".join(
+            [char for char in event.answer if char.isalpha()]
+        ).upper()
+
+        correct = Puzzle.normalize_answer(answer) == sanitized_answer
+
+        if correct:
+            EventCompletion.objects.create(
+                team=context.team, event=event, completion_datetime=context.now
+            )
+
+        return Response(
+            {"status": "correct" if correct else "incorrect", "correct": correct},
+            status=200,
+        )
+    except Event.DoesNotExist:
+        return Response({"error": "Event not found"}, status=404)

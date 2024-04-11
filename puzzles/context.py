@@ -300,6 +300,11 @@ class Context:
     def minor_case_completed(self):
         return self.team.db_minor_case_completed if self.team else {}
 
+    def completed_events(self):
+        return (
+            models.EventCompletion.get_completed_events(self.team) if self.team else {}
+        )
+
     # The purpose of this logic is to keep archive links current. For example,
     # https://2019.galacticpuzzlehunt.com/archive is a page that exists but only
     # links to the 2017, 2018, and 2019 GPHs. We're not going to keep updating

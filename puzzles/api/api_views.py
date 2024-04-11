@@ -239,9 +239,10 @@ def get_events(request: Request) -> Response:
     context = request._request.context
 
     if len(context.major_case_solves) >= len(MAJOR_CASE_SLUGS):
-        events = Event.objects.all()
+        events = Event.objects.all().order_by("timestamp")
     else:
-        events = Event.objects.filter(is_final_runaround=False)
+        events = Event.objects.filter(is_final_runaround=False).order_by("timestamp")
+
     serializer = EventSerializer(events, many=True)
 
     return Response(serializer.data)

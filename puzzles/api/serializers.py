@@ -249,6 +249,7 @@ class TeamPuzzleContextSerializer(serializers.Serializer):
     major_case_unlocks = serializers.DictField(child=MajorCaseSerializer())
     major_case_puzzles = serializers.DictField(child=PuzzleBasicSerializer())
     current_incoming_event = MinorCaseIncomingEventSerializer()
+    completed_events = serializers.DictField(child=EventCompletionSerializer())
 
 
 class HuntContextSerializer(serializers.Serializer):

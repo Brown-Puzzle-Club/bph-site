@@ -1,13 +1,12 @@
-import { motion, type Variants } from "framer-motion";
+import { AnimatePresence, motion, type Variants } from "framer-motion";
 import { useMemo, useState } from "react";
 import { FaBell } from "react-icons/fa";
 import { useTime } from "react-timer-hook";
 
 import phone from "@/assets/main_page/PhoneWallp.png";
-import { useDjangoContext } from "@/hooks/useDjangoContext";
+import { useDjangoContext, useEvents } from "@/hooks/useDjangoContext";
 import { cn } from "@/utils/utils";
 
-import type { PhoneNotificationProps } from "./PhoneNotification";
 import PhoneNotification from "./PhoneNotification";
 
 const phoneVariant: Variants = {
@@ -24,44 +23,39 @@ const phoneVariant: Variants = {
   },
 };
 
-const NOTIFICATIONS: PhoneNotificationProps[] = [
-  {
-    icon: "🔭",
-    name: "Gaze at the Stars",
-    time: new Date("4/10 20:00 2024"),
-    location: "Barus & Holley 7th Floor",
-    instructions: "Bring ",
-  },
-  {
-    icon: "🔎",
-    name: "An Interrogation",
-    time: new Date("4/13 8:00 2024"),
-    location: "Somewhere",
-  },
-];
+const EVENT_EMOJI_LOOKUP: Record<string, string> = {
+  astronomy: "🔭",
+  interrogation: "🔎",
+};
 
 const SOON_AMOUNT_OF_HOURS = 2;
 
 const Phone = () => {
   const { data: context } = useDjangoContext();
+  const { data: events } = useEvents();
+
   const [isCenter, setIsCenter] = useState(false);
   const { minutes, hours } = useTime({});
 
-  const ANY_EVENTS_SOON = useMemo(() => {
-    let any_soon = false;
-    for (const notif of NOTIFICATIONS) {
+  const EVENTS_SOON = useMemo(() => {
+    if (!events) {
+      return false;
+    }
+    const events_soon = new Set();
+    for (const event of events) {
+      const event_time = new Date(event.timestamp || "");
       if (
-        notif.time.getTime() - new Date().getTime() < SOON_AMOUNT_OF_HOURS * 60 * 60 * 1000 &&
-        notif.time.getTime() > new Date().getTime()
+        event.timestamp &&
+        event_time.getTime() - new Date().getTime() < SOON_AMOUNT_OF_HOURS * 60 * 60 * 1000 &&
+        event_time.getTime() > new Date().getTime()
       ) {
-        notif.is_soon = true;
-        any_soon = true;
+        events_soon.add(event);
       }
     }
-    return any_soon;
-  }, []);
+    return events_soon;
+  }, [events]);
 
-  if (!context?.team_context?.in_person) {
+  if (!context || !events) {
     return null;
   }
 
@@ -78,8 +72,14 @@ const Phone = () => {
       >
         <div className="relative">
           <img src={phone} alt="phone" className="w-full" />
-          {ANY_EVENTS_SOON && !isCenter && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+          {EVENTS_SOON && EVENTS_SOON.size > 0 && !isCenter && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              layout
+            >
               <FaBell
                 className="absolute text-[2vw] text-[white] drop-shadow-[0_0_5px_black]"
                 style={{
@@ -91,16 +91,34 @@ const Phone = () => {
             </motion.div>
           )}
           <div
-            className="absolute grid place-items-center gap-[0.2rem] -translate-x-1/2 left-1/2 w-full"
+            className="absolute grid place-items-center gap-[0.01rem] -translate-x-1/2 left-1/2 w-full"
             style={{ top: "20%" }}
           >
             <p className="font-bold text-white font-sans text-[0.8vw]">
               {hours}:{minutes.toLocaleString("en-US", { minimumIntegerDigits: 2 })}
             </p>
-
-            {NOTIFICATIONS.map((notification, i) => (
-              <PhoneNotification key={i} {...notification} />
-            ))}
+            {events && context.team_context.in_person && (
+              <AnimatePresence mode="wait">
+                {events.map(
+                  (event) =>
+                    !context.team_context.completed_events[event.slug] && (
+                      <motion.div
+                        key={event.slug}
+                        initial={{ x: "-25%", opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        exit={{ x: "25%", opacity: 0 }}
+                      >
+                        <PhoneNotification
+                          key={event.slug}
+                          {...event}
+                          icon={EVENT_EMOJI_LOOKUP[event.slug]}
+                          is_soon={EVENTS_SOON && EVENTS_SOON.has(event)}
+                        />
+                      </motion.div>
+                    ),
+                )}
+              </AnimatePresence>
+            )}
           </div>
         </div>
       </motion.div>
