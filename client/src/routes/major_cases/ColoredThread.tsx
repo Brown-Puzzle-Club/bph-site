@@ -100,7 +100,7 @@ export default function ColoredThread() {
         <Threads
           selectedThread={selectedThread}
           toggleThread={(thread) =>
-            setSelectedThread((currThread) => (currThread === thread ? thread : null))
+            setSelectedThread((currThread) => (currThread === thread ? null : thread))
           }
         />
         <AnswerPins {...state} />

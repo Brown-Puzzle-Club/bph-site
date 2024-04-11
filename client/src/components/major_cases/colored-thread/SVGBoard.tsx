@@ -42,17 +42,11 @@ const Links = ({ links, handleLinkClick }: LinksProps) => {
 
     return (
       <line
+        className="cursor-not-allowed"
         key={link.from.id + link.to.id + index}
-        x1={x1}
-        y1={y1}
-        x2={x2}
-        y2={y2}
+        {...{ x1, y1, x2, y2 }}
         stroke={THREAD_COLOR[link.thread]}
         strokeWidth="0.5"
-        style={{
-          cursor: "pointer",
-          zIndex: 10,
-        }}
         onClick={() => handleLinkClick(link.from, link.to)}
       />
     );
