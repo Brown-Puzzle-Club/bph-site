@@ -1,3 +1,4 @@
+import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useRef, useState } from "react";
 
 import { cn } from "@/utils/utils";
@@ -5,6 +6,18 @@ import { cn } from "@/utils/utils";
 import extraPinPng from "../../../assets/major_cases/colored-thread/extrapin.png";
 import { COLORED_GLOW, THREAD_COLOR } from "./consts";
 import type { ILink, INode, NodeAnswer, ThreadType } from "./types/BoardTypes";
+
+function screenToSvgCoords(
+  e: React.MouseEvent<SVGImageElement, MouseEvent>,
+  svgEl: SVGSVGElement | null,
+) {
+  if (!svgEl) return { x: 0, y: 0 };
+  let pt = svgEl.createSVGPoint();
+  pt.x = e.clientX;
+  pt.y = e.clientY;
+  pt = pt.matrixTransform(svgEl.getScreenCTM()!.inverse());
+  return { x: pt.x, y: pt.y };
+}
 
 interface Position {
   x: number;
@@ -15,77 +28,94 @@ interface Position {
   };
 }
 
-export default function SVGBoard({
-  selectedThread,
-  selectedNode,
-  setSelectedNode,
-  links,
-  setLinks,
-  nodes,
-}: {
+const lineVariants = {
+  hidden: { pathLength: 0, opacity: 0 },
+  visible: {
+    pathLength: 1,
+    opacity: 1,
+    transition: {
+      pathLength: { type: "spring", duration: 1.5, bounce: 0 },
+      opacity: { duration: 0.01 },
+    },
+  },
+};
+
+interface LinksProps {
+  links: ILink[];
+  handleLinkClick: (sourceNode: INode, targetNode: INode) => void;
+}
+
+const Links = ({ links, handleLinkClick }: LinksProps) => {
+  return (
+    <AnimatePresence>
+      {links.map((link) => {
+        // Adjust the coordinates if 'solution-pin' is involved
+        const x1 = link.from.id === "solution-pin" ? link.from.x + 2 : link.from.x;
+        const y1 = link.from.id === "solution-pin" ? link.from.y + 2 : link.from.y;
+        const x2 = link.to.id === "solution-pin" ? link.to.x + 2 : link.to.x;
+        const y2 = link.to.id === "solution-pin" ? link.to.y + 2 : link.to.y;
+
+        return (
+          <motion.line
+            variants={lineVariants}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+            className="cursor-not-allowed"
+            key={link.from.id + link.to.id}
+            {...{ x1, y1, x2, y2 }}
+            stroke={THREAD_COLOR[link.thread]}
+            strokeWidth="0.5"
+            onClick={() => handleLinkClick(link.from, link.to)}
+          />
+        );
+      })}
+    </AnimatePresence>
+  );
+};
+
+interface NodesProps {
+  nodes: NodeAnswer[];
+  setSelectedNode: (node: INode | null) => void;
+}
+
+const Nodes = ({ nodes, setSelectedNode }: NodesProps) => {
+  return nodes.map((node) => (
+    <circle
+      key={node.node.id}
+      cx={node.node.x}
+      cy={node.node.y}
+      r={0}
+      fill="white"
+      stroke="black"
+      strokeWidth="2"
+      style={{
+        cursor: "pointer",
+      }}
+      onClick={() => {
+        setSelectedNode(node.node);
+      }}
+    />
+  ));
+};
+interface SolutionPinProps {
   selectedThread: ThreadType | null;
   selectedNode: INode | null;
-  setSelectedNode: React.Dispatch<React.SetStateAction<INode | null>>;
+  handleNodeClick: (node: INode) => void;
   links: ILink[];
-  setLinks: React.Dispatch<React.SetStateAction<ILink[]>>;
-  nodes: NodeAnswer[];
-}) {
-  // oops duplicated from AnswerPins.tsx, running out of time.
-  const handleNodeClick = (targetNode: INode) => {
-    if (selectedThread) {
-      if (!selectedNode) {
-        // Select the node
-        setSelectedNode(targetNode);
-        return;
-      }
-      // Check if the two nodes are not the same and there is no existing link between them
-      if (
-        selectedNode.id !== targetNode.id &&
-        !links.some(
-          (link) =>
-            (link.from.id === selectedNode.id && link.to.id === targetNode.id) ||
-            (link.from.id === targetNode.id && link.to.id === selectedNode.id),
-        )
-      ) {
-        // Link the two nodes
-        setLinks([...links, { from: selectedNode, to: targetNode, thread: selectedThread }]);
-        setSelectedNode(null);
-      }
-    }
-  };
+  setLinks: (links: ILink[]) => void;
+  svgEleRef: React.RefObject<SVGSVGElement>;
+}
 
-  const svgEleRef = useRef<SVGSVGElement>(null);
-  const [solutionPinPos, setSolutionPinPos] = useState<Position>({
-    x: 22,
-    y: 90,
-    coords: {},
-  });
-
-  /**
-   * Function that converts screen coordinates to SVG coordinates.
-   */
-  function screenToSvgCoords(
-    e: React.MouseEvent<SVGImageElement, MouseEvent>,
-    svgEl: SVGSVGElement | null,
-  ) {
-    if (!svgEl) return { x: 0, y: 0 };
-    let pt = svgEl.createSVGPoint();
-    pt.x = e.clientX;
-    pt.y = e.clientY;
-    pt = pt.matrixTransform(svgEl.getScreenCTM()!.inverse());
-    return { x: pt.x, y: pt.y };
-  }
-
-  /**
-   * Handler for when a link is clicked.
-   */
-  const handleLinkClick = (sourceNode: INode, targetNode: INode) => {
-    // Remove the link
-    setLinks(
-      links.filter((link) => link.from.id !== sourceNode.id || link.to.id !== targetNode.id),
-    );
-    setSelectedNode(null);
-  };
+const SolutionPin = ({
+  selectedThread,
+  selectedNode,
+  handleNodeClick,
+  links,
+  setLinks,
+  svgEleRef,
+}: SolutionPinProps) => {
+  const [solutionPinPos, setSolutionPinPos] = useState<Position>({ x: 22, y: 90, coords: {} });
 
   /**
    * Handler for when the mouse is moved for the solution pin.
@@ -109,7 +139,7 @@ export default function SVGBoard({
         };
       });
     },
-    [setSolutionPinPos],
+    [svgEleRef],
   );
 
   /**
@@ -133,118 +163,101 @@ export default function SVGBoard({
     // Dynamically update any links that are connected to the solution pin
     const updatedLinks = links.map((link) => {
       if (link.to.id === "solution-pin") {
-        return { ...link, to: { id: "solution-pin", x: solutionPinPos.x, y: solutionPinPos.y } };
+        return {
+          ...link,
+          to: { id: "solution-pin", x: solutionPinPos.x + 2.8, y: solutionPinPos.y - 0.4 },
+        };
       }
       if (link.from.id === "solution-pin") {
-        return { ...link, from: { id: "solution-pin", x: solutionPinPos.x, y: solutionPinPos.y } };
+        return {
+          ...link,
+          from: { id: "solution-pin", x: solutionPinPos.x + 2.8, y: solutionPinPos.y - 0.4 },
+        };
       }
       return link;
     });
     setLinks(updatedLinks);
   };
 
-  /**
-   * Draw the nodes on the SVG board.
-   */
-  function drawNodes() {
-    return nodes.map((node) => (
-      <circle
-        key={node.node.id}
-        cx={node.node.x}
-        cy={node.node.y}
-        r={0}
-        fill="white"
-        stroke="black"
-        strokeWidth="2"
+  return (
+    <svg id="example1" xmlns="http://www.w3.org/2000/svg">
+      <image
+        id="solution-pin"
+        className={cn(
+          `cursor-pointer select-none`,
+          `${selectedThread && selectedNode && selectedNode.id === "solution-pin" ? COLORED_GLOW[selectedThread] : `hover:drop-shadow-[0_15px_15px_rgba(255,255,255,0.4)]`}`,
+        )}
+        x={solutionPinPos.x}
+        y={solutionPinPos.y}
+        width="5"
+        height="5"
+        href={extraPinPng}
+        onMouseUp={handleMouseUp}
+        onMouseDown={handleMouseDown}
         style={{
           cursor: "pointer",
         }}
         onClick={() => {
-          setSelectedNode(node.node);
+          if (selectedThread) {
+            handleNodeClick({
+              id: "solution-pin",
+              x: solutionPinPos.x + 2.8,
+              y: solutionPinPos.y - 0.4,
+            });
+          }
         }}
       />
-    ));
-  }
+    </svg>
+  );
+};
 
-  /**
-   * Draw the links on the SVG board.
-   */
-  function drawLinks() {
-    return links.map((link, index) => {
-      // Adjust the coordinates if 'solution-pin' is involved
-      const x1 = link.from.id === "solution-pin" ? link.from.x + 2 : link.from.x;
-      const y1 = link.from.id === "solution-pin" ? link.from.y + 2 : link.from.y;
-      const x2 = link.to.id === "solution-pin" ? link.to.x + 2 : link.to.x;
-      const y2 = link.to.id === "solution-pin" ? link.to.y + 2 : link.to.y;
+interface SVGBoardProps {
+  selectedThread: ThreadType | null;
+  selectedNode: INode | null;
+  setSelectedNode: React.Dispatch<React.SetStateAction<INode | null>>;
+  handleNodeClick: (node: INode) => void;
+  links: ILink[];
+  setLinks: React.Dispatch<React.SetStateAction<ILink[]>>;
+  nodes: NodeAnswer[];
+}
 
-      return (
-        <line
-          key={link.from.id + link.to.id + index}
-          x1={x1}
-          y1={y1}
-          x2={x2}
-          y2={y2}
-          stroke={THREAD_COLOR[link.thread]}
-          strokeWidth="0.5"
-          style={{
-            cursor: "pointer",
-            zIndex: 10,
-          }}
-          onClick={() => handleLinkClick(link.from, link.to)}
-        />
-      );
-    });
-  }
+export default function SVGBoard({
+  selectedThread,
+  selectedNode,
+  setSelectedNode,
+  handleNodeClick,
+  links,
+  setLinks,
+  nodes,
+}: SVGBoardProps) {
+  const svgEleRef = useRef<SVGSVGElement>(null);
 
-  /**
-   * Draw the solution pin on the SVG board.
-   */
-  function drawSolutionPin() {
-    return (
-      <svg id="example1" xmlns="http://www.w3.org/2000/svg">
-        <image
-          id="solution-pin"
-          // GLOW DOES NOT WORK :(
-          className={cn(
-            `hover:cursor-pointer select-none`,
-            `${selectedThread && selectedNode && selectedNode.id === "solution-pin" ? COLORED_GLOW[selectedThread] : `hover:drop-shadow-[0_15px_15px_rgba(255,255,255,0.4)]`}`,
-          )}
-          x={solutionPinPos.x}
-          y={solutionPinPos.y}
-          width="5"
-          height="5"
-          href={extraPinPng}
-          onMouseUp={handleMouseUp}
-          onMouseDown={handleMouseDown}
-          style={{
-            cursor: "pointer",
-          }}
-          onClick={() => {
-            if (selectedThread) {
-              handleNodeClick({
-                id: "solution-pin",
-                x: solutionPinPos.x,
-                y: solutionPinPos.y,
-              });
-            }
-          }}
-        />
-      </svg>
+  const handleLinkClick = (sourceNode: INode, targetNode: INode) => {
+    setSelectedNode(null);
+    setLinks((oldLinks) =>
+      oldLinks.filter((link) => link.from.id !== sourceNode.id || link.to.id !== targetNode.id),
     );
-  }
+  };
 
   return (
     <div className="absolute inset-0">
       <svg
         ref={svgEleRef}
-        width="100vw"
+        width="100%"
         height="100%"
         viewBox="0 0 100 100"
         xmlns="http://www.w3.org/2000/svg"
       >
-        {drawNodes()}
-        {drawLinks()}
-        {drawSolutionPin()}
+        <Nodes nodes={nodes} setSelectedNode={setSelectedNode} />
+        <Links links={links} handleLinkClick={handleLinkClick} />
+        <SolutionPin
+          selectedThread={selectedThread}
+          selectedNode={selectedNode}
+          handleNodeClick={handleNodeClick}
+          links={links}
+          setLinks={setLinks}
+          svgEleRef={svgEleRef}
+        />
       </svg>
     </div>
   );
