@@ -281,9 +281,14 @@ def handle_answer(
                 completed_datetime=request_context.now,
             )
             completed.save()
+
         elif puzzle.is_major_meta:
             print("Solved the major case!")
-            # TODO: major case completion
+            completed = models.MajorCaseCompleted.objects.create(
+                team=django_context.team,
+                major_case_round=puzzle.round.major_case,
+                completed_datetime=request_context.now,
+            )
 
     return Response(
         {

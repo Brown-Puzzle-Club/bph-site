@@ -160,7 +160,7 @@ export const BluenoirStories: Record<string, Story> = {
       },
     ],
   },
-  "first-major-case-complete": {
+  "major-case-complete-1": {
     slug: "first-major-case-complete",
     dialogues: [
       {
@@ -205,7 +205,7 @@ export const BluenoirStories: Record<string, Story> = {
       },
     ],
   },
-  "second-major-case-complete": {
+  "major-case-complete-2": {
     slug: "second-major-case-complete",
     dialogues: [
       {
@@ -274,7 +274,7 @@ export const BluenoirStories: Record<string, Story> = {
       },
     ],
   },
-  "third-major-case-complete": {
+  "major-case-complete-3": {
     slug: "third-major-case-complete",
     dialogues: [
       {

@@ -1366,6 +1366,49 @@ class MinorCaseCompleted(models.Model):
             )
             incoming_case_event.save()
 
+        StorylineUnlock.activate_non_storyline_dialogue(
+            f"{self.minor_case_round.slug}-case-solve"
+        )
+
+
+class MajorCaseCompleted(models.Model):
+    """Represents a team completing a major case."""
+
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_("team"))
+    major_case = models.ForeignKey(
+        MajorCase, on_delete=models.CASCADE, verbose_name=_("major case")
+    )
+
+    completed_datetime = models.DateTimeField(verbose_name=_("Completed datetime"))
+
+    def __str__(self):
+        return "%s -> %s @ %s" % (
+            self.team,
+            self.major_case_round,
+            self.completed_datetime,
+        )
+
+    class Meta:
+        unique_together = ("team", "major_case")
+        verbose_name = _("major case completed")
+        verbose_name_plural = _("major cases completed")
+
+    # team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_("team"))
+    #     storyline = models.SlugField(verbose_name=_("Storyline Slug (in frontend)"))
+    #     unlock_datetime = models.DateTimeField(verbose_name=_("Unlock datetime"))
+    def save(self, *args, **kwargs):
+        super(MajorCaseCompleted, self).save(*args, **kwargs)
+
+        num_major_case_solves = MajorCaseCompleted.objects.filter(
+            team=self.team
+        ).count()
+
+        story_unlock = StorylineUnlock.objects.create(
+            team=self.team,
+            storyline=f"major-case-complete-{num_major_case_solves}",
+        )
+        story_unlock.save()
+
 
 class AnswerSubmission(models.Model):
     """Represents a team making a solve attempt on a puzzle (right or wrong)."""
@@ -1852,9 +1895,26 @@ def notify_on_hint_update(sender, instance, created, update_fields, **kwargs):
         # show_hint_notification(instance)
 
 
-class Dialog(models.Model):
-    """Represents a single point of dialog for"""
+class StorylineUnlock(models.Model):
+    """Represents a team's unlock for a core part of the story"""
 
-    order = models.IntegerField(verbose_name=_("Order"))
-    transcript = models.TextField(verbose_name=_("Transcript"))
-    reaction = models.TextField(verbose_name=_("Reaction"))
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_("team"))
+    storyline = models.SlugField(verbose_name=_("Storyline Slug (in frontend)"))
+    unlock_datetime = models.DateTimeField(verbose_name=_("Unlock datetime"))
+
+    def __str__(self):
+        return "%s -> %s @ %s" % (self.team, self.storyline, self.unlock_datetime)
+
+    class Meta:
+        unique_together = ("team", "storyline")
+        verbose_name = _("storyline unlock")
+        verbose_name_plural = _("storyline unlocks")
+
+    def save(self, *args, **kwargs):
+        super(StorylineUnlock, self).save(*args, **kwargs)
+        # TODO: add story notification / SSE to move bluenoir
+
+    @staticmethod
+    def activate_non_storyline_dialogue(storyline_slug: str):
+        # TODO: add story notification / SSE to make bluenoir talk
+        return
