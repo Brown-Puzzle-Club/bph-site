@@ -4,10 +4,7 @@ import type { INode, NodeAnswer } from "./types/BoardTypes";
 
 export const collectNodes = (context: DjangoContext | undefined) => {
   const consistent_nodes: NodeAnswer[] = [
-    {
-      node: { id: "wasting-illness", x: 68.7, y: 13.5 },
-      answer: "WASTING ILLNESS",
-    },
+    { node: { id: "wasting-illness", x: 68.7, y: 13.5 }, answer: "WASTING ILLNESS" },
     { node: { id: "trampled", x: 73.5, y: 41 }, answer: "TRAMPLED" },
     { node: { id: "ennui", x: 62, y: 58 }, answer: "ENNUI" },
     { node: { id: "forced-regeneration", x: 62, y: 65 }, answer: "FORCED REGENERATION" },
@@ -29,12 +26,11 @@ export const collectNodes = (context: DjangoContext | undefined) => {
   ];
 
   const answered_puzzle_nodes: NodeAnswer[] = [];
+  const solves = context.team_context.solves;
+
   for (const node of puzzle_nodes) {
-    if (context.team_context.solves[node.id]) {
-      answered_puzzle_nodes.push({
-        node: node,
-        answer: context.team_context.solves[node.id].submitted_answer,
-      });
+    if (solves[node.id]) {
+      answered_puzzle_nodes.push({ node: node, answer: solves[node.id].submitted_answer });
     }
   }
 

@@ -237,7 +237,7 @@ export default function SVGBoard({
     <div className="absolute inset-0">
       <svg
         ref={svgEleRef}
-        width="100vw"
+        width="100%"
         height="100%"
         viewBox="0 0 100 100"
         xmlns="http://www.w3.org/2000/svg"

@@ -21,27 +21,31 @@ export const PIN_HOVER_GLOW = "drop-shadow-[0_15px_15px_rgba(255,255,255,0.4)]";
 
 interface AnswerPin extends AssetProps {
   id: string;
-  textStyle?: CSSProperties;
-}
-
-export default function AnswerPins({
-  nodes,
-  selectedThread,
-  selectedNode,
-  setSelectedNode,
-  links,
-  setLinks,
-}: {
   nodes: NodeAnswer[];
   selectedThread: ThreadType | null;
   selectedNode: INode | null;
-  setSelectedNode: React.Dispatch<React.SetStateAction<INode | null>>;
+  setSelectedNode: (node: INode | null) => void;
   links: ILink[];
-  setLinks: React.Dispatch<React.SetStateAction<ILink[]>>;
-}) {
-  /**
-   * Handler for when a node is clicked.
-   */
+  setLinks: (links: ILink[]) => void;
+  textStyle?: CSSProperties;
+}
+
+const formatAnswer = (answer: string) => {
+  // remove everything after the word ON, if it exists
+  const answer_upper = answer.toUpperCase();
+  const index = answer_upper.indexOf(" ON");
+  return index === -1 ? answer : answer_upper.substring(0, index);
+};
+
+const Pin = ({
+  nodes,
+  selectedThread,
+  setSelectedNode,
+  selectedNode,
+  links,
+  setLinks,
+  ...props
+}: AnswerPin) => {
   const handleNodeClick = (targetNode: INode) => {
     if (selectedThread) {
       if (!selectedNode) {
@@ -65,43 +69,44 @@ export default function AnswerPins({
     }
   };
 
-  const formatAnswer = (answer: string) => {
-    // remove everything after the word ON, if it exists
-    const answer_upper = answer.toUpperCase();
-    const index = answer_upper.indexOf(" ON");
-    return index === -1 ? answer : answer_upper.substring(0, index);
-  };
+  const node = nodes.find((node) => node.node.id === props.id);
+  if (!node) return null;
 
-  const Pin = (props: AnswerPin) => {
-    const node = nodes.find((node) => node.node.id === props.id);
-    if (!node) return null;
+  return (
+    <RelativeAsset
+      extraClasses={cn(
+        `hover:cursor-pointer select-none`,
+        `${selectedThread && selectedNode && selectedNode.id === props.id ? COLORED_GLOW[selectedThread] : `hover:drop-shadow-[0_15px_15px_rgba(255,255,255,0.4)]`}`,
+      )}
+      onClick={() => {
+        if (selectedThread) handleNodeClick(node.node);
+      }}
+      {...props}
+    >
+      <p
+        className="absolute text-[#000000e6] font-mono font-bold text-[1.5vw] text-center select-none"
+        style={props.textStyle ? props.textStyle : props.extraStyles}
+      >
+        {formatAnswer(node.answer)}
+      </p>
+    </RelativeAsset>
+  );
+};
 
-    return (
-      <>
-        <RelativeAsset
-          extraClasses={cn(
-            `hover:cursor-pointer select-none`,
-            `${selectedThread && selectedNode && selectedNode.id === props.id ? COLORED_GLOW[selectedThread] : `hover:drop-shadow-[0_15px_15px_rgba(255,255,255,0.4)]`}`,
-          )}
-          onClick={() => {
-            if (selectedThread) handleNodeClick(node.node);
-          }}
-          {...props}
-        >
-          <p
-            className="absolute text-[#000000e6] font-mono font-bold text-[1.5vw] text-center select-none"
-            style={props.textStyle ? props.textStyle : props.extraStyles}
-          >
-            {formatAnswer(node.answer)}
-          </p>
-        </RelativeAsset>
-      </>
-    );
-  };
+interface AnswerPinsProps {
+  nodes: NodeAnswer[];
+  selectedThread: ThreadType | null;
+  selectedNode: INode | null;
+  setSelectedNode: React.Dispatch<React.SetStateAction<INode | null>>;
+  links: ILink[];
+  setLinks: React.Dispatch<React.SetStateAction<ILink[]>>;
+}
 
+export default function AnswerPins(props: AnswerPinsProps) {
   return (
     <>
       <Pin
+        {...props}
         id="mr-cat"
         imageSrc={pin1}
         extraStyles={{
@@ -118,6 +123,7 @@ export default function AnswerPins({
         }}
       />
       <Pin
+        {...props}
         id="wasting-illness"
         imageSrc={pin2}
         extraStyles={{
@@ -134,6 +140,7 @@ export default function AnswerPins({
         }}
       />
       <Pin
+        {...props}
         id="penny-puzz"
         imageSrc={pin3}
         extraStyles={{
@@ -150,6 +157,7 @@ export default function AnswerPins({
         }}
       />
       <Pin
+        {...props}
         id="trampled"
         imageSrc={pin4}
         extraStyles={{
@@ -166,6 +174,7 @@ export default function AnswerPins({
         }}
       />
       <Pin
+        {...props}
         id="internal-lacerations"
         imageSrc={pin5}
         extraStyles={{
@@ -182,6 +191,7 @@ export default function AnswerPins({
         }}
       />
       <Pin
+        {...props}
         id="ennui"
         imageSrc={pin5} // 6
         extraStyles={{
@@ -198,6 +208,7 @@ export default function AnswerPins({
         }}
       />
       <Pin
+        {...props}
         id="shot-out-of-cannon"
         imageSrc={pin7}
         extraStyles={{
@@ -214,6 +225,7 @@ export default function AnswerPins({
         }}
       />
       <Pin
+        {...props}
         id="forced-regeneration"
         imageSrc={pin8}
         extraStyles={{
@@ -230,6 +242,7 @@ export default function AnswerPins({
         }}
       />
       <Pin
+        {...props}
         id="crushed-neck"
         imageSrc={pin9}
         extraStyles={{
@@ -246,6 +259,7 @@ export default function AnswerPins({
         }}
       />
       <Pin
+        {...props}
         id="whaling-ships"
         imageSrc={pin10}
         extraStyles={{
@@ -262,6 +276,7 @@ export default function AnswerPins({
         }}
       />
       <Pin
+        {...props}
         id="birbs-at-brown"
         imageSrc={pin11}
         extraStyles={{
