@@ -123,8 +123,8 @@ export default function Roles() {
           <br></br> An indecisive villager with a serial killer gene. The Resurrected{" "}
           <i>
             acts and reads as a member of the <b style={{ color: GOOD_TEXT_COLOR }}>Village</b>{" "}
-            team, until they are killed by the Assassin, at which point they join the{" "}
-            <b style={{ color: EVIL_TEXT_COLOR }}>Evil</b> team.
+            team, until they are killed by the Assassin, at which point they join (and read as a
+            member of) the <b style={{ color: EVIL_TEXT_COLOR }}>Evil</b> team.
           </i>
         </li>
         <TextBreak />

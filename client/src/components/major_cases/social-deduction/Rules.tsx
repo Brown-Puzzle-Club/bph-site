@@ -23,7 +23,7 @@ export default function Rules() {
           they&apos;ve intended.
           <br />
           <br />
-          It&apos;s the last night of the game, and you must determine which guest is masquerading
+          It&apos;s the fourth day of the game, and you must determine which guest is masquerading
           as which role in order to help the village win. Once you&apos;ve done that, you&apos;ll
           need to work out: <b>who&apos;s been turning the game into a bloodbath?</b>
         </p>
@@ -36,7 +36,7 @@ export default function Rules() {
           phase.
         </li>
         <li>
-          Night Phase 1 is a set-up round. Each player will be assigned a role in secret, with no
+          Night 1 is a set-up phase. Each player will be assigned a role in secret, with no
           duplicate roles, though some roles will remain unused. During night 1, every player except
           the <CharacterRoleTooltip char_role={Role.ASSASSIN} scale={false} /> will be able to
           perform their role-designated action if they have one. No one will be killed by the{" "}
@@ -91,15 +91,15 @@ export default function Rules() {
         <li>
           During the day phase, all characters can talk to each other. After discussion, any player
           can accuse any other player of being evil. All accused players will have a chance to
-          defend themselves and all accusers will give a reasoning. Then votes are cast <b>anonymously</b>
-          (players may vote for anyone, even a non-accused player or themselves). Votes are tallied
-          and if a player has the majority of votes (and at least half), they will be exiled. If the
-          votes are tied, no one is exiled.
+          defend themselves and all accusers will give a reasoning. Then votes are cast{" "}
+          <b>completely anonymously</b> (players may vote for anyone, even a non-accused player or
+          themselves). Votes are tallied and if a player has the majority of votes (and at least
+          half), they will be exiled. If the votes are tied, no one is exiled.
         </li>
         <li>
           After votes are tallied and anyone voted out has been exiled, a new night phase begins.
         </li>
-        <li>Once a player has been killed/exiled, they can no longer talk or vote.</li>
+        <li>Once a player has been killed or exiled, they can no longer talk or vote.</li>
         <li>
           The <b style={{ color: GOOD_TEXT_COLOR }}>Village</b> team wins once the{" "}
           <CharacterRoleTooltip char_role={Role.ASSASSIN} scale={false} /> has been exiled by the{" "}
