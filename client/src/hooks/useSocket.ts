@@ -49,7 +49,6 @@ const useSocket = (path: string, callbacks: SocketCallbacks | undefined = undefi
 
   useEffect(() => {
     if (token.data) {
-      console.log(token.data);
       setSocketUrl(`${protocol}://${window.location.host}/${path}?token=${token.data}`);
     }
   }, [token, path, setSocketUrl, protocol]);
