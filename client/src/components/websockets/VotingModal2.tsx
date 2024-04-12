@@ -56,6 +56,7 @@ const VotingModal = ({
         >
           {Object.values(votingInfo.cases).map(
             (caseObj) =>
+              caseObj &&
               caseObj.round && (
                 <div key={caseObj.round.id} className={"grid place-items-center gap-5"}>
                   <MinorCaseFolder
