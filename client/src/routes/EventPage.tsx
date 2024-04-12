@@ -38,7 +38,7 @@ const MajorCaseIcon = (props: MajorCaseIconProps) => {
           context.team_context.major_case_puzzles[props.majorCase].slug
         ] && (
           <FaCheck
-            className="absolute select-none hover:cursor-pointer text-[5vw] text-[#ffffff80]"
+            className="pointer-events-none absolute select-none hover:cursor-pointer text-[5vw] text-[#ffffff80]"
             style={{
               top: "50%",
               left: "50%",

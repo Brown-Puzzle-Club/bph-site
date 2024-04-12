@@ -20,6 +20,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useDjangoContext } from "@/hooks/useDjangoContext";
 import { useTheme } from "@/hooks/useTheme";
+import useBPHStore, { BOTTOM_LEFT } from "@/stores/useBPHStore";
 import { IS_MINOR_CASE_UNLOCKED } from "@/utils/auth";
 import type { MajorCaseEnum } from "@/utils/constants";
 import { CASE_PALETTE } from "@/utils/constants";
@@ -31,9 +32,15 @@ import { Error404 } from "./ErrorPage";
 
 function MinorCasePage() {
   const { setTheme } = useTheme();
+  const setPosition = useBPHStore((state) => state.setBluenoirPosition);
+
   useEffect(() => {
     setTheme(DEFAULT_THEME);
   }, [setTheme]);
+
+  useEffect(() => {
+    setPosition(BOTTOM_LEFT);
+  });
 
   const { slug: minorCaseSlug } = useParams();
   const navigate = useNavigate();
