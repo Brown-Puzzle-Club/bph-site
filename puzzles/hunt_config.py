@@ -98,4 +98,4 @@ FREE_ANSWER_TIME = HUNT_START_TIME + datetime.timedelta(days=6)
 TEAM_AGE_BEFORE_FREE_ANSWERS = datetime.timedelta(days=3)
 
 MAJOR_CASE_SLUGS = ["colored-thread", "social-deduction", "data"]
-MAJOR_CASE_UNLOCK_SOLVE_COUNT = [3, 4, 5]
+MAJOR_CASE_UNLOCK_SOLVE_COUNT = [1, 2, 4]
