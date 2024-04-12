@@ -35,9 +35,10 @@ const Wordle = () => {
   }, [guesses]);
 
   return (
-    <div className="text-black bg-[#e6e6ec]">
-      <h1 className="text-center font-bold text-3xl py-4">Wordlangman</h1>
-
+    <div className="text-black bg-[#ffffff]">
+      <h1 className="text-center font-bold text-3xl karnak pt-4 pb-4">Wordlangman</h1>
+      <hr />
+      <div className="pb-12" />
       <div className="grid place-items-center">
         {gameMode === GameMode.Hangman ? (
           <HangmanWordle
@@ -57,10 +58,18 @@ const Wordle = () => {
         )}
       </div>
       <div className="flex justify-center items-center flex-col pt-4">
-        <p className="text-xl py-3">
-          <b>Remaining Guesses</b>: {guesses}
+        <p className="flex flex-row gap-2 items-center text-xl py-3 franklin">
+          <p>Remaining Guesses:</p>
+          <div className="flex flex-row gap-1 pt-1">
+            <>
+              {[...Array(guesses)].map((_, i) => (
+                <div key={i} className="rounded-full bg-neutral-500 w-4 h-4" />
+              ))}
+            </>
+          </div>
         </p>
         <Button
+          className="mt-4 text-black outline font-bold py-2 px-4 rounded-full h-12 bg-white hover:bg-slate-200 mb-12"
           onClick={() => {
             setGameMode(GameMode.Hangman);
             setGameState(GameState.InProgress);

@@ -197,7 +197,7 @@ const HangmanWordle = ({ setGameMode, setGuesses, gameState }: HangmanWordleProp
         />
       </div>
       <div>
-        <p>Previous Guesses</p>
+        <p className="franklin pb-4">Previous Guesses</p>
         <ul className="grid gap-2">
           {prevGuesses.map((guess, i) => (
             <GuessTile key={i} guess={guess} />

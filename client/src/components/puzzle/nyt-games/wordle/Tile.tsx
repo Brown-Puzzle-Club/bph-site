@@ -17,7 +17,7 @@ interface TileProps {
 
 const tile = cva(
   [
-    "text-black",
+    "font-extrabold",
     "w-16",
     "h-16",
     "border-[#CED1D5]",
@@ -26,6 +26,7 @@ const tile = cva(
     "items-center",
     "uppercase",
     "border-2",
+    "text-4xl",
   ],
   {
     variants: {
@@ -40,7 +41,7 @@ const tile = cva(
         incorrect: ["bg-[#787C7E]"],
       },
       mini: {
-        true: ["w-8", "h-8"],
+        true: ["w-8", "h-8", "text-xl"],
       },
     },
   },

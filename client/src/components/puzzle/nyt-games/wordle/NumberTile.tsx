@@ -15,8 +15,13 @@ const numberTile = cva(
   [
     "rounded-full",
     "bg-black",
-    "text-white",
+    "bg-white",
+    "text-black",
+    "franklin",
+    "border-dashed",
+    "border-2",
     "font-bold",
+    "text-xl",
     "flex",
     "justify-center",
     "items-center",
@@ -26,7 +31,7 @@ const numberTile = cva(
   {
     variants: {
       mini: {
-        true: ["w-8", "h-8"],
+        true: ["w-8", "h-8", "text-xs"],
       },
     },
   },
