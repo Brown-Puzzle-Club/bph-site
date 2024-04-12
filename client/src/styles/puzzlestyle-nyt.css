@@ -1,0 +1,74 @@
+@font-face {
+  font-family: "Karnak";
+  src: url("..//assets/fonts/karnak-font/karnak-normal-400.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Franklin";
+  src: url("..//assets/fonts/franklin-font/franklin-normal-500.ttf") format("truetype");
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: "Franklin";
+  src: url("..//assets/fonts/franklin-font/franklin-normal-300.ttf") format("truetype");
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: "Franklin";
+  src: url("..//assets/fonts/franklin-font/franklin-normal-700.ttf") format("truetype");
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: "Franklin";
+  src: url("..//assets/fonts/franklin-font/franklin-normal-800.ttf") format("truetype");
+  font-weight: 800;
+}
+
+
+.connections-prompt {
+  font-family: "Franklin";
+  font-weight: 500;
+}
+
+.connections-date {
+  font-family: "Franklin";
+  font-weight: 300;
+}
+
+.connections-title {
+  font-family: "Karnak";
+}
+
+.connections-box {
+  font-family: "Franklin";
+  font-weight: 700;
+}
+
+.connections-answer-category {
+  font-family: "Franklin";
+  font-weight: 800;
+}
+
+.connections-answer-text {
+  font-family: "Franklin";
+  font-weight: 500;
+}
+
+.connections-0 {
+  background-color: #f9df6e
+}
+
+.connections-1 {
+  background-color: #a0c45a
+}
+
+.connections-2 {
+  background-color: #b1c4ef
+}
+
+.connections-3 {
+  background-color: #b1c4ef
+}

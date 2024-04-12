@@ -13,14 +13,14 @@ const ConnectionsBox: React.FC<ConnectionsBoxProps> = ({ word, isSelected, onCli
   // If the word includes "N/A", set red background color
   const boxStyle = word.includes("N/A")
     ? isSelected
-      ? "bg-slate-700 text-white"
-      : "bg-gray-500"
+      ? "bg-[#5A594E] text-white"
+      : "bg-[#FFE6E6FF]"
     : isSelected
-      ? "bg-slate-700 text-white"
-      : "bg-gray-200";
+      ? "bg-[#5A594E] text-white"
+      : "bg-[#FFE6E6FF]";
   return (
     <div
-      className={`${boxStyle} h-20 flex items-center justify-center rounded-lg cursor-pointer text-black`}
+      className={`${boxStyle} h-20 flex items-center justify-center rounded-md cursor-pointer text-black connections-box text-xl`}
       onClick={onClick}
     >
       {displayWord}

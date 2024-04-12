@@ -31,6 +31,7 @@ import Data from "./routes/major_cases/Data";
 import SocialDeduction from "./routes/major_cases/SocialDeduction";
 import "./styles/index.css";
 import "./styles/puzzlestyle-data.css";
+import "./styles/puzzlestyle-nyt.css";
 import "./styles/puzzlestyle-red-thread.css";
 import "./styles/puzzlestyle-soc-deduction.css";
 import { HUNT_HAS_STARTED, IS_ADMIN, IS_MAJOR_CASE_UNLOCKED } from "./utils/auth";

@@ -123,66 +123,85 @@ function Connections() {
   };
 
   return (
-    <div className="mx-20">
-      <h1 className="text-4xl font-bold text-center py-5 text-white">Connections</h1>
-      <h2 className="text-center text-white">Create four groups of four!</h2>
-
-      {matches.length !== 0 && (
-        <div className="flex justify-center mt-4 flex-col">
-          {matches.map((match, index) => (
-            <div key={index} className="bg-green-500 text-white font-bold py-2 px-4 rounded mb-2">
-              {match}
-            </div>
-          ))}
-        </div>
-      )}
-
-      {words.length != 0 ? (
-        <div className="flex justify-center mt-4">
-          <div className="grid grid-cols-4 gap-4 mt-10 w-3/4">
-            {words.map((word, index) => (
-              <ConnectionsBox
-                key={index}
-                index={index}
-                word={word}
-                isSelected={selectedWords.includes(word)} // Check for words instead of indices
-                onClick={() => handleBoxClick(word)} // Pass word instead of index
-              />
-            ))}
-          </div>
-        </div>
-      ) : (
-        !answer && (
-          <BeatLoader
-            className="justify-center content-center text-center p-4"
-            color={"#fff"}
-            size={12}
-          />
-        )
-      )}
-
-      <div className="flex justify-center mt-4">
-        <button
-          className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          onClick={submitGroups}
-          disabled={selectedWords.length !== 4 || submitting}
-          style={{ opacity: selectedWords.length !== 4 || submitting ? 0.5 : 1 }}
-        >
-          Submit
-        </button>
-        <button
-          className="ml-4 mt-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-          onClick={restartGame}
-        >
-          {" "}
-          Restart{" "}
-        </button>
+    <div className="scale-x-100 pt-10 pb-20 w-full bg-white align-middle flex flex-col justify-center">
+      <div className="flex flex-row items-baseline">
+        <h1 className="text-4xl font-bold px-10 py-5 text-black connections-title">Connections</h1>
+        <p className="text-black connections-date text-2xl">Sometime, Never</p>
       </div>
-      {answer && ( // Conditionally render answer
-        <div className="flex justify-center mt-4">
-          <div className="bg-yellow-300 text-black font-bold py-2 px-4 rounded">{`You win!`}</div>
+      <hr />
+      <div className="mx-20 w-2/3 min-w-[500px] flex flex-col pt-5 self-center">
+        <h2 className="text-center text-black connections-prompt">Create four groups of four!</h2>
+        {matches.length !== 0 && (
+          <div className="flex flex-row justify-center">
+            <div className="flex justify-center mt-4 flex-col w-3/4 gap-2">
+              {matches.map((match, index) => {
+                const color = `connections-${index}`;
+                return (
+                  <div
+                    key={index}
+                    className={`${color} text-black rounded-md h-20 flex-col justify-center align-center`}
+                  >
+                    <div className="h-[15px]" />
+                    <p className="self-center text-center connections-answer-category uppercase text-xl py-0 -my-1">
+                      {match.split(":")[0]}
+                    </p>
+                    <p className="self-center text-center connections-answer-text text-xl -my-1">
+                      {match.split(":")[1]}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {words.length != 0 ? (
+          <div className="flex justify-center mt-0">
+            <div className="grid grid-cols-4 gap-2 mt-[10px] w-3/4">
+              {words.map((word, index) => (
+                <ConnectionsBox
+                  key={index}
+                  index={index}
+                  word={word}
+                  isSelected={selectedWords.includes(word)} // Check for words instead of indices
+                  onClick={() => handleBoxClick(word)} // Pass word instead of index
+                />
+              ))}
+            </div>
+          </div>
+        ) : (
+          !answer && (
+            <BeatLoader
+              className="justify-center content-center text-center p-4"
+              color={"#fff"}
+              size={12}
+            />
+          )
+        )}
+
+        <div className="flex justify-center mt-4 gap-4">
+          <button
+            className="mt-4 text-black outline font-bold py-2 px-4 rounded-full"
+            onClick={restartGame}
+          >
+            {" "}
+            Restart{" "}
+          </button>
+          <button
+            className="mt-4 text-black outline font-bold py-2 px-4 rounded-full h-12"
+            onClick={submitGroups}
+            disabled={selectedWords.length !== 4 || submitting}
+            style={{ opacity: selectedWords.length !== 4 || submitting ? 0.5 : 1 }}
+          >
+            Submit
+          </button>
         </div>
-      )}
+        {answer && ( // Conditionally render answer
+          <div className="flex justify-center mt-4">
+            <div className="bg-yellow-300 text-black font-bold py-2 px-4 rounded0-full">{`You win!`}</div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
