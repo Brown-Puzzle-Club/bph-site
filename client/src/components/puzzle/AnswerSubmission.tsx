@@ -175,12 +175,12 @@ const AnswerSubmitRedThread = ({
             ) : (
               <>
                 <Button type="submit">Submit</Button>
-                {hintButton}
               </>
             )}
           </div>
         </form>
       </Form>
+      {hintButton}
     </div>
   );
 };
