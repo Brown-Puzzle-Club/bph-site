@@ -138,3 +138,14 @@ export const mostRecentSolves = (context: DjangoContext, n?: number) => {
   });
   return n ? solved_cases.slice(0, n) : solved_cases;
 };
+
+const MAJOR_CASE_PUZZLE_SLUGS = ["colored-thread", "social-deduction", "data"];
+export function numberOfMajorCaseSolves(context: DjangoContext): number {
+  let count = 0;
+  for (const mc_slug in MAJOR_CASE_PUZZLE_SLUGS) {
+    if (context.team_context.solves[mc_slug]) {
+      count++;
+    }
+  }
+  return count;
+}

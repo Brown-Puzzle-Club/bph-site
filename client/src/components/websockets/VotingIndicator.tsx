@@ -1,15 +1,16 @@
-import VotingBear from "@/assets/voting-bear.svg?react";
+import vote1 from "@/assets/main_page/vote_icons/vote1.png";
+import vote2 from "@/assets/main_page/vote_icons/vote2.png";
+import vote3 from "@/assets/main_page/vote_icons/vote3.png";
+import vote4 from "@/assets/main_page/vote_icons/vote4.png";
 import { cn } from "@/utils/utils";
 
-const colors = ["#9B59B6", "#CB4335", "#45B39D", "#CA6F1E", "#148F77"];
+const vote_icons = [vote1, vote2, vote3, vote4];
 
 const VotingIndicator = () => {
   return (
-    <VotingBear
+    <img
       className={cn("rounded-full h-[2vw] w-[2vw]")}
-      style={{
-        color: colors[Math.floor(Math.random() * colors.length)],
-      }}
+      src={vote_icons[Math.floor(Math.random() * vote_icons.length)]}
     />
   );
 };

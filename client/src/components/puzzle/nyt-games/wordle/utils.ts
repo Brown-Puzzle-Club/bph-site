@@ -1,4 +1,4 @@
-import { possibleWords } from "./wordList";
+import { possibleSolutions } from "./wordList";
 
 export enum Row {
   None = -1,
@@ -168,17 +168,17 @@ export const getRowString = (row: Row, board: Board) => {
 };
 
 export const generateAnswers = (): [string, string, string] => {
-  const answers = [possibleWords[Math.floor(Math.random() * possibleWords.length)]];
+  const answers = [possibleSolutions[Math.floor(Math.random() * possibleSolutions.length)]];
 
   while (answers.length < 2) {
-    const newWord = possibleWords[Math.floor(Math.random() * possibleWords.length)];
+    const newWord = possibleSolutions[Math.floor(Math.random() * possibleSolutions.length)];
     if (!answers.includes(newWord) && newWord[0] === answers[0][4]) {
       answers.push(newWord);
     }
   }
 
   while (answers.length < 3) {
-    const newWord = possibleWords[Math.floor(Math.random() * possibleWords.length)];
+    const newWord = possibleSolutions[Math.floor(Math.random() * possibleSolutions.length)];
     if (!answers.includes(newWord) && newWord[2] === answers[1][4]) {
       answers.push(newWord);
     }
@@ -237,6 +237,7 @@ export const verifyGuess = (
   guess: string,
   answers: string[],
   selectedRow: Omit<Row, Row.None>,
+  solved: [boolean, boolean, boolean],
 ): [
   VerificationState,
   VerificationState,
@@ -253,7 +254,7 @@ export const verifyGuess = (
   ];
   const correctAnswer = answers[selectedRow as keyof typeof answers] as string;
   const correctAnswerLetters = correctAnswer.split("");
-  const otherAnswers = answers.filter((_, i) => i !== selectedRow);
+  const otherAnswers = answers.filter((_, i) => i !== selectedRow && !solved[i]);
   const otherAnswersLetters = otherAnswers.map((answer) => answer.split(""));
 
   // exact match

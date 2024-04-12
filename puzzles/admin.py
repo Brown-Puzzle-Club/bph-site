@@ -4,8 +4,10 @@ from django import forms
 from channels_presence.models import Room, Presence
 from puzzles.models import (
     MajorCase,
+    MajorCaseCompleted,
     Round,
     Puzzle,
+    StorylineUnlock,
     Team,
     TeamMember,
     PuzzleUnlock,
@@ -141,6 +143,11 @@ class MinorCaseCompletedAdmin(admin.ModelAdmin):
     list_filter = ("minor_case_round", "minor_case_round__major_case", "team")
 
 
+class MajorCaseCompletedAdmin(admin.ModelAdmin):
+    list_display = ("team", "major_case", "completed_datetime")
+    list_filter = ("major_case", "team")
+
+
 class AnswerSubmissionAdmin(admin.ModelAdmin):
     list_display = (
         "team",
@@ -193,6 +200,11 @@ class VoiceRecordingAdmin(admin.ModelAdmin):
     search_fields = ("transcript", "characters")
 
 
+class StorylineUnlockAdmin(admin.ModelAdmin):
+    list_display = ("team", "storyline", "unlock_datetime")
+    list_filter = ("storyline", "team")
+
+
 class EventAdmin(admin.ModelAdmin):
     list_display = (
         "name",
@@ -221,6 +233,8 @@ admin.site.register(MinorCaseVoteEvent, MinorCaseVoteEventAdmin)
 admin.site.register(MinorCaseActive, MinorCaseActiveAdmin)
 admin.site.register(MinorCaseCompleted, MinorCaseCompletedAdmin)
 
+admin.site.register(MajorCaseCompleted, MajorCaseCompletedAdmin)
+
 admin.site.register(AnswerSubmission, AnswerSubmissionAdmin)
 admin.site.register(ExtraGuessGrant, ExtraGuessGrantAdmin)
 admin.site.register(Erratum, ErratumAdmin)
@@ -229,6 +243,8 @@ admin.site.register(Hint, HintAdmin)
 admin.site.register(Room, RoomAdmin)
 admin.site.register(Presence, PresenceAdmin)
 admin.site.register(VoiceRecording, VoiceRecordingAdmin)
+
+admin.site.register(StorylineUnlock, StorylineUnlockAdmin)
 
 admin.site.register(Event, EventAdmin)
 admin.site.register(EventCompletion, EventCompletionAdmin)

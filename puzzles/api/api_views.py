@@ -116,6 +116,15 @@ class EventCompletionViewSet(viewsets.ModelViewSet):
         return EventCompletion.objects.filter(team=self.request._request.context.team)
 
 
+class StorylineUnlockViewSet(viewsets.ModelViewSet):
+    queryset = StorylineUnlock.objects.all()
+    serializer_class = StorylineUnlockSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return StorylineUnlock.objects.filter(team=self.request._request.context.team)
+
+
 @api_view(["GET"])
 def context(request: Request) -> Response:
     serializer = ContextSerializer(data=request._request.context)
@@ -166,7 +175,7 @@ def get_puzzle(request: Request, puzzle_slug: str) -> Response:
         # errata
         errata = Erratum.get_puzzle_erata(context=context, puzzle_slug=puzzle.slug)
         additional_fields["errata"] = ErrataSerializer(errata, many=True).data
-        
+
         # puzzle body
         if context.is_admin:
             additional_fields["body"] = puzzle.body

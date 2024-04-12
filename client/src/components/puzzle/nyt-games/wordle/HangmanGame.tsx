@@ -18,7 +18,7 @@ import {
   getRowString,
   verifyGuess,
 } from "./utils";
-import { possibleWords } from "./wordList";
+import { possibleWordsToGuess } from "./wordList";
 
 const hangmanTemplateAreas = `'a b c d e A . .'
                               '. . . . f . . .'
@@ -127,8 +127,8 @@ const HangmanWordle = ({ setGameMode, setGuesses, gameState }: HangmanWordleProp
     } else if (e.key === "Enter") {
       const enteredWord = getRowString(selectedRow, board).toLowerCase();
       if (enteredWord.length === 5) {
-        if (possibleWords.includes(enteredWord)) {
-          const guessVerification = verifyGuess(enteredWord, answers, selectedRow);
+        if (possibleWordsToGuess.includes(enteredWord)) {
+          const guessVerification = verifyGuess(enteredWord, answers, selectedRow, solved);
           const letters = enteredWord.split("");
           const characters = letters.map((letter, i) => {
             return { letter: letter, verified: guessVerification[i] };

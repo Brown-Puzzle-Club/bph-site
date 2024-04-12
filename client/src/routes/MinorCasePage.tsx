@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { BeatLoader } from "react-spinners";
 
+import BackButton from "@/components/BackButton";
 import CasePageArt from "@/components/minor_cases/CasePageArt";
 import {
   AlertDialog,
@@ -19,6 +20,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useDjangoContext } from "@/hooks/useDjangoContext";
 import { useTheme } from "@/hooks/useTheme";
+import useBPHStore, { BOTTOM_LEFT } from "@/stores/useBPHStore";
 import { IS_MINOR_CASE_UNLOCKED } from "@/utils/auth";
 import type { MajorCaseEnum } from "@/utils/constants";
 import { CASE_PALETTE } from "@/utils/constants";
@@ -41,9 +43,15 @@ const ALT_MINOR_CASE_ROUTE = (mc_slug: string, context: DjangoContext) => {
 
 function MinorCasePage() {
   const { setTheme } = useTheme();
+  const setPosition = useBPHStore((state) => state.setBluenoirPosition);
+
   useEffect(() => {
     setTheme(DEFAULT_THEME);
   }, [setTheme]);
+
+  useEffect(() => {
+    setPosition(BOTTOM_LEFT);
+  });
 
   const { slug: minorCaseSlug } = useParams();
   const navigate = useNavigate();
@@ -107,6 +115,7 @@ function MinorCasePage() {
 
   return (
     <div>
+      <BackButton to={"/eventpage"} />
       <CasePageArt case_slug={minorCaseSlug} />
       {context && context.team_context.unlocks && (
         <>

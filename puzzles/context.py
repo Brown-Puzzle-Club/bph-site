@@ -309,6 +309,12 @@ class Context:
             models.EventCompletion.get_completed_events(self.team) if self.team else {}
         )
 
+    def storyline_unlocks(self):
+        if not self.team:
+            return {}
+
+        return models.StorylineUnlock.get_and_compute_unlocks(self.team)
+
     # The purpose of this logic is to keep archive links current. For example,
     # https://2019.galacticpuzzlehunt.com/archive is a page that exists but only
     # links to the 2017, 2018, and 2019 GPHs. We're not going to keep updating

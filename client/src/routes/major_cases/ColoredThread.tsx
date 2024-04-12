@@ -226,8 +226,7 @@ export default function ColoredThread() {
             <TooltipContent className="grid gap-2 max-w-screen-sm bg-slate-900 border-none text-white">
               <p>Click on a spool (↘️) to toggle making threads of that color.</p>
               <p>
-                Click on two pins on the map to make a thread. Cl toicking the thread will remove
-                it.
+                Click on two pins on the map to make a thread. Clicking the thread will remove it.
               </p>
               <p>
                 When you believe you know where the final murder took place, move the solution pin

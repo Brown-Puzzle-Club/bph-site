@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 const Wordle = () => {
   const [gameMode, setGameMode] = useState(GameMode.Hangman);
   const [gameState, setGameState] = useState<GameState>(GameState.InProgress);
-  const [guesses, setGuesses] = useState(9);
+  const [guesses, setGuesses] = useState(7);
   const [numRows, setNumRows] = useState<number | null>(null);
   const [remountCounter, setRemountCounter] = useState(0);
 

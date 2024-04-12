@@ -5,7 +5,7 @@ import { toast } from "react-hot-toast";
 import Tile from "./Tile";
 import type { Character } from "./utils";
 import { GameState, VerificationState } from "./utils";
-import { possibleWords } from "./wordList";
+import { possibleWordsToGuess } from "./wordList";
 
 interface FinalWordleProps {
   gameState: GameState;
@@ -112,7 +112,7 @@ const FinalWordle = ({ gameState, setGameState, setGuesses, numRows }: FinalWord
         .join("")
         .toLowerCase();
       if (enteredWord.length === 5) {
-        if (possibleWords.includes(enteredWord)) {
+        if (possibleWordsToGuess.includes(enteredWord)) {
           verifyGuess(enteredWord).then((guessVerification) => {
             if (guessVerification.every((v) => v === VerificationState.Correct)) {
               setGameState(GameState.Win);
