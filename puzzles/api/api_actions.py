@@ -348,12 +348,25 @@ def post_hint(request: Request, puzzle_slug: str) -> Response:
         ):
             raise KeyError
 
-        hints_count = Hint.objects.filter(puzzle=puzzle).count()
+        if request.data["followup"] != -1:
+            og_hint = Hint.objects.filter(
+                puzzle=puzzle, team=context.team, id=request.data["followup"]
+            ).first()
+            if og_hint is None:
+                return Response({"error": "Original hint not found"}, status=404)
+
+            if og_hint.is_followed_up_on:
+                return Response(
+                    {"error": "Original hint already followed up to"}, status=400
+                )
+
+            og_hint.is_followed_up_on = True
+            og_hint.save()
 
         hint = Hint.objects.create(
             puzzle=puzzle,
             team=context.team,
-            is_followup=(request.data["followup"] and hints_count > 0),
+            is_followup=request.data["followup"] != -1,
             hint_question=request.data["question"],
         )
 

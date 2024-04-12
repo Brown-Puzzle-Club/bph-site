@@ -1,7 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
-import type { DjangoContext, InPersonEvent, Puzzle, Team, TeamMember } from "@/utils/django_types";
+import type {
+  DjangoContext,
+  Hint,
+  InPersonEvent,
+  Puzzle,
+  Team,
+  TeamMember,
+} from "@/utils/django_types";
 
 const getMyTeamMembers = async () => {
   const response = await axios.get<TeamMember[]>("/api/team-members");
@@ -29,6 +36,10 @@ const getPuzzle = async (puzzleSlug: string) => {
 };
 const getEvents = async () => {
   const response = await axios.get<InPersonEvent[]>("/api/events");
+  return response.data;
+};
+const getHintsForPuzzle = async (puzzleSlug: string) => {
+  const response = await axios.get<Hint[]>(`/api/hints/${puzzleSlug}`);
   return response.data;
 };
 
@@ -81,8 +92,23 @@ export const useEvents = () => {
   });
 };
 
+export const useHintsForPuzzle = (puzzleSlug: string) => {
+  return useQuery({
+    queryKey: ["hints", puzzleSlug],
+    queryFn: () => getHintsForPuzzle(puzzleSlug),
+    refetchInterval: 1000 * 30, // 30 seconds
+  });
+};
+
 const postUpdateTeam = async (data: Partial<Team>) => {
   const response = await axios.post<Team>("/api/update-team", data);
+  return response.data;
+};
+const postHintRequest = async (
+  puzzleSlug: string,
+  data: { question: string; followup: number },
+) => {
+  const response = await axios.post<Hint>(`/api/hints/${puzzleSlug}/submit`, data);
   return response.data;
 };
 
@@ -95,6 +121,18 @@ export const useMutateTeam = () => {
       // queryClient.setQueryData(["my-team"], data);
       queryClient.invalidateQueries({ queryKey: ["team-members"] });
       queryClient.invalidateQueries({ queryKey: ["my-team"] });
+    },
+  });
+};
+
+export const useMutateHint = (puzzleSlug: string) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ["hint", puzzleSlug],
+    mutationFn: (data: { question: string; followup: number }) => postHintRequest(puzzleSlug, data),
+    onSuccess: (/* data */) => {
+      queryClient.refetchQueries({ queryKey: ["hints", puzzleSlug] });
+      queryClient.refetchQueries({ queryKey: ["my-team"] });
     },
   });
 };
