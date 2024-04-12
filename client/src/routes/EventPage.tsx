@@ -104,20 +104,20 @@ export default function EventPage({ setVotingOpen }: EventPage) {
             imageSrc={cassette}
             hoverImageSrc={cassetteHover}
             linkTo="/majorcase/data"
-            extraClasses="w-[15%] drop-shadow-[0_4px_4px_rgba(121,22,159,1)] hover:drop-shadow-[0_16px_16px_rgba(121,22,159,1)]"
+            extraClasses="w-[15%] drop-shadow-[0_4px_4px_rgba(121,22,159,1)] hover:drop-shadow-[0_16px_16px_rgba(121,22,159,1)] rotate-[30deg]"
             extraStyles={{
-              top: "12%",
-              left: "45%",
+              top: "15%",
+              left: "38%",
             }}
           />
           <MajorCaseIcon
             majorCase={MajorCaseEnum.COLORED_THREAD}
             imageSrc={thread}
             hoverImageSrc={threadHover}
-            extraClasses="w-[15%] drop-shadow-[0_4px_4px_rgba(255,0,0,1)] hover:drop-shadow-[0_16px_16px_rgba(255,0,0,1)]"
+            extraClasses="w-[15%] drop-shadow-[0_4px_4px_rgba(123,10,10,1)] hover:drop-shadow-[0_16px_16px_rgba(123,10,10,1)]"
             extraStyles={{
-              top: "23%",
-              left: "80%",
+              top: "16%",
+              left: "52%",
             }}
           />
           <MajorCaseIcon
@@ -125,7 +125,7 @@ export default function EventPage({ setVotingOpen }: EventPage) {
             imageSrc={letter}
             hoverImageSrc={letterHover}
             linkTo="/majorcase/social-deduction"
-            extraClasses="w-[15%] rotate-[-23deg] drop-shadow-[0_4px_4px_rgba(48,205,93,1)] hover:drop-shadow-[0_16px_16px_rgba(48,205,93,1)]"
+            extraClasses="w-[15%] rotate-[-23deg] drop-shadow-[0_4px_4px_rgba(85,171,110,1)] hover:drop-shadow-[0_16px_16px_rgba(85,171,110,1)]"
             extraStyles={{
               top: "15%",
               left: "65%",

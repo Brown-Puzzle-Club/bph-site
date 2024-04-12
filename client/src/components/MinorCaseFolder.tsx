@@ -26,13 +26,6 @@ const MinorCaseFolder: React.FC<BoxProps> = ({
   const [isHovered, setIsHovered] = React.useState(false);
   const [randomRotation, setRandomRotation] = React.useState(RAND_ROT());
 
-  // const { data: context } = useDjangoContext();
-
-  // const solution = useMemo(() => {
-  //   if (!context) return null;
-  //   return getMinorCaseSolution(minorCase, context);
-  // }, [context, minorCase]);
-
   return (
     <div className="max-w-[8vw]">
       <div
