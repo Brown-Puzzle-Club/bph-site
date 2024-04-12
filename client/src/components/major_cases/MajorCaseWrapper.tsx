@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 
+import type { MajorCaseEnum } from "@/utils/constants";
 import type { MajorCase, Puzzle } from "@/utils/django_types";
 
 import AnswerSubmit from "../puzzle/AnswerSubmission";
@@ -11,8 +12,8 @@ function MajorCaseWrapper({ children }: { children: ReactNode }) {
   const [majorCase, setMajorCase] = useState<MajorCase>({} as MajorCase);
 
   const { pathname } = useLocation();
+  const majorCaseSlug = pathname.split("/").pop();
   useEffect(() => {
-    const majorCaseSlug = pathname.split("/").pop();
     const url = `/api/major-case/${majorCaseSlug}`;
     console.log(`fetching major case from ${url}`);
     axios.get(url).then((response) => {
@@ -24,7 +25,7 @@ function MajorCaseWrapper({ children }: { children: ReactNode }) {
       setMajorCase(major_case);
       console.log(major_case);
     });
-  }, [pathname]);
+  }, [majorCaseSlug, pathname]);
 
   // TYPE JANKNESS OOPS
   const puzzle = useMemo(() => {
@@ -55,7 +56,7 @@ function MajorCaseWrapper({ children }: { children: ReactNode }) {
 
   return (
     <div className="puzzle-page">
-      <AnswerSubmit puzzle={puzzle} />
+      <AnswerSubmit puzzle={puzzle} major_case={majorCaseSlug as MajorCaseEnum} />
       {children}
     </div>
   );

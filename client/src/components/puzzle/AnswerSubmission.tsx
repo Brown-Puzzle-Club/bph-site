@@ -375,7 +375,8 @@ export default function AnswerSubmit({
           {puzzle.is_meta && major_case && (
             <CaseQuestion major_case={major_case as MajorCaseEnum} case_slug={puzzle.round.slug} />
           )}
-          {major_case === MajorCaseEnum.COLORED_THREAD && puzzle.is_meta ? (
+          {major_case === MajorCaseEnum.COLORED_THREAD &&
+          (puzzle.is_meta || puzzle.is_major_meta) ? (
             <AnswerSubmitRedThread
               puzzle_slug={puzzle.slug}
               setSubmissions={setSubmissions}

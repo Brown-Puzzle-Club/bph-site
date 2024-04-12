@@ -22,11 +22,22 @@ import { useTheme } from "@/hooks/useTheme";
 import { IS_MINOR_CASE_UNLOCKED } from "@/utils/auth";
 import type { MajorCaseEnum } from "@/utils/constants";
 import { CASE_PALETTE } from "@/utils/constants";
+import type { DjangoContext } from "@/utils/django_types";
 import { DEFAULT_THEME } from "@/utils/themes";
 import type { PuzzleAnswer } from "@/utils/utils";
 import { getUnlockedPuzzles } from "@/utils/utils";
 
 import { Error404 } from "./ErrorPage";
+import GamesRoundPage from "./minor_cases/nyt-games/GamesRoundPage";
+
+const ALT_MINOR_CASE_ROUTE = (mc_slug: string, context: DjangoContext) => {
+  switch (mc_slug) {
+    case "nyt":
+      return <GamesRoundPage context={context} />;
+    default:
+      return null;
+  }
+};
 
 function MinorCasePage() {
   const { setTheme } = useTheme();
@@ -89,6 +100,10 @@ function MinorCasePage() {
     unlocked_puzzles?.find(
       (puzzle_answer) => puzzle_answer.puzzle.is_meta && puzzle_answer.answer,
     ) !== undefined;
+
+  if (ALT_MINOR_CASE_ROUTE(minorCaseSlug, context)) {
+    return ALT_MINOR_CASE_ROUTE(minorCaseSlug, context);
+  }
 
   return (
     <div>
