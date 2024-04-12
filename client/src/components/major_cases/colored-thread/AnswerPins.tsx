@@ -14,92 +14,73 @@ import type { AssetProps } from "@/components/RelativeAsset";
 import RelativeAsset from "@/components/RelativeAsset";
 import { cn } from "@/utils/utils";
 
-import type { ILink, INode, NodeAnswer, ThreadType } from "./board_types";
 import { COLORED_GLOW } from "./consts";
+import type { INode, NodeAnswer, ThreadType } from "./types/BoardTypes";
 
-const PIN_HOVER_GLOW = "drop-shadow-[0_15px_15px_rgba(255,255,255,0.4)]";
+export const PIN_HOVER_GLOW = "drop-shadow-[0_15px_15px_rgba(255,255,255,0.4)]";
 
 interface AnswerPin extends AssetProps {
   id: string;
-  textStyle?: CSSProperties;
-}
-
-export default function AnswerPins({
-  nodes,
-  selectedThread,
-  selectedNode,
-  setSelectedNode,
-  links,
-  setLinks,
-}: {
   nodes: NodeAnswer[];
   selectedThread: ThreadType | null;
   selectedNode: INode | null;
-  setSelectedNode: React.Dispatch<React.SetStateAction<INode | null>>;
-  links: ILink[];
-  setLinks: React.Dispatch<React.SetStateAction<ILink[]>>;
-}) {
-  /**
-   * Handler for when a node is clicked.
-   */
-  const handleNodeClick = (targetNode: INode) => {
-    if (selectedThread) {
-      if (!selectedNode) {
-        // Select the node
-        setSelectedNode(targetNode);
-        return;
-      }
-      // Check if the two nodes are not the same and there is no existing link between them
-      if (
-        selectedNode.id !== targetNode.id &&
-        !links.some(
-          (link) =>
-            (link.from.id === selectedNode.id && link.to.id === targetNode.id) ||
-            (link.from.id === targetNode.id && link.to.id === selectedNode.id),
-        )
-      ) {
-        // Link the two nodes
-        setLinks([...links, { from: selectedNode, to: targetNode, thread: selectedThread }]);
-        setSelectedNode(null);
-      }
-    }
-  };
+  handleNodeClick: (node: INode) => void;
+  textStyle?: CSSProperties;
+}
 
-  const Pin = (props: AnswerPin) => {
-    const node = nodes.find((node) => node.node.id === props.id);
-    if (!node) return null;
+const formatAnswer = (answer: string) => {
+  // remove everything after the word ON, if it exists
+  const answer_upper = answer.toUpperCase();
+  const index = answer_upper.indexOf(" ON");
+  return index === -1 ? answer : answer_upper.substring(0, index);
+};
 
-    return (
-      <>
-        <RelativeAsset
-          extraClasses={cn(
-            `hover:cursor-pointer select-none`,
-            `${selectedThread && selectedNode && selectedNode.id === props.id ? COLORED_GLOW[selectedThread] : `hover:${PIN_HOVER_GLOW}`}`,
-          )}
-          onClick={() => {
-            if (selectedThread) handleNodeClick(node.node);
-          }}
-          {...props}
-        >
-          <p
-            className="absolute text-black font-mono font-bold text-[1.5vw] text-center select-none"
-            style={props.textStyle ? props.textStyle : props.extraStyles}
-          >
-            {node.answer}
-          </p>
-        </RelativeAsset>
-      </>
-    );
-  };
+const Pin = ({ nodes, selectedThread, selectedNode, handleNodeClick, ...props }: AnswerPin) => {
+  const node = nodes.find((node) => node.node.id === props.id);
+  if (!node) return null;
 
+  return (
+    <RelativeAsset
+      extraClasses={cn(
+        "select-none",
+        selectedThread ? "hover:cursor-pointer" : "pointer-events-none",
+        selectedThread &&
+          (selectedNode && selectedNode.id === props.id
+            ? COLORED_GLOW[selectedThread]
+            : "hover:drop-shadow-[0_15px_15px_rgba(255,255,255,0.4)]"),
+      )}
+      onClick={() => {
+        if (selectedThread) handleNodeClick(node.node);
+      }}
+      {...props}
+    >
+      <p
+        className="absolute text-[#000000e6] font-mono font-bold text-[1.5vw] text-center select-none"
+        style={props.textStyle ? props.textStyle : props.extraStyles}
+      >
+        {formatAnswer(node.answer)}
+      </p>
+    </RelativeAsset>
+  );
+};
+
+interface AnswerPinsProps {
+  nodes: NodeAnswer[];
+  selectedThread: ThreadType | null;
+  selectedNode: INode | null;
+  handleNodeClick: (node: INode) => void;
+}
+
+export default function AnswerPins(props: AnswerPinsProps) {
   return (
     <>
       <Pin
+        {...props}
         id="mr-cat"
         imageSrc={pin1}
         extraStyles={{
           top: "9%",
-          left: "28%",
+          left: "30%",
           width: "9%",
           zIndex: 3,
         }}
@@ -107,15 +88,16 @@ export default function AnswerPins({
           top: "49%",
           left: "40%",
           transform: "translate(-50%, -50%) rotate(354deg)",
-          fontSize: "1.1vw",
+          fontSize: "0.9vw",
         }}
       />
       <Pin
+        {...props}
         id="wasting-illness"
         imageSrc={pin2}
         extraStyles={{
           top: "9%",
-          left: "54%",
+          left: "51.7%",
           width: "9%",
           zIndex: 3,
         }}
@@ -127,7 +109,8 @@ export default function AnswerPins({
         }}
       />
       <Pin
-        id="trampled" // penny-puzz
+        {...props}
+        id="penny-puzz"
         imageSrc={pin3}
         extraStyles={{
           top: "35%",
@@ -136,13 +119,14 @@ export default function AnswerPins({
           zIndex: 3,
         }}
         textStyle={{
-          top: "49%",
-          left: "40%",
-          transform: "translate(-50%, -50%) rotate(354deg)",
-          fontSize: "1.1vw",
+          top: "59%",
+          left: "34%",
+          transform: "translate(-50%, -50%) rotate(6deg)",
+          fontSize: "0.9vw",
         }}
       />
       <Pin
+        {...props}
         id="trampled"
         imageSrc={pin4}
         extraStyles={{
@@ -159,6 +143,7 @@ export default function AnswerPins({
         }}
       />
       <Pin
+        {...props}
         id="internal-lacerations"
         imageSrc={pin5}
         extraStyles={{
@@ -175,22 +160,24 @@ export default function AnswerPins({
         }}
       />
       <Pin
+        {...props}
         id="ennui"
         imageSrc={pin5} // 6
         extraStyles={{
           top: "52%",
           left: "50%",
-          width: "10%",
+          width: "9%",
           zIndex: 3,
         }}
         textStyle={{
-          top: "49%",
-          left: "40%",
+          top: "67%",
+          left: "35%",
           transform: "translate(-50%, -50%) rotate(354deg)",
-          fontSize: "1.1vw",
+          fontSize: "1.3vw",
         }}
       />
       <Pin
+        {...props}
         id="shot-out-of-cannon"
         imageSrc={pin7}
         extraStyles={{
@@ -207,6 +194,7 @@ export default function AnswerPins({
         }}
       />
       <Pin
+        {...props}
         id="forced-regeneration"
         imageSrc={pin8}
         extraStyles={{
@@ -223,6 +211,7 @@ export default function AnswerPins({
         }}
       />
       <Pin
+        {...props}
         id="crushed-neck"
         imageSrc={pin9}
         extraStyles={{
@@ -239,7 +228,8 @@ export default function AnswerPins({
         }}
       />
       <Pin
-        id="trampled" // birbs-at-brown
+        {...props}
+        id="whaling-ships"
         imageSrc={pin10}
         extraStyles={{
           top: "72%",
@@ -248,14 +238,15 @@ export default function AnswerPins({
           zIndex: 3,
         }}
         textStyle={{
-          top: "49%",
+          top: "59%",
           left: "40%",
-          transform: "translate(-50%, -50%) rotate(354deg)",
+          transform: "translate(-50%, -50%) rotate(2deg)",
           fontSize: "1.1vw",
         }}
       />
       <Pin
-        id="trampled" // whaling-ships
+        {...props}
+        id="birbs-at-brown"
         imageSrc={pin11}
         extraStyles={{
           top: "69%",
@@ -264,10 +255,10 @@ export default function AnswerPins({
           zIndex: 3,
         }}
         textStyle={{
-          top: "49%",
-          left: "40%",
-          transform: "translate(-50%, -50%) rotate(354deg)",
-          fontSize: "1.1vw",
+          top: "55%",
+          left: "63%",
+          transform: "translate(-50%, -50%) rotate(355deg)",
+          fontSize: "0.9vw",
         }}
       />
     </>

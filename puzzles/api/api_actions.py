@@ -1,4 +1,5 @@
 from datetime import datetime
+import traceback
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from puzzles import models
@@ -209,18 +210,17 @@ def create_vote_event(request: Request) -> Response:
 
 
 def handle_answer(
-    answer: str | None, request_context, django_context, puzzle_slug: str
+    answer: str | None, request_context, django_context, puzzle_slug: str, voucher=False
 ) -> Response:
     print(
         f"submitting for puzzle: {puzzle_slug} with answer: {answer} for team: {django_context.team}"
     )
 
-    puzzle = django_context.team.unlocks.get(puzzle_slug)
-    if not puzzle:
-        if django_context.is_admin:
-            puzzle = Puzzle.objects.get(slug=puzzle_slug)
-        else:
-            return Response({"error": "Puzzle not unlocked"}, status=403)
+    puzzle = Puzzle.objects.get(slug=puzzle_slug)
+    unlock = PuzzleUnlock.objects.filter(team=django_context.team, puzzle=puzzle)
+
+    if not unlock and not django_context.is_admin:
+        return Response({"error": "Puzzle not unlocked"}, status=403)
 
     guesses_left = request_context.team.guesses_remaining(puzzle)
     if guesses_left <= 0:
@@ -247,7 +247,7 @@ def handle_answer(
             puzzle=puzzle,
             submitted_answer=answer,
             is_correct=correct,
-            used_free_answer=False,
+            used_free_answer=voucher,
         )
         submission.save()
     except Exception as e:
@@ -293,6 +293,7 @@ def handle_answer(
     return Response(
         {
             "status": "correct" if correct else "incorrect",
+            "guess": answer,
             "guesses_left": guesses_left,
             "messages": PuzzleMessageSerializer(puzzle_messages, many=True).data,
         },
@@ -352,12 +353,25 @@ def post_hint(request: Request, puzzle_slug: str) -> Response:
         ):
             raise KeyError
 
-        hints_count = Hint.objects.filter(puzzle=puzzle).count()
+        if request.data["followup"] != -1:
+            og_hint = Hint.objects.filter(
+                puzzle=puzzle, team=context.team, id=request.data["followup"]
+            ).first()
+            if og_hint is None:
+                return Response({"error": "Original hint not found"}, status=404)
+
+            if og_hint.is_followed_up_on:
+                return Response(
+                    {"error": "Original hint already followed up to"}, status=400
+                )
+
+            og_hint.is_followed_up_on = True
+            og_hint.save()
 
         hint = Hint.objects.create(
             puzzle=puzzle,
             team=context.team,
-            is_followup=(request.data["followup"] and hints_count > 0),
+            is_followup=request.data["followup"] != -1,
             hint_question=request.data["question"],
         )
 
@@ -370,3 +384,68 @@ def post_hint(request: Request, puzzle_slug: str) -> Response:
         return Response(
             {"error": f"Missing required fields {required_fields}"}, status=400
         )
+
+
+@api_view(["POST"])
+@require_auth
+def submit_event_answer(request: Request) -> Response:
+    try:
+        context = request._request.context
+        event_slug = request.data["event_slug"]
+        answer = request.data["answer"]
+
+        event = Event.objects.get(slug=event_slug)
+
+        sanitized_answer = "".join(
+            [char for char in event.answer if char.isalpha()]
+        ).upper()
+
+        correct = Puzzle.normalize_answer(answer) == sanitized_answer
+
+        if correct:
+            EventCompletion.objects.create(
+                team=context.team, event=event, completion_datetime=context.now
+            )
+
+        return Response(
+            {"status": "correct" if correct else "incorrect", "correct": correct},
+            status=200,
+        )
+    except Event.DoesNotExist:
+        return Response({"error": "Event not found"}, status=404)
+
+
+@api_view(["POST"])
+@require_auth
+def voucher_case(request: Request, round_slug: str) -> Response:
+    try:
+        django_context = request._request.context
+        request_context = request.context
+
+        case = Round.objects.get(slug=round_slug)
+        case_meta = case.meta
+
+        team = django_context.team
+
+        if team.num_free_answers_remaining <= 0:
+            return Response({"error": "No free answers remaining"}, status=400)
+
+        if case_meta.slug in team.solves:
+            return Response({"error": "Case already solved."}, status=400)
+
+        if case_meta.slug not in team.unlocks:
+            # If the puzzle is not unlocked, unlock it
+            unlock = PuzzleUnlock.objects.create(
+                team=team, puzzle=case_meta, unlock_datetime=request_context.now
+            )
+            unlock.save()
+
+        answer = case_meta.answer
+        return handle_answer(
+            answer, request_context, django_context, case_meta.slug, voucher=True
+        )
+    except Exception as e:
+        print(e)
+        tb = traceback.format_exc()
+        print(tb)
+        return Response({"error": "Could not voucher"}, status=404)

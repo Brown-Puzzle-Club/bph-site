@@ -13,6 +13,7 @@ from django.utils import timezone
 
 from puzzles import hunt_config
 from puzzles.hunt_config import (
+    HOURS_PER_HINT,
     HUNT_START_TIME,
     HUNT_END_TIME,
     HUNT_CLOSE_TIME,
@@ -194,6 +195,9 @@ class Context:
     def num_free_answers_remaining(self):
         return self.team.num_free_answers_remaining if self.team else 0
 
+    def hours_per_hint(self):
+        return HOURS_PER_HINT
+
     def unlocks(self):
         return self.team.unlocks_by_case if self.team else {}
 
@@ -253,7 +257,7 @@ class Context:
         return self.time_since_unlock.total_seconds() // 3600
 
     def in_person(self):
-        return self.team.in_person
+        return self.team and self.team.in_person
 
     def test(self, n):
         return n * 3
@@ -288,6 +292,9 @@ class Context:
     def minor_case_solves(self):
         return self.team.minor_case_solves if self.team else {}
 
+    def major_case_solves(self):
+        return self.team.major_case_solves if self.team else {}
+
     def current_incoming_event(self):
         return models.MinorCaseIncomingEvent.get_current_incoming_event(self)
 
@@ -296,6 +303,17 @@ class Context:
 
     def minor_case_completed(self):
         return self.team.db_minor_case_completed if self.team else {}
+
+    def completed_events(self):
+        return (
+            models.EventCompletion.get_completed_events(self.team) if self.team else {}
+        )
+
+    def storyline_unlocks(self):
+        if not self.team:
+            return {}
+
+        return models.StorylineUnlock.get_and_compute_unlocks(self.team)
 
     # The purpose of this logic is to keep archive links current. For example,
     # https://2019.galacticpuzzlehunt.com/archive is a page that exists but only

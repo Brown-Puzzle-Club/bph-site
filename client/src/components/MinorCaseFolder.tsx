@@ -26,7 +26,7 @@ const MinorCaseFolder: React.FC<BoxProps> = ({
   const [isHovered, setIsHovered] = React.useState(false);
   const [randomRotation, setRandomRotation] = React.useState(RAND_ROT());
 
-  // const { context } = useDjangoContext();
+  // const { data: context } = useDjangoContext();
 
   // const solution = useMemo(() => {
   //   if (!context) return null;

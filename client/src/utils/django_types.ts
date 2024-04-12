@@ -20,6 +20,9 @@ const UserTeamSchema = z.object({
   start_offset: z.string(),
   allow_time_unlocks: z.boolean(),
   total_hints_awarded: z.number(),
+  num_hints_remaining: z.number(),
+  num_hints_used: z.number(),
+  num_hints_total: z.number(),
   total_free_answers_awarded: z.number(),
   last_solve_time: z.string().nullable(),
   is_prerelease_testsolver: z.boolean(),
@@ -33,7 +36,6 @@ const UserTeamSchema = z.object({
   user: z.number(),
   emoji_choice: z.string(),
   color_choice: z.string(),
-  auth_token: z.string(),
 });
 type UserTeam = z.infer<typeof UserTeamSchema>;
 
@@ -52,6 +54,14 @@ const TeamMemberSchema = z.object({
   email: z.string(),
 });
 type TeamMember = z.infer<typeof TeamMemberSchema>;
+
+const ErratumSchema = z.object({
+  id: z.number(),
+  updates_text: z.string(),
+  timestamp: z.date(),
+  published: z.boolean(),
+});
+type Erratum = z.infer<typeof ErratumSchema>;
 
 const AnswerSubmissionSchema = z.object({
   id: z.number(),
@@ -103,6 +113,7 @@ const PuzzleSchema = z.object({
   clipboard: z.string(),
   clipboard_remote: z.string(),
   submissions: z.array(AnswerSubmissionSchema),
+  errata: z.array(ErratumSchema),
 });
 type Puzzle = z.infer<typeof PuzzleSchema>;
 
@@ -152,6 +163,32 @@ const MinorCaseIncomingEventSchema = z.object({
 });
 type MinorCaseIncomingEvent = z.infer<typeof MinorCaseIncomingEventSchema>;
 
+const EventSchema = z.object({
+  slug: z.string(),
+  name: z.string(),
+  timestamp: z.date().nullable(),
+  message: z.string(),
+  location: z.string(),
+  is_final_runaround: z.boolean(),
+  answer: z.string(),
+});
+interface InPersonEvent extends z.infer<typeof EventSchema> {}
+
+const EventCompletionSchema = z.object({
+  team: TeamSchema,
+  event: EventSchema,
+  completion_datetime: z.date(),
+});
+interface EventCompletion extends z.infer<typeof EventCompletionSchema> {}
+
+const StorylineUnlockSchema = z.object({
+  id: z.number(),
+  team: TeamSchema,
+  storyline: z.string(),
+  unlock_datetime: z.string(),
+});
+interface StorylineUnlock extends z.infer<typeof StorylineUnlockSchema> {}
+
 const TeamPuzzleContextSchema = z.object({
   is_admin: z.boolean(),
   is_superuser: z.boolean(),
@@ -169,7 +206,10 @@ const TeamPuzzleContextSchema = z.object({
   case_unlocks: z.record(RoundSchema),
   major_case_unlocks: z.record(MajorCaseSchema),
   major_case_puzzles: z.record(PuzzleSchema),
+  major_case_solves: z.record(AnswerSubmissionSchema),
   current_incoming_event: MinorCaseIncomingEventSchema,
+  completed_events: z.record(EventCompletionSchema),
+  storyline_unlocks: z.array(StorylineUnlockSchema),
 });
 
 const HuntContextSchema = z.object({
@@ -183,6 +223,7 @@ const HuntContextSchema = z.object({
   hunt_is_closed: z.boolean(),
   max_guesses_per_puzzle: z.number(),
   max_members_per_team: z.number(),
+  hours_per_hint: z.number(),
 });
 
 const ContextSchema = z.object({
@@ -208,9 +249,44 @@ const VotingInfoSchema = z.object({
 });
 interface VotingInfo extends z.infer<typeof VotingInfoSchema> {}
 
+const HintSchema = z.object({
+  id: z.number(),
+  team: z.number().int(),
+  puzzle: z.number().int(),
+  is_followup: z.boolean(),
+  is_followed_up_on: z.boolean(),
+  submitted_datetime: z.string(),
+  hint_question: z.string(),
+  notify_emails: z.string(),
+  claimed_datetime: z.string().nullable(),
+  claimer: z.string(),
+  discord_id: z.string(),
+  answered_datetime: z.string().nullable(),
+  status: z.string(),
+  response: z.string(),
+});
+interface Hint extends z.infer<typeof HintSchema> {}
+
+type Token = { key: string; id: number };
+
+interface SuccessResponse<T> {
+  data: T;
+  success: true;
+}
+interface ErrorResponse {
+  error: string;
+  success: false;
+}
+type APIResponse<T> = SuccessResponse<T> | ErrorResponse;
+
 export type {
+  APIResponse,
   AnswerSubmission,
   DjangoContext,
+  Erratum,
+  EventCompletion,
+  Hint,
+  InPersonEvent,
   MajorCase,
   MinorCase,
   MinorCaseActive,
@@ -220,8 +296,10 @@ export type {
   Puzzle,
   PuzzleMessage,
   Round,
+  StorylineUnlock,
   Team,
   TeamMember,
+  Token,
   User,
   UserTeam,
   VotingInfo,

@@ -1,6 +1,8 @@
 import * as React from "react";
 import { useState } from "react";
 import Countdown from "react-countdown";
+import type { HashLinkProps as LinkProps } from "react-router-hash-link";
+import { HashLink as Link } from "react-router-hash-link";
 import { BeatLoader } from "react-spinners";
 
 import bluenoir_logo from "@/assets/navbar_logo_head.png";
@@ -19,66 +21,65 @@ import { useTheme } from "@/hooks/useTheme";
 import { DEFAULT_THEME } from "@/utils/themes";
 import { cn } from "@/utils/utils";
 
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 import LoginNavbar from "./LoginNavbar";
 import TeamNavbar from "./TeamNavbar";
 
-const components: { title: string; href: string; description: string }[] = [
+const components: { title: string; to: string; description: string }[] = [
   {
     title: "Event Details",
-    href: "/info#important-info",
+    to: "/info#important-info",
     description: "Information on when, where, and how to participate in the event.",
   },
   {
     title: "In-Person Participation",
-    href: "/info#on-campus",
+    to: "/info#on-campus",
     description: "All are welcome to participate in-person! Find out more here.",
   },
   {
     title: "What is a puzzlehunt?",
-    href: "/info#FAQ",
+    to: "/info#FAQ",
     description: "Details on our event structure with examples and helpful links.",
   },
   {
     title: "I'm stuck! What do I do?",
-    href: "/info#stuck",
+    to: "/info#stuck",
     description: "Resources and tips for when you're lost.",
   },
 ];
 
-export const ListItem = React.forwardRef<
-  React.ElementRef<"a">,
-  React.ComponentPropsWithoutRef<"a">
-  // eslint-disable-next-line react/prop-types
->(({ className, title, children, ...props }, ref) => {
-  return (
-    <li>
-      <NavigationMenuLink asChild>
-        <a
-          ref={ref}
-          className={cn(
-            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-            className,
-          )}
-          {...props}
-        >
-          <div className="text-sm font-medium leading-none truncate">{title}</div>
-          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">{children}</p>
-        </a>
-      </NavigationMenuLink>
-    </li>
-  );
-});
-
+export const ListItem = React.forwardRef<React.ElementRef<typeof Link>, Omit<LinkProps, "ref">>(
+  ({ className, title, children, ...props }, ref) => {
+    return (
+      <li>
+        <NavigationMenuLink asChild>
+          <Link
+            smooth
+            ref={ref}
+            className={cn(
+              "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+              className,
+            )}
+            {...props}
+          >
+            <div className="text-sm font-medium leading-none truncate">{title}</div>
+            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">{children}</p>
+          </Link>
+        </NavigationMenuLink>
+      </li>
+    );
+  },
+);
 ListItem.displayName = "ListItem";
 
-const IconItem = React.forwardRef<React.ElementRef<"a">, React.ComponentPropsWithoutRef<"a">>(
-  // eslint-disable-next-line react/prop-types
+const IconItem = React.forwardRef<React.ElementRef<typeof Link>, Omit<LinkProps, "ref">>(
   ({ className, title, ...props }, ref) => {
     return (
       <li>
         {/* TODO: make icon float on left side */}
         <NavigationMenuLink asChild>
-          <a
+          <Link
+            smooth
             ref={ref}
             className={cn(
               "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
@@ -87,7 +88,7 @@ const IconItem = React.forwardRef<React.ElementRef<"a">, React.ComponentPropsWit
             {...props}
           >
             <div className="text-sm font-medium leading-none">{title}</div>
-          </a>
+          </Link>
         </NavigationMenuLink>
       </li>
     );
@@ -124,8 +125,9 @@ const HuntLogo = () => {
   const [hover, setHover] = useState(false);
 
   return (
-    <a
-      href="/"
+    <Link
+      smooth
+      to="/"
       className="text-white font-bold pl-3 pr-4 md:pr-1 whitespace-nowrap justify-center"
       onMouseEnter={() => {
         setHover(true);
@@ -144,12 +146,12 @@ const HuntLogo = () => {
         }}
       />
       <span>Brown Puzzlehunt</span>
-    </a>
+    </Link>
   );
 };
 
 const NavbarLeft = () => {
-  const { context } = useDjangoContext();
+  const { data: context } = useDjangoContext();
 
   return (
     <div className="left flex justify-start w-1/3">
@@ -164,9 +166,10 @@ const NavbarLeft = () => {
               <ul className="grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
                 <li className="row-span-4">
                   <NavigationMenuLink asChild>
-                    <a
+                    <Link
+                      smooth
                       className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
-                      href="/"
+                      to="/"
                     >
                       <div className="mb-2 mt-4 text-xl font-bold">The Hunt</div>
                       <p className="text-sm leading-tight text-muted-foreground">
@@ -179,13 +182,13 @@ const NavbarLeft = () => {
                           />
                         )}
                       </p>
-                    </a>
+                    </Link>
                   </NavigationMenuLink>
                 </li>
-                <IconItem href="/leaderboard" title="Leaderboard" />
-                <IconItem href="/contact" title="Contact HQ" />
-                <IconItem href="/credits" title="Hunt Credits" />
-                <IconItem href="/archive" title="Past Hunts" />
+                <IconItem to="/leaderboard" title="Leaderboard" />
+                <IconItem to="/contact" title="Contact HQ" />
+                <IconItem to="/credits" title="Hunt Credits" />
+                <IconItem to="/archive" title="Past Hunts" />
                 {/* <IconItem href="/club" title="Club Info" /> */}
               </ul>
             </NavigationMenuContent>
@@ -195,7 +198,7 @@ const NavbarLeft = () => {
             <NavigationMenuContent>
               <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
                 {components.map((component) => (
-                  <ListItem key={component.title} title={component.title} href={component.href}>
+                  <ListItem key={component.title} title={component.title} to={component.to}>
                     {component.description}
                   </ListItem>
                 ))}
@@ -213,14 +216,60 @@ const NavbarMiddle = () => {
 };
 
 const NavbarRight = () => {
-  const { loggedIn, checkingLoginStatus } = useAuth();
+  const { team } = useAuth();
+  const { isLoading, data: teamData } = team;
+  const { data: context } = useDjangoContext();
+
   return (
     <div className="right flex justify-end w-1/3">
       <NavigationMenuRight>
-        {(checkingLoginStatus && (
+        <div className="space-x-2">
+          {context?.team_context.num_hints_remaining &&
+          context?.team_context.num_hints_remaining > 0 ? (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <div className="flex justify-center items-center text-white">
+                    <span className="text-xs bg-white text-accent rounded-full p-1">
+                      {context?.team_context.num_hints_remaining}
+                      <b>H</b>
+                    </span>
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent className="bg-slate-900 text-white border-none">
+                  <p>
+                    Puzzle <b className="font-extrabold">H</b>ints Available Every{" "}
+                    {context.hunt_context.hours_per_hint} Hours
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          ) : null}
+          {context?.team_context.num_free_answers_remaining &&
+          context?.team_context.num_free_answers_remaining > 0 ? (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <div className="flex justify-center items-center text-white">
+                    <span className="text-xs bg-white text-accent rounded-full p-1">
+                      {context?.team_context.num_free_answers_remaining}
+                      <b>V</b>
+                    </span>
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent className="bg-slate-900 text-white border-none">
+                  <p>
+                    Free Case <b className="font-extrabold">V</b>ouchers
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          ) : null}
+        </div>
+        {(isLoading && (
           <BeatLoader className="justify-center content-center pr-2" color={"#fff"} size={12} />
         )) ||
-          (loggedIn && <TeamNavbar />) || <LoginNavbar />}
+          (teamData && <TeamNavbar />) || <LoginNavbar />}
       </NavigationMenuRight>
     </div>
   );

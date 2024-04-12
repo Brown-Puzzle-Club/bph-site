@@ -62,7 +62,7 @@ HUNT_SOLUTION_TIME = timezone.make_aware(
     )
 )
 
-MAX_GUESSES_PER_PUZZLE = 20
+MAX_GUESSES_PER_PUZZLE = 100
 MAX_MEMBERS_PER_TEAM = 12
 
 # If this is disabled, teams will not get any hints.
@@ -70,7 +70,7 @@ HINTS_ENABLED = True
 # Teams accumulate this many hints each day.
 # HINTS_PER_DAY = (2, 2, 2, 2, 2, 2, 2, 2, 2, 2)
 # number of hours a team has to wait for their next hint.
-HOURS_PER_HINT = 3
+HOURS_PER_HINT = 2
 # Teams get the first number in HINTS_PER_DAY at this time, and subsequent
 # numbers every day after until the end of HINTS_PER_DAY.
 HINT_TIME = HUNT_START_TIME + datetime.timedelta(hours=2)
@@ -98,4 +98,4 @@ FREE_ANSWER_TIME = HUNT_START_TIME + datetime.timedelta(days=6)
 TEAM_AGE_BEFORE_FREE_ANSWERS = datetime.timedelta(days=3)
 
 MAJOR_CASE_SLUGS = ["colored-thread", "social-deduction", "data"]
-MAJOR_CASE_UNLOCK_SOLVE_COUNT = [3, 4, 5]
+MAJOR_CASE_UNLOCK_SOLVE_COUNT = [1, 2, 4]

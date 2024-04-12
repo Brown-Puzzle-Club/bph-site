@@ -30,7 +30,7 @@ export default function Data() {
 
   return (
     <div className="py-4 mx-[20%]">
-      <h1 className="text-2xl font-bold">Data Major Case</h1>
+      <h1 className="text-2xl font-bold">The Crime of Data</h1>
       <p>
         <a
           href="https://docs.google.com/document/d/1M5AHZp_9G-F7cQ-8NTrw8rORa_hT-rN9MwwDVaudpXo/edit?usp=sharing"

@@ -8,7 +8,7 @@ import { cn } from "@/utils/utils";
 import BluenoirFrame from "./BluenoirFrame";
 import BluenoirSpeech from "./BluenoirSpeech";
 
-export const IDLE_TIMER = 5;
+export const IDLE_TIMER = 2 * 60; // 2 minutes
 
 const Bluenoir = () => {
   const speak = useBPHStore((state) => state.bluenoirSpeak);

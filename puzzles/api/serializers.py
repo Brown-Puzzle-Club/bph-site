@@ -2,6 +2,8 @@ from django.contrib.auth.models import User
 from puzzles.models import (
     AnswerSubmission,
     Erratum,
+    Event,
+    EventCompletion,
     ExtraGuessGrant,
     Hint,
     MajorCase,
@@ -15,6 +17,7 @@ from puzzles.models import (
     PuzzleUnlock,
     RatingField,
     Round,
+    StorylineUnlock,
     Survey,
     Team,
     TeamMember,
@@ -66,6 +69,9 @@ class TeamMemberSerializer(serializers.ModelSerializer):
 
 class TeamSerializer(serializers.ModelSerializer):
     team_members = TeamMemberSerializer(many=True, read_only=True)
+    num_hints_remaining = serializers.IntegerField(read_only=True)
+    num_hints_used = serializers.IntegerField(read_only=True)
+    num_hints_total = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Team
@@ -195,6 +201,36 @@ class ErrataSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class EventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
+        fields = [
+            "slug",
+            "name",
+            "timestamp",
+            "message",
+            "location",
+            "is_final_runaround",
+        ]
+
+
+class StorylineUnlockSerializer(serializers.ModelSerializer):
+    team = TeamSerializer()
+
+    class Meta:
+        model = StorylineUnlock
+        fields = "__all__"
+
+
+class EventCompletionSerializer(serializers.ModelSerializer):
+    event = EventSerializer()
+    team = TeamSerializer()
+
+    class Meta:
+        model = EventCompletion
+        fields = "__all__"
+
+
 # a single context call for all of a team's puzzle and solve progression data
 # IMPORTANT NOTE: This serializer contains the frontent context payload, so must be safe for a team to view
 # (all information should be unlocked to the team, not like "all puzzles" or something like that)
@@ -207,6 +243,7 @@ class TeamPuzzleContextSerializer(serializers.Serializer):
     minor_case_solves = serializers.DictField(
         child=serializers.DictField(child=AnswerSubmissionSerializer())
     )
+    major_case_solves = serializers.DictField(child=AnswerSubmissionSerializer())
     minor_case_active = MinorCaseActiveSerializer(many=True)
     minor_case_completed = MinorCaseCompletedSerializer(many=True)
     solves = serializers.DictField(child=AnswerSubmissionSerializer())
@@ -224,6 +261,8 @@ class TeamPuzzleContextSerializer(serializers.Serializer):
     major_case_unlocks = serializers.DictField(child=MajorCaseSerializer())
     major_case_puzzles = serializers.DictField(child=PuzzleBasicSerializer())
     current_incoming_event = MinorCaseIncomingEventSerializer()
+    completed_events = serializers.DictField(child=EventCompletionSerializer())
+    storyline_unlocks = StorylineUnlockSerializer(many=True)
 
 
 class HuntContextSerializer(serializers.Serializer):
@@ -237,6 +276,7 @@ class HuntContextSerializer(serializers.Serializer):
     hunt_is_closed = serializers.BooleanField()
     max_guesses_per_puzzle = serializers.IntegerField()
     max_members_per_team = serializers.IntegerField()
+    hours_per_hint = serializers.IntegerField()
 
 
 class ContextSerializer(serializers.Serializer):

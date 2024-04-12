@@ -1,31 +1,31 @@
 import axios from "axios";
 import type { ReactNode } from "react";
 import { useEffect, useMemo, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 import type { MajorCase, Puzzle } from "@/utils/django_types";
 
+import BackButton from "../BackButton";
 import AnswerSubmit from "../puzzle/AnswerSubmission";
 
 function MajorCaseWrapper({ children }: { children: ReactNode }) {
   const [majorCase, setMajorCase] = useState<MajorCase>({} as MajorCase);
 
-  const major_case_slug = useMemo(() => {
-    return window.location.pathname.split("/").pop();
-  }, []);
-
+  const { pathname } = useLocation();
   useEffect(() => {
-    const url = `/api/major-case/${major_case_slug}`;
+    const majorCaseSlug = pathname.split("/").pop();
+    const url = `/api/major-case/${majorCaseSlug}`;
     console.log(`fetching major case from ${url}`);
     axios.get(url).then((response) => {
       const major_case = response.data as MajorCase;
       console.log(major_case);
       // jank fix to match regular answer submission
-      major_case.puzzle = { name: major_case.name, slug: major_case_slug } as Puzzle;
+      major_case.puzzle = { name: major_case.name, slug: majorCaseSlug } as Puzzle;
       major_case.puzzle.submissions = major_case.submissions;
       setMajorCase(major_case);
       console.log(major_case);
     });
-  }, [major_case_slug]);
+  }, [pathname]);
 
   // TYPE JANKNESS OOPS
   const puzzle = useMemo(() => {
@@ -50,12 +50,14 @@ function MajorCaseWrapper({ children }: { children: ReactNode }) {
       solution: "",
       clipboard: "",
       clipboard_remote: "",
+      errata: [],
     };
   }, [majorCase]);
 
   return (
     <div className="puzzle-page">
       <AnswerSubmit puzzle={puzzle} />
+      <BackButton to={`/eventpage`} />
       {children}
     </div>
   );

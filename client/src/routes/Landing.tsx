@@ -15,7 +15,7 @@ const isMobileDevice = /iphone|ipad|ipod|android|blackberry|windows phone|iemobi
 export default function Landing() {
   const [visitedBefore, setVisitedBefore] = useState(false);
   const setBluenoirDialogue = useBPHStore((state) => state.setRandomDialogueFunction);
-  const { context } = useDjangoContext();
+  const { data: context } = useDjangoContext();
 
   useEffect(() => {
     setBluenoirDialogue(() => {

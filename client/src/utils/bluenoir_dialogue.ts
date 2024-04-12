@@ -60,11 +60,15 @@ export interface Dialogue {
 export interface Story {
   slug: string;
   dialogues: Dialogue[];
+  title?: string;
+  description?: string;
 }
 
 export const BluenoirStories: Record<string, Story> = {
   "main-page-intro": {
     slug: "main-page-intro",
+    title: "Introduction",
+    description: "Welcome to the Brown Investigative Bureau",
     dialogues: [
       {
         text: "Tch ... Just my luck, I get the rookies shoved off on me.",
@@ -158,6 +162,8 @@ export const BluenoirStories: Record<string, Story> = {
   },
   "major-case-complete-1": {
     slug: "first-major-case-complete",
+    title: "First Discovery",
+    description: "You've solved your first major case!",
     dialogues: [
       {
         text: "Heh ... Not bad work back there, kid.",
@@ -203,6 +209,8 @@ export const BluenoirStories: Record<string, Story> = {
   },
   "major-case-complete-2": {
     slug: "second-major-case-complete",
+    title: "Second Discovery",
+    description: "You've solved your second major case!",
     dialogues: [
       {
         text: "Look who's done it again!",
@@ -272,6 +280,8 @@ export const BluenoirStories: Record<string, Story> = {
   },
   "major-case-complete-3": {
     slug: "third-major-case-complete",
+    title: "Final Discovery",
+    description: "You've solved your second major case!",
     dialogues: [
       {
         text: "... Wow, kid.",

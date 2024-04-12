@@ -7,6 +7,7 @@ import { toast } from "react-hot-toast";
 import { BeatLoader } from "react-spinners";
 import { z } from "zod";
 
+import { useAuth } from "@/hooks/useAuth";
 import { MajorCaseEnum } from "@/utils/constants";
 import type { AnswerSubmission, Puzzle, PuzzleMessage } from "@/utils/django_types";
 import { cn } from "@/utils/utils";
@@ -14,6 +15,42 @@ import { cn } from "@/utils/utils";
 import { Button } from "../ui/button";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
+import HintModal from "./HintModal";
+
+const CUSTOM_CASE_QUESTIONS: Record<string, string> = {
+  "blues-clues": "What's a clue that can tell us when the crime was committed?",
+  cats: "How did the victim lose one of their nine lives? And where?",
+};
+const DEFAULT_CASE_QUESTIONS: Record<MajorCaseEnum, string> = {
+  [MajorCaseEnum.COLORED_THREAD]: "How did the victim die? And where?",
+  [MajorCaseEnum.SOCIAL_DEDUCTION]: "What was the name of the victim?",
+  [MajorCaseEnum.DATA]: "What’s a clue that can tell us when the victim died?",
+};
+
+const CaseQuestion = ({
+  major_case,
+  case_slug,
+}: {
+  major_case: MajorCaseEnum;
+  case_slug: string;
+}) => {
+  let message;
+  if (CUSTOM_CASE_QUESTIONS[case_slug]) {
+    message = CUSTOM_CASE_QUESTIONS[case_slug];
+  } else {
+    message = DEFAULT_CASE_QUESTIONS[major_case];
+  }
+  return (
+    <p
+      className="flex flex-col items-center"
+      style={{
+        textShadow: "0 0 10px #fff",
+      }}
+    >
+      {message}
+    </p>
+  );
+};
 
 function sanitize_answer(answer: string) {
   const answer_only_letters = answer.replace(/[^a-zA-Z]/g, "");
@@ -32,9 +69,11 @@ const answerSchema = z.object({
 const AnswerSubmitRedThread = ({
   puzzle_slug,
   setSubmissions,
+  hintButton,
 }: {
   puzzle_slug: string;
   setSubmissions: React.Dispatch<React.SetStateAction<AnswerSubmission[]>>;
+  hintButton: JSX.Element;
 }) => {
   const [submitting, setSubmitting] = useState(false);
 
@@ -104,7 +143,6 @@ const AnswerSubmitRedThread = ({
           onSubmit={form.handleSubmit(submit_answer)}
           className="text-white dark flex items-center space-x-3" // Changed flex class to include items-center
         >
-          <p>The victim was</p>
           <FormField
             control={form.control}
             name="cause"
@@ -135,11 +173,14 @@ const AnswerSubmitRedThread = ({
             {submitting ? (
               <BeatLoader className="self-center" color={"#fff"} size={12} />
             ) : (
-              <Button type="submit">Submit</Button>
+              <>
+                <Button type="submit">Submit</Button>
+              </>
             )}
           </div>
         </form>
       </Form>
+      {hintButton}
     </div>
   );
 };
@@ -147,9 +188,11 @@ const AnswerSubmitRedThread = ({
 const AnswerSubmitRegular = ({
   puzzle_slug,
   setSubmissions,
+  hintButton,
 }: {
   puzzle_slug: string;
   setSubmissions: React.Dispatch<React.SetStateAction<AnswerSubmission[]>>;
+  hintButton: JSX.Element;
 }) => {
   const [submitting, setSubmitting] = useState(false);
 
@@ -243,11 +286,14 @@ const AnswerSubmitRegular = ({
             {submitting ? (
               <BeatLoader className="self-center" color={"#fff"} size={12} />
             ) : (
-              <Button type="submit">Submit</Button>
+              <>
+                <Button type="submit">Submit</Button>
+              </>
             )}
           </div>
         </form>
       </Form>
+      {hintButton}
     </div>
   );
 };
@@ -292,6 +338,10 @@ export default function AnswerSubmit({
   puzzle: Puzzle;
   major_case?: MajorCaseEnum;
 }) {
+  const { team } = useAuth();
+  const hintsRemaining = team.data?.num_hints_remaining;
+  const [hintModalOpen, setHintModalOpen] = useState(false);
+
   const [submissions, setSubmissions] = useState(puzzle.submissions);
 
   const PUZZLE_ANSWER = useMemo(() => {
@@ -303,17 +353,45 @@ export default function AnswerSubmit({
     setSubmissions(puzzle.submissions);
   }, [puzzle]);
 
+  const hintButton = (
+    <Button
+      className="ml-1"
+      onClick={() => {
+        setHintModalOpen(true);
+      }}
+    >
+      Hints remaining: {hintsRemaining}
+    </Button>
+  );
+
   return puzzle.name ? (
     <div>
       {PUZZLE_ANSWER != "" ? (
         <div className="text-white dark text-center">
           ANSWER: <span className="font-mono text-green-100">{PUZZLE_ANSWER}</span>
         </div>
-      ) : major_case === MajorCaseEnum.COLORED_THREAD && puzzle.is_meta ? (
-        <AnswerSubmitRedThread puzzle_slug={puzzle.slug} setSubmissions={setSubmissions} />
       ) : (
-        <AnswerSubmitRegular puzzle_slug={puzzle.slug} setSubmissions={setSubmissions} />
+        <div>
+          {puzzle.is_meta && major_case && (
+            <CaseQuestion major_case={major_case as MajorCaseEnum} case_slug={puzzle.round.slug} />
+          )}
+          {major_case === MajorCaseEnum.COLORED_THREAD && puzzle.is_meta ? (
+            <AnswerSubmitRedThread
+              puzzle_slug={puzzle.slug}
+              setSubmissions={setSubmissions}
+              hintButton={hintButton}
+            />
+          ) : (
+            <AnswerSubmitRegular
+              puzzle_slug={puzzle.slug}
+              setSubmissions={setSubmissions}
+              hintButton={hintButton}
+            />
+          )}
+        </div>
       )}
+
+      <HintModal puzzleSlug={puzzle.slug} open={hintModalOpen} onOpenChange={setHintModalOpen} />
       <SubmissionHistory submissions={submissions} />
     </div>
   ) : (

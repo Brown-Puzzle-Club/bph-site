@@ -35,3 +35,9 @@ export const BIRB_THEME: Theme = {
   content_color: "#db7319",
   footer_color: "#db7319",
 };
+
+export const MAZE_THEME: Theme = {
+  content_color: "#c8c8c8",
+  footer_color: "#c8c8c8",
+  navbar_color: "#c8c8c8",
+};
