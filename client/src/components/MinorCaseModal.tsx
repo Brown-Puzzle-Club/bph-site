@@ -3,6 +3,7 @@ import type React from "react";
 import { useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 
+import solvedstamp from "@/assets/main_page/folders/SOLVED.png";
 import dt_folder from "@/assets/main_page/folders/dt_folder.png";
 import rt_folder from "@/assets/main_page/folders/rt_folder.png";
 import sd_folder from "@/assets/main_page/folders/sd_folder.png";
@@ -15,6 +16,14 @@ import { CASE_ART_BY_ROUND_SLUG } from "./minor_cases/FolderArt";
 import { Button } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
+
+function getRandomIntInclusive(min: number, max: number) {
+  const minCeiled = Math.ceil(min);
+  const maxFloored = Math.floor(max);
+  return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled); // The maximum is inclusive and the minimum is inclusive
+}
+
+const SOLVED_STAMP_ROT_RANGE = [-10, 10];
 
 const folder_art: Record<MajorCaseEnum, string> = {
   [MajorCaseEnum.COLORED_THREAD]: rt_folder,
@@ -63,6 +72,18 @@ const MinorCaseModal: React.FC<ModalProps> = ({
           }}
         >
           {CASE_ART_BY_ROUND_SLUG[selectedCase.slug as MajorCaseEnum]}
+          {solution && (
+            <img
+              className="absolute object-cover w-[18vw] select-none pointer-events-none"
+              style={{
+                left: "65%",
+                top: "72%",
+                rotate: `${getRandomIntInclusive(SOLVED_STAMP_ROT_RANGE[0], SOLVED_STAMP_ROT_RANGE[1])}deg`,
+                opacity: 0.5,
+              }}
+              src={solvedstamp}
+            />
+          )}
           <DialogHeader
             className="absolute max-w-[35%] grid gap-2"
             style={{
