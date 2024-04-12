@@ -95,7 +95,7 @@ export const BluenoirStories: Record<string, Story> = {
         reaction: BluenoirReaction.HAPPY,
       },
       {
-        text: "Desk work!",
+        text: "Desk work!!",
         reaction: BluenoirReaction.HAPPY,
       },
       {
