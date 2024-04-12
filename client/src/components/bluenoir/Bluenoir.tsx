@@ -1,15 +1,17 @@
 import { AnimatePresence, animate, motion, useMotionValue, type Variants } from "framer-motion";
 import { forwardRef, useEffect, useRef } from "react";
+import { useTimer } from "react-timer-hook";
 import { useGesture } from "react-use-gesture";
 import Typewriter from "typewriter-effect";
 
 import frame from "@/assets/bluenoir/frame.png";
 import frame_bg from "@/assets/bluenoir/frame_bg.png";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import useBPHStore, { CENTER } from "@/stores/useBPHStore";
 import { BluenoirReactionImage } from "@/utils/bluenoir_dialogue";
 import { cn } from "@/utils/utils";
 
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
+const IDLE_TIMER = 5;
 
 const BluenoirFrame = forwardRef<HTMLDivElement>((_props, ref) => {
   const open = useBPHStore((state) => state.bluenoirOpen);
@@ -17,7 +19,7 @@ const BluenoirFrame = forwardRef<HTMLDivElement>((_props, ref) => {
   const speechDialogue = useBPHStore((state) => state.bluenoirDialogue);
 
   return (
-    <TooltipProvider>
+    <TooltipProvider delayDuration={100}>
       <Tooltip>
         <TooltipTrigger>
           <div ref={ref} className="cursor-pointer h-[100px] w-[100px]">
@@ -81,43 +83,15 @@ const BluenoirSpeech = () => {
   const open = useBPHStore((state) => state.bluenoirOpen);
   const setOpen = useBPHStore((state) => state.setBluenoirOpen);
   const speechDialogue = useBPHStore((state) => state.bluenoirDialogue);
-
-  // const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  /*
-  const speechTimeout = useCallback(
-    () =>
-      setTimeout(() => {
-        speak(undefined, true);
-        console.log("timeout!");
-        timeoutRef.current = speechTimeout();
-      }, 5000),
-    [speak],
-  );
-
-  useEffect(() => {
-    timeoutRef.current = setTimeout(() => {
-      speechTimeout();
-    }, 5000);
-
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
+  const { restart, isRunning } = useTimer({
+    expiryTimestamp: new Date(new Date().getTime() + IDLE_TIMER * 1000),
+    autoStart: true,
+    onExpire: () => {
+      console.log("He");
+      restart(new Date(new Date().getTime() + IDLE_TIMER * 1000));
+      console.log(isRunning);
+    },
   });
-
-  useEffect(() => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    if (open) {
-      timeoutRef.current = speechTimeout();
-    }
-
-    return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    };
-  }, [open, speechTimeout]);
-  */
 
   return (
     <motion.div
@@ -139,8 +113,7 @@ const BluenoirSpeech = () => {
               <button
                 onClick={() => {
                   setOpen(false);
-                  // if (timeoutRef.current) clearTimeout(timeoutRef.current);
-                  //          timeoutRef.current = speechTimeout();
+                  restart(new Date(new Date().getTime() + IDLE_TIMER * 1000), true);
                 }}
               >
                 ✕
