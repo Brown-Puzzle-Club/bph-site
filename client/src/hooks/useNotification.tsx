@@ -20,6 +20,10 @@ export const useNotification = () => {
 
     const eventSource = new EventSource(`/notifications/${team.data.user}`);
 
+    eventSource.onerror = (e) => {
+      console.error(e);
+    };
+
     eventSource.onmessage = (e) => {
       console.log(e);
       const message = NotificationSchema.safeParse(JSON.parse(e.data));
