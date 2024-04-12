@@ -2,6 +2,7 @@ import type { Puzzle } from "@/utils/django_types";
 
 import IllicitAffairsPano from "./exile/IllicitAffairsPano";
 import LabyrinthBook from "./labyrinth/LabyrinthBook";
+import LockboxIframe from "./lockbox/LockboxIframe";
 import Connections from "./nyt-games/Connections";
 import LetterBoxedPuzzle from "./nyt-games/LetterBoxed";
 import Obituary from "./nyt-games/Obituary";
@@ -22,6 +23,7 @@ export function ALT_PUZZLE_ROUTES(puzzle: Puzzle): {
     obituary: <Obituary />,
     "labyrinth-puzz": <LabyrinthBook />,
     "illicit-affairs": <IllicitAffairsPano />,
+    lockbox: <LockboxIframe />,
     // "penny-puzz": <PennyPDF />,
   };
 }
