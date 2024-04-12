@@ -68,6 +68,9 @@ class TeamMemberSerializer(serializers.ModelSerializer):
 
 class TeamSerializer(serializers.ModelSerializer):
     team_members = TeamMemberSerializer(many=True, read_only=True)
+    num_hints_remaining = serializers.IntegerField(read_only=True)
+    num_hints_used = serializers.IntegerField(read_only=True)
+    num_hints_total = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Team
