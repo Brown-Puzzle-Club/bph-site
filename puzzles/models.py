@@ -641,6 +641,7 @@ class Team(models.Model):
     def asked_hints(self):
         return tuple(self.hint_set.select_related("puzzle", "puzzle__round"))
 
+    @property
     def num_hints_total(self):
         """
         Compute the total number of hints (used + remaining) available to this team.
@@ -668,9 +669,11 @@ class Team(models.Model):
         # print("HINT COMPUTE HINTS",hints)
         return self.total_hints_awarded + hints + FREE_HINT_CNT
 
+    @property
     def num_hints_used(self):
         return sum(hint.consumes_hint for hint in self.asked_hints)
 
+    @property
     def num_hints_remaining(self):
         return self.num_hints_total - self.num_hints_used
 
@@ -1723,6 +1726,7 @@ class Hint(models.Model):
         Puzzle, on_delete=models.CASCADE, verbose_name=_("puzzle")
     )
     is_followup = models.BooleanField(default=False, verbose_name=_("Is followup"))
+    is_followed_up_on = models.BooleanField(default=False, verbose_name=_("Is followed up on"))
 
     submitted_datetime = models.DateTimeField(
         auto_now_add=True, verbose_name=_("Submitted datetime")
