@@ -63,7 +63,7 @@ const HintModal: React.FC<ModalProps> = ({ puzzleSlug, open, onOpenChange }: Mod
             </div>
           ) : (
             <Button disabled={hintsRemaining <= 0} onClick={() => setIsHintOpen(true)}>
-              {hintsRemaining <= 0 ? "No hints remaining" : "Request new hint"}
+              {hintsRemaining <= 0 ? "No hints available" : "Request new hint"}
             </Button>
           )}
         </DialogHeader>

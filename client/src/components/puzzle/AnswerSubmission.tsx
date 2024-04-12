@@ -360,7 +360,7 @@ export default function AnswerSubmit({
         setHintModalOpen(true);
       }}
     >
-      Hints remaining: {hintsRemaining}
+      Hints available: {hintsRemaining}
     </Button>
   );
 

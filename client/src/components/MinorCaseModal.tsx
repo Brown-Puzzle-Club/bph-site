@@ -1,19 +1,26 @@
 // Modal.tsx
 import type React from "react";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 
-import manila from "@/assets/main/manila_open.png";
-import * as birb from "@/assets/minor_cases/birbs/teaser-1.png";
-import * as clip1 from "@/assets/minor_cases/clipping1.png";
-import * as clip2 from "@/assets/minor_cases/clipping2.png";
-import { CASE_PALETTE, type MajorCaseEnum } from "@/utils/constants";
+import dt_folder from "@/assets/main_page/folders/dt_folder.png";
+import rt_folder from "@/assets/main_page/folders/rt_folder.png";
+import sd_folder from "@/assets/main_page/folders/sd_folder.png";
+import { CASE_PALETTE, MajorCaseEnum } from "@/utils/constants";
 import type { Round } from "@/utils/django_types";
 import { getMinorCaseSolution } from "@/utils/utils";
 
 import { useDjangoContext } from "../hooks/useDjangoContext";
+import { CASE_ART_BY_ROUND_SLUG } from "./minor_cases/FolderArt";
+import { Button } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
+
+const folder_art: Record<MajorCaseEnum, string> = {
+  [MajorCaseEnum.COLORED_THREAD]: rt_folder,
+  [MajorCaseEnum.SOCIAL_DEDUCTION]: sd_folder,
+  [MajorCaseEnum.DATA]: dt_folder,
+};
 
 interface ModalProps {
   setSelectedCase: (round: Round | null) => void;
@@ -34,6 +41,13 @@ const MinorCaseModal: React.FC<ModalProps> = ({
     console.log(selectedCase);
   }, [selectedCase]);
 
+  const solution = useMemo(() => {
+    if (!selectedCase || !context) {
+      return "";
+    }
+    return getMinorCaseSolution(selectedCase, context);
+  }, [selectedCase, context]);
+
   return (
     selectedCase &&
     context && (
@@ -41,63 +55,61 @@ const MinorCaseModal: React.FC<ModalProps> = ({
         <DialogContent
           className="max-w-[60%] bg-transparent absolute grid grid-cols-1 grid-rows-2"
           style={{
-            aspectRatio: "16/9",
-            backgroundImage: `url(${manila})`,
+            aspectRatio: "16/10",
+            backgroundImage: `url(${folder_art[selectedCase.major_case.slug as MajorCaseEnum]})`,
             backgroundSize: "cover",
             backgroundPosition: "center center",
+            border: "none",
           }}
         >
-          <div>
-            <img
-              className="absolute shadow-lg aspect-square object-cover w-[8vw]"
-              style={{ left: "10%", top: "10%", rotate: "-27deg" }}
-              src={birb.default}
-            />
-            <img
-              className="absolute shadow-lg aspect-square object-cover w-[10vw]"
-              style={{ left: "8%", top: "55%", rotate: "15deg" }}
-              src={clip1.default}
-            />
-            <img
-              className="absolute shadow-lg aspect-square object-cover w-[8vw]"
-              style={{ left: "28%", top: "30%", rotate: "5deg" }}
-              src={clip2.default}
-            />
-            <img
-              className="absolute shadow-lg aspect-square object-cover w-[9vw]"
-              style={{ left: "30%", top: "60%", rotate: "-15deg" }}
-              src={birb.default}
-            />
-          </div>
-
+          {CASE_ART_BY_ROUND_SLUG[selectedCase.slug as MajorCaseEnum]}
           <DialogHeader
             className="absolute max-w-[35%] grid gap-2"
             style={{
               left: "55%",
-              top: "3%",
+              top: "9%",
             }}
           >
-            <DialogTitle className="text-[2vw]">{selectedCase.name}</DialogTitle>
+            <DialogTitle
+              className="text-[2vw]"
+              style={{
+                fontFamily: `Cartesian, sans-serif`,
+              }}
+            >
+              {selectedCase.name}
+            </DialogTitle>
             <p className="text-[0.9vw]">{selectedCase.description}</p>
           </DialogHeader>
           <div
-            className="grid gap-4 absolute"
+            className="grid gap-2 absolute"
             style={{
               left: "55%",
-              top: "70%",
+              top: "75%",
             }}
           >
-            <p
-              className="font-mono pt-1 text-[3vw]"
-              style={{
-                color: CASE_PALETTE[selectedCase.major_case.slug as MajorCaseEnum].answerColor,
-              }}
-            >
-              {getMinorCaseSolution(selectedCase, context) ?? "PLACEHOLDER"}
-            </p>
-            <div className="text-[0.9vw]">
+            {solution && (
+              <p className="font-mono  text-[1.4vw] font-bold">
+                ANSWER: <br></br>
+                <span
+                  className="bg-[#421515]"
+                  style={{
+                    color: CASE_PALETTE[selectedCase.major_case.slug as MajorCaseEnum].answerColor,
+                  }}
+                >
+                  {solution}
+                </span>
+              </p>
+            )}
+            <div className="text-[0.9vw] flex flex-col items-center">
               {typeof action === "string" ? (
-                <Link to={action}>Go to Minor Case Page</Link>
+                <div className="flex items-center space-x-4">
+                  {/* <p className="font-bold text-2xl">{'>>'}</p> */}
+                  <Link to={action}>
+                    <Button className={`text-[1vw] hover:bg-slate-800`}>
+                      Go to Minor Case Page
+                    </Button>
+                  </Link>
+                </div>
               ) : (
                 <div>
                   <Checkbox
