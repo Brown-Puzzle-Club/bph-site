@@ -325,20 +325,6 @@ class DiscordInterface:
 discord_interface = DiscordInterface()
 
 
-@receiver(send_notification)
-def broadcast_notification(sender, notification_type, title, desc, team, **kwargs):
-    print(f"broadcasting notification to {team}")
-    send_event(
-        f"_user-{team}",
-        "message",
-        {
-            "type": notification_type,
-            "title": title,
-            "desc": desc,
-        },
-    )
-
-
 # A WebsocketConsumer subclass that can broadcast messages to a set of users.
 
 
@@ -415,36 +401,26 @@ class AdminWebsocketConsumer(BroadcastWebsocketConsumer):
             cls.group_id, {"type": "channel.receive_broadcast", "data": text_data}
         )
 
+@receiver(send_notification)
+def broadcast_notification(sender, notification_type, title, desc, team, **kwargs):
+    print(f"broadcasting notification to {team}")
+    room = Room.objects.get(channel_name=f"puzzles-{team}")
 
-# class TeamNotificationsConsumer(WebsocketConsumer):
-#     def get_room(self):
-#         return f"notifications-{self.scope['user'].team.id}"
+    channel = get_channel_layer()
+    if channel is not None:
+        message = {
+            "type": notification_type,
+            "title": title,
+            "desc": desc,
+        }
 
-#     def connect(self):
-#         print(f"connected a new user: {self.scope['user']} {self.channel_name=}")
-#         self.accept()
-#         Room.objects.add(self.get_room(), self.channel_name)  # type: ignore
+        channel_layer_message = {"type": "forward.message", "data": json.dumps(message)}
 
-#     def disconnect(self, close_code):
-#         print(
-#             f"disconnected a user: {self.scope['user']} {self.channel_name=} with code {close_code}"
-#         )
-#         Room.objects.remove(self.get_room(), self.channel_name)  # type: ignore
-
-#     def receive(self, text_data):
-#         client_room = Room.objects.get(channel_name=self.get_room())
-#         content = json.loads(text_data)
-
-#         print(f"Notification Received: {content}")
-#         if content == "heartbeat":
-#             return
-
-#     def forward_message(self, event):
-#         self.send(text_data=event["data"])
+        async_to_sync(channel.group_send)(room.channel_name, channel_layer_message)
 
 
 @receiver(create_minor_case_incoming_event)
-def broadcast_minor_case_incoming_event(sender, id, cases, team, max_choices, **kwargs):
+def broadcast_minor_case_incoming_event(sender, caseId, cases, team, max_choices, **kwargs):
     print(f"broadcasting minor case incoming event to {team}")
     room = Room.objects.get(channel_name=f"puzzles-{team}")
 
@@ -453,7 +429,7 @@ def broadcast_minor_case_incoming_event(sender, id, cases, team, max_choices, **
         message = {
             "type": "vote",
             "data": {
-                "id": id,
+                "id": caseId,
                 "cases": cases,
                 "expiration_time": None,
                 "max_choices": max_choices,
@@ -465,12 +441,13 @@ def broadcast_minor_case_incoming_event(sender, id, cases, team, max_choices, **
         async_to_sync(channel.group_send)(room.channel_name, channel_layer_message)
 
 
-class VotingConsumer(WebsocketConsumer):
+class BPHConsumer(WebsocketConsumer):
     def get_room(self):
-        return f"{self.scope['path'].split('/')[-1]}-{self.scope['user'].team.id}"
+        return f"puzzles-{self.scope['user'].team.id}"
 
     def connect(self):
         print(f"connected a new user: {self.scope['user']} {self.channel_name=}")
+        print("room", self.get_room())
         self.accept()
         Room.objects.add(self.get_room(), self.channel_name)  # type: ignore
 

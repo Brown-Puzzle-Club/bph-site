@@ -3,7 +3,7 @@ import { Toaster } from "react-hot-toast";
 
 import Footer from "@/components/Footer";
 import Navbar from "@/components/navbar/Navbar";
-import { useNotification } from "@/hooks/useNotification";
+import useSocket from "@/hooks/useSocket";
 import { useTheme } from "@/hooks/useTheme";
 import { DEFAULT_THEME } from "@/utils/themes";
 
@@ -22,7 +22,17 @@ export const PageWrapper = ({ route }: { route: React.ReactElement }) => {
   const [votingOpen, setVotingOpen] = useState(false);
   const [blueNoirOpen, setBlueNoirOpen] = useState(false);
   const [position, setPosition] = useState(snapPositions[0]);
-  useNotification();
+  const { sendJsonMessage, readyState, votingInfo } = useSocket("ws/puzzles", {
+    onOpen: () => {
+      console.log("Connected to websocket! yay!");
+    },
+    onClose: () => {
+      console.log("Disconnected from websocket! boo!");
+    },
+    onError: (e) => {
+      console.log("Error connecting to websocket! boo!", e);
+    },
+  });
 
   return (
     <div
@@ -56,7 +66,9 @@ export const PageWrapper = ({ route }: { route: React.ReactElement }) => {
         }}
       />
       <CaseVoting
-        path="ws/puzzles"
+        sendJsonMessage={sendJsonMessage}
+        readyState={readyState}
+        votingInfo={votingInfo}
         open={votingOpen}
         onOpenChange={(open) => setVotingOpen(open)}
       />

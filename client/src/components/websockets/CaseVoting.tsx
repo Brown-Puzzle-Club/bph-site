@@ -1,20 +1,25 @@
-import useSocket from "@/hooks/useSocket";
+import type { ReadyState } from "react-use-websocket";
+import type { SendJsonMessage } from "react-use-websocket/dist/lib/types";
+
+import type { VotingInfo } from "@/utils/django_types";
 
 import VotingModal from "./VotingModal";
 
 interface CaseVotingProps {
-  path: string;
+  sendJsonMessage: SendJsonMessage;
+  readyState: ReadyState;
+  votingInfo: VotingInfo;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-const CaseVoting = ({ path, open, onOpenChange }: CaseVotingProps) => {
-  const { sendJsonMessage, readyState, votingInfo } = useSocket(path, {
-    onOpen: () => {
-      console.log("Connected to websocket! yay!");
-    },
-  });
-
+const CaseVoting = ({
+  sendJsonMessage,
+  readyState,
+  votingInfo,
+  open,
+  onOpenChange,
+}: CaseVotingProps) => {
   return (
     readyState == WebSocket.OPEN && (
       <VotingModal
