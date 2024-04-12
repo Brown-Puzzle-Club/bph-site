@@ -60,8 +60,9 @@ const useSocket = (path: string, callbacks: SocketCallbacks | undefined = undefi
   useEffect(() => {
     if (!lastJsonMessage) return;
 
+    console.log(lastJsonMessage);
+
     const parsedMessage = ResponseSchema.parse(lastJsonMessage);
-    console.log(parsedMessage);
     switch (parsedMessage.type) {
       case "vote": {
         setVotingInfo(parsedMessage.data);

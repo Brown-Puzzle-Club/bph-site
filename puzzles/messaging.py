@@ -406,12 +406,15 @@ def broadcast_notification(sender, notification_type, title, desc, team, **kwarg
     print(f"broadcasting notification to {team}")
     room = Room.objects.get(channel_name=f"puzzles-{team}")
 
+
     channel = get_channel_layer()
     if channel is not None:
         message = {
             "type": notification_type,
-            "title": title,
-            "desc": desc,
+            "data": {
+                "title": title,
+                "desc": desc
+            }
         }
 
         channel_layer_message = {"type": "forward.message", "data": json.dumps(message)}
