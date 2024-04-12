@@ -88,7 +88,7 @@ const LandingInfo: React.FC = () => {
             and end on:
             <br />
             <span className="font-semibold underline decoration-dashed cursor-help">
-              Sunday, April 14th 2024 @ 6:00PM EDT
+              Sunday, April 14th 2024 @ 7:00PM EDT
             </span>
           </p>
         </div>

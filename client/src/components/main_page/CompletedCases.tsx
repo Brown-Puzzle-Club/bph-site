@@ -19,6 +19,8 @@ export default function CompletedCases() {
     return mostRecentSolves(context);
   }, [context]);
 
+  if (solved_cases.length === 0) return null;
+
   return (
     solved_cases && (
       <>

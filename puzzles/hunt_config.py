@@ -62,7 +62,7 @@ HUNT_SOLUTION_TIME = timezone.make_aware(
     )
 )
 
-MAX_GUESSES_PER_PUZZLE = 100
+MAX_GUESSES_PER_PUZZLE = 20
 MAX_MEMBERS_PER_TEAM = 12
 
 # If this is disabled, teams will not get any hints.
