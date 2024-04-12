@@ -26,7 +26,7 @@ urlpatterns = [
     path("my-team/", api_views.get_my_team, name="get-my-team"),
     path("my-token/", api_views.get_my_token, name="get-my-token"),
     path("puzzle/", include(puzzle_handlers_urls)),
-    path("admin/", include(admin_handler_urls))
+    path("admin/", include(admin_handler_urls)),
     path("", include(router.urls)),
     path("context", api_views.context, name="context"),
     path("login", api_actions.login_action, name="login"),
