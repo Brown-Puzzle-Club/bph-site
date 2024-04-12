@@ -26,6 +26,7 @@ import MyTeamPage from "./routes/MyTeamPage";
 import PuzzleList from "./routes/PuzzleList";
 import PuzzlePage from "./routes/PuzzlePage";
 import RegisterForm from "./routes/Register";
+import Story from "./routes/Story";
 import TeamPage from "./routes/TeamPage";
 import ColoredThread from "./routes/major_cases/ColoredThread";
 import Data from "./routes/major_cases/Data";
@@ -115,6 +116,18 @@ const router = createBrowserRouter([
             route={
               <Locked condition={HUNT_HAS_STARTED}>
                 <EventPage />
+              </Locked>
+            }
+          />
+        ),
+      },
+      {
+        path: "/story",
+        element: (
+          <PageWrapper
+            route={
+              <Locked condition={HUNT_HAS_STARTED}>
+                <Story />
               </Locked>
             }
           />
