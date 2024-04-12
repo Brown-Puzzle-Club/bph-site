@@ -103,7 +103,13 @@ const BluenoirSpeech = ({ show, setShow, isLeft }: BluenoirSpeechProps) => {
             animate="visible"
             exit="hidden"
           >
-            <div className={cn("absolute text-slate-500 text-sm", isLeft ? "right-2" : "left-2")}>
+            <div
+              className={cn(
+                "absolute text-slate-500 text-sm",
+                isLeft ? "right-2" : "left-2",
+                "top-0",
+              )}
+            >
               <button onClick={() => setShow(false)}>✕</button>
             </div>
             <div
@@ -140,10 +146,12 @@ const BluenoirSpeech = ({ show, setShow, isLeft }: BluenoirSpeechProps) => {
 
 const dampen = (val: number, [min, max]: [number, number]) => {
   if (val > max) {
+    // return max;
     const extra = val - max;
     const dampenedExtra = extra > 0 ? Math.sqrt(extra) : -Math.sqrt(-extra);
     return max + dampenedExtra * 2;
   } else if (val < min) {
+    // return min;
     const extra = val - min;
     const dampenedExtra = extra > 0 ? Math.sqrt(extra) : -Math.sqrt(-extra);
     return min + dampenedExtra * 2;
@@ -180,14 +188,8 @@ const Bluenoir = ({ show, setShow, position, setPosition }: BluenoirProps) => {
         y.stop();
         if (!ref.current) return;
 
-        const [minX, maxX] = [
-          0.02 * window.innerWidth,
-          0.97 * window.innerWidth - ref.current.offsetWidth,
-        ];
-        const [minY, maxY] = [
-          0.1 * window.innerHeight,
-          0.95 * window.innerHeight - ref.current.offsetHeight,
-        ];
+        const [minX, maxX] = [10, window.innerWidth - ref.current.offsetWidth - 10];
+        const [minY, maxY] = [50, 0.95 * window.innerHeight - ref.current.offsetHeight];
 
         x.set(dampen(dx, [minX, maxX]));
         y.set(dampen(dy, [minY, maxY]));
@@ -202,7 +204,7 @@ const Bluenoir = ({ show, setShow, position, setPosition }: BluenoirProps) => {
       },
     },
     {
-      drag: { initial: () => [x.get(), y.get()] },
+      drag: { initial: () => [x.get(), y.get()], filterTaps: true },
       domTarget: ref,
       eventOptions: { passive: false },
     },
