@@ -23,7 +23,7 @@ export default function ActiveCases() {
 
   return (
     <>
-      <div className="flex space-x-4">
+      <div className="flex gap-4">
         {context ? <Cases casesRecord={active_cases} setSelectedCase={setSelectedCase} /> : null}
       </div>
       <MinorCaseModal

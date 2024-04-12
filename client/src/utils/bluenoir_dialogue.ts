@@ -1440,7 +1440,11 @@ function randomChoice(idle_dialogue_options: Dialogue[]): Dialogue {
 
 // dialog access:
 
-export const getMainPageIdleDialogue = (context: DjangoContext): Dialogue => {
+export const getMainPageIdleDialogue = (): Dialogue => {
+  return randomChoice(MAIN_PAGE_IDLE);
+};
+
+export const getMainPageIdleDialogueWithMajorCases = (context: DjangoContext): Dialogue => {
   const case_solve_count = numberOfMajorCaseSolves(context);
   const idle_dialogue_options =
     MAIN_PAGE_IDLE_CASE_COUNT[case_solve_count as 0 | 1 | 2 | 3].concat(MAIN_PAGE_IDLE);

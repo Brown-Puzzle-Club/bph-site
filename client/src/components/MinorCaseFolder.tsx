@@ -26,13 +26,6 @@ const MinorCaseFolder: React.FC<BoxProps> = ({
   const [isHovered, setIsHovered] = React.useState(false);
   const [randomRotation, setRandomRotation] = React.useState(RAND_ROT());
 
-  // const { data: context } = useDjangoContext();
-
-  // const solution = useMemo(() => {
-  //   if (!context) return null;
-  //   return getMinorCaseSolution(minorCase, context);
-  // }, [context, minorCase]);
-
   return (
     <div className="max-w-[8vw]">
       <div
@@ -60,14 +53,17 @@ const MinorCaseFolder: React.FC<BoxProps> = ({
         />
         {/* Box content */}
         <span
-          className="z-10 absolute font-mono font-bold text-[#000000b0] text-center whitespace-pre-line break-words text-[1vw]"
+          className="z-10 hyphens-auto absolute font-mono font-bold text-[#000000b0] text-center whitespace-pre-line break-words text-[0.7vw]"
           style={{
-            top: "30%",
+            top: minorCase.name.length < 20 ? "38%" : "45%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            maxWidth: "90%",
+            maxWidth: "85%",
             maxHeight: "80%",
             overflow: "hidden",
+            msHyphens: "auto",
+            MozHyphens: "auto",
+            WebkitHyphens: "auto",
           }}
         >
           {minorCase.name.toUpperCase()}
