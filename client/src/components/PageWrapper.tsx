@@ -1,4 +1,4 @@
-import { cloneElement, useEffect, useState } from "react";
+import { cloneElement, useState } from "react";
 import { Toaster } from "react-hot-toast";
 
 import Footer from "@/components/Footer";
@@ -23,14 +23,11 @@ const randomStrings = [
 export const PageWrapper = ({ route }: { route: React.ReactElement }) => {
   const { theme } = useTheme();
   const [votingOpen, setVotingOpen] = useState(false);
-  const toggleCentered = useBPHStore((state) => state.toggleCentered);
+  const toggleCentered = useBPHStore((state) => state.toggleBluenoirCentered);
   const speak = useBPHStore((state) => state.bluenoirSpeak);
+  // const restart = useBPHStore((state) => state.restartIdleTimer);
 
   useNotification();
-
-  useEffect(() => {
-    console.log(votingOpen);
-  }, [votingOpen]);
 
   return (
     <div
@@ -62,13 +59,11 @@ export const PageWrapper = ({ route }: { route: React.ReactElement }) => {
         className="bg-red-400"
         onClick={() => {
           toggleCentered();
-          speak(
-            {
-              text: randomStrings[Math.floor(Math.random() * randomStrings.length)],
-              reaction: BluenoirReaction.SMUG,
-            },
-            true,
-          );
+          speak({
+            text: randomStrings[Math.floor(Math.random() * randomStrings.length)],
+            reaction: BluenoirReaction.SMUG,
+          });
+          // restart(speak, 5000);
         }}
       >
         test

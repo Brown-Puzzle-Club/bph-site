@@ -1,162 +1,38 @@
-import { AnimatePresence, animate, motion, useMotionValue, type Variants } from "framer-motion";
-import { forwardRef, useEffect, useRef } from "react";
-import { useTimer } from "react-timer-hook";
+import { animate, motion, useMotionValue } from "framer-motion";
+import { useEffect, useRef } from "react";
 import { useGesture } from "react-use-gesture";
-import Typewriter from "typewriter-effect";
 
-import frame from "@/assets/bluenoir/frame.png";
-import frame_bg from "@/assets/bluenoir/frame_bg.png";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import useBPHStore, { CENTER } from "@/stores/useBPHStore";
-import { BluenoirReactionImage } from "@/utils/bluenoir_dialogue";
 import { cn } from "@/utils/utils";
 
-const IDLE_TIMER = 5;
+import BluenoirFrame from "./BluenoirFrame";
+import BluenoirSpeech from "./BluenoirSpeech";
 
-const BluenoirFrame = forwardRef<HTMLDivElement>((_props, ref) => {
-  const open = useBPHStore((state) => state.bluenoirOpen);
-  const toggleOpen = useBPHStore((state) => state.toggleBluenoirOpen);
-  const speechDialogue = useBPHStore((state) => state.bluenoirDialogue);
-
-  return (
-    <TooltipProvider delayDuration={100}>
-      <Tooltip>
-        <TooltipTrigger>
-          <div ref={ref} className="cursor-pointer h-[100px] w-[100px]">
-            <div className="h-[70px] w-[70px] absolute mx-[12px] my-[12px]">
-              <img
-                className="select-none"
-                src={BluenoirReactionImage[speechDialogue.reaction]}
-                style={{
-                  backgroundImage: `url(${frame_bg})`,
-                }}
-              />
-            </div>
-            <div
-              onDoubleClick={toggleOpen}
-              className="h-[100px] w-[100px] absolute mx-auto my-auto"
-            >
-              <img className="select-none" src={frame} />
-            </div>
-          </div>
-        </TooltipTrigger>
-        {!open && (
-          <TooltipContent className="bg-slate-900 text-white border-none">
-            <p>Double Click Me!</p>
-          </TooltipContent>
-        )}
-      </Tooltip>
-    </TooltipProvider>
-  );
-});
-BluenoirFrame.displayName = "BluenoirFrame";
-
-const frameSlideInOut = 0.15;
-const textFadeInOut = 0.25;
-const totalAnimationTime = frameSlideInOut + textFadeInOut;
-
-const frameVariants: Variants = {
-  visible: {
-    width: "auto",
-    transition: { duration: frameSlideInOut },
-  },
-  hidden: {
-    width: 0,
-    transition: { duration: frameSlideInOut, delay: textFadeInOut },
-  },
-};
-
-const textVariants: Variants = {
-  visible: {
-    opacity: 1,
-    height: "auto",
-    transition: { duration: textFadeInOut, delay: frameSlideInOut },
-  },
-  hidden: {
-    opacity: 0,
-    height: 0,
-    transition: { duration: textFadeInOut },
-  },
-};
-
-const BluenoirSpeech = () => {
-  const open = useBPHStore((state) => state.bluenoirOpen);
-  const setOpen = useBPHStore((state) => state.setBluenoirOpen);
-  const speechDialogue = useBPHStore((state) => state.bluenoirDialogue);
-  const { restart, isRunning } = useTimer({
-    expiryTimestamp: new Date(new Date().getTime() + IDLE_TIMER * 1000),
-    autoStart: true,
-    onExpire: () => {
-      console.log("He");
-      restart(new Date(new Date().getTime() + IDLE_TIMER * 1000));
-      console.log(isRunning);
-    },
-  });
-
-  return (
-    <motion.div
-      className="flex flex-col"
-      variants={frameVariants}
-      initial={false}
-      animate={open ? "visible" : "hidden"}
-    >
-      <AnimatePresence initial={false}>
-        {open && (
-          <motion.div
-            className="px-4"
-            variants={textVariants}
-            initial="hidden"
-            animate="visible"
-            exit="hidden"
-          >
-            <div className={cn("absolute text-slate-500 text-sm top-1 right-2")}>
-              <button
-                onClick={() => {
-                  setOpen(false);
-                  restart(new Date(new Date().getTime() + IDLE_TIMER * 1000), true);
-                }}
-              >
-                ✕
-              </button>
-            </div>
-            <div className={cn("font-extrabold font-mono text-sm underline underline-offset-2")}>
-              Bluenoir
-            </div>
-            <div className="grid font-mono font-light max-w-xs text-xs">
-              <p className="text-slate-900 col-start-1 row-start-1">{speechDialogue.text}</p>
-              <div className="w-full col-start-1 row-start-1" key={speechDialogue.text}>
-                <Typewriter
-                  onInit={(typewriter) => {
-                    typewriter
-                      .pauseFor(totalAnimationTime * 1000)
-                      .typeString(speechDialogue.text)
-                      .start();
-                  }}
-                  options={{
-                    cursor: "",
-                    delay: 10,
-                  }}
-                />
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
-  );
-};
+export const IDLE_TIMER = 5;
 
 const Bluenoir = () => {
+  const speak = useBPHStore((state) => state.bluenoirSpeak);
+  const start = useBPHStore((state) => state.startIdleTimer);
+
   const position = useBPHStore((state) => state.getBluenoirPosition());
   const previousPosition = useBPHStore((state) => state.getPreviousPosition());
   const setPosition = useBPHStore((state) => state.setBluenoirPosition);
-  const centered = useBPHStore((state) => state.centered);
+  const centered = useBPHStore((state) => state.bluenoirCentered);
   const getNearestSnapPoint = useBPHStore((state) => state.getNearestSnapPoint);
-  const dragRef = useRef<HTMLDivElement>(null);
-  const measureRef = useRef<HTMLDivElement>(null);
 
   const x = useMotionValue(position.x);
   const y = useMotionValue(position.y);
+
+  const dragRef = useRef<HTMLDivElement>(null);
+  const measureRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    console.log(centered);
+  }, [centered]);
+
+  useEffect(() => {
+    start(speak, IDLE_TIMER * 1000);
+  });
 
   useEffect(() => {
     if (measureRef.current) {
@@ -169,18 +45,17 @@ const Bluenoir = () => {
   });
 
   useEffect(() => {
-    const position = centered ? CENTER : previousPosition;
-
+    const pos = centered ? CENTER : previousPosition;
     const centeredPositionX =
-      position.x * window.innerWidth - (measureRef.current?.offsetWidth ?? 0) / 2;
+      pos.x * window.innerWidth - (measureRef.current?.offsetWidth ?? 0) / 2;
     const centeredPositionY =
-      position.y * window.innerHeight - (measureRef.current?.offsetHeight ?? 0) / 2;
+      pos.y * window.innerHeight - (measureRef.current?.offsetHeight ?? 0) / 2;
 
     animate(x, centeredPositionX);
     animate(y, centeredPositionY);
-    setPosition(position);
+    setPosition(pos);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [centered, setPosition, x, y]);
+  }, [centered, setPosition]);
 
   useGesture(
     {
@@ -193,18 +68,13 @@ const Bluenoir = () => {
         y.set(dy);
       },
       onDragEnd: () => {
-        const snappedPosition = centered ? CENTER : getNearestSnapPoint({ x: x.get(), y: y.get() });
-        const centeredPositionX =
-          snappedPosition.x * window.innerWidth - (measureRef.current?.offsetWidth ?? 0) / 2;
-        const centeredPositionY =
-          snappedPosition.y * window.innerHeight - (measureRef.current?.offsetHeight ?? 0) / 2;
-
-        console.log(centeredPositionX, centeredPositionY);
+        const pos = centered ? CENTER : getNearestSnapPoint({ x: x.get(), y: y.get() });
+        const centeredPositionX = pos.x * innerWidth - (measureRef.current?.offsetWidth ?? 0) / 2;
+        const centeredPositionY = pos.y * innerHeight - (measureRef.current?.offsetHeight ?? 0) / 2;
 
         animate(x, centeredPositionX);
         animate(y, centeredPositionY);
-
-        setPosition(snappedPosition);
+        setPosition(pos);
       },
     },
     {
