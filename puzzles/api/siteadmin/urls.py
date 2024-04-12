@@ -8,6 +8,7 @@ from . import views
 
 urlpatterns = [
     path("", views.index, name="index"),
-    path("get_all_emails", views.get_emails, name="otherindex"),
+    path("get_all_emails", views.get_all_emails, name="get_all_emails"),
+    path("get_onsite_emails", views.get_onsite_emails, name="get_onsite_emails"),
+    path("get_remote_emails", views.get_remote_emails, name="get_remote_emails"),
 ]
-
