@@ -19,6 +19,8 @@ import Phone from "@/components/main_page/Phone";
 import { ArtWrapperInner } from "@/components/minor_cases/CasePageArt";
 import { useDjangoContext } from "@/hooks/useDjangoContext";
 import { useTheme } from "@/hooks/useTheme";
+import useBPHStore from "@/stores/useBPHStore";
+import { getMainPageIdleDialogueWithMajorCases } from "@/utils/bluenoir_dialogue";
 import { MajorCaseEnum } from "@/utils/constants";
 import { MAIN_PAGE_THEME } from "@/utils/themes";
 
@@ -55,9 +57,16 @@ interface EventPage {
 
 export default function EventPage({ setVotingOpen }: EventPage) {
   const { setTheme } = useTheme();
+  const { data: context } = useDjangoContext();
+  const setBluenoirDialogue = useBPHStore((state) => state.setRandomDialogueFunction);
+
   useEffect(() => {
     setTheme(MAIN_PAGE_THEME);
   }, [setTheme]);
+
+  useEffect(() => {
+    if (context) setBluenoirDialogue(() => getMainPageIdleDialogueWithMajorCases(context));
+  }, [context, setBluenoirDialogue]);
 
   return (
     <div

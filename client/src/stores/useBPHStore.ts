@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
-import { BluenoirReaction, type Dialogue } from "@/utils/bluenoir_dialogue";
+import { getMainPageIdleDialogue, type Dialogue } from "@/utils/bluenoir_dialogue";
 
 export const TOP_LEFT = { x: 0.05, y: 0.13 } as const;
 export const BOTTOM_LEFT = { x: 0.05, y: 0.85 } as const;
@@ -50,15 +50,12 @@ interface BPHState extends BluenoirState, VotingState {}
 interface BPHActions extends BluenoirActions, VotingActions {}
 
 const initialBluenoirState: BluenoirState = {
-  bluenoirOpen: false,
-  bluenoirDialogue: {
-    text: "Heya kiddo, these cases are starting to get out of hand... I'll talk to you at the funeral.",
-    reaction: BluenoirReaction.NEUTRAL,
-  },
+  bluenoirOpen: true,
+  bluenoirDialogue: (() => getMainPageIdleDialogue())(),
   bluenoirCurrentPosition: TOP_LEFT,
   bluenoirPreviousPosition: TOP_LEFT,
   bluenoirCentered: false,
-  bluenoirIdleDialogueFunction: null,
+  bluenoirIdleDialogueFunction: getMainPageIdleDialogue,
   bluenoirIntervalId: null,
 };
 

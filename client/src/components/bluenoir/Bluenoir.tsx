@@ -8,7 +8,7 @@ import { cn } from "@/utils/utils";
 import BluenoirFrame from "./BluenoirFrame";
 import BluenoirSpeech from "./BluenoirSpeech";
 
-export const IDLE_TIMER = 2 * 60; // 2 minutes
+export const IDLE_TIMER = 15; // 2 minutes
 
 const Bluenoir = () => {
   const speak = useBPHStore((state) => state.bluenoirSpeak);
@@ -25,10 +25,6 @@ const Bluenoir = () => {
 
   const dragRef = useRef<HTMLDivElement>(null);
   const measureRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    console.log(centered);
-  }, [centered]);
 
   useEffect(() => {
     start(speak, IDLE_TIMER * 1000);

@@ -7,6 +7,7 @@ import MarkdownWrapper from "@/components/puzzle/MarkdownWrapper";
 import { usePuzzle } from "@/hooks/useDjangoContext";
 import { Error404 } from "@/routes/ErrorPage";
 import AltPuzzleRoute, { ALT_PUZZLE_ROUTES } from "@/routes/minor_cases/AltPuzzleRoute";
+import useBPHStore, { BOTTOM_LEFT } from "@/stores/useBPHStore";
 import type { MajorCaseEnum } from "@/utils/constants";
 import { toPuzzleStyle } from "@/utils/constants";
 import type { Erratum } from "@/utils/django_types";
@@ -53,6 +54,7 @@ const NO_ANSWER_SUBMIT = new Set(["wordle", "connection", "lettertroxd"]);
 
 function PuzzleWrapper({ puzzle_slug }: { puzzle_slug: string }) {
   const { data: puzzle, isError } = usePuzzle(puzzle_slug);
+  const setPosition = useBPHStore((state) => state.setBluenoirPosition);
   const [puzzleContent, setPuzzleContent] = useState(puzzle?.body);
   useEffect(() => {
     setPuzzleContent(puzzle?.body);
@@ -74,6 +76,10 @@ function PuzzleWrapper({ puzzle_slug }: { puzzle_slug: string }) {
       ? puzzle.clipboard_remote
       : puzzle?.clipboard;
   }, [puzzle, puzzleContent]);
+
+  useEffect(() => {
+    setPosition(BOTTOM_LEFT);
+  });
 
   if (isError) {
     navigate("/eventpage");
