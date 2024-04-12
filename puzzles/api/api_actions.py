@@ -49,13 +49,13 @@ def register_action(request):
     serializer = UserRegistrationSerializer(data=request.data)
 
     if serializer.is_valid():
-
         try:
             user = User.objects.create_user(
                 serializer.validated_data.get("team_id"),
                 password=serializer.validated_data.get("password"),
                 first_name=serializer.validated_data.get("team_name"),
             )
+            Token.objects.get_or_create(user=user)
 
             team = Team.objects.create(
                 user=user,
@@ -263,7 +263,7 @@ def handle_answer(
         send_notification.send(
             None,
             notification_type="solve",
-            team=django_context.team.user.id,
+            team=django_context.team.id,
             title="Congratulations! Case Solved!",
             desc=f"Team {django_context.team} has solved a case! {puzzle.name}!",
         )

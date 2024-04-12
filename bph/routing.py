@@ -1,13 +1,13 @@
 from django.urls import path, re_path
 
-from puzzles.messaging import VotingConsumer
+from puzzles.messaging import BPHConsumer
 
 from channels.auth import AuthMiddlewareStack
 from channels.routing import URLRouter
 import django_eventstream
 
 websocket_urlpatterns = [
-    re_path("^ws/puzzles", VotingConsumer.as_asgi()),
+    re_path("^ws/puzzles", BPHConsumer.as_asgi()),
 ]
 
 eventstream_urlpatterns = [

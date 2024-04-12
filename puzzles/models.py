@@ -1258,7 +1258,7 @@ class MinorCaseIncomingEvent(models.Model):
             send_notification.send(
                 None,
                 notification_type="unlock",
-                team=self.team.user.id,
+                team=self.team.id,
                 title="Time's Up!",
                 desc=f"Team {self.team.team_name} has unlocked a new case: {case.name}!",
             )
@@ -1377,7 +1377,7 @@ class MinorCaseCompleted(models.Model):
         if incoming_case_event:
             create_minor_case_incoming_event.send(
                 None,
-                id=incoming_case_event.id,
+                caseId=incoming_case_event.id,
                 cases=incoming_case_event.get_votes(),
                 team=self.team.id,
                 max_choices=incoming_case_event.num_votes_allowed,

@@ -123,6 +123,12 @@
     </tbody>
 </table>
 
+{% if hint.team.in_person %}
+<div class="note">
+    {% blocktranslate with phone_number=hint.team.phone_number location=hint.team.location|default:"unknown" %}This team is in person. Their phone number is {{ phone_number }} and they are located at {{ location }}.{% endblocktranslate %}
+</div>
+{% endif %}
+
 {{ form.non_field_errors }}
 <form method="post" class="hint-controls">
     {% csrf_token %}

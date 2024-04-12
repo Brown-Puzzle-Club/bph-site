@@ -98,7 +98,7 @@ const Phone = () => {
               {hours}:{minutes.toLocaleString("en-US", { minimumIntegerDigits: 2 })}
             </p>
             {events && context.team_context.in_person && (
-              <AnimatePresence mode="wait">
+              <AnimatePresence>
                 {events.map(
                   (event) =>
                     !context.team_context.completed_events[event.slug] && (
