@@ -1,6 +1,7 @@
 from rest_framework import permissions, viewsets, mixins
 from puzzles import models
 from puzzles.api.api_guards import require_auth
+from puzzles.hunt_config import MAJOR_CASE_SLUGS
 
 from .serializers import *
 
@@ -14,38 +15,40 @@ def index(request: Request) -> Response:
     return Response({"Hello": "World"})
 
 
-class UserViewSet(viewsets.ReadOnlyModelViewSet):
-    serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
-        return User.objects.filter(id=self.request.user.id)  # type: ignore
-
-
-class TeamViewSet(
-    mixins.RetrieveModelMixin,
-    mixins.UpdateModelMixin,
-    mixins.ListModelMixin,
-    viewsets.GenericViewSet,
-):
-    serializer_class = TeamSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
-        return Team.objects.filter(user=self.request.user)
+@api_view(["GET"])
+def get_my_user(request: Request) -> Response:
+    if not request.user.is_authenticated:
+        return Response({"success": False, "error": "User not logged in"})
+    try:
+        user = User.objects.get(id=request.user.id)
+        serializer = UserSerializer(user)
+        return Response({"success": True, "data": serializer.data})
+    except User.DoesNotExist:
+        return Response({"success": False, "error": "User not found"})
 
 
-class TokenViewSet(
-    mixins.RetrieveModelMixin,
-    mixins.UpdateModelMixin,
-    mixins.ListModelMixin,
-    viewsets.GenericViewSet,
-):
-    serializer_class = TokenSerializer
-    permission_classes = [permissions.IsAuthenticated]
+@api_view(["GET"])
+def get_my_team(request: Request) -> Response:
+    if not request.user.is_authenticated:
+        return Response({"success": False, "error": "User not logged in"})
+    try:
+        team = Team.objects.get(id=request._request.context.team.id)  # type: ignore
+        serializer = TeamSerializer(team)
+        return Response({"success": True, "data": serializer.data})
+    except Team.DoesNotExist:
+        return Response({"success": False, "error": "Team not found"})
 
-    def get_queryset(self):
-        return Token.objects.filter(user=self.request.user)
+
+@api_view(["GET"])
+def get_my_token(request: Request) -> Response:
+    if not request.user.is_authenticated:
+        return Response({"success": False, "error": "User not logged in"})
+    try:
+        token = Token.objects.get(user=request.user)
+        serializer = TokenSerializer(token)
+        return Response({"success": True, "data": serializer.data})
+    except Token.DoesNotExist:
+        return Response({"success": False, "error": "Token not found"})
 
 
 class BasicTeamViewSet(
@@ -104,6 +107,15 @@ class PuzzleViewSet(viewsets.ModelViewSet):
         return self.request._request.context.team.unlocks.values()
 
 
+class EventCompletionViewSet(viewsets.ModelViewSet):
+    queryset = EventCompletion.objects.all()
+    serializer_class = EventCompletionSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return EventCompletion.objects.filter(team=self.request._request.context.team)
+
+
 @api_view(["GET"])
 def context(request: Request) -> Response:
     serializer = ContextSerializer(data=request._request.context)
@@ -147,11 +159,14 @@ def get_puzzle(request: Request, puzzle_slug: str) -> Response:
 
         # answer history
         submissions = context.team.puzzle_submissions(puzzle)
-
         additional_fields["submissions"] = AnswerSubmissionSerializer(
             submissions, many=True
         ).data
 
+        # errata
+        errata = Erratum.get_puzzle_erata(context=context, puzzle_slug=puzzle.slug)
+        additional_fields["errata"] = ErrataSerializer(errata, many=True).data
+        
         # puzzle body
         if context.is_admin:
             additional_fields["body"] = puzzle.body
@@ -219,3 +234,18 @@ def get_hints_for_puzzle(request: Request, puzzle_slug: str) -> Response:
         return Response(serializer.data)
     except Puzzle.DoesNotExist:
         return Response({"error": "Puzzle not found"}, status=404)
+
+
+@api_view(["GET"])
+@require_auth
+def get_events(request: Request) -> Response:
+    context = request._request.context
+
+    if len(context.major_case_solves) >= len(MAJOR_CASE_SLUGS):
+        events = Event.objects.all().order_by("timestamp")
+    else:
+        events = Event.objects.filter(is_final_runaround=False).order_by("timestamp")
+
+    serializer = EventSerializer(events, many=True)
+
+    return Response(serializer.data)

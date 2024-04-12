@@ -27,7 +27,7 @@ interface MajorCaseIconProps extends AssetProps {
 }
 
 const MajorCaseIcon = (props: MajorCaseIconProps) => {
-  const { context } = useDjangoContext();
+  const { data: context } = useDjangoContext();
   return (
     context?.team_context &&
     context.team_context.major_case_puzzles[props.majorCase] && (

@@ -1,4 +1,4 @@
-import { cloneElement, useEffect, useState } from "react";
+import { cloneElement, useState } from "react";
 import { Toaster } from "react-hot-toast";
 
 import Footer from "@/components/Footer";
@@ -27,10 +27,6 @@ export const PageWrapper = ({ route }: { route: React.ReactElement }) => {
   const speak = useBPHStore((state) => state.bluenoirSpeak);
 
   useNotification();
-
-  useEffect(() => {
-    console.log(votingOpen);
-  }, [votingOpen]);
 
   return (
     <div

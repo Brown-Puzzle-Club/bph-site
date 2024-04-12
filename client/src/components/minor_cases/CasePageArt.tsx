@@ -1,15 +1,22 @@
 import type { ReactNode } from "react";
 import { useEffect, useMemo } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import birb_bg from "@/assets/minor_cases/birbs/birb_bg.png";
 import thebirb from "@/assets/minor_cases/birbs/thebirb.png";
+import mr_cat from "@/assets/minor_cases/cats/mr_cat.jpg";
 import bottle from "@/assets/minor_cases/exile/bottle.png";
 import exile_bg from "@/assets/minor_cases/exile/exile_bg.png";
 import painting from "@/assets/minor_cases/exile/painting.png";
 import victrola from "@/assets/minor_cases/exile/victrola.png";
 import wine from "@/assets/minor_cases/exile/wine.png";
-import labyrinth_cover from "@/assets/minor_cases/labyrinth/labyrinth_cover.png";
+import labyrinth_cover from "@/assets/minor_cases/labyrinth/labyrinth.png";
+import lockbox from "@/assets/minor_cases/maze/lockbox.png";
+import goodreads from "@/assets/minor_cases/microinfluencer/goodreads.svg";
+import instagram from "@/assets/minor_cases/microinfluencer/instagram.svg";
+import letterboxd from "@/assets/minor_cases/microinfluencer/letterboxd.svg";
+import strava from "@/assets/minor_cases/microinfluencer/strava.svg";
+import twiqh from "@/assets/minor_cases/twiqh/twiqh.png";
 import whale_bg from "@/assets/minor_cases/whales/background_whale2.png";
 import flowers from "@/assets/minor_cases/whales/flowers.png";
 import parrot from "@/assets/minor_cases/whales/parrot.png";
@@ -87,7 +94,7 @@ const WhaleArt = () => {
   return (
     <ArtWrapper className="" background_src={whale_bg}>
       <PuzzleIconWrapper
-        slug="underwater-flora"
+        slug="the-flowers"
         imageSrc={flowers}
         extraStyles={{
           top: "40%",
@@ -174,6 +181,69 @@ const LabyrinthArt = () => {
   );
 };
 
+const MrCatArt = () => {
+  return (
+    <ArtWrapper
+      className="max-w-[400px] pt-2 left-1/2 transform -translate-x-1/2 drop-shadow-[0_15px_15px_rgba(255,255,255,0.3)]"
+      background_src={mr_cat}
+      linkTo="/puzzle/mr-cat"
+    />
+  );
+};
+
+const MazeArt = () => {
+  return (
+    <ArtWrapper
+      className="max-w-[400px] pt-2 left-1/2 transform -translate-x-1/2 drop-shadow-[0_15px_15px_rgba(255,255,255,0.3)]"
+      background_src={lockbox}
+      linkTo="/puzzle/lockbox"
+    />
+  );
+};
+
+const TwiqhArt = () => {
+  return (
+    <ArtWrapper
+      className="max-w-[400px] pt-2 left-1/2 transform -translate-x-1/2 drop-shadow-[0_15px_15px_rgba(255,255,255,0.3)]"
+      background_src={twiqh}
+      linkTo="/puzzle/twiqh"
+    />
+  );
+};
+
+const MicroinfluencerArt = () => {
+  return (
+    <div className="aspect-w-4 aspect-h-3 max-w-screen-xl">
+      <div className={cn("map relative w-[100vw] h-[22vw]")}>
+        <PuzzleIconWrapper
+          slug="strava"
+          imageSrc={strava}
+          extraStyles={{ top: "28%", left: "70%", width: "15%", zIndex: 3 }}
+          answer_bg
+        />
+        <PuzzleIconWrapper
+          slug="instagram"
+          imageSrc={instagram}
+          extraStyles={{ top: "28%", left: "52%", width: "15%", zIndex: 3 }}
+          answer_bg
+        />
+        <PuzzleIconWrapper
+          slug="goodreads"
+          imageSrc={goodreads}
+          extraStyles={{ top: "28%", left: "33%", width: "15%", zIndex: 3 }}
+          answer_bg
+        />
+        <PuzzleIconWrapper
+          slug="letterboxd"
+          imageSrc={letterboxd}
+          extraStyles={{ top: "28%", left: "15%", width: "15%", zIndex: 3 }}
+          answer_bg
+        />
+      </div>
+    </div>
+  );
+};
+
 interface PuzzleAsset extends AssetProps {
   slug: string;
   meta?: boolean;
@@ -181,16 +251,17 @@ interface PuzzleAsset extends AssetProps {
 }
 
 const PuzzleIconWrapper = (props: PuzzleAsset) => {
-  const { context } = useDjangoContext();
+  const { data: context } = useDjangoContext();
   const { slug } = props;
 
+  const { pathname } = useLocation();
   const puzzle_answer: PuzzleAnswer | null = useMemo(() => {
-    const case_slug = window.location.pathname.split("/").pop();
-    if (!context?.team_context || !case_slug) {
+    const caseSlug = pathname.split("/").pop();
+    if (!context?.team_context || !caseSlug) {
       return null;
     }
-    return getUnlockedPuzzle(slug, context, case_slug);
-  }, [context, slug]);
+    return getUnlockedPuzzle(slug, context, caseSlug);
+  }, [context, slug, pathname]);
 
   return (
     <>
@@ -269,6 +340,10 @@ const CASE_ART_COMPONENT: { [key: string]: JSX.Element } = {
   whales: <WhaleArt />,
   "birbs-at-brown": <BirbsArt />,
   "god-of-the-labyrinth": <LabyrinthArt />,
+  cats: <MrCatArt />,
+  microinfluencer: <MicroinfluencerArt />,
+  maze: <MazeArt />,
+  twiqh: <TwiqhArt />,
 };
 
 export default function CasePageArt({ case_slug }: { case_slug: string }) {

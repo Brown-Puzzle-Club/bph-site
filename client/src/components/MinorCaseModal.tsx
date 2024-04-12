@@ -28,7 +28,7 @@ const MinorCaseModal: React.FC<ModalProps> = ({
   selectedCases,
   action,
 }) => {
-  const { context } = useDjangoContext();
+  const { data: context } = useDjangoContext();
 
   useEffect(() => {
     console.log(selectedCase);

@@ -3,25 +3,30 @@ from django.urls import include, path
 from . import api_views
 from . import api_actions
 from .puzzlehandlers import urls as puzzle_handlers_urls
+from .siteadmin import urls as admin_handler_urls
 
 from rest_framework.authtoken.views import obtain_auth_token
 
 app_name = "puzzles-api"
 
 router = routers.DefaultRouter()
-router.register(r"user", api_views.UserViewSet, basename="user")
-router.register(r"my-team", api_views.TeamViewSet, basename="team")
-router.register(r"my-token", api_views.TokenViewSet, basename="token")
 router.register(r"teams", api_views.BasicTeamViewSet, basename="team")
 router.register(r"team-members", api_views.TeamMemberViewSet, basename="team-member")
 router.register(r"errata", api_views.ErrataViewSet, basename="erratum")
 router.register(r"rounds", api_views.RoundsViewSet, basename="rounds")
 router.register(r"puzzles", api_views.PuzzleViewSet, basename="puzzles")
+router.register(
+    r"events/completed", api_views.EventCompletionViewSet, basename="events-completed"
+)
 
 
 urlpatterns = [
     path("", api_views.index, name="index"),
+    path("user/", api_views.get_my_user, name="get-my-user"),
+    path("my-team/", api_views.get_my_team, name="get-my-team"),
+    path("my-token/", api_views.get_my_token, name="get-my-token"),
     path("puzzle/", include(puzzle_handlers_urls)),
+    path("admin/", include(admin_handler_urls)),
     path("", include(router.urls)),
     path("context", api_views.context, name="context"),
     path("login", api_actions.login_action, name="login"),
@@ -43,4 +48,7 @@ urlpatterns = [
         name="get_hints_for_puzzle",
     ),
     path("hints/<str:puzzle_slug>/submit", api_actions.post_hint, name="post_hint"),
+    path("events", api_views.get_events, name="get_events"),
+    path("events/submit_answer", api_actions.submit_event_answer, name="submit_answer"),
+    path("rounds/<str:round_slug>/voucher", api_actions.voucher_case, name="get_round"),
 ]

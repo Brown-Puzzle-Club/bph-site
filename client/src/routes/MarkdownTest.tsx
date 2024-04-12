@@ -33,7 +33,7 @@ export default function MarkdownTest() {
               )}
               onClick={() => setPuzzleStyle(PuzzleStyle.COLORED_THREAD)}
             >
-              Red Thread
+              Colored Thread
             </button>
             <button
               className={cn(

@@ -43,15 +43,15 @@ const useSocket = (path: string, callbacks: SocketCallbacks | undefined = undefi
     },
     retryOnError: true,
   });
-  const { team } = useAuth();
+  const { token } = useAuth();
 
   const protocol = window.location.protocol.includes("https") ? "wss" : "ws";
 
   useEffect(() => {
-    if (team) {
-      setSocketUrl(`${protocol}://${window.location.host}/${path}?token=${team.auth_token}`);
+    if (token.data) {
+      setSocketUrl(`${protocol}://${window.location.host}/${path}?token=${token.data}`);
     }
-  }, [team, path, setSocketUrl, protocol]);
+  }, [token, path, setSocketUrl, protocol]);
 
   useEffect(() => {
     if (!lastJsonMessage) return;

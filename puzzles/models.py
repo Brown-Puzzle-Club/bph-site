@@ -442,7 +442,11 @@ class Team(models.Model):
     def puzzle_answer(self, puzzle):
         return puzzle.answer if puzzle.id in self.solves else None
 
+    INFINITE_GUESS_SLUGS = set(["illicit-affairs"])
+
     def guesses_remaining(self, puzzle):
+        if puzzle.slug in self.INFINITE_GUESS_SLUGS:
+            return 69420
         wrong_guesses = sum(
             1
             for submission in self.puzzle_submissions(puzzle)
@@ -637,11 +641,12 @@ class Team(models.Model):
     def asked_hints(self):
         return tuple(self.hint_set.select_related("puzzle", "puzzle__round"))
 
+    @property
     def num_hints_total(self):
         """
         Compute the total number of hints (used + remaining) available to this team.
         """
-        FREE_HINT_CNT = 2
+        FREE_HINT_CNT = 0
         if not HINTS_ENABLED or self.hunt_is_over:
             return 0
         if self.now < self.creation_time + TEAM_AGE_BEFORE_HINTS:
@@ -664,25 +669,20 @@ class Team(models.Model):
         # print("HINT COMPUTE HINTS",hints)
         return self.total_hints_awarded + hints + FREE_HINT_CNT
 
+    @property
     def num_hints_used(self):
         return sum(hint.consumes_hint for hint in self.asked_hints)
 
+    @property
     def num_hints_remaining(self):
         return self.num_hints_total - self.num_hints_used
 
     def num_free_answers_total(self):
-        if not FREE_ANSWERS_ENABLED or self.hunt_is_over:
-            return 0
-        # TODO: FREE ANSWERS (VOUCHER) : count the number of puzzles in event that a team has
-        # print(self.main_round_solves[1]['events'])
-        event_solve_cnt = self.main_round_solves[1]["events"]
+        # if not FREE_ANSWERS_ENABLED or self.hunt_is_over:
+        #     return 0
+        # TODO: NUMBER OF EVENT SOLVES
+        event_solve_cnt = len(self.event_solves)
         return self.total_free_answers_awarded + event_solve_cnt
-
-        # OLD IMPLEMNTATION: based on auto unlock time.. If need to reassess, we can comment this back in and force feed hints.
-        # if self.now < self.creation_time + TEAM_AGE_BEFORE_FREE_ANSWERS:
-        #     return self.total_free_answers_awarded
-        # days = max(0, (self.now - (FREE_ANSWER_TIME - self.start_offset)).days + 1)
-        # return self.total_free_answers_awarded + sum(FREE_ANSWERS_PER_DAY[:days])
 
     def num_free_answers_used(self):
         return sum(1 for submission in self.submissions if submission.used_free_answer)
@@ -835,6 +835,20 @@ class Team(models.Model):
                 ] = submit
         return out
 
+    def major_case_solves(self):
+        solves = self.solves
+        out = {}
+        for slug in MAJOR_CASE_SLUGS:
+            if slug in solves:
+                out[slug] = solves[slug]
+        return out
+
+    def event_solves(self):
+        return [
+            event_completion
+            for event_completion in self.eventcompletion_set.select_related("event")
+        ]
+
     def db_minor_case_active(self):
         return [
             active
@@ -901,7 +915,12 @@ class Team(models.Model):
                 new_unlocks.append(round)
 
         for new_unlock in new_unlocks:
-            Team.unlock_case(context.team, new_unlock, context.now)
+            # Team.unlock_case(context.team, new_unlock, context.now)
+            unlock = MinorCaseActive.objects.get_or_create(
+                team=context.team,
+                minor_case_round=new_unlock,
+                active_datetime=context.now,
+            )
 
         new_puzzle_unlocks = []
         for puzzle in context.all_puzzles:
@@ -997,21 +1016,12 @@ class Team(models.Model):
         print(
             f"EVENT: unlocking case {minor_case} for team {team} at {unlock_datetime}"
         )
-
-        try:
-            unlock = MinorCaseActive.objects.get_or_create(
-                team=team, minor_case_round=minor_case, active_datetime=unlock_datetime
-            )
-        except:
-            print(f"Case {minor_case} already set active for team {team}.")
-            return None
-
-        # unlock all puzzles in the minor case
         puzzle_unlocks = []
         for puzzle in Puzzle.objects.filter(round=minor_case):
             try:
                 # unlock all puzzles that don't require local solves.
                 if puzzle.unlock_local < 0:
+                    print(f"EVENT: unlocking puzzle {puzzle} for team {team}")
                     PuzzleUnlock.objects.get_or_create(
                         team=team, puzzle=puzzle, unlock_datetime=unlock_datetime
                     )
@@ -1020,7 +1030,7 @@ class Team(models.Model):
                 print(f"Puzzle {puzzle} already unlocked for team {team}. Skipping.")
                 pass
 
-        return unlock, puzzle_unlocks
+        return puzzle_unlocks
 
 
 @receiver(post_save, sender=Team)
@@ -1253,7 +1263,10 @@ class MinorCaseIncomingEvent(models.Model):
                 desc=f"Team {self.team.team_name} has unlocked a new case: {case.name}!",
             )
             print(f"EVENT: Unlocking case {case.name} for team {self.team}")
-            Team.unlock_case(self.team, case, self.timestamp)
+            # Team.unlock_case(self.team, case, self.timestamp)
+            unlock = MinorCaseActive.objects.get_or_create(
+                team=self.team, minor_case_round=case, active_datetime=self.timestamp
+            )
 
         return [
             {
@@ -1328,6 +1341,11 @@ class MinorCaseActive(models.Model):
         unique_together = ("team", "minor_case_round")
         verbose_name = _("minor case active")
         verbose_name_plural = _("minor cases active")
+
+    def save(self, *args, **kwargs):
+        super(MinorCaseActive, self).save(*args, **kwargs)
+
+        Team.unlock_case(self.team, self.minor_case_round, self.active_datetime)
 
 
 class MinorCaseCompleted(models.Model):
@@ -1640,6 +1658,17 @@ class Erratum(models.Model):
             errata.append(erratum)
         return errata
 
+    @staticmethod
+    def get_puzzle_erata(context, puzzle_slug):
+        errata = []
+        for erratum in Erratum.objects.filter(puzzle__slug=puzzle_slug).order_by(
+            "timestamp"
+        ):
+            if not context.is_superuser and not erratum.published:
+                continue
+            errata.append(erratum)
+        return errata
+
     def get_emails(self):
         teams = (
             PuzzleUnlock.objects.filter(puzzle=self.puzzle)
@@ -1740,6 +1769,7 @@ class Hint(models.Model):
         Puzzle, on_delete=models.CASCADE, verbose_name=_("puzzle")
     )
     is_followup = models.BooleanField(default=False, verbose_name=_("Is followup"))
+    is_followed_up_on = models.BooleanField(default=False, verbose_name=_("Is followed up on"))
 
     submitted_datetime = models.DateTimeField(
         auto_now_add=True, verbose_name=_("Submitted datetime")
@@ -1864,6 +1894,61 @@ class VoiceRecording(models.Model):
                 name="transcript_trgm_idx",
             )
         ]
+
+
+class Event(models.Model):
+    """An event that occurs during the hunt."""
+
+    slug = models.SlugField(unique=True, verbose_name=_("Slug"))
+    name = models.CharField(max_length=255, verbose_name=_("Name"))
+    timestamp = models.DateTimeField(verbose_name=_("Timestamp"), null=True, blank=True)
+    message = models.TextField(verbose_name=_("Message"))
+    location = models.CharField(max_length=255, verbose_name=_("Location"))
+    is_final_runaround = models.BooleanField(
+        default=False, verbose_name=_("Is final runaround")
+    )
+    answer = models.CharField(max_length=255, verbose_name=_("Answer"), blank=True)
+
+    class Meta:
+        verbose_name = _("event")
+        verbose_name_plural = _("events")
+
+    def __str__(self):
+        return "(%s) %s" % (self.slug, self.name)
+
+    def solve_event(self, team):
+        return EventCompletion.objects.get_or_create(
+            team=team, event=self, completion_datetime=timezone.now()
+        )
+
+
+class EventCompletion(models.Model):
+    """A record of a team completing an event."""
+
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_("team"))
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, verbose_name=_("event"))
+    completion_datetime = models.DateTimeField(
+        auto_now=True, verbose_name=_("Completion datetime")
+    )
+
+    def __str__(self):
+        return "%s -> %s @ %s" % (
+            self.team,
+            self.event,
+            self.completion_datetime,
+        )
+
+    class Meta:
+        verbose_name = _("event completion")
+        verbose_name_plural = _("event completions")
+        unique_together = ("team", "event")
+
+    @staticmethod
+    def get_completed_events(team):
+        return {
+            eventcompletion.event.slug: eventcompletion
+            for eventcompletion in EventCompletion.objects.filter(team=team)
+        }
 
 
 @receiver(post_save, sender=Hint)
