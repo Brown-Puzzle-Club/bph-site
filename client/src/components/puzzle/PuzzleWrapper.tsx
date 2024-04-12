@@ -12,6 +12,7 @@ import { toPuzzleStyle } from "@/utils/constants";
 import type { Erratum } from "@/utils/django_types";
 import { cn } from "@/utils/utils";
 
+import BackButton from "../BackButton";
 import { Button } from "../ui/button";
 import AnswerSubmit from "./AnswerSubmission";
 
@@ -85,6 +86,7 @@ function PuzzleWrapper({ puzzle_slug }: { puzzle_slug: string }) {
 
   return (
     <div className="puzzle-page">
+      <BackButton to={`/minorcase/${puzzle.round.slug}`} />
       <div>
         {ADMIN_REMOTE_VISIBLE && (
           <>

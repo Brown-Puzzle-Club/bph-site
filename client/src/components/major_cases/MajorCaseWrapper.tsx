@@ -5,6 +5,7 @@ import { useLocation } from "react-router-dom";
 
 import type { MajorCase, Puzzle } from "@/utils/django_types";
 
+import BackButton from "../BackButton";
 import AnswerSubmit from "../puzzle/AnswerSubmission";
 
 function MajorCaseWrapper({ children }: { children: ReactNode }) {
@@ -56,6 +57,7 @@ function MajorCaseWrapper({ children }: { children: ReactNode }) {
   return (
     <div className="puzzle-page">
       <AnswerSubmit puzzle={puzzle} />
+      <BackButton to={`/eventpage`} />
       {children}
     </div>
   );

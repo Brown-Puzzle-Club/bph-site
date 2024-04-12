@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { BeatLoader } from "react-spinners";
 
+import BackButton from "@/components/BackButton";
 import CasePageArt from "@/components/minor_cases/CasePageArt";
 import {
   AlertDialog,
@@ -92,6 +93,7 @@ function MinorCasePage() {
 
   return (
     <div>
+      <BackButton to={"/eventpage"} />
       <CasePageArt case_slug={minorCaseSlug} />
       {context && context.team_context.unlocks && (
         <>
