@@ -181,6 +181,14 @@ const EventCompletionSchema = z.object({
 });
 interface EventCompletion extends z.infer<typeof EventCompletionSchema> {}
 
+const StorylineUnlockSchema = z.object({
+  id: z.number(),
+  team: TeamSchema,
+  storyline: z.string(),
+  unlock_datetime: z.string(),
+});
+interface StorylineUnlock extends z.infer<typeof StorylineUnlockSchema> {}
+
 const TeamPuzzleContextSchema = z.object({
   is_admin: z.boolean(),
   is_superuser: z.boolean(),
@@ -201,6 +209,7 @@ const TeamPuzzleContextSchema = z.object({
   major_case_solves: z.record(AnswerSubmissionSchema),
   current_incoming_event: MinorCaseIncomingEventSchema,
   completed_events: z.record(EventCompletionSchema),
+  storyline_unlocks: z.array(StorylineUnlockSchema),
 });
 
 const HuntContextSchema = z.object({
@@ -239,125 +248,6 @@ const VotingInfoSchema = z.object({
   max_choices: z.number().nonnegative(),
 });
 interface VotingInfo extends z.infer<typeof VotingInfoSchema> {}
-
-/**
- * class Hint(models.Model):
-    """A request for a hint."""
-
-    NO_RESPONSE = "NR"
-    ANSWERED = "ANS"
-    REFUNDED = "REF"
-    OBSOLETE = "OBS"
-
-    STATUSES = (
-        (NO_RESPONSE, _("No response")),
-        (ANSWERED, _("Answered")),
-        # we can't answer for some reason, or think that the hint is too small
-        (REFUNDED, _("Refunded")),
-        # puzzle was solved while waiting for hint
-        (OBSOLETE, _("Obsolete")),
-    )
-
-    team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_("team"))
-    puzzle = models.ForeignKey(
-        Puzzle, on_delete=models.CASCADE, verbose_name=_("puzzle")
-    )
-    is_followup = models.BooleanField(default=False, verbose_name=_("Is followup"))
-
-    submitted_datetime = models.DateTimeField(
-        auto_now_add=True, verbose_name=_("Submitted datetime")
-    )
-    hint_question = models.TextField(verbose_name=_("Hint question"))
-    notify_emails = models.CharField(
-        default="none", max_length=255, verbose_name=_("Notify emails")
-    )
-
-    claimed_datetime = models.DateTimeField(
-        null=True, blank=True, verbose_name=_("Claimed datetime")
-    )
-    # Making these null=True, blank=False is painful and apparently not
-    # idiomatic Django. For example, if set that way, the Django admin won't
-    # let you save a model with blank values. Just check for the empty string
-    # or falsiness when you're using them.
-    claimer = models.CharField(blank=True, max_length=255, verbose_name=_("Claimer"))
-    discord_id = models.CharField(
-        blank=True, max_length=255, verbose_name=_("Discord id")
-    )
-
-    answered_datetime = models.DateTimeField(
-        null=True, blank=True, verbose_name=_("Answered datetime")
-    )
-    status = models.CharField(
-        choices=STATUSES, default=NO_RESPONSE, max_length=3, verbose_name=_("Status")
-    )
-    response = models.TextField(blank=True, verbose_name=_("Response"))
-
-    class Meta:
-        verbose_name = _("hint")
-        verbose_name_plural = _("hints")
-
-    def __str__(self):
-        def abbr(s):
-            if len(s) > 50:
-                return s[:47] + "..."
-            return s
-
-        o = '{}, {}: "{}"'.format(
-            self.team.team_name,
-            self.puzzle.name,
-            abbr(self.hint_question),
-        )
-        if self.status != self.NO_RESPONSE:
-            o = o + " {}".format(self.get_status_display())
-        return o
-
-    @property
-    def consumes_hint(self):
-        if self.status == Hint.REFUNDED:
-            return False
-        if self.status == Hint.OBSOLETE:
-            return False
-        if self.is_followup:
-            return False
-        return True
-
-    def recipients(self):
-        if self.notify_emails == "all":
-            return self.team.get_emails()
-        if self.notify_emails == "none":
-            return []
-        return [self.notify_emails]
-
-    def full_url(self, claim=False):
-        url = settings.DOMAIN + "hint/%s" % self.id
-        if claim:
-            url += "?claim=true"
-        return url
-
-    def short_discord_message(self, threshold=500):
-        return (_("[{}](<{}>) requested on {} **{}** by {}\n" "```{}```\n")).format(
-            _("*Followup hint*") if self.is_followup else _("Hint"),
-            self.full_url(),
-            self.puzzle.emoji,
-            self.puzzle,
-            self.team,
-            self.hint_question[:threshold],
-        )
-
-    def long_discord_message(self):
-        return self.short_discord_message(1000) + (
-            _(
-                "[View team](<{}>)  |  [View all hints from this team](<{}>)\n"
-                "[View puzzle](<{}>)  |  [View all puzzle hints](<{}>)\n"
-            )
-        ).format(
-            settings.DOMAIN + "team/%s" % self.team.id,
-            settings.DOMAIN + "hints?team=%s" % self.team_id,
-            settings.DOMAIN + "puzzle/" + self.puzzle.slug,
-            settings.DOMAIN + "hints?puzzle=%s" % self.puzzle_id,
-        )
-
- */
 
 const HintSchema = z.object({
   id: z.number(),
@@ -406,6 +296,7 @@ export type {
   Puzzle,
   PuzzleMessage,
   Round,
+  StorylineUnlock,
   Team,
   TeamMember,
   Token,

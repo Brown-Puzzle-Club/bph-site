@@ -1385,7 +1385,7 @@ class MinorCaseCompleted(models.Model):
             incoming_case_event.save()
 
         StorylineUnlock.activate_non_storyline_dialogue(
-            f"{self.minor_case_round.slug}-case-solve"
+            f"{self.minor_case_round.slug}-case-solve", self.team
         )
 
 
@@ -1769,7 +1769,9 @@ class Hint(models.Model):
         Puzzle, on_delete=models.CASCADE, verbose_name=_("puzzle")
     )
     is_followup = models.BooleanField(default=False, verbose_name=_("Is followup"))
-    is_followed_up_on = models.BooleanField(default=False, verbose_name=_("Is followed up on"))
+    is_followed_up_on = models.BooleanField(
+        default=False, verbose_name=_("Is followed up on")
+    )
 
     submitted_datetime = models.DateTimeField(
         auto_now_add=True, verbose_name=_("Submitted datetime")
@@ -1988,7 +1990,7 @@ class StorylineUnlock(models.Model):
     unlock_datetime = models.DateTimeField(verbose_name=_("Unlock datetime"))
 
     def __str__(self):
-        return "%s -> %s @ %s" % (self.team, self.storyline, self.unlock_datetime)
+        return "%s -> (%s)" % (self.team, self.storyline)
 
     class Meta:
         unique_together = ("team", "storyline")
@@ -1997,8 +1999,38 @@ class StorylineUnlock(models.Model):
 
     def save(self, *args, **kwargs):
         super(StorylineUnlock, self).save(*args, **kwargs)
-        send_notification.send(None, notification_type="storyline_unlock", title=self.storyline, desc=self.storyline, team=self.team.user.id)
+        send_notification.send(
+            None,
+            notification_type="storyline_unlock",
+            title=self.storyline,
+            desc=self.storyline,
+            team=self.team.user.id,
+        )
 
     @staticmethod
-    def activate_non_storyline_dialogue(storyline_slug: str):
-        send_notification.send(None, notification_type="storyline_unlock", title=storyline_slug, desc=storyline_slug, team=self.team.user.id)
+    def activate_non_storyline_dialogue(storyline_slug: str, team: Team):
+        send_notification.send(
+            None,
+            notification_type="storyline_unlock",
+            title=storyline_slug,
+            desc=storyline_slug,
+            team=team.user.id,  # TODO: fix (no access to team
+        )
+
+    FREE_STORY_SLUGS = ["main-page-intro"]
+
+    @staticmethod
+    def get_and_compute_unlocks(team: Team):
+        story_unlocks = StorylineUnlock.objects.filter(team=team)
+
+        new_unlocks = []
+        for slug in StorylineUnlock.FREE_STORY_SLUGS:
+            if not story_unlocks.filter(storyline=slug).exists():
+                new_unlocks.append(
+                    story_unlocks.create(
+                        team=team, storyline=slug, unlock_datetime=timezone.now()
+                    )
+                )
+
+        all_unlocks = list(story_unlocks) + new_unlocks
+        return all_unlocks

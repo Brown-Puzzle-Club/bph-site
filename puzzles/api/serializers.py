@@ -17,6 +17,7 @@ from puzzles.models import (
     PuzzleUnlock,
     RatingField,
     Round,
+    StorylineUnlock,
     Survey,
     Team,
     TeamMember,
@@ -213,6 +214,14 @@ class EventSerializer(serializers.ModelSerializer):
         ]
 
 
+class StorylineUnlockSerializer(serializers.ModelSerializer):
+    team = TeamSerializer()
+
+    class Meta:
+        model = StorylineUnlock
+        fields = "__all__"
+
+
 class EventCompletionSerializer(serializers.ModelSerializer):
     event = EventSerializer()
     team = TeamSerializer()
@@ -253,6 +262,7 @@ class TeamPuzzleContextSerializer(serializers.Serializer):
     major_case_puzzles = serializers.DictField(child=PuzzleBasicSerializer())
     current_incoming_event = MinorCaseIncomingEventSerializer()
     completed_events = serializers.DictField(child=EventCompletionSerializer())
+    storyline_unlocks = StorylineUnlockSerializer(many=True)
 
 
 class HuntContextSerializer(serializers.Serializer):

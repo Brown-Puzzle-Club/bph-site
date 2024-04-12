@@ -18,6 +18,9 @@ router.register(r"puzzles", api_views.PuzzleViewSet, basename="puzzles")
 router.register(
     r"events/completed", api_views.EventCompletionViewSet, basename="events-completed"
 )
+router.register(
+    r"story-unlocks", api_views.StorylineUnlockViewSet, basename="story-unlocks"
+)
 
 
 urlpatterns = [

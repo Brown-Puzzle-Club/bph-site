@@ -6,6 +6,7 @@ import type {
   Hint,
   InPersonEvent,
   Puzzle,
+  StorylineUnlock,
   Team,
   TeamMember,
 } from "@/utils/django_types";
@@ -40,6 +41,10 @@ const getEvents = async () => {
 };
 const getHintsForPuzzle = async (puzzleSlug: string) => {
   const response = await axios.get<Hint[]>(`/api/hints/${puzzleSlug}`);
+  return response.data;
+};
+const getStoryUnlocks = async () => {
+  const response = await axios.get<StorylineUnlock[]>("/api/story-unlocks");
   return response.data;
 };
 
@@ -97,6 +102,13 @@ export const useHintsForPuzzle = (puzzleSlug: string) => {
     queryKey: ["hints", puzzleSlug],
     queryFn: () => getHintsForPuzzle(puzzleSlug),
     refetchInterval: 1000 * 30, // 30 seconds
+  });
+};
+
+export const useStoryUnlocks = () => {
+  return useQuery({
+    queryKey: ["story-unlocks"],
+    queryFn: getStoryUnlocks,
   });
 };
 
