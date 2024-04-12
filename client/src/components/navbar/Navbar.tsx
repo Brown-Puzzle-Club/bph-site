@@ -5,6 +5,8 @@ import type { HashLinkProps as LinkProps } from "react-router-hash-link";
 import { HashLink as Link } from "react-router-hash-link";
 import { BeatLoader } from "react-spinners";
 
+import hint_token from "@/assets/main_page/vote_icons/hintcoin.png";
+import voucher_token from "@/assets/main_page/vote_icons/solvecoin.png";
 import bluenoir_logo from "@/assets/navbar_logo_head.png";
 import {
   NavigationMenu,
@@ -220,26 +222,28 @@ const NavbarRight = () => {
   const { isLoading, data: teamData } = team;
   const { data: context } = useDjangoContext();
 
+  console.log(context?.team_context.num_hints_remaining);
+
   return (
     <div className="right flex justify-end w-1/3">
       <NavigationMenuRight>
-        <div className="space-x-2">
+        <div className="space-x-4">
           {context?.team_context.num_hints_remaining &&
           context?.team_context.num_hints_remaining > 0 ? (
             <TooltipProvider>
               <Tooltip>
-                <TooltipTrigger>
+                <TooltipTrigger className="flex justify-center">
                   <div className="flex justify-center items-center text-white">
-                    <span className="text-xs bg-white text-accent rounded-full p-1">
-                      {context?.team_context.num_hints_remaining}
-                      <b>H</b>
+                    <img className={"max-w-[20px]"} src={hint_token} />
+                    <span className="text-sm text-white">
+                      x{context?.team_context.num_hints_remaining}
                     </span>
                   </div>
                 </TooltipTrigger>
                 <TooltipContent className="bg-slate-900 text-white border-none">
                   <p>
-                    Puzzle <b className="font-extrabold">H</b>ints Available Every{" "}
-                    {context.hunt_context.hours_per_hint} Hours
+                    Puzzle <b className="font-extrabold">H</b>ints Every{" "}
+                    {context.hunt_context.hours_per_hint}hrs
                   </p>
                 </TooltipContent>
               </Tooltip>
@@ -249,17 +253,17 @@ const NavbarRight = () => {
           context?.team_context.num_free_answers_remaining > 0 ? (
             <TooltipProvider>
               <Tooltip>
-                <TooltipTrigger>
+                <TooltipTrigger className="flex justify-center">
                   <div className="flex justify-center items-center text-white">
-                    <span className="text-xs bg-white text-accent rounded-full p-1">
-                      {context?.team_context.num_free_answers_remaining}
-                      <b>V</b>
+                    <img className={"max-w-[20px]"} src={voucher_token} />
+                    <span className="text-sm text-white">
+                      x{context?.team_context.num_free_answers_remaining}
                     </span>
                   </div>
                 </TooltipTrigger>
                 <TooltipContent className="bg-slate-900 text-white border-none">
                   <p>
-                    Free Case <b className="font-extrabold">V</b>ouchers
+                    Free Case <b className="font-extrabold">S</b>olves
                   </p>
                 </TooltipContent>
               </Tooltip>

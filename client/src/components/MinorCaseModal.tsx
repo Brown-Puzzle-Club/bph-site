@@ -3,7 +3,7 @@ import type React from "react";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
-import manila from "@/assets/main/manila_open.png";
+import manila from "@/assets/main_page/manilaopen.png";
 import * as birb from "@/assets/minor_cases/birbs/teaser-1.png";
 import * as clip1 from "@/assets/minor_cases/clipping1.png";
 import * as clip2 from "@/assets/minor_cases/clipping2.png";
