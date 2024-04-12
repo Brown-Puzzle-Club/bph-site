@@ -54,22 +54,25 @@ const VotingModal = ({
             Object.values(votingInfo.cases).length <= 4 ? "grid-cols-2" : "grid-cols-3",
           )}
         >
-          {Object.values(votingInfo.cases).map((caseObj) => (
-            <div key={caseObj.round.id} className={"grid place-items-center gap-5"}>
-              <MinorCaseFolder
-                className={cn(
-                  "max-w-fit hover:rotate-0",
-                  votedCases.includes(caseObj.round?.name)
-                    ? "drop-shadow-[0_12px_12px_rgba(135,172,100,0.5)]"
-                    : "hover:drop-shadow-[0_12px_12px_rgba(255,196,100,0.5)]",
-                )}
-                minorCase={caseObj.round}
-                majorCase={caseObj.round.major_case}
-                onClick={() => setSelectedCase(caseObj.round)}
-              />
-              <VotingIndicators numVotes={caseObj.count} />
-            </div>
-          ))}
+          {Object.values(votingInfo.cases).map(
+            (caseObj) =>
+              caseObj.round && (
+                <div key={caseObj.round.id} className={"grid place-items-center gap-5"}>
+                  <MinorCaseFolder
+                    className={cn(
+                      "max-w-fit hover:rotate-0",
+                      votedCases.includes(caseObj.round?.name)
+                        ? "drop-shadow-[0_12px_12px_rgba(135,172,100,0.5)]"
+                        : "hover:drop-shadow-[0_12px_12px_rgba(255,196,100,0.5)]",
+                    )}
+                    minorCase={caseObj.round}
+                    majorCase={caseObj.round.major_case}
+                    onClick={() => setSelectedCase(caseObj.round)}
+                  />
+                  <VotingIndicators numVotes={caseObj.count} />
+                </div>
+              ),
+          )}
         </div>
         <DialogFooter>
           {isRunning
