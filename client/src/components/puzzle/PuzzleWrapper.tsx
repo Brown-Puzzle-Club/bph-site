@@ -60,6 +60,10 @@ function PuzzleWrapper({ puzzle_slug }: { puzzle_slug: string }) {
     setPuzzleContent(puzzle?.body);
   }, [puzzle]);
 
+  useEffect(() => {
+    setPosition(BOTTOM_LEFT);
+  });
+
   const navigate = useNavigate();
 
   const ADMIN_REMOTE_VISIBLE = useMemo(() => {
@@ -76,10 +80,6 @@ function PuzzleWrapper({ puzzle_slug }: { puzzle_slug: string }) {
       ? puzzle.clipboard_remote
       : puzzle?.clipboard;
   }, [puzzle, puzzleContent]);
-
-  useEffect(() => {
-    setPosition(BOTTOM_LEFT);
-  });
 
   if (isError) {
     navigate("/eventpage");
