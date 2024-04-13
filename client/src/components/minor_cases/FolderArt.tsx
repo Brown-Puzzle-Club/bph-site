@@ -381,7 +381,7 @@ export const FinancialCrimesArt = () => {
       <img
         className="absolute object-cover w-[18vw]"
         style={{ left: "-5%", top: "61%", rotate: "42deg" }}
-        src={mollusk}
+        src={tape}
       />
 
       <img
