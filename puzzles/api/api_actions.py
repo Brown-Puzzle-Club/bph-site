@@ -353,6 +353,11 @@ def post_hint(request: Request, puzzle_slug: str) -> Response:
         context = request._request.context
         puzzle = context.team.unlocks.get(puzzle_slug)
 
+        if request.data["followup"] == -1:
+            # Ensure they have enough hints left
+            if context.team.num_hints_remaining <= 0:
+                return Response({"error": "No hints remaining"}, status=400)
+
         if puzzle is None:
             if context.is_admin:
                 puzzle = Puzzle.objects.get(slug=puzzle_slug)
