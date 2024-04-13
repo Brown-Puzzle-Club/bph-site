@@ -83,6 +83,7 @@ const VotingModal = ({
       <MinorCaseModal
         selectedCase={selectedCase}
         setSelectedCase={setSelectedCase}
+        selectedCases={votedCases}
         action={updateVote}
       />
     </Dialog>
