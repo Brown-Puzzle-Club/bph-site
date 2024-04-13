@@ -2,7 +2,7 @@ import type { ErrorResponse } from "react-router-dom";
 import { isRouteErrorResponse, useRouteError } from "react-router-dom";
 
 const DefaultError = ({ error }: { error: ErrorResponse }) => {
-  window.location.href = "/eventpage";
+  // window.location.href = "/eventpage";
   return (
     <div className="h-[90vh] flex items-center justify-center">
       <div className="text-center text-muted-foreground text-5xl">
