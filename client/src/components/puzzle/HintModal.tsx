@@ -57,6 +57,7 @@ const HintModal: React.FC<ModalProps> = ({ puzzleSlug, open, onOpenChange }: Mod
                   setIsHintOpen(false);
                 }}
                 className="bg-blue-500 px-1 h-6 ml-1"
+                disabled={hintQuestion.length === 0}
               >
                 Submit hint request
               </Button>
@@ -135,6 +136,7 @@ const HintRow: React.FC<HintRowProps> = ({ hint, i, puzzleSlug }: HintRowProps) 
                     setIsFollowupOpen(false);
                   }}
                   className="bg-blue-500 px-1 h-6 ml-1"
+                  disabled={followupQuestion.length === 0}
                 >
                   Submit followup
                 </Button>
