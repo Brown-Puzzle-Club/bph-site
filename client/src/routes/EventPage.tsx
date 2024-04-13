@@ -51,14 +51,11 @@ const MajorCaseIcon = (props: MajorCaseIconProps) => {
   );
 };
 
-interface EventPage {
-  setVotingOpen?: (open: boolean) => void;
-}
-
-export default function EventPage({ setVotingOpen }: EventPage) {
+export default function EventPage() {
   const { setTheme } = useTheme();
   const { data: context } = useDjangoContext();
   const setBluenoirDialogue = useBPHStore((state) => state.setRandomDialogueFunction);
+  const setVotingOpen = useBPHStore((state) => state.setVotingModalOpen);
 
   useEffect(() => {
     setTheme(MAIN_PAGE_THEME);
