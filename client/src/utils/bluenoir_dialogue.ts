@@ -402,10 +402,6 @@ export const BluenoirStories: Record<string, Story> = {
         text: "So, the time has come to figure out the big question that I'm sure's been tickling your brain: which of these knuckleheaded goons killed Josiah Carberry?",
         reaction: BluenoirReaction.SMUG,
       },
-      {
-        text: "I'll let you stew on it a little longer. I'm coming by to talk you through some theories in person. Expect a call from me.",
-        reaction: BluenoirReaction.EXCITED,
-      },
     ],
   },
   // these downwards are NON NOTIFICATION, NON CENTER
