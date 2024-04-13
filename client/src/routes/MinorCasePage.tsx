@@ -111,6 +111,10 @@ function MinorCasePage() {
     return ALT_MINOR_CASE_ROUTE(minorCaseSlug, context);
   }
 
+  if (!context.hunt_context.hunt_has_started && !context.team_context.is_admin) {
+    return <Error404 />;
+  }
+
   return (
     <div>
       <BackButton to={"/eventpage"} />

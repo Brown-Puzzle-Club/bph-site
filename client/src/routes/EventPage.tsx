@@ -1,3 +1,4 @@
+import { useLocalStorage } from "@uidotdev/usehooks";
 import { useEffect } from "react";
 import { FaCheck } from "react-icons/fa";
 
@@ -56,10 +57,20 @@ export default function EventPage() {
   const { data: context } = useDjangoContext();
   const setBluenoirDialogue = useBPHStore((state) => state.setRandomDialogueFunction);
   const setVotingOpen = useBPHStore((state) => state.setVotingModalOpen);
+  const setStoryLine = useBPHStore((state) => state.setStoryline);
+
+  const [fistVisit, setFirstVisit] = useLocalStorage("firstVisit", true);
 
   useEffect(() => {
     setTheme(MAIN_PAGE_THEME);
   }, [setTheme]);
+
+  useEffect(() => {
+    if (fistVisit) {
+      setStoryLine("main-page-intro");
+      setFirstVisit(false);
+    }
+  });
 
   useEffect(() => {
     if (context) setBluenoirDialogue(() => getMainPageIdleDialogueWithMajorCases(context));
