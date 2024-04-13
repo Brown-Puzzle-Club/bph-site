@@ -14,7 +14,6 @@ import { getMinorCaseSolution } from "@/utils/utils";
 import { useDjangoContext } from "../hooks/useDjangoContext";
 import { CASE_ART_BY_ROUND_SLUG } from "./minor_cases/FolderArt";
 import { Button } from "./ui/button";
-import { Checkbox } from "./ui/checkbox";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 
 function getRandomIntInclusive(min: number, max: number) {
@@ -129,11 +128,11 @@ const MinorCaseModal: React.FC<ModalProps> = ({
                 </div>
               ) : (
                 <div>
-                  <Checkbox
-                    id={selectedCase.name}
-                    checked={selectedCases && selectedCases.includes(selectedCase.name)}
-                    onClick={() => action(selectedCase.name)}
-                  />
+                  <Button onClick={() => action(selectedCase.name)}>
+                    {selectedCases && selectedCases.includes(selectedCase.name)
+                      ? "Unselect Vote"
+                      : "Vote!"}
+                  </Button>
                   <label htmlFor={selectedCase.name}>Vote for {selectedCase.name}!</label>
                 </div>
               )}
