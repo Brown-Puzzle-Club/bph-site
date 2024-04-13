@@ -171,14 +171,16 @@ export const generateAnswers = (): [string, string, string] => {
   const answers = [possibleSolutions[Math.floor(Math.random() * possibleSolutions.length)]];
 
   while (answers.length < 2) {
-    const newWord = possibleSolutions[Math.floor(Math.random() * possibleSolutions.length)];
+    const newWord =
+      possibleSolutions[Math.floor(Math.random() * possibleSolutions.length)].toLowerCase();
     if (!answers.includes(newWord) && newWord[0] === answers[0][4]) {
       answers.push(newWord);
     }
   }
 
   while (answers.length < 3) {
-    const newWord = possibleSolutions[Math.floor(Math.random() * possibleSolutions.length)];
+    const newWord =
+      possibleSolutions[Math.floor(Math.random() * possibleSolutions.length)].toLowerCase();
     if (!answers.includes(newWord) && newWord[2] === answers[1][4]) {
       answers.push(newWord);
     }

@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 
+import type { MajorCaseEnum } from "@/utils/constants";
 import type { MajorCase, Puzzle } from "@/utils/django_types";
 
 import BackButton from "../BackButton";
@@ -56,7 +57,7 @@ function MajorCaseWrapper({ children }: { children: ReactNode }) {
 
   return (
     <div className="puzzle-page">
-      <AnswerSubmit puzzle={puzzle} />
+      <AnswerSubmit puzzle={puzzle} major_case={majorCase.slug as MajorCaseEnum} />
       <BackButton to={`/eventpage`} />
       {children}
     </div>

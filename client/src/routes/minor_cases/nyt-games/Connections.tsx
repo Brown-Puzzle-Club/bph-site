@@ -125,8 +125,8 @@ function Connections() {
   return (
     <div className="scale-x-100 pt-10 pb-20 w-full bg-white align-middle flex flex-col justify-center">
       <div className="flex flex-row items-baseline">
-        <h1 className="text-4xl font-bold px-10 py-5 text-black connections-title">Connections</h1>
-        <p className="text-black connections-date text-2xl">Sometime, Never</p>
+        <h1 className="text-4xl font-bold px-10 py-5 text-black connections-title">Connection</h1>
+        {/* <p className="text-black connections-date text-2xl">Sometime, Never</p> */}
       </div>
       <hr />
       <div className="mx-20 w-2/3 min-w-[500px] flex flex-col pt-5 self-center">
