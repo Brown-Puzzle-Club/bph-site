@@ -192,6 +192,14 @@ function LetterBoxed({ puzzleNum }: { puzzleNum: 1 | 2 | 3 }) {
           onSelect={attemptPushSolution}
           solved={answer ? true : false}
         />
+        <Button
+          onClick={() => {
+            setSolution([[]]);
+            setAnswer(null);
+          }}
+        >
+          Reset
+        </Button>
         <div className="text-white">
           (Use the <code>enter</code> and <code>delete</code> keys to navigate)
         </div>
