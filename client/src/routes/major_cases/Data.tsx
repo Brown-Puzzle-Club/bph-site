@@ -29,13 +29,13 @@ export default function Data() {
 
   return (
     <div
-      className="flex justify-center h-full"
+      className="flex justify-center h-full items-center"
       style={{
         backgroundImage: "url('/src/assets/major_cases/data/databg.PNG')",
         backgroundSize: "cover",
       }}
     >
-      <div className="py-4 mx-[20%] w-full">
+      <div className="py-4 mx-[2%] w-full flex flex-col items-center">
         <h1 className="text-2xl font-bold">Data Major Case</h1>
         <p>
           <a
@@ -46,22 +46,18 @@ export default function Data() {
           </a>
         </p>
         <div
-          className="bg-contain bg-no-repeat pt-2 pb-2 "
+          className="bg-contain bg-no-repeat pt-2 pb-2 w-full relative aspect-[7/1] w-[70%]"
           style={{
-            paddingTop: "1%",
-            paddingBottom: "1%",
-            paddingLeft: "15%",
-
             backgroundImage: "url('/src/assets/major_cases/data/datasearch.png')",
           }}
         >
           <Input
             type="text"
-            className="bg-transparent text-xl text-black font-mono my-4 border-none outline-none shadow-none text-white -mx-2 px-2 py-1  focus:outline-none focus-visible:ring-offset-0 ring-offset-0 border-0 "
+            className="absolute bg-transparent text-xl text-black font-mono my-4 border-none outline-none shadow-none text-white px-2 py-1 focus:outline-none focus-visible:ring-offset-0 ring-offset-0 border-0 w-[80%]"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search voice recordings"
-            style={{ width: "97%", height: "90%" }}
+            style={{ top: "10%", left: "10%" }}
           />
         </div>
 
