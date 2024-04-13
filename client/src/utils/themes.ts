@@ -41,3 +41,9 @@ export const MAZE_THEME: Theme = {
   footer_color: "#c8c8c8",
   navbar_color: "#c8c8c8",
 };
+
+export const NOMENCLEPT_THEME: Theme = {
+  // bg_color: "#bba067",
+  content_color: "#bba067",
+  footer_color: "#bba067",
+};
