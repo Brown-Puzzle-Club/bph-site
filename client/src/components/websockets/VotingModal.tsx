@@ -4,18 +4,18 @@ import { useTimer } from "react-timer-hook";
 import type { SendJsonMessage } from "react-use-websocket/dist/lib/types";
 
 import useBPHStore from "@/stores/useBPHStore";
-import type { VotingInfo } from "@/utils/django_types";
 
 import VotingModal2 from "./VotingModal2";
 
 interface VotingModalProps {
-  votingInfo: VotingInfo | null;
   sendJsonMessage: SendJsonMessage;
 }
 
-const VotingModal = ({ sendJsonMessage, votingInfo }: VotingModalProps) => {
+const VotingModal = ({ sendJsonMessage }: VotingModalProps) => {
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const onOpenChange = useBPHStore((state) => state.setVotingModalOpen);
+
+  const votingInfo = useBPHStore((state) => state.votingInfo);
 
   const updateVote = useCallback(
     (option: string) => {
@@ -67,6 +67,8 @@ const VotingModal = ({ sendJsonMessage, votingInfo }: VotingModalProps) => {
   useEffect(() => {
     sendJsonMessage({ type: "vote", data: { oldVote: [], newVote: [] } });
   }, [sendJsonMessage]);
+
+  console.log(votingInfo);
 
   if (!votingInfo || Object.keys(votingInfo.cases).length === 0) {
     return null;

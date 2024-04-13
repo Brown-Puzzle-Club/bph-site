@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { SendJsonMessage } from "react-use-websocket/dist/lib/types";
 
 import useBPHStore from "@/stores/useBPHStore";
@@ -7,7 +7,7 @@ import { cn } from "@/utils/utils";
 
 import MinorCaseFolder from "../MinorCaseFolder";
 import MinorCaseModal from "../MinorCaseModal";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "../ui/dialog";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
 import VotingIndicators from "./VotingIndicators";
 
 interface VotingModalProps {
@@ -29,6 +29,14 @@ const VotingModal = ({
   const [selectedCase, setSelectedCase] = useState<Round | null>(null);
   const open = useBPHStore((state) => state.votingModalOpen);
   const onOpenChange = useBPHStore((state) => state.setVotingModalOpen);
+
+  useEffect(() => {
+    console.log(open);
+  }, [open]);
+
+  useEffect(() => {
+    console.log(votingInfo);
+  }, [votingInfo]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

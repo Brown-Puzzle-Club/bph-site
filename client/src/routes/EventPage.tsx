@@ -85,7 +85,8 @@ export default function EventPage() {
           >
             <IncomingCasesStack
               onClick={() => {
-                if (setVotingOpen != undefined) setVotingOpen(true);
+                console.log("called!");
+                setVotingOpen(true);
               }}
             />
           </div>

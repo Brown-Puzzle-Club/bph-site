@@ -12,7 +12,7 @@ import CaseVoting from "./websockets/CaseVoting";
 export const PageWrapper = ({ route }: { route: React.ReactNode }) => {
   const { theme } = useTheme();
 
-  const { sendJsonMessage, readyState, votingInfo } = useSocket("ws/puzzles", {
+  const { sendJsonMessage, readyState } = useSocket("ws/puzzles", {
     onOpen: () => {
       console.log("Connected to websocket! yay!");
     },
@@ -50,11 +50,7 @@ export const PageWrapper = ({ route }: { route: React.ReactNode }) => {
           duration: 5000,
         }}
       />
-      <CaseVoting
-        sendJsonMessage={sendJsonMessage}
-        readyState={readyState}
-        votingInfo={votingInfo}
-      />
+      <CaseVoting sendJsonMessage={sendJsonMessage} readyState={readyState} />
       <Footer
         extraStyle={{
           backgroundColor: theme.footer_color ? theme.footer_color : DEFAULT_THEME.footer_color,

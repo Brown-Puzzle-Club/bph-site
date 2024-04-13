@@ -3,6 +3,7 @@ import { immer } from "zustand/middleware/immer";
 
 import { IDLE_TIMER } from "@/components/bluenoir/Bluenoir";
 import { BluenoirStories, getMainPageIdleDialogue, type Dialogue } from "@/utils/bluenoir_dialogue";
+import type { VotingInfo } from "@/utils/django_types";
 
 export const TOP_LEFT = { x: 0.05, y: 0.13 } as const;
 export const BOTTOM_LEFT = { x: 0.05, y: 0.85 } as const;
@@ -45,11 +46,13 @@ interface BluenoirActions {
 
 interface VotingState {
   votingModalOpen: boolean;
+  votingInfo: VotingInfo;
 }
 
 interface VotingActions {
   toggleVotingModalOpen: () => void;
   setVotingModalOpen: (open: boolean) => void;
+  setVotingInfo: (votingInfo: VotingInfo) => void;
 }
 
 interface BPHState extends BluenoirState, VotingState {}
@@ -70,6 +73,12 @@ const initialBluenoirState: BluenoirState = {
 
 const initialVotingState: VotingState = {
   votingModalOpen: false,
+  votingInfo: {
+    id: 0,
+    cases: {},
+    expiration_time: null,
+    max_choices: 0,
+  },
 };
 
 const initialBPHState: BPHState = {
@@ -188,7 +197,14 @@ const useBPHStore = create<BPHState & BPHActions>()(
         bluenoirCentered: false,
       });
     },
-    setVotingModalOpen: (open) => set({ votingModalOpen: open }),
+    setVotingModalOpen: (open) => {
+      console.log("ran voting modal open!!");
+      set({ votingModalOpen: open });
+    },
+    setVotingInfo: (info) => {
+      console.log("ran set voting info!!");
+      set({ votingInfo: info });
+    },
     toggleVotingModalOpen: () => set((state) => ({ votingModalOpen: !state.votingModalOpen })),
   })),
 );

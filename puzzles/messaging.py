@@ -248,7 +248,7 @@ class DiscordInterface:
             embed["color"] = 0xFF00FF  # type: ignore
             embed["author"]["name"] = _("U N C L A I M E D")  # type: ignore
             claim_url = hint.full_url(claim=True)
-            embed["title"] = _("Click here to claim!") # type: ignore
+            embed["title"] = _("Click here to claim!")  # type: ignore
             embed["url"] = claim_url
             debug = "unclaimed"
 
@@ -401,6 +401,7 @@ class AdminWebsocketConsumer(BroadcastWebsocketConsumer):
             cls.group_id, {"type": "channel.receive_broadcast", "data": text_data}
         )
 
+
 @receiver(send_notification)
 def broadcast_notification(sender, notification_type, data, team, **kwargs):
     print(f"broadcasting notification to {team}")
@@ -408,10 +409,7 @@ def broadcast_notification(sender, notification_type, data, team, **kwargs):
 
     channel = get_channel_layer()
     if channel is not None:
-        message = {
-            "type": notification_type,
-            "data": data
-        }
+        message = {"type": notification_type, "data": data}
 
         channel_layer_message = {"type": "forward.message", "data": json.dumps(message)}
 
@@ -419,7 +417,9 @@ def broadcast_notification(sender, notification_type, data, team, **kwargs):
 
 
 @receiver(create_minor_case_incoming_event)
-def broadcast_minor_case_incoming_event(sender, caseId, cases, team, max_choices, **kwargs):
+def broadcast_minor_case_incoming_event(
+    sender, caseId, cases, team, max_choices, **kwargs
+):
     print(f"broadcasting minor case incoming event to {team}")
     room = Room.objects.get(channel_name=f"puzzles-{team}")
 

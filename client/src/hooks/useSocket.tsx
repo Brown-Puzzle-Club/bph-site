@@ -7,7 +7,8 @@ import { z } from "zod";
 
 import NotificationToast from "@/NotificationToast";
 import useBPHStore from "@/stores/useBPHStore";
-import { RoundSchema, VotingInfoSchema, type VotingInfo } from "@/utils/django_types";
+import type { VotingInfo } from "@/utils/django_types";
+import { RoundSchema } from "@/utils/django_types";
 
 import { useAuth } from "./useAuth";
 
@@ -22,12 +23,6 @@ const NotificationSchema = z.object({
   type: z.string(),
   data: z.unknown(),
 });
-
-const VoteNotificationSchema = z.object({
-  type: z.literal("vote"),
-  data: VotingInfoSchema,
-});
-interface VoteNotification extends z.infer<typeof VoteNotificationSchema> {}
 
 const HintNotificationSchema = z.object({
   type: z.literal("hint"),
@@ -54,12 +49,13 @@ const StorylineNotificationSchema = z.object({
 interface StorylineNotification extends z.infer<typeof StorylineNotificationSchema> {}
 
 const useSocket = (path: string, callbacks: SocketCallbacks | undefined = undefined) => {
-  const [votingInfo, setVotingInfo] = useState<VotingInfo>({
-    id: 0,
-    cases: {},
-    expiration_time: null,
-    max_choices: 0,
-  });
+  // const [votingInfo, setVotingInfo] = useState<VotingInfo>({
+  //   id: 0,
+  //   cases: {},
+  //   expiration_time: null,
+  //   max_choices: 0,
+  // });
+  const setVotingInfo = useBPHStore((state) => state.setVotingInfo);
   const [socketUrl, setSocketUrl] = useState<string | null>(null);
   const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(socketUrl, {
     onMessage: callbacks?.onMessage,
@@ -89,9 +85,10 @@ const useSocket = (path: string, callbacks: SocketCallbacks | undefined = undefi
     if (!lastJsonMessage) return;
 
     const parsedMessage = NotificationSchema.parse(lastJsonMessage);
+    console.log(parsedMessage);
     switch (parsedMessage.type) {
       case "vote": {
-        setVotingInfo((parsedMessage.data as VoteNotification).data);
+        setVotingInfo(parsedMessage.data as VotingInfo);
         toast.custom(
           <NotificationToast Icon={Vote}>
             <h2 className="font-bold">New Voting Round!</h2>
@@ -148,9 +145,9 @@ const useSocket = (path: string, callbacks: SocketCallbacks | undefined = undefi
         console.warn("Unknown message", parsedMessage);
         break;
     }
-  }, [dispatchBluenoir, lastJsonMessage, setVotingModalOpen]);
+  }, [dispatchBluenoir, lastJsonMessage, setVotingInfo, setVotingModalOpen]);
 
-  return { sendJsonMessage, readyState, votingInfo };
+  return { sendJsonMessage, readyState };
 };
 
 export default useSocket;
