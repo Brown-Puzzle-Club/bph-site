@@ -45,6 +45,7 @@ from puzzles.hunt_config import (
     HINTS_ENABLED,
     HOURS_PER_HINT,
     HINT_TIME,
+    MINOR_CASE_VOTE_EXPIRE_MINUTES,
     TEAM_AGE_BEFORE_HINTS,
     INTRO_HINTS,
     FREE_ANSWERS_ENABLED,
@@ -884,6 +885,22 @@ class Team(models.Model):
             global_solves += 1
         return (global_solves, local_solves)
 
+    def end_outdated_incoming_event(self):
+        most_recent_incoming_event = (
+            MinorCaseIncomingEvent.objects.filter(team=self)
+            .order_by("-timestamp")
+            .first()
+        )
+        if (
+            most_recent_incoming_event
+            and not most_recent_incoming_event.final_vote
+            and most_recent_incoming_event.timestamp
+            + datetime.timedelta(minutes=MINOR_CASE_VOTE_EXPIRE_MINUTES)
+            < timezone.now()
+        ):
+            print("EVENT: ending outdated vote event")
+            most_recent_incoming_event.finalize_vote()
+
     def replenish_incoming_cases(self):
         # if a team has fewer than 5 active cases after the first 2 case solves, they are missing cases.
         # This makes a vote event to fill the remaining cases.
@@ -891,6 +908,10 @@ class Team(models.Model):
         completed_cases = set(
             map(lambda el: el.minor_case_round.slug, self.db_minor_case_completed)
         )
+        active_slugs = set(map(lambda el: el.minor_case_round.slug, active_cases))
+        cases_remaining = Round.objects.all().exclude(slug__in=active_slugs)
+
+        print(cases_remaining)
 
         if len(completed_cases) < 2:
             return
@@ -900,10 +921,10 @@ class Team(models.Model):
             if case.minor_case_round.slug not in completed_cases:
                 unsolved_cases.append(case.minor_case_round.slug)
 
-        print(len(completed_cases))
-        missing_count = 5 - len(unsolved_cases)
+        # print(len(completed_cases))
+        missing_count = min(len(cases_remaining), 5 - len(unsolved_cases))
 
-        print(missing_count, len(unsolved_cases))
+        # print(missing_count, len(unsolved_cases))
         if missing_count > 0:
             most_recent_incoming_event = (
                 MinorCaseIncomingEvent.objects.filter(team=self.team)
@@ -926,7 +947,7 @@ class Team(models.Model):
                 most_recent_incoming_event.delete()
 
             # make a new one.
-            print("EVENT: making new ")
+            print("EVENT: making new vote event")
             incoming_event = MinorCaseIncomingEvent.objects.create(
                 team=self, timestamp=timezone.now()
             )
@@ -939,6 +960,10 @@ class Team(models.Model):
         if not context.hunt_has_started and not context.is_admin:
             return []
 
+        # TWO GUARDS FOR SOFT LOCKS :
+        # - chosing the case for a team after a set amount of time
+        # - making sure teams always have 5 cases unlocked.
+        context.team.end_outdated_incoming_event
         context.team.replenish_incoming_cases
 
         rounds_not_unlocked = Round.objects.order_by("order").exclude(

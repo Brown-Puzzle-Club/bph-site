@@ -99,3 +99,6 @@ TEAM_AGE_BEFORE_FREE_ANSWERS = datetime.timedelta(days=3)
 
 MAJOR_CASE_SLUGS = ["colored-thread", "social-deduction", "data"]
 MAJOR_CASE_UNLOCK_SOLVE_COUNT = [1, 2, 4]
+
+
+MINOR_CASE_VOTE_EXPIRE_MINUTES = 5
