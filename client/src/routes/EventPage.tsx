@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { FaCheck } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 import background from "@/assets/main_page/Backdrop.png";
 import cassette from "@/assets/main_page/D1.png";
@@ -17,6 +18,7 @@ import CompletedCases from "@/components/main_page/CompletedCases";
 import IncomingCasesStack from "@/components/main_page/IncomingCasesStack";
 import Phone from "@/components/main_page/Phone";
 import { ArtWrapperInner } from "@/components/minor_cases/CasePageArt";
+import { Button } from "@/components/ui/button";
 import { useDjangoContext } from "@/hooks/useDjangoContext";
 import { useTheme } from "@/hooks/useTheme";
 import useBPHStore from "@/stores/useBPHStore";
@@ -132,6 +134,29 @@ export default function EventPage({ setVotingOpen }: EventPage) {
             }}
           />
           <Phone />
+          {context?.team_context?.major_case_solves &&
+            Object.values(context?.team_context?.major_case_solves).length >= 3 && (
+              <div
+                className="absolute"
+                style={{
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                }}
+              >
+                <Button className="hover:cursor-select text-xl ">
+                  <Link
+                    to="/final-verdict"
+                    className="drop-shadow-[0_30px_30px_rgba(255,255,255,0.2)]"
+                    style={{
+                      textShadow: "0 0 10px #fff",
+                    }}
+                  >
+                    THE FINAL VERDICT
+                  </Link>
+                </Button>
+              </div>
+            )}
         </ArtWrapperInner>
       </div>
     </div>

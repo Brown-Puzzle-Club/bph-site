@@ -97,7 +97,7 @@ const Phone = () => {
             <p className="font-bold text-white font-sans text-[0.8vw]">
               {hours}:{minutes.toLocaleString("en-US", { minimumIntegerDigits: 2 })}
             </p>
-            {events && context.team_context.in_person && (
+            {events && (
               <AnimatePresence>
                 {events.map(
                   (event) =>
