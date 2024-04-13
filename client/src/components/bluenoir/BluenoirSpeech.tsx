@@ -56,7 +56,7 @@ const BluenoirSpeech = () => {
       <AnimatePresence initial={false}>
         {open && (
           <motion.div
-            className="px-4 min-w-xs"
+            className={cn("px-4", centered && "min-w-[24rem]")}
             variants={textVariants}
             initial="hidden"
             animate="visible"
