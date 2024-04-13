@@ -93,7 +93,7 @@ const AnswerSubmitRedThread = ({
       .then((response) => {
         console.log(response);
         if (response.data.status === "correct") {
-          toast.success("Correct answer!", { duration: Infinity, position: "top-center" });
+          toast.success("Correct answer!", { duration: 10 * 1000, position: "top-center" });
         } else {
           const guesses_left = response.data.guesses_left;
           toast.error(`Incorrect answer. ${guesses_left} guesses left.`, {
@@ -210,7 +210,7 @@ const AnswerSubmitRegular = ({
       .then((response) => {
         console.log(response);
         if (response.data.status === "correct") {
-          toast.success("Correct answer!", { duration: Infinity, position: "top-center" });
+          toast.success("Correct answer!", { duration: 10 * 1000, position: "top-center" });
         } else if (response.data.messages.length > 0) {
           response.data.messages.forEach((message: PuzzleMessage) => {
             toast.custom(

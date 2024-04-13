@@ -79,7 +79,7 @@ export default function PuzzleList() {
                   }}
                 >
                   <Link to={`/majorcase/${curTab}`} className="underline text-2xl">
-                    The Crime of {context.team_context.major_case_unlocks[curTab].name}
+                    The Case of {context.team_context.major_case_unlocks[curTab].name}
                   </Link>
                   {context.team_context.solves[curTab] && (
                     <p

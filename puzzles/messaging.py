@@ -402,19 +402,15 @@ class AdminWebsocketConsumer(BroadcastWebsocketConsumer):
         )
 
 @receiver(send_notification)
-def broadcast_notification(sender, notification_type, title, desc, team, **kwargs):
+def broadcast_notification(sender, notification_type, data, team, **kwargs):
     print(f"broadcasting notification to {team}")
     room = Room.objects.get(channel_name=f"puzzles-{team}")
-
 
     channel = get_channel_layer()
     if channel is not None:
         message = {
             "type": notification_type,
-            "data": {
-                "title": title,
-                "desc": desc
-            }
+            "data": data
         }
 
         channel_layer_message = {"type": "forward.message", "data": json.dumps(message)}

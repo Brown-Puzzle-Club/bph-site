@@ -1329,12 +1329,12 @@ class MinorCaseIncomingEvent(models.Model):
         self.save()
 
         for case in most_voted_cases:
+            from puzzles.api.serializers import RoundSerializer
             send_notification.send(
                 None,
                 notification_type="unlock",
+                data=RoundSerializer(instance=case).data,
                 team=self.team.id,
-                title="Time's Up!",
-                desc=f"Team {self.team.team_name} has unlocked a new case: {case.name}!",
             )
             print(f"EVENT: Unlocking case {case.name} for team {self.team}")
             # Team.unlock_case(self.team, case, self.timestamp)
@@ -2043,11 +2043,20 @@ def notify_on_hint_update(sender, instance, created, update_fields, **kwargs):
     # to be safe and prevent overtriggering of these handlers, e.g. spamming
     # the team with more emails if an answered hint is somehow claimed again.
     # return
+    from puzzles.api.serializers import HintSerializer
+
     if not update_fields:
         update_fields = ()
     if instance.status == Hint.NO_RESPONSE:
         if "discord_id" not in update_fields:
             discord_interface.update_hint(instance)
+            # TODO: Update this!
+            send_notification.send(
+                None,
+                notification_type="hint",
+                data=HintSerializer(instance).data,
+                team=instance.team.id,
+            )
     else:
         if "discord_id" not in update_fields:
             discord_interface.clear_hint(instance)
@@ -2084,20 +2093,18 @@ class StorylineUnlock(models.Model):
         super(StorylineUnlock, self).save(*args, **kwargs)
         send_notification.send(
             None,
-            notification_type="storyline_unlock",
-            title=self.storyline,
-            desc=self.storyline,
-            team=self.team.user.id,
+            notification_type="storyline",
+            data={"slug": self.storyline},
+            team=self.team.id,
         )
 
     @staticmethod
     def activate_non_storyline_dialogue(storyline_slug: str, team: Team):
         send_notification.send(
             None,
-            notification_type="storyline_unlock",
-            title=storyline_slug,
-            desc=storyline_slug,
-            team=team.user.id,  # TODO: fix (no access to team
+            notification_type="storyline",
+            data={"slug": storyline_slug},
+            team=team.id,
         )
 
     FREE_STORY_SLUGS = ["main-page-intro"]

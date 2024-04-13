@@ -241,7 +241,7 @@ const MinorCaseSchema = z.object({
 });
 type MinorCase = z.infer<typeof MinorCaseSchema>;
 
-const VotingInfoSchema = z.object({
+export const VotingInfoSchema = z.object({
   id: z.number(),
   cases: z.record(z.object({ round: RoundSchema, count: z.number().nonnegative() })),
   expiration_time: z.string().nullable(),
