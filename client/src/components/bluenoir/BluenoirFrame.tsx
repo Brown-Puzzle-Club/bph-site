@@ -19,7 +19,7 @@ const BluenoirFrame = forwardRef<HTMLDivElement>((_props, ref) => {
     <TooltipProvider delayDuration={100}>
       <Tooltip>
         <TooltipTrigger>
-          <div ref={ref} className="cursor-pointer h-[100px] w-[100px]">
+          <div ref={ref} className="cursor-pointer h-[100px] w-[100px] select-none">
             <div className="h-[70px] w-[70px] absolute mx-[12px] my-[12px]">
               <img
                 className="select-none"
@@ -38,9 +38,9 @@ const BluenoirFrame = forwardRef<HTMLDivElement>((_props, ref) => {
                 }
                 restart(speak, IDLE_TIMER * 1000);
               }}
-              className="h-[100px] w-[100px] absolute mx-auto my-auto"
+              className="h-[100px] w-[100px] absolute mx-auto my-auto select-none"
             >
-              <img className="select-none" src={frame} />
+              <img className="select-none pointer-events-none" src={frame} />
             </div>
           </div>
         </TooltipTrigger>

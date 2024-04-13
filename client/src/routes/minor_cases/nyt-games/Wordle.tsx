@@ -58,8 +58,8 @@ const Wordle = () => {
         )}
       </div>
       <div className="flex justify-center items-center flex-col pt-4">
-        <p className="flex flex-row gap-2 items-center text-xl py-3 franklin">
-          <p>Remaining Guesses:</p>
+        <div className="flex flex-row gap-2 items-center text-xl py-3 franklin">
+          <span>Remaining Guesses:</span>
           <div className="flex flex-row gap-1 pt-1">
             <>
               {[...Array(guesses)].map((_, i) => (
@@ -67,7 +67,7 @@ const Wordle = () => {
               ))}
             </>
           </div>
-        </p>
+        </div>
         <Button
           className="mt-4 text-black outline font-bold py-2 px-4 rounded-full h-12 bg-white hover:bg-slate-200 mb-12"
           onClick={() => {

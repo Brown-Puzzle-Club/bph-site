@@ -1,6 +1,8 @@
 import angry from "@/assets/bluenoir/angry.png";
 import curious from "@/assets/bluenoir/curious.png";
 import embarassed from "@/assets/bluenoir/embarassed.png";
+import evil from "@/assets/bluenoir/evil.png";
+import excited from "@/assets/bluenoir/excited.png";
 import happy from "@/assets/bluenoir/happy.png";
 import nervous from "@/assets/bluenoir/nervous.png";
 import neutral from "@/assets/bluenoir/neutral.png";
@@ -50,8 +52,8 @@ export const BluenoirReactionImage: Record<BluenoirReaction, string> = {
   [BluenoirReaction.TIRED]: tired,
   [BluenoirReaction.SMUG]: smug,
   [BluenoirReaction.CURIOUS]: curious,
-  [BluenoirReaction.EVIL]: neutral,
-  [BluenoirReaction.EXCITED]: neutral,
+  [BluenoirReaction.EVIL]: evil,
+  [BluenoirReaction.EXCITED]: excited,
   [BluenoirReaction.PHONE]: phone,
 };
 

@@ -1,5 +1,6 @@
 import datasticker1 from "@/assets/main_page/folders/dt_trim1.png";
 import datasticker2 from "@/assets/main_page/folders/dt_trim2.png";
+import dtpaper1 from "@/assets/main_page/folders/dt_trim3.png";
 import rtpaper1 from "@/assets/main_page/folders/rt_trim1.png";
 import blood from "@/assets/main_page/folders/sd_blood.png";
 import sd_trim2 from "@/assets/main_page/folders/sd_trim2.png";
@@ -7,6 +8,8 @@ import tape from "@/assets/main_page/folders/tape.png";
 import birb from "@/assets/minor_cases/birbs/teaser-1.png";
 import birbyarn from "@/assets/minor_cases/birbs/teaser-2.png";
 import birbcoin from "@/assets/minor_cases/birbs/teaser-3.png";
+import bluenoirclues from "@/assets/minor_cases/blues_clues/bluenoirclues.png";
+import mollusk from "@/assets/minor_cases/blues_clues/mollusk.png";
 import catmeme from "@/assets/minor_cases/cats/catmeme.png";
 import clip1 from "@/assets/minor_cases/clipping1.png";
 import clip2 from "@/assets/minor_cases/clipping2.png";
@@ -22,6 +25,9 @@ import nyt2 from "@/assets/minor_cases/nyt/nyt-teaser2.png";
 import nyt3 from "@/assets/minor_cases/nyt/nyt-teaser3.png";
 import pennytitle from "@/assets/minor_cases/penny/pennytitle.png";
 import wreath from "@/assets/minor_cases/penny/wreath.png";
+import showdownpicture from "@/assets/minor_cases/showdown/showdown_photo.png";
+import smogon from "@/assets/minor_cases/showdown/smogon.png";
+import showdownsticker from "@/assets/minor_cases/showdown/sticker.png";
 import twiqh2 from "@/assets/minor_cases/twiqh/twiqh.png";
 import anchor from "@/assets/minor_cases/whales/anchor.png";
 import whales1 from "@/assets/minor_cases/whales/whales-teaser1.png";
@@ -375,13 +381,80 @@ export const FinancialCrimesArt = () => {
       <img
         className="absolute object-cover w-[18vw]"
         style={{ left: "-5%", top: "61%", rotate: "42deg" }}
-        src={tape}
+        src={mollusk}
       />
 
       <img
         className="absolute object-cover w-[15vw]"
         style={{ left: "27%", top: "44%", rotate: "354deg" }}
         src={datasticker1}
+      />
+    </div>
+  );
+};
+const BluesCluesArt = () => {
+  return (
+    <div>
+      <img
+        className="absolute object-cover w-[22vw]"
+        style={{ left: "12%", top: "57%", rotate: "3deg" }}
+        src={dtpaper1}
+      />
+      <img
+        className="absolute object-cover w-[22vw]"
+        style={{ left: "8%", top: "10%", rotate: "0deg" }}
+        src={bluenoirclues}
+      />
+      <img
+        className="absolute object-cover w-[18vw]"
+        style={{ left: "30%", top: "21%", rotate: "66deg" }}
+        src={tape}
+      />
+      <img
+        className="absolute object-cover w-[18vw]"
+        style={{ left: "-8%", top: "17%", rotate: "66deg" }}
+        src={tape}
+      />
+      <img
+        className="absolute object-cover w-[12vw]"
+        style={{ left: "3%", top: "40%", rotate: "0deg" }}
+        src={mollusk}
+      />
+      <img
+        className="absolute object-cover w-[15vw]"
+        style={{ left: "27%", top: "44%", rotate: "354deg" }}
+        src={datasticker1}
+      />
+    </div>
+  );
+};
+const ShowdownArt = () => {
+  return (
+    <div>
+      <img
+        className="absolute object-cover w-[25vw]"
+        style={{ left: "8%", top: "41%", rotate: "357deg" }}
+        src={dtpaper1}
+      />
+      <img
+        className="absolute object-cover w-[22vw]"
+        style={{ left: "12%", top: "21%", rotate: "3deg" }}
+        src={dtpaper1}
+      />
+      <img
+        className="absolute object-cover w-[12vw]"
+        style={{ left: "9%", top: "37%", rotate: "3deg" }}
+        src={smogon}
+      />
+      <img
+        className="absolute object-cover w-[13vw]"
+        style={{ left: "27%", top: "3%", rotate: "358deg" }}
+        src={showdownpicture}
+      />
+      <img
+        className="absolute object-cover w-[20vw]"
+        style={{ left: "12%", top: "70%", rotate: "0deg" }}
+        src={showdownsticker}
       />
     </div>
   );
@@ -399,4 +472,6 @@ export const CASE_ART_BY_ROUND_SLUG: Record<string, JSX.Element> = {
   cats: <CatsArt />,
   maze: <LockboxArt />,
   "financial-crimes": <FinancialCrimesArt />,
+  "blues-clues": <BluesCluesArt />,
+  showdown: <ShowdownArt />,
 };

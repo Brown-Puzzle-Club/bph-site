@@ -53,8 +53,8 @@ const SubscriptionModal = ({ setIsModalOpen, setCorrectAnswer }: SubscriptionMod
 
   // Render the modal only if isOpen is true
   return (
-    <div className="fixed inset-0 flex items-center justify-center">
-      <div className="fixed inset-x-0 bottom-0 mx-auto p-6 bg-white rounded-t-lg shadow-lg">
+    <div className="w-full inset-0 flex items-center justify-center">
+      <div className="w-full inset-x-0 bottom-0 mx-auto p-6 bg-white shadow-lg">
         {/* Modal Content */}
         <div className="text-center h-100 items-center justify-center flex flex-col">
           <p className="">

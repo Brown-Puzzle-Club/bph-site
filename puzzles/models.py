@@ -679,9 +679,7 @@ class Team(models.Model):
         return self.num_hints_total - self.num_hints_used
 
     def num_free_answers_total(self):
-        # if not FREE_ANSWERS_ENABLED or self.hunt_is_over:
-        #     return 0
-        # TODO: NUMBER OF EVENT SOLVES
+
         event_solve_cnt = len(self.event_solves)
         return self.total_free_answers_awarded + event_solve_cnt
 
@@ -911,7 +909,7 @@ class Team(models.Model):
         active_slugs = set(map(lambda el: el.minor_case_round.slug, active_cases))
         cases_remaining = Round.objects.all().exclude(slug__in=active_slugs)
 
-        print(cases_remaining)
+        # print(cases_remaining)
 
         if len(completed_cases) < 2:
             return
@@ -1502,6 +1500,15 @@ class MajorCaseCompleted(models.Model):
             storyline=f"major-case-complete-{num_major_case_solves}",
         )
         story_unlock.save()
+
+        # get all minor cases whose major case is this oe
+        minor_cases = Round.objects.filter(major_case=self.major_case)
+        for minor_case in minor_cases:
+            MinorCaseCompleted.objects.get_or_create(
+                team=self.team,
+                minor_case_round=minor_case,
+                active_datetime=self.completed_datetime,
+            )
 
 
 class AnswerSubmission(models.Model):
