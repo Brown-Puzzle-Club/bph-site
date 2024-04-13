@@ -16,6 +16,11 @@ import goodreads from "@/assets/minor_cases/microinfluencer/goodreads.svg";
 import instagram from "@/assets/minor_cases/microinfluencer/instagram.svg";
 import letterboxd from "@/assets/minor_cases/microinfluencer/letterboxd.svg";
 import strava from "@/assets/minor_cases/microinfluencer/strava.svg";
+import application from "@/assets/minor_cases/nomenclept/application.webp";
+import book from "@/assets/minor_cases/nomenclept/book.png";
+import casette from "@/assets/minor_cases/nomenclept/casette.png";
+import letter from "@/assets/minor_cases/nomenclept/letter.png";
+import nomenclepttitle from "@/assets/minor_cases/nomenclept/nomenclepttitle.png";
 import twiqh from "@/assets/minor_cases/twiqh/twiqh.png";
 import whale_bg from "@/assets/minor_cases/whales/background_whale2.png";
 import flowers from "@/assets/minor_cases/whales/flowers.png";
@@ -27,7 +32,7 @@ import { useDjangoContext } from "@/hooks/useDjangoContext";
 import { useTheme } from "@/hooks/useTheme";
 import type { MajorCaseEnum } from "@/utils/constants";
 import { CASE_PALETTE } from "@/utils/constants";
-import { BIRB_THEME, WHALE_THEME } from "@/utils/themes";
+import { BIRB_THEME, NOMENCLEPT_THEME, WHALE_THEME } from "@/utils/themes";
 import type { PuzzleAnswer } from "@/utils/utils";
 import { cn, getUnlockedPuzzle } from "@/utils/utils";
 
@@ -212,12 +217,45 @@ const TwiqhArt = () => {
 };
 
 const NomencleptArt = () => {
+  const { setTheme } = useTheme();
+  useEffect(() => {
+    setTheme(NOMENCLEPT_THEME);
+  });
+
   return (
-    <ArtWrapper
-      className="max-w-[400px] pt-2 left-1/2 transform -translate-x-1/2 drop-shadow-[0_15px_15px_rgba(255,255,255,0.3)]"
-      background_src={twiqh}
-      linkTo="/puzzle/twiqh"
-    />
+    <div className="aspect-w-4 aspect-h-3 max-w-screen-xl">
+      <div className={cn("map relative w-[100vw] h-[30vw]")}>
+        <PuzzleIconWrapper
+          slug="silent-killer"
+          imageSrc={letter}
+          extraStyles={{ top: "47%", left: "33%", width: "15%", zIndex: 3 }}
+          answer_bg
+        />
+        <PuzzleIconWrapper
+          slug="sailing"
+          imageSrc={application}
+          extraStyles={{ top: "46%", left: "51%", width: "11%", zIndex: 3 }}
+          answer_bg
+        />
+        <PuzzleIconWrapper
+          slug="ballads"
+          imageSrc={book}
+          extraStyles={{ top: "45%", left: "65%", width: "17%", zIndex: 3 }}
+          answer_bg
+        />
+        <PuzzleIconWrapper
+          slug="nomenclept-puzz"
+          imageSrc={casette}
+          extraStyles={{ top: "18%", left: "1%", width: "22%", zIndex: 3 }}
+          answer_bg
+          meta
+        />
+        <RelativeAsset
+          imageSrc={nomenclepttitle}
+          extraStyles={{ top: "6%", left: "25%", width: "50%", zIndex: 3 }}
+        />
+      </div>
+    </div>
   );
 };
 

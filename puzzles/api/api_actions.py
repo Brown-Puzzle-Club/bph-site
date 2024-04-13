@@ -223,7 +223,7 @@ def handle_answer(
         return Response({"error": "Puzzle not unlocked"}, status=403)
 
     guesses_left = request_context.team.guesses_remaining(puzzle)
-    if guesses_left <= 0:
+    if guesses_left <= 0 and not voucher:
         return Response({"error": "No guesses remaining"}, status=400)
 
     sanitized_answer = "".join(
