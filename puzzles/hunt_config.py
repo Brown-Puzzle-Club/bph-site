@@ -8,7 +8,7 @@ HUNT_TITLE = "Brown Puzzlehunt"
 # included in various templates and displayed on the static site
 HUNT_ORGANIZERS = "Brown Puzzle Club"
 # included in various templates and set as reply-to for automatic emails
-CONTACT_EMAIL = "puzzle@brown.edu"
+CONTACT_EMAIL = "brownpuzzleHQ@gmail.com"
 # the sender from which automatic emails are sent; your mail sending service
 # might require you set this to something (check settings/base.py to put your
 # actual mail sending service credentials)

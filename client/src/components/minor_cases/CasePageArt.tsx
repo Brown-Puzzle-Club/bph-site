@@ -211,6 +211,16 @@ const TwiqhArt = () => {
   );
 };
 
+const NomencleptArt = () => {
+  return (
+    <ArtWrapper
+      className="max-w-[400px] pt-2 left-1/2 transform -translate-x-1/2 drop-shadow-[0_15px_15px_rgba(255,255,255,0.3)]"
+      background_src={twiqh}
+      linkTo="/puzzle/twiqh"
+    />
+  );
+};
+
 const MicroinfluencerArt = () => {
   return (
     <div className="aspect-w-4 aspect-h-3 max-w-screen-xl">
@@ -344,6 +354,7 @@ const CASE_ART_COMPONENT: { [key: string]: JSX.Element } = {
   microinfluencer: <MicroinfluencerArt />,
   maze: <MazeArt />,
   twiqh: <TwiqhArt />,
+  nomenclept: <NomencleptArt />,
 };
 
 export default function CasePageArt({ case_slug }: { case_slug: string }) {
