@@ -44,6 +44,7 @@ const BluenoirSpeech = () => {
   const restart = useBPHStore((state) => state.restartIdleTimer);
   const prevStoryline = useBPHStore((state) => state.prevStoryline);
   const nextStoryline = useBPHStore((state) => state.nextStoryline);
+  const stopStoryline = useBPHStore((state) => state.stopStoryline);
   const centered = useBPHStore((state) => state.bluenoirCentered);
 
   return (
@@ -63,16 +64,21 @@ const BluenoirSpeech = () => {
             exit="hidden"
           >
             <div className={cn("absolute text-slate-500 text-sm top-1 right-2")}>
-              {!centered && (
-                <button
-                  onClick={() => {
-                    setOpen(false);
-                    restart(speak, IDLE_TIMER * 1000);
-                  }}
-                >
-                  ✕
-                </button>
-              )}
+              <button
+                onClick={
+                  centered
+                    ? () => {
+                        stopStoryline();
+                        setOpen(false);
+                      }
+                    : () => {
+                        setOpen(false);
+                        restart(speak, IDLE_TIMER * 1000);
+                      }
+                }
+              >
+                ✕
+              </button>
             </div>
             <div className={cn("font-extrabold font-mono text-sm underline underline-offset-2")}>
               Bluenoir

@@ -1476,7 +1476,7 @@ class MajorCaseCompleted(models.Model):
     def __str__(self):
         return "%s -> %s @ %s" % (
             self.team,
-            self.major_case_round,
+            self.major_case,
             self.completed_datetime,
         )
 
@@ -1498,6 +1498,7 @@ class MajorCaseCompleted(models.Model):
         story_unlock = StorylineUnlock.objects.create(
             team=self.team,
             storyline=f"major-case-complete-{num_major_case_solves}",
+            unlock_datetime=self.completed_datetime,
         )
         story_unlock.save()
 
@@ -1507,7 +1508,7 @@ class MajorCaseCompleted(models.Model):
             MinorCaseCompleted.objects.get_or_create(
                 team=self.team,
                 minor_case_round=minor_case,
-                active_datetime=self.completed_datetime,
+                completed_datetime=self.completed_datetime,
             )
 
 

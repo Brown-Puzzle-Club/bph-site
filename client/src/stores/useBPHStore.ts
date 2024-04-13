@@ -40,6 +40,7 @@ interface BluenoirActions {
   setStoryline: (slug: string) => void;
   nextStoryline: () => void;
   prevStoryline: () => void;
+  stopStoryline: () => void;
 }
 
 interface VotingState {
@@ -163,12 +164,7 @@ const useBPHStore = create<BPHState & BPHActions>()(
       get().restartIdleTimer(get().nextStoryline, 10 * 1000);
       const newIndex = get().bluenoirStorylineIndex + 1;
       if (newIndex === BluenoirStories[get().bluenoirStorylineSlug].dialogues.length) {
-        get().restartIdleTimer(get().bluenoirSpeak, IDLE_TIMER * 1000);
-        set({
-          bluenoirStorylineSlug: "",
-          bluenoirStorylineIndex: 0,
-          bluenoirCentered: false,
-        });
+        get().stopStoryline();
       } else {
         get().bluenoirSpeak(BluenoirStories[get().bluenoirStorylineSlug].dialogues[newIndex]);
         set({
@@ -183,6 +179,14 @@ const useBPHStore = create<BPHState & BPHActions>()(
       get().bluenoirSpeak(BluenoirStories[get().bluenoirStorylineSlug].dialogues[newIndex]);
       set({
         bluenoirStorylineIndex: newIndex,
+      });
+    },
+    stopStoryline: () => {
+      get().restartIdleTimer(get().bluenoirSpeak, IDLE_TIMER * 1000);
+      set({
+        bluenoirStorylineSlug: "",
+        bluenoirStorylineIndex: 0,
+        bluenoirCentered: false,
       });
     },
     setVotingModalOpen: (open) => set({ votingModalOpen: open }),
