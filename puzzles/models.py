@@ -884,11 +884,62 @@ class Team(models.Model):
             global_solves += 1
         return (global_solves, local_solves)
 
+    def replenish_incoming_cases(self):
+        # if a team has fewer than 5 active cases after the first 2 case solves, they are missing cases.
+        # This makes a vote event to fill the remaining cases.
+        active_cases = self.db_minor_case_active
+        completed_cases = set(
+            map(lambda el: el.minor_case_round.slug, self.db_minor_case_completed)
+        )
+
+        if len(completed_cases) < 2:
+            return
+
+        unsolved_cases = []
+        for case in active_cases:
+            if case.minor_case_round.slug not in completed_cases:
+                unsolved_cases.append(case.minor_case_round.slug)
+
+        print(len(completed_cases))
+        missing_count = 5 - len(unsolved_cases)
+
+        print(missing_count, len(unsolved_cases))
+        if missing_count > 0:
+            most_recent_incoming_event = (
+                MinorCaseIncomingEvent.objects.filter(team=self.team)
+                .order_by("-timestamp")
+                .first()
+            )
+
+            if (
+                most_recent_incoming_event
+                and not most_recent_incoming_event.final_vote
+                and most_recent_incoming_event.num_votes_allowed == missing_count
+            ):
+                return
+            elif (
+                most_recent_incoming_event
+                and not most_recent_incoming_event.final_vote
+                and most_recent_incoming_event.num_votes_allowed != missing_count
+            ):
+                # remove old one if needed
+                most_recent_incoming_event.delete()
+
+            # make a new one.
+            print("EVENT: making new ")
+            incoming_event = MinorCaseIncomingEvent.objects.create(
+                team=self, timestamp=timezone.now()
+            )
+            incoming_event.initialize(
+                num_cases=missing_count + 2, num_votes=missing_count
+            )
+
     @staticmethod
     def compute_unlocks(case_unlocks, context):
         if not context.hunt_has_started and not context.is_admin:
             return []
-        # computes extra unlocks that could happen due to time or local solve count
+
+        context.team.replenish_incoming_cases
 
         rounds_not_unlocked = Round.objects.order_by("order").exclude(
             slug__in=case_unlocks.keys()
@@ -1154,15 +1205,18 @@ class MinorCaseIncomingEvent(models.Model):
         print(f"EVENT: Incoming cases generated: {incoming_cases}")
         return incoming_cases
 
-    def initialize(self):
+    def initialize(self, num_cases=None, num_votes=None):
         if self.is_initialized:
             return
 
-        team_incoming_events = MinorCaseIncomingEvent.objects.filter(team=self.team)
-        number_of_cases = 4 if len(team_incoming_events) <= 2 else 3
-        self.num_votes_allowed = 1 if number_of_cases < 4 else 2
+        if num_cases is None or num_votes is None:
+            team_incoming_events = MinorCaseIncomingEvent.objects.filter(team=self.team)
+            num_cases = 4 if len(team_incoming_events) <= 2 else 3
+            num_votes = 1 if num_cases < 4 else 2
 
-        potential_cases = self.generate_incoming_cases(self.team, number_of_cases)
+        self.num_votes_allowed = num_votes
+
+        potential_cases = self.generate_incoming_cases(self.team, num_cases)
         if potential_cases is None:
             return
         self.incoming_cases.set(potential_cases)
@@ -1223,9 +1277,6 @@ class MinorCaseIncomingEvent(models.Model):
 
     def finalize_vote(self):
         """Finalizes the vote for the incoming event, and creates a MinorCaseVoteEvent"""
-
-        # TODO: fix this in the case where multiple cases need to be unlocked
-
         if self.final_vote:
             return [case.name for case in self.final_vote.selected_cases]
 
