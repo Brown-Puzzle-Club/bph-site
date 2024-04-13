@@ -141,6 +141,21 @@ body {
   animation: glow_subtle 4s ease-in-out infinite alternate;
 }
 /* // color: #6581c2; */
+@keyframes pulse-red-white {
+  0% {
+    color: red;
+  }
+  50% {
+    color: white;
+  }
+  100% {
+    color: red;
+  }
+}
+
+.animate-pulse-red-white {
+  animation: pulse-red-white 2s infinite;
+}
 
 @keyframes glow {
   from {

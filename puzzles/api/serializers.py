@@ -191,6 +191,7 @@ class SurveySerializer(serializers.ModelSerializer):
 
 class HintSerializer(serializers.ModelSerializer):
     puzzle = PuzzleBasicSerializer()
+
     class Meta:
         model = Hint
         fields = "__all__"
@@ -212,6 +213,7 @@ class EventSerializer(serializers.ModelSerializer):
             "message",
             "location",
             "is_final_runaround",
+            "requires_answer",
         ]
 
 

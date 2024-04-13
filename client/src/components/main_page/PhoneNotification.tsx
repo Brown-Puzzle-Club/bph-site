@@ -132,6 +132,7 @@ const PhoneNotificationContent = ({
   message,
   is_soon,
   is_solved,
+  answer,
   icon,
 }: PhoneNotificationProps) => {
   const event_time = new Date(timestamp || "");
@@ -159,29 +160,34 @@ const PhoneNotificationContent = ({
         {icon}
       </p>
       <div className="grid gap-[0.5] absolute text-black" style={{ top: "15%", left: "31%" }}>
-        <div className="flex items-center gap-1">
-          <h2 className="text-bold text-[0.2vw] font-bold tracking-tighter">{name}</h2>
-          <p className="text-[0.1vw]">
+        <div className="flex items-center space-x-[5px]">
+          <h2 className="text-bold text-[0.12vw] font-bold tracking-tighter">{name}</h2>
+          <p className="text-[0.1vw] text-right">
             {event_time.getDate()}th {event_time.getHours()}:
             {event_time.getMinutes().toLocaleString("en-US", { minimumIntegerDigits: 2 })}
           </p>
         </div>
-        <p className="text-[0.1vw] text-left">{location}</p>
+        <div className="max-w-[2vw]">
+          <p className="text-[0.08vw] text-left">{location}</p>
+          <p className="text-[0.08vw] text-left font-mono">{message}</p>
+        </div>
+
         {is_soon ? (
           <span className="text-[0.1vw] font-bold text-[white] bg-[red] text-center mr-[0.6vw] p-[0.02vw]">
             IN {mins_until} MINUTE
             {mins_until > 1 && "S"}
           </span>
-        ) : event_passed ? (
-          is_solved ? (
+        ) : (
+          event_passed &&
+          (is_solved ? (
             <FaCheck className="text-[#e06379] text-[0.2vw]" size={2} />
           ) : (
-            <span className="text-[0.1vw] font-bold text-[white] bg-[red] text-center mr-[0.6vw] p-[0.02vw]">
-              CLICK TO SUBMIT ANSWER
-            </span>
-          )
-        ) : (
-          <p className="text-[0.1vw] text-left">{message}</p>
+            answer && (
+              <span className="text-[0.1vw] font-bold text-[white] bg-[red] text-center mr-[0.6vw] p-[0.02vw]">
+                CLICK TO SUBMIT ANSWER
+              </span>
+            )
+          ))
         )}
       </div>
     </div>
@@ -201,7 +207,7 @@ const PhoneNotification = (props: PhoneNotificationProps) => {
   //   return null;
   // }
 
-  return event_passed ? (
+  return event_passed && props.answer ? (
     <EventCompletionDialogWrapper {...props}>
       <PhoneNotificationContent {...props} />
     </EventCompletionDialogWrapper>

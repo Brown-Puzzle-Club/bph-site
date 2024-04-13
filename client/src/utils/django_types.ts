@@ -171,6 +171,7 @@ const EventSchema = z.object({
   location: z.string(),
   is_final_runaround: z.boolean(),
   answer: z.string(),
+  requires_answer: z.boolean(),
 });
 interface InPersonEvent extends z.infer<typeof EventSchema> {}
 

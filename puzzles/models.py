@@ -1993,6 +1993,9 @@ class Event(models.Model):
     is_final_runaround = models.BooleanField(
         default=False, verbose_name=_("Is final runaround")
     )
+    requires_answer = models.BooleanField(
+        default=False, verbose_name=_("Requires answer")
+    )
     answer = models.CharField(max_length=255, verbose_name=_("Answer"), blank=True)
 
     class Meta:

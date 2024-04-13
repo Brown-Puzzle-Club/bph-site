@@ -28,7 +28,7 @@ const EVENT_EMOJI_LOOKUP: Record<string, string> = {
   interrogation: "🔎",
 };
 
-const SOON_AMOUNT_OF_HOURS = 2;
+const SOON_AMOUNT_OF_HOURS = 1;
 
 const Phone = () => {
   const { data: context } = useDjangoContext();
@@ -54,6 +54,32 @@ const Phone = () => {
     }
     return events_soon;
   }, [events]);
+
+  const unfinished_events = useMemo(() => {
+    if (!events || !context) {
+      return null;
+    }
+
+    const acc = [];
+    for (const event of events) {
+      if (
+        (!event.requires_answer &&
+          new Date(event.timestamp || "").getTime() > new Date().getTime()) ||
+        (event.requires_answer && !context.team_context.completed_events[event.slug])
+      ) {
+        acc.push(event);
+        console.log(event, event.timestamp);
+        console.log(
+          !event.requires_answer &&
+            new Date(event.timestamp || "").getTime() > new Date().getTime(),
+        );
+      }
+    }
+
+    return acc;
+  }, [events, context]);
+
+  // console.log(unfinished_events);
 
   if (!context || !events) {
     return null;
@@ -81,7 +107,7 @@ const Phone = () => {
               layout
             >
               <FaBell
-                className="absolute text-[2vw] text-[white] drop-shadow-[0_0_5px_black]"
+                className="absolute text-[2vw] text-[white] drop-shadow-[0_0_5px_black] animate-pulse-red-white"
                 style={{
                   top: "0%",
                   left: "80%",
@@ -91,15 +117,15 @@ const Phone = () => {
             </motion.div>
           )}
           <div
-            className="absolute grid place-items-center gap-[0.01rem] -translate-x-1/2 left-1/2 w-full"
+            className="absolute grid place-items-center gap-[0.05rem] -translate-x-1/2 left-1/2 w-full"
             style={{ top: "20%" }}
           >
             <p className="font-bold text-white font-sans text-[0.8vw]">
               {hours}:{minutes.toLocaleString("en-US", { minimumIntegerDigits: 2 })}
             </p>
-            {events && context.team_context.in_person && (
+            {unfinished_events && (
               <AnimatePresence>
-                {events.map(
+                {unfinished_events.map(
                   (event) =>
                     !context.team_context.completed_events[event.slug] && (
                       <motion.div
