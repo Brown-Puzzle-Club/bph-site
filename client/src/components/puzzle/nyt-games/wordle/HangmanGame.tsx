@@ -1,5 +1,10 @@
+import { useLocalStorage } from "@uidotdev/usehooks";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
+
+import { IDLE_TIMER } from "@/components/bluenoir/Bluenoir";
+import useBPHStore from "@/stores/useBPHStore";
+import { wordleFailDialogue } from "@/utils/bluenoir_dialogue";
 
 import { GuessTile } from "./GuessTile";
 import NumberTile from "./NumberTile";
@@ -53,6 +58,9 @@ const HangmanWordle = ({ setGameMode, setGuesses, gameState }: HangmanWordleProp
   const [solved, setSolved] = useState<[boolean, boolean, boolean]>([false, false, false]);
   const [prevGuesses, setPrevGuesses] = useState<Guess[]>([]);
   const [answers, setAnswers] = useState(["", "", "", ""]);
+  const [, setFails] = useLocalStorage("wordle-fails", 0);
+  const bluenoirRestart = useBPHStore((state) => state.restartIdleTimer);
+  const speak = useBPHStore((state) => state.bluenoirSpeak);
 
   useEffect(() => {
     setAnswers((prev) => {
@@ -154,7 +162,16 @@ const HangmanWordle = ({ setGameMode, setGuesses, gameState }: HangmanWordleProp
             });
           } else {
             setBoard((prev) => clearRow(selectedRow, prev, guessVerification, solved));
-            setGuesses((prev) => prev - 1);
+            setGuesses((prevNumGuesses) => {
+              if (prevNumGuesses === 1) {
+                setFails((prevNumFails) => {
+                  bluenoirRestart(speak, IDLE_TIMER * 1000);
+                  speak(wordleFailDialogue(prevNumFails));
+                  return prevNumFails + 1;
+                });
+              }
+              return prevNumGuesses - 1;
+            });
             setSelectedRow(Row.None);
             setPrevGuesses((prev) => [...prev, { guess: characters, row: selectedRow }]);
           }

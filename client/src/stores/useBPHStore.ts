@@ -59,8 +59,8 @@ interface BPHActions extends BluenoirActions, VotingActions {}
 const initialBluenoirState: BluenoirState = {
   bluenoirOpen: true,
   bluenoirDialogue: (() => getMainPageIdleDialogue())(),
-  bluenoirCurrentPosition: TOP_LEFT,
-  bluenoirPreviousPosition: TOP_LEFT,
+  bluenoirCurrentPosition: BOTTOM_LEFT,
+  bluenoirPreviousPosition: BOTTOM_LEFT,
   bluenoirCentered: false,
   bluenoirIdleDialogueFunction: getMainPageIdleDialogue,
   bluenoirIntervalId: null,

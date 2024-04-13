@@ -1,6 +1,9 @@
+import { useLocalStorage } from "@uidotdev/usehooks";
 import axios from "axios";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
+
+import useBPHStore from "@/stores/useBPHStore";
 
 import Tile from "./Tile";
 import type { Character } from "./utils";
@@ -63,6 +66,9 @@ const FinalWordle = ({ gameState, setGameState, setGuesses, numRows }: FinalWord
     currentRow: 0,
     activeTile: 0,
   });
+  const [, setFails] = useLocalStorage("wordle-fails", 0);
+  const bluenoirRestart = useBPHStore((state) => state.restartIdleTimer);
+  const speak = useBPHStore((state) => state.bluenoirSpeak);
 
   const keyPressHandler = (e: React.KeyboardEvent) => {
     if (gameState !== GameState.InProgress) {
@@ -117,7 +123,16 @@ const FinalWordle = ({ gameState, setGameState, setGuesses, numRows }: FinalWord
             if (guessVerification.every((v) => v === VerificationState.Correct)) {
               setGameState(GameState.Win);
             } else {
-              setGuesses((prev) => prev - 1);
+              setGuesses((prevNumGuesses) => {
+                if (prevNumGuesses === 1) {
+                  setFails((prevNumFails) => {
+                    bluenoirRestart(speak, IDLE_TIMER * 1000);
+                    speak(wordleFailDialogue(prevNumFails));
+                    return prevNumFails + 1;
+                  });
+                }
+                return prevNumGuesses - 1;
+              });
             }
 
             setWordleGameState((prev) => {
