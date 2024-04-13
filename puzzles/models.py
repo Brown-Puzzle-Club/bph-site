@@ -1330,6 +1330,7 @@ class MinorCaseIncomingEvent(models.Model):
 
         for case in most_voted_cases:
             from puzzles.api.serializers import RoundSerializer
+
             send_notification.send(
                 None,
                 notification_type="unlock",
@@ -1497,7 +1498,7 @@ class MajorCaseCompleted(models.Model):
 
         story_unlock = StorylineUnlock.objects.create(
             team=self.team,
-            storyline=f"major-case-complete-{num_major_case_solves}",
+            storyline=f"{self.major_case.slug}-complete",
             unlock_datetime=self.completed_datetime,
         )
         story_unlock.save()
