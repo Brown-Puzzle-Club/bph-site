@@ -3,7 +3,9 @@ import axios from "axios";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 
+import { IDLE_TIMER } from "@/components/bluenoir/Bluenoir";
 import useBPHStore from "@/stores/useBPHStore";
+import { wordleFailDialogue } from "@/utils/bluenoir_dialogue";
 
 import Tile from "./Tile";
 import type { Character } from "./utils";
