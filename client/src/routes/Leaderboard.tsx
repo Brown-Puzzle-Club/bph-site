@@ -61,6 +61,10 @@ export default function Leaderboard() {
   return (
     <div className="contact bg-slate-900 text-white h-[90vh] overscroll-contain overflow-hidden overflow-y-auto ">
       <h1 className="text-4xl font-bold text-center py-5">Teams</h1>
+      <h1 className="text-md text-center pb-5">
+        !! Due to our unconventional unlock structure, we will not be releasing stats until after
+        the hunt is over !!
+      </h1>
       <div className="tabs flex items-center justify-end gap-4 mx-[5%] md:mx-[20%] pr-10 z-10">
         <button
           onClick={() => setTab(LeaderboardTab.IN_PERSON)}

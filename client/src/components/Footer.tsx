@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 import { FaInstagram } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 import { cn } from "@/utils/utils";
 
@@ -24,6 +25,17 @@ export default function Footer({
           size={24}
         />
       </a>
+
+      <span className="text-muted-foreground pl-3">
+        <Link className="underline font-semibold hover:text-white transition-colors" to="/credits">
+          Hunt Credits
+        </Link>
+      </span>
+      <span className="text-muted-foreground px-3 border-r-2 border-muted-foreground">
+        <Link className="underline font-semibold hover:text-white transition-colors" to="/archive">
+          Past Hunts
+        </Link>
+      </span>
       <span className="text-muted-foreground pl-3">
         powered by{" "}
         <a

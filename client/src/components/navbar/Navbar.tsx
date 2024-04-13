@@ -1,6 +1,8 @@
 import * as React from "react";
 import { useState } from "react";
 import Countdown from "react-countdown";
+import { FaFolderOpen } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import type { HashLinkProps as LinkProps } from "react-router-hash-link";
 import { HashLink as Link } from "react-router-hash-link";
 import { BeatLoader } from "react-spinners";
@@ -20,9 +22,11 @@ import {
 import { useAuth } from "@/hooks/useAuth";
 import { useDjangoContext } from "@/hooks/useDjangoContext";
 import { useTheme } from "@/hooks/useTheme";
+import useBPHStore from "@/stores/useBPHStore";
 import { DEFAULT_THEME } from "@/utils/themes";
 import { cn } from "@/utils/utils";
 
+import { Button } from "../ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 import LoginNavbar from "./LoginNavbar";
 import TeamNavbar from "./TeamNavbar";
@@ -78,7 +82,6 @@ const IconItem = React.forwardRef<React.ElementRef<typeof Link>, Omit<LinkProps,
   ({ className, title, ...props }, ref) => {
     return (
       <li>
-        {/* TODO: make icon float on left side */}
         <NavigationMenuLink asChild>
           <Link
             smooth
@@ -154,6 +157,8 @@ const HuntLogo = () => {
 
 const NavbarLeft = () => {
   const { data: context } = useDjangoContext();
+  const navigate = useNavigate();
+  const setBluenoirStory = useBPHStore((state) => state.setStoryline);
 
   return (
     <div className="left flex justify-start w-1/3">
@@ -170,10 +175,11 @@ const NavbarLeft = () => {
                   <NavigationMenuLink asChild>
                     <Link
                       smooth
-                      className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
-                      to="/"
+                      className="group flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md hover:from-muted/60 hover:cursor-pointer"
+                      to={context?.hunt_context?.hunt_has_started ? "/eventpage" : "/"}
                     >
-                      <div className="mb-2 mt-4 text-xl font-bold">The Hunt</div>
+                      <FaFolderOpen className="group-hover:text-slate-400 text-4xl" />
+                      <div className="mb-2 mt-4 text-xl font-bold">Your Desk</div>
                       <p className="text-sm leading-tight text-muted-foreground">
                         {context?.hunt_context?.hunt_has_started ? (
                           "The hunt has started! Good luck!"
@@ -187,10 +193,18 @@ const NavbarLeft = () => {
                     </Link>
                   </NavigationMenuLink>
                 </li>
+                <IconItem
+                  to={context?.hunt_context.hunt_has_started ? "/puzzles" : "/"}
+                  title="List of Puzzles"
+                />
                 <IconItem to="/leaderboard" title="Leaderboard" />
+                <IconItem
+                  to={context?.hunt_context.hunt_has_started ? "/story" : "/"}
+                  title="Story So Far"
+                />
                 <IconItem to="/contact" title="Contact HQ" />
-                <IconItem to="/credits" title="Hunt Credits" />
-                <IconItem to="/archive" title="Past Hunts" />
+                {/* <IconItem to="/credits" title="Hunt Credits" /> */}
+                {/* <IconItem to="/archive" title="Past Hunts" /> */}
                 {/* <IconItem href="/club" title="Club Info" /> */}
               </ul>
             </NavigationMenuContent>
@@ -207,6 +221,19 @@ const NavbarLeft = () => {
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>
+          {context?.hunt_context.hunt_has_started && (
+            <NavigationMenuItem>
+              <Button
+                className="bg-[grey] hover:text-black font-bold"
+                onClick={() => {
+                  setBluenoirStory("tutorial");
+                  navigate("/eventpage");
+                }}
+              >
+                Tutorial
+              </Button>
+            </NavigationMenuItem>
+          )}
         </NavigationMenuList>
       </NavigationMenu>
     </div>

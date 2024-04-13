@@ -70,6 +70,71 @@ export interface Story {
 }
 
 export const BluenoirStories: Record<string, Story> = {
+  tutorial: {
+    slug: "tutorial",
+    dialogues: [
+      {
+        text: "Below me on the desk are your active 'Minor Cases'. We're collecting criminal information into packets for your whole lot to puzzle through.",
+        reaction: BluenoirReaction.NEUTRAL,
+      },
+      {
+        text: "You solve a Minor Case by answering a question related to the overarching crime. I've started color coding the folders to help a bit.",
+        reaction: BluenoirReaction.NEUTRAL,
+      },
+      {
+        text: "Solved Minor Cases will go to the left, and you will periodically see incoming cases on the right. Be sure to check here after every case solve for new choices.",
+        reaction: BluenoirReaction.NEUTRAL,
+      },
+      {
+        text: "We believe in free will at BIB so we are giving your team a couple minutes to choose which to take up next.",
+        reaction: BluenoirReaction.NEUTRAL,
+      },
+      {
+        text: "And over HERE is where -",
+        reaction: BluenoirReaction.HAPPY,
+      },
+      {
+        text: "*RING RING*",
+        reaction: BluenoirReaction.PHONE,
+      },
+      {
+        text: "Oh, hold on, kid. I gotta take this.",
+        reaction: BluenoirReaction.ANGRY,
+      },
+      {
+        text: "*Click*",
+        reaction: BluenoirReaction.PHONE,
+      },
+      {
+        text: "Hello? Yeah, I'm with the kid now. What's going on?",
+        reaction: BluenoirReaction.NEUTRAL,
+      },
+      {
+        text: "... They did WHAT? With WHOM? In his WHERE? With your mother's HUH???",
+        reaction: BluenoirReaction.SURPRISED,
+      },
+      {
+        text: "... *Sigh*",
+        reaction: BluenoirReaction.TIRED,
+      },
+      {
+        text: "Well, kid, take everything I just said and throw it out the window. Looks like we'll be seeing some action together after all.",
+        reaction: BluenoirReaction.NEUTRAL,
+      },
+      {
+        text: "Some nancy's gone haywire and committed a string of murders across town, and all these other mooks are too preoccupied dipping the bills to deal with it.",
+        reaction: BluenoirReaction.ANGRY,
+      },
+      {
+        text: "... And, as it turns out, all interns are entitled to at least one macho hardboiled spyguy moment, or else the union is gonna be all up our asses.",
+        reaction: BluenoirReaction.EMBARRASSED,
+      },
+      {
+        text: "You can enter the case by clicking the folder down below. Just stick close to me, and you should be fine. And try not to mess anything up.",
+        reaction: BluenoirReaction.NEUTRAL,
+      },
+    ],
+  },
   "main-page-intro": {
     slug: "main-page-intro",
     title: "Introduction",

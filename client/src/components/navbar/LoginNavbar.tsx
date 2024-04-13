@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { BeatLoader } from "react-spinners";
 
 import { useAuth } from "@/hooks/useAuth";
+import { useDjangoContext } from "@/hooks/useDjangoContext";
 
 import { Button } from "../ui/button";
 import {
@@ -27,6 +28,8 @@ export default function LoginNavbar() {
   const { login } = useAuth();
   const navigate = useNavigate();
 
+  const { data: context } = useDjangoContext();
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormProgress(true);
@@ -48,7 +51,7 @@ export default function LoginNavbar() {
 
   return (
     <NavigationMenuList>
-      {window.location.pathname !== "/register" && (
+      {window.location.pathname !== "/register" && !context?.hunt_context.hunt_has_started && (
         <NavigationMenuItem>
           {/* send to /register page */}
           <Button

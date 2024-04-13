@@ -46,6 +46,14 @@ def logout_action(request: Request) -> Response:
 
 @api_view(["POST"])
 def register_action(request):
+
+    context = request.context
+    if context.hunt_has_started:
+        return Response(
+            {"error": "Registration has closed. Please contact an admin."},
+            status=400,
+        )
+
     serializer = UserRegistrationSerializer(data=request.data)
 
     if serializer.is_valid():
@@ -264,7 +272,7 @@ def handle_answer(
             None,
             notification_type="solve",
             data={"name": puzzle.name},
-            team=django_context.team.id
+            team=django_context.team.id,
         )
 
         if not request_context.hunt_is_over:
