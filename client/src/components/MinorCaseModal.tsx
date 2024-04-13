@@ -1,6 +1,6 @@
 // Modal.tsx
 import type React from "react";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 
 import solvedstamp from "@/assets/main_page/folders/SOLVED.png";
@@ -45,10 +45,6 @@ const MinorCaseModal: React.FC<ModalProps> = ({
   action,
 }) => {
   const { data: context } = useDjangoContext();
-
-  useEffect(() => {
-    console.log(selectedCase);
-  }, [selectedCase]);
 
   const solution = useMemo(() => {
     if (!selectedCase || !context) {

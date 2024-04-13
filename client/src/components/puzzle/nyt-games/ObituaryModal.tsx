@@ -42,7 +42,6 @@ const SubscriptionModal = ({ setIsModalOpen, setCorrectAnswer }: SubscriptionMod
           position: "top-center",
         });
       }
-      console.log(data);
     } catch (error) {
       console.error("Error fetching data:", error);
       toast.error("An error has occured.", { duration: 5000, position: "top-center" });

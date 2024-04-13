@@ -249,8 +249,6 @@ const NavbarRight = () => {
   const { isLoading, data: teamData } = team;
   const { data: context } = useDjangoContext();
 
-  console.log(context?.team_context.num_hints_remaining);
-
   return (
     <div className="right flex justify-end w-1/3">
       <NavigationMenuRight>

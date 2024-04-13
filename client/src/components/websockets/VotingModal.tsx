@@ -3,6 +3,7 @@ import { toast } from "react-hot-toast";
 import { useTimer } from "react-timer-hook";
 import type { SendJsonMessage } from "react-use-websocket/dist/lib/types";
 
+import useBPHStore from "@/stores/useBPHStore";
 import type { VotingInfo } from "@/utils/django_types";
 
 import VotingModal2 from "./VotingModal2";
@@ -10,12 +11,12 @@ import VotingModal2 from "./VotingModal2";
 interface VotingModalProps {
   votingInfo: VotingInfo | null;
   sendJsonMessage: SendJsonMessage;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
 }
 
-const VotingModal = ({ sendJsonMessage, votingInfo, open, onOpenChange }: VotingModalProps) => {
+const VotingModal = ({ sendJsonMessage, votingInfo }: VotingModalProps) => {
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+  const onOpenChange = useBPHStore((state) => state.setVotingModalOpen);
+
   const updateVote = useCallback(
     (option: string) => {
       if (!votingInfo) return;
@@ -51,7 +52,6 @@ const VotingModal = ({ sendJsonMessage, votingInfo, open, onOpenChange }: Voting
 
   useEffect(() => {
     if (votingInfo && votingInfo.expiration_time !== null) {
-      console.log(new Date(votingInfo.expiration_time));
       restart(new Date(votingInfo.expiration_time));
     } else {
       pause();
@@ -76,8 +76,6 @@ const VotingModal = ({ sendJsonMessage, votingInfo, open, onOpenChange }: Voting
     <VotingModal2
       seconds={seconds}
       isRunning={isRunning}
-      open={open}
-      onOpenChange={onOpenChange}
       votingInfo={votingInfo}
       sendJsonMessage={sendJsonMessage}
       votedCases={selectedOptions}

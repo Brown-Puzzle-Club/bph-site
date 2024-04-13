@@ -6,17 +6,14 @@ import type { registerFormSchema } from "@/routes/Register";
 import type { APIResponse, Token, User, UserTeam } from "@/utils/django_types";
 
 const getMyTeam = async () => {
-  console.log("getMyTeam");
   const response = await axios.get<APIResponse<UserTeam>>("/api/my-team/");
   return response.data.success ? response.data.data : null;
 };
 const getMyToken = async () => {
-  console.log("getMyToken");
   const response = await axios.get<APIResponse<Token>>("/api/my-token/");
   return response.data.success ? response.data.data["key"] : null;
 };
 const getUser = async () => {
-  console.log("getUser");
   const response = await axios.get<APIResponse<User>>("/api/user/");
   return response.data.success ? response.data.data : null;
 };

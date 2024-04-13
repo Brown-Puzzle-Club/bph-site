@@ -9,25 +9,12 @@ interface CaseVotingProps {
   sendJsonMessage: SendJsonMessage;
   readyState: ReadyState;
   votingInfo: VotingInfo;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
 }
 
-const CaseVoting = ({
-  sendJsonMessage,
-  readyState,
-  votingInfo,
-  open,
-  onOpenChange,
-}: CaseVotingProps) => {
+const CaseVoting = ({ sendJsonMessage, readyState, votingInfo }: CaseVotingProps) => {
   return (
     readyState == WebSocket.OPEN && (
-      <VotingModal
-        sendJsonMessage={sendJsonMessage}
-        votingInfo={votingInfo}
-        open={open}
-        onOpenChange={onOpenChange}
-      />
+      <VotingModal sendJsonMessage={sendJsonMessage} votingInfo={votingInfo} />
     )
   );
 };

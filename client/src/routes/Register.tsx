@@ -74,7 +74,6 @@ export const registerFormSchema = z
   )
   .refine(
     (data) => {
-      console.log("refining phone number:", data.phone_number);
       if (data.in_person) {
         return (
           (data.phone_number ?? "") !== "" &&
@@ -90,9 +89,7 @@ export const registerFormSchema = z
   )
   .refine(
     (data) => {
-      console.log("refining where to find:", data);
       if (data.in_person && data.classroom_need === false) {
-        console.log(data.where_to_find !== "");
         return data.where_to_find && data.where_to_find !== "";
       }
       return true;

@@ -217,7 +217,6 @@ export const clearRow = (
   const newSolved = [...solved];
   newSolved[selectedRow] =
     newSolved[selectedRow] || verificationGuess.every((v) => v === VerificationState.Correct);
-  console.log(newSolved);
 
   newBoard.forEach((_character, i) => {
     if (idToRow(i).includes(selectedRow)) {

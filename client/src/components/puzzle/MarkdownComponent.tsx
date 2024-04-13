@@ -69,7 +69,6 @@ export const MarkdownComponents: object = {
       );
     }
     if (["drive", "d"].every((el) => props.href.includes(el))) {
-      console.log(parseStyle(props.children));
       return (
         <div className="ContentWrapper">
           <iframe

@@ -44,7 +44,6 @@ export default function InternalCharacters({
       document.getElementById("selected-character-div")?.classList.remove("opacity-100");
     }
   }, [selectedInternalCharacter]);
-  // console.log(selectedInternalCharacter)
 
   const InternalCharacterAsset = ({
     imageSrc,

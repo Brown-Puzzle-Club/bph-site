@@ -69,7 +69,6 @@ function Connections() {
 
   const submitGroups = () => {
     const sanitizedWords = selectedWords.map((word) => word.replace(" N/A", ""));
-    console.log(sanitizedWords);
     setSubmitting(true);
     axios
       .get(`/api/puzzle/nyt/connections-guess/${currRound}/${sanitizedWords.join(",")}`)
@@ -98,7 +97,6 @@ function Connections() {
           }
           setWords(groupedWords.flat());
         } else {
-          console.log("No matching category found");
           alert("no match! :(");
           // Handle case when no matching category is found
         }

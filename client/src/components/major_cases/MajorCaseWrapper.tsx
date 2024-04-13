@@ -16,15 +16,12 @@ function MajorCaseWrapper({ children }: { children: ReactNode }) {
   const majorCaseSlug = pathname.split("/").pop();
   useEffect(() => {
     const url = `/api/major-case/${majorCaseSlug}`;
-    console.log(`fetching major case from ${url}`);
     axios.get(url).then((response) => {
       const major_case = response.data as MajorCase;
-      console.log(major_case);
       // jank fix to match regular answer submission
       major_case.puzzle = { name: major_case.name, slug: majorCaseSlug } as Puzzle;
       major_case.puzzle.submissions = major_case.submissions;
       setMajorCase(major_case);
-      console.log(major_case);
     });
   }, [majorCaseSlug, pathname]);
 

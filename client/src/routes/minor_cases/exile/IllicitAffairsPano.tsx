@@ -68,6 +68,13 @@ export default function IllicitAffairsPano() {
           (or in what region), but i do know he wasn&apos;t with his wife.
         </p>
       </div>
+      <div className="flex justify-center h-full my-5 border border-slate-500 rounded lg:mx-[35vw] md:mx-[25vw] mx-[15vw] max-h-[12rem] ">
+        <p className="rounded p-4 italic text-center text-sm">
+          When you know what region each panorama refers to, you should type it into the answer
+          submission box above. If you are correct, you will receive additional information (either
+          &apos;RED&apos; or &apos;WHITE&apos;). Guess limits are turned off for this puzzle.
+        </p>
+      </div>
       <img
         className="flex self-center h-full lg:mx-[43vw] md:mx-[25vw] mx-[15vw] max-h-[12rem]"
         src={postIt}

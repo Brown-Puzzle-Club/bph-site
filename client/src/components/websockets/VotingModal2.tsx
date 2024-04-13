@@ -1,19 +1,13 @@
 import { useState } from "react";
 import type { SendJsonMessage } from "react-use-websocket/dist/lib/types";
 
+import useBPHStore from "@/stores/useBPHStore";
 import type { Round, VotingInfo } from "@/utils/django_types";
 import { cn } from "@/utils/utils";
 
 import MinorCaseFolder from "../MinorCaseFolder";
 import MinorCaseModal from "../MinorCaseModal";
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "../ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "../ui/dialog";
 import VotingIndicators from "./VotingIndicators";
 
 interface VotingModalProps {
@@ -21,9 +15,7 @@ interface VotingModalProps {
   isRunning: boolean;
   votingInfo: VotingInfo;
   sendJsonMessage: SendJsonMessage;
-  open: boolean;
   votedCases: string[];
-  onOpenChange: (open: boolean) => void;
   updateVote: (round: string) => void;
 }
 
@@ -31,16 +23,15 @@ const VotingModal = ({
   seconds,
   isRunning,
   votingInfo,
-  open,
-  onOpenChange,
   votedCases,
   updateVote,
 }: VotingModalProps) => {
   const [selectedCase, setSelectedCase] = useState<Round | null>(null);
+  const open = useBPHStore((state) => state.votingModalOpen);
+  const onOpenChange = useBPHStore((state) => state.setVotingModalOpen);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogTrigger>VOTE ON A NEW CASE</DialogTrigger>
       <DialogContent className="max-w-[60%] aspect-[16/9] max-h-none">
         <DialogHeader>
           <DialogTitle className="text-[2vw]">
@@ -91,27 +82,3 @@ const VotingModal = ({
 };
 
 export default VotingModal;
-
-// cases
-// :
-// What Happened to Mr. Cat
-// :
-// {desc: 'desc!!!', voteCount: 1}
-// sd-mc-2
-// :
-// {desc: '', voteCount: 0}
-// sd-mc-3
-// :
-// {desc: '', voteCount: 3}
-// [[Prototype]]
-// :
-// Object
-// expiration_time
-// :
-// null
-// id
-// :
-// 80
-// max_choices
-// :
-// 1

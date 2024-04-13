@@ -25,7 +25,6 @@ export default function SocialDeduction() {
   const { setTheme } = useTheme();
 
   useEffect(() => {
-    console.log("setting the theme");
     setTheme(BROWN_THEME);
   });
 

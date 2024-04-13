@@ -1,4 +1,4 @@
-import { FileQuestion, PartyPopper, PcCase } from "lucide-react";
+import { FileQuestion, PartyPopper, PcCase, Vote } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { Link } from "react-router-dom";
@@ -75,6 +75,7 @@ const useSocket = (path: string, callbacks: SocketCallbacks | undefined = undefi
   });
   const { token } = useAuth();
   const dispatchBluenoir = useBPHStore((state) => state.setStoryline);
+  const setVotingModalOpen = useBPHStore((state) => state.setVotingModalOpen);
 
   const protocol = window.location.protocol.includes("https") ? "wss" : "ws";
 
@@ -87,12 +88,17 @@ const useSocket = (path: string, callbacks: SocketCallbacks | undefined = undefi
   useEffect(() => {
     if (!lastJsonMessage) return;
 
-    console.log(lastJsonMessage);
-
     const parsedMessage = NotificationSchema.parse(lastJsonMessage);
     switch (parsedMessage.type) {
       case "vote": {
         setVotingInfo((parsedMessage.data as VoteNotification).data);
+        toast.custom(
+          <NotificationToast Icon={Vote}>
+            <h2 className="font-bold">New Voting Round!</h2>
+            <button onClick={() => setVotingModalOpen(true)}>Click here to vote now.</button>
+          </NotificationToast>,
+          { duration: 5 * 60 * 1000 },
+        );
         break;
       }
       case "hint": {
@@ -142,7 +148,7 @@ const useSocket = (path: string, callbacks: SocketCallbacks | undefined = undefi
         console.warn("Unknown message", parsedMessage);
         break;
     }
-  }, [dispatchBluenoir, lastJsonMessage]);
+  }, [dispatchBluenoir, lastJsonMessage, setVotingModalOpen]);
 
   return { sendJsonMessage, readyState, votingInfo };
 };

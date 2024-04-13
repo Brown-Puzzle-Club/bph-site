@@ -86,12 +86,10 @@ const AnswerSubmitRedThread = ({
     const cause = sanitize_answer(values.cause);
     const answer = `${cause}ON${location}ST`;
     const submitUrl = `/api/puzzle/${puzzle_slug}/submit?answer=${answer}`;
-    console.log(`submitting answer to ${submitUrl}`);
     setSubmitting(true);
     axios
       .post(submitUrl)
       .then((response) => {
-        console.log(response);
         if (response.data.status === "correct") {
           toast.success("Correct answer!", { duration: 10 * 1000, position: "top-center" });
         } else {
@@ -112,7 +110,6 @@ const AnswerSubmitRedThread = ({
         return response;
       })
       .catch((error) => {
-        console.log(error);
         if (error.response.data.error == "Answer submission failed") {
           toast.error("Answer already submitted.", {
             duration: 5000,
@@ -203,12 +200,10 @@ const AnswerSubmitRegular = ({
   const submit_answer = async (values: z.infer<typeof answerSchema>) => {
     const answer = sanitize_answer(values.answer);
     const submitUrl = `/api/puzzle/${puzzle_slug}/submit?answer=${answer}`;
-    console.log(`submitting answer to ${submitUrl}`);
     setSubmitting(true);
     axios
       .post(submitUrl)
       .then((response) => {
-        console.log(response);
         if (response.data.status === "correct") {
           toast.success("Correct answer!", { duration: 10 * 1000, position: "top-center" });
         } else if (response.data.messages.length > 0) {
@@ -242,7 +237,6 @@ const AnswerSubmitRegular = ({
         return response;
       })
       .catch((error) => {
-        console.log(error);
         if (error.response.data.error == "Answer submission failed") {
           toast.error("Answer already submitted.", {
             duration: 5000,

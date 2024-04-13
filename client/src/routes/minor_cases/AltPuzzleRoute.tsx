@@ -10,10 +10,9 @@ import Wordle from "./nyt-games/Wordle";
 
 // import PennyPDF from "./penny/PennyPDF";
 
-export function ALT_PUZZLE_ROUTES(puzzle: Puzzle): {
+export function ALT_PUZZLE_ROUTES(): {
   [key: string]: JSX.Element;
 } {
-  console.log(puzzle);
   // if any puzzle has no markdown, it will attempt to route using this
   // puzzle_slug -> JSX.Element
   return {
@@ -29,5 +28,5 @@ export function ALT_PUZZLE_ROUTES(puzzle: Puzzle): {
 }
 
 export default function AltPuzzleRoute({ puzzle }: { puzzle: Puzzle }) {
-  return <div className="puzzle-content">{ALT_PUZZLE_ROUTES(puzzle)[puzzle.slug]}</div>;
+  return <div className="puzzle-content">{ALT_PUZZLE_ROUTES()[puzzle.slug]}</div>;
 }

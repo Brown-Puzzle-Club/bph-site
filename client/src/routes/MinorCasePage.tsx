@@ -85,8 +85,6 @@ function MinorCasePage() {
     }
   }, [minorCaseSlug, context?.team_context]);
 
-  console.log(majorCaseSlug);
-
   const unlocked_puzzles: PuzzleAnswer[] | null = useMemo(() => {
     if (!majorCaseSlug || !minorCaseSlug || !context?.team_context) {
       return null;

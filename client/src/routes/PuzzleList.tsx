@@ -21,8 +21,6 @@ export default function PuzzleList() {
     MajorCaseEnum.COLORED_THREAD,
   );
 
-  console.log(curTab);
-
   const handleTabChange = (tab: SetStateAction<string>) => {
     setTab(tab as MajorCaseEnum);
   };

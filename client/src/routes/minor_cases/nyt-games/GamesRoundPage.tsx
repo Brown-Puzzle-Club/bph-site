@@ -24,8 +24,6 @@ export default function GamesRoundPage({ context }: { context: DjangoContext }) 
     return getUnlockedPuzzles(MajorCaseEnum.SOCIAL_DEDUCTION, "nyt", context);
   }, [context]);
 
-  console.log("puzz:", unlocked_puzzles);
-
   const obituary_answer = unlocked_puzzles?.find((p) => p.puzzle.name == "The Obituary")?.answer;
   const connections_answer = unlocked_puzzles?.find((p) => p.puzzle.name == "Connection")?.answer;
   const letterboxed_answer = unlocked_puzzles?.find((p) => p.puzzle.name == "Lettertroxd")?.answer;

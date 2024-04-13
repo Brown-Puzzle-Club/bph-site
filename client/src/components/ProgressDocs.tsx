@@ -26,7 +26,6 @@ export default function ProgressDocs({ children }: { children: ReactNode }) {
 
     headings.forEach((heading) => {
       const rect = heading.getBoundingClientRect();
-      // console.log(i, rect)
       if (
         rect.x >= 0 &&
         rect.y >= 0 &&

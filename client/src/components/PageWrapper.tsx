@@ -1,4 +1,3 @@
-import { cloneElement, useState } from "react";
 import { Toaster } from "react-hot-toast";
 
 import Footer from "@/components/Footer";
@@ -10,9 +9,8 @@ import { DEFAULT_THEME } from "@/utils/themes";
 import Bluenoir from "./bluenoir/Bluenoir";
 import CaseVoting from "./websockets/CaseVoting";
 
-export const PageWrapper = ({ route }: { route: React.ReactElement }) => {
+export const PageWrapper = ({ route }: { route: React.ReactNode }) => {
   const { theme } = useTheme();
-  const [votingOpen, setVotingOpen] = useState(false);
 
   const { sendJsonMessage, readyState, votingInfo } = useSocket("ws/puzzles", {
     onOpen: () => {
@@ -41,7 +39,7 @@ export const PageWrapper = ({ route }: { route: React.ReactElement }) => {
           backgroundColor: theme.content_color ? theme.content_color : DEFAULT_THEME.content_color,
         }}
       >
-        {cloneElement(route, { setVotingOpen: (open: boolean) => setVotingOpen(open) })}
+        {route}
       </div>
       <Toaster
         position="top-right"
@@ -56,8 +54,6 @@ export const PageWrapper = ({ route }: { route: React.ReactElement }) => {
         sendJsonMessage={sendJsonMessage}
         readyState={readyState}
         votingInfo={votingInfo}
-        open={votingOpen}
-        onOpenChange={(open) => setVotingOpen(open)}
       />
       <Footer
         extraStyle={{

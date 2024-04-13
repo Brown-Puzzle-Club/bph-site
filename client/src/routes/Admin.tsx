@@ -20,7 +20,6 @@ export default function AdminPanel() {
 
   const giveToTestSolver = (round: Round) => {
     // Implement your API call to give the round to testsolver
-    console.log(`Give round ${round.name} to testsolver.`);
     axios.post(`/api/unlock-case/${round.slug}`).then((response) => {
       console.log(response);
     });

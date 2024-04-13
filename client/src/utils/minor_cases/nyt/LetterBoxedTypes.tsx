@@ -184,13 +184,10 @@ export class Solution {
   }
 
   public attemptPushLetter(idx: number): boolean {
-    console.log("attemptPushLetter: " + this.letterDict.get(idx)!.letter);
     // Pushes idx to the last list in solution
     this.solution[this.solution.length - 1].push(idx);
-    console.log(this.solution);
     // Checks if the letters are valid
     if (!this.checkLetterValidity()) {
-      console.log("letter invalid");
       // If not, pop the letter off
       this.solution[this.solution.length - 1].pop();
       return false;
@@ -251,7 +248,6 @@ export class Solution {
         this.setAnswer("An error occurred, contact HQ");
       }
     } else {
-      console.log("submitting");
       this.setAnswer("Solved!");
       const url = "/api/puzzle/nyt/letterboxed";
       const data = {
@@ -260,7 +256,6 @@ export class Solution {
       };
       const response = await axios.post(url, data);
       // get response
-      console.log(response);
       if (response.data.correct) {
         this.setAnswer(response.data.answer);
       } else {

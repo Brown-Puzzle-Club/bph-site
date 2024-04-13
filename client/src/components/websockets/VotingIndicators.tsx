@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-
 import VotingIndicator from "./VotingIndicator";
 
 interface VotingIndicatorsProps {
@@ -7,10 +5,6 @@ interface VotingIndicatorsProps {
 }
 
 const VotingIndicators = ({ numVotes }: VotingIndicatorsProps) => {
-  useEffect(() => {
-    console.log(numVotes);
-  }, [numVotes]);
-
   return (
     <div className="flex justify-center space-x-2">
       {Array(numVotes)

@@ -121,7 +121,6 @@ const useBPHStore = create<BPHState & BPHActions>()(
       return orderedSnapPoints[0];
     },
     toggleBluenoirCentered: () => {
-      console.log("toggling centered");
       set((state) => ({ bluenoirCentered: !state.bluenoirCentered }));
     },
     startIdleTimer: (callback, duration) => {

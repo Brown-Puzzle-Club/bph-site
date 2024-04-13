@@ -68,18 +68,11 @@ const Phone = () => {
         (event.requires_answer && !context.team_context.completed_events[event.slug])
       ) {
         acc.push(event);
-        console.log(event, event.timestamp);
-        console.log(
-          !event.requires_answer &&
-            new Date(event.timestamp || "").getTime() > new Date().getTime(),
-        );
       }
     }
 
     return acc;
   }, [events, context]);
-
-  // console.log(unfinished_events);
 
   if (!context || !events) {
     return null;

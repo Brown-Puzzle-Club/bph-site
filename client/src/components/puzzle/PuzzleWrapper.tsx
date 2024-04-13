@@ -128,7 +128,7 @@ function PuzzleWrapper({ puzzle_slug }: { puzzle_slug: string }) {
         <p className="text-center py-4">Completion of the game will solve this puzzle</p>
       )}
       <Errata errata={puzzle.errata} />
-      {ALT_PUZZLE_ROUTES(puzzle)[puzzle_slug] ? (
+      {ALT_PUZZLE_ROUTES()[puzzle_slug] ? (
         <AltPuzzleRoute puzzle={puzzle} />
       ) : (
         <div className="flex flex-col items-center">
