@@ -118,7 +118,7 @@ const EventCompletionDialogWrapper = ({
   return (
     <Dialog>
       <DialogTrigger onClick={(e) => e.stopPropagation()}>{children}</DialogTrigger>
-      <DialogContent className="dark">
+      <DialogContent className="dark w-11/13">
         <EventAnswerSubmission {...props} />
       </DialogContent>
     </Dialog>
@@ -132,7 +132,7 @@ const PhoneNotificationContent = ({
   message,
   is_soon,
   is_solved,
-  answer,
+  requires_answer,
   icon,
 }: PhoneNotificationProps) => {
   const event_time = new Date(timestamp || "");
@@ -182,7 +182,7 @@ const PhoneNotificationContent = ({
           (is_solved ? (
             <FaCheck className="text-[#e06379] text-[0.2vw]" size={2} />
           ) : (
-            answer && (
+            requires_answer && (
               <span className="text-[0.1vw] font-bold text-[white] bg-[red] text-center mr-[0.6vw] p-[0.02vw]">
                 CLICK TO SUBMIT ANSWER
               </span>
@@ -207,7 +207,7 @@ const PhoneNotification = (props: PhoneNotificationProps) => {
   //   return null;
   // }
 
-  return event_passed && props.answer ? (
+  return event_passed && props.requires_answer ? (
     <EventCompletionDialogWrapper {...props}>
       <PhoneNotificationContent {...props} />
     </EventCompletionDialogWrapper>
