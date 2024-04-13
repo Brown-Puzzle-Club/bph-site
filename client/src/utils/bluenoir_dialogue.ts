@@ -390,7 +390,7 @@ export const BluenoirStories: Record<string, Story> = {
         reaction: BluenoirReaction.SMUG,
       },
       {
-        text: "Well, I'll let you stew on it a little longer! I'm coming by to talk to you in person. Expect a call from me.",
+        text: "I'll let you stew on it a little longer. I'm coming by to talk you through some theories in person. Expect a call from me.",
         reaction: BluenoirReaction.EXCITED,
       },
     ],
@@ -612,7 +612,7 @@ export const BluenoirStories: Record<string, Story> = {
     dialogues: [
       {
         text: "Let's all raise a glass to the greatest games writer of our generation.",
-        reaction: BluenoirReaction.SMUG,
+        reaction: BluenoirReaction.HAPPY,
       },
     ],
   },
@@ -638,7 +638,7 @@ export const BluenoirStories: Record<string, Story> = {
     dialogues: [
       {
         text: "Ah, I remember now! Gourd Wilson used to be a good friend of mine.",
-        reaction: BluenoirReaction.SMUG,
+        reaction: BluenoirReaction.HAPPY,
       },
     ],
   },
@@ -655,8 +655,8 @@ export const BluenoirStories: Record<string, Story> = {
       },
     ],
   },
-  "blues-clues-case-solve": {
-    slug: "blues-clues-case-solve",
+  "microinfluencer-case-solve": {
+    slug: "microinfluencer-case-solve",
     dialogues: [
       {
         text: "Nice work! I doubt even Carberry himself could've figured that one out like you did.",
@@ -667,7 +667,7 @@ export const BluenoirStories: Record<string, Story> = {
         reaction: BluenoirReaction.TIRED,
       },
       {
-        text: "Everybody likes to talk about him like he was the most brilliant detective to ever live, or something, but he really just had a great yap. I was the one who did most of the actual rough-and-tumble work.",
+        text: "Everybody likes to talk about him like he was the most brilliant detective to ever live, or something, but really he was just a serial yapper. I was the one who did most of the actual rough-and-tumble work.",
         reaction: BluenoirReaction.NEUTRAL,
       },
       {
@@ -689,6 +689,15 @@ export const BluenoirStories: Record<string, Story> = {
       {
         text: "Nothing keeps a bear humble like a smartass rookie by his side.",
         reaction: BluenoirReaction.SMUG,
+      },
+    ],
+  },
+  "blues-clues-case-solve": {
+    slug: "blues-clues-case-solve",
+    dialogues: [
+      {
+        text: "So it's a blue, anthropomorphic animal solving clues with their human companion? Sheesh ... these guys need to get their own rub.",
+        reaction: BluenoirReaction.NEUTRAL,
       },
     ],
   },
@@ -787,11 +796,11 @@ const MAIN_PAGE_IDLE: Dialogue[] = [
   },
   {
     text: "I love working at the B.I.B.",
-    reaction: BluenoirReaction.SMUG,
+    reaction: BluenoirReaction.HAPPY,
   },
   {
     text: "My fedora collection knows no bounds",
-    reaction: BluenoirReaction.SMUG,
+    reaction: BluenoirReaction.NEUTRAL,
   },
   {
     text: "I'm blue da ba dee da ba di",
@@ -799,19 +808,19 @@ const MAIN_PAGE_IDLE: Dialogue[] = [
   },
   {
     text: "*puffs cigar* ",
-    reaction: BluenoirReaction.SMUG,
+    reaction: BluenoirReaction.NEUTRAL,
   },
   {
     text: "*coughs in lung cancer*",
-    reaction: BluenoirReaction.SMUG,
+    reaction: BluenoirReaction.ANGRY,
   },
   {
     text: "Back in my day, we didn't have all these new-fangled computers to do our jobs for us",
-    reaction: BluenoirReaction.SMUG,
+    reaction: BluenoirReaction.ANGRY,
   },
   {
     text: "Kids these days have it too easy",
-    reaction: BluenoirReaction.SMUG,
+    reaction: BluenoirReaction.NEUTRAL,
   },
   {
     text: "Are you lost babygirl",
@@ -819,19 +828,19 @@ const MAIN_PAGE_IDLE: Dialogue[] = [
   },
   {
     text: "In case you haven't noticed, I'm weird. I'm a weirdo. I don't fit in. And I don't want to fit in. Have you ever seen me without this stupid fedora on? That's weird.",
-    reaction: BluenoirReaction.SMUG,
+    reaction: BluenoirReaction.NEUTRAL,
   },
   {
     text: "Pretty dark and stormy out tonight ...",
-    reaction: BluenoirReaction.SMUG,
+    reaction: BluenoirReaction.NEUTRAL,
   },
   {
     text: "Wonder who the next head detective's gonna be, now that Carberry's gone.",
-    reaction: BluenoirReaction.SMUG,
+    reaction: BluenoirReaction.THINKING,
   },
   {
     text: "Noir slang, etc.",
-    reaction: BluenoirReaction.SMUG,
+    reaction: BluenoirReaction.NEUTRAL,
   },
   {
     text: "BIB wants me, rookies fear me",
@@ -843,69 +852,65 @@ const MAIN_PAGE_IDLE_CASE_COUNT: Record<0 | 1 | 2 | 3, Dialogue[]> = {
   0: [
     {
       text: "Tch ...",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.ANGRY,
     },
     {
       text: "Hmm ...",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.THINKING,
     },
     {
       text: "What are you just standing around for? We have work to do.",
-      reaction: BluenoirReaction.SMUG,
-    },
-    {
-      text: "You wanna know who I am, kiddo? Yeah, sometimes so do I...",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.ANGRY,
     },
     {
       text: "What are you lookin' at?",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.ANGRY,
     },
     {
       text: "Buzz off.",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.NEUTRAL,
     },
     {
       text: "Get a move on.",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.ANGRY,
     },
     {
       text: "They don't pay me near enough to deal with rookies.",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.TIRED,
     },
     {
       text: "Scram.",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.ANGRY,
     },
     {
       text: "Don't lay an egg, kid",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.NEUTRAL,
     },
     {
       text: "Try not to mess anything up",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.ANGRY,
     },
     {
       text: "Don't touch my papers!",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.ANGRY,
     },
     {
       text: "Grrr ...",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.ANGRY,
     },
   ],
   1: [
     {
       text: "Good work, kid, I'm proud of you",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.PROUD,
     },
     {
       text: "Not bad, rookie. Not bad",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.PROUD,
     },
     {
       text: "You're a real gee, kid",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.HAPPY,
     },
     {
       text: "We make a pretty great team, don't we?",
@@ -913,7 +918,7 @@ const MAIN_PAGE_IDLE_CASE_COUNT: Record<0 | 1 | 2 | 3, Dialogue[]> = {
     },
     {
       text: "Say, how about this one? 'Three blondes walk into a bar ... You'd think one of them would've seen it.' Hehe.",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.HAPPY,
     },
     {
       text: "What's the matter, kid? Bear got your tongue?",
@@ -921,14 +926,14 @@ const MAIN_PAGE_IDLE_CASE_COUNT: Record<0 | 1 | 2 | 3, Dialogue[]> = {
     },
     {
       text: "At this rate, you'll be Detective of the Month in no time.",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.PROUD,
     },
     {
       text: "A bear's greatest weapon is a keen eye, and his greatest ally is the dark. Or, wait, maybe that's a cat ...",
       reaction: BluenoirReaction.SMUG,
     },
     {
-      text: "It takes two shots to kill a man. First, a shot of liquor to numb the pain. Then, another through the skull.",
+      text: "It takes two shots to kill a man. First, a shot of liquor to numb the pain. Then, you shoot him.",
       reaction: BluenoirReaction.SMUG,
     },
     {
@@ -948,25 +953,25 @@ const MAIN_PAGE_IDLE_CASE_COUNT: Record<0 | 1 | 2 | 3, Dialogue[]> = {
       reaction: BluenoirReaction.SMUG,
     },
     {
-      text: "You learn to smile real pretty in this profession. You gotta have a smile that greets 'hello' when your trigger finger's busy waving goodbye.",
+      text: "You learn to smile real pretty in this profession. You gotta have a smile that greets 'hello' as your trigger finger's busy waving goodbye.",
       reaction: BluenoirReaction.SMUG,
     },
   ],
   2: [
     {
-      text: "You know, you're like the child I never had",
-      reaction: BluenoirReaction.SMUG,
+      text: "You know, I never had a kid, but if I did, I hope they'd be like you.",
+      reaction: BluenoirReaction.PROUD,
     },
     {
-      text: "You're a real gee, kid",
-      reaction: BluenoirReaction.SMUG,
+      text: "You're a real gee, kid.",
+      reaction: BluenoirReaction.PROUD,
     },
     {
-      text: "Thanks for helping on my case",
-      reaction: BluenoirReaction.SMUG,
+      text: "Thanks for helping on my case.",
+      reaction: BluenoirReaction.HAPPY,
     },
     {
-      text: "Whew, I did a lot of hard work on that case",
+      text: "Whew, I did a lot of hard work on that case.",
       reaction: BluenoirReaction.SMUG,
     },
     {
@@ -974,12 +979,12 @@ const MAIN_PAGE_IDLE_CASE_COUNT: Record<0 | 1 | 2 | 3, Dialogue[]> = {
       reaction: BluenoirReaction.SMUG,
     },
     {
-      text: "The board of directors will be really glad I cracked this one",
+      text: "The board of directors will be really glad I cracked this one!",
       reaction: BluenoirReaction.SMUG,
     },
     {
       text: "Carberry kinda lost it towards the end ... Well, maybe we shouldn't talk about it here.",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.SAD,
     },
     {
       text: "Holmes is so overrated. ",
@@ -991,23 +996,23 @@ const MAIN_PAGE_IDLE_CASE_COUNT: Record<0 | 1 | 2 | 3, Dialogue[]> = {
     },
     {
       text: "My old partner would've liked you. You remind me of him sometimes.",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.SENSITIVE,
     },
     {
       text: "Damnit, Carberry drove me crazy, but the bastard always did know how to make me laugh ...",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.SENSITIVE,
     },
     {
       text: "The third Baja's? That was Carberry's doing. He loves the place, so he ordered the city to build a new one closer to the agency.",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.NEUTRAL,
     },
     {
       text: "Carberry once flipped a table because they got his Baja's order wrong. That was towards the end ...",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.THINKING,
     },
     {
       text: "A little birdie told me that Detective of the Month is practically yours!",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.HAPPY,
     },
     {
       text: "Say, do you think I would look good in silver?",
@@ -1022,14 +1027,14 @@ const MAIN_PAGE_IDLE_CASE_COUNT: Record<0 | 1 | 2 | 3, Dialogue[]> = {
       reaction: BluenoirReaction.SMUG,
     },
     {
-      text: "It takes two shots to kill a man. First, a shot of liquor to numb the pain. Then, another through his skull.",
+      text: "It takes two shots to kill a man. First, a shot of liquor to numb the pain. Then, you shoot him.",
       reaction: BluenoirReaction.SMUG,
     },
   ],
   3: [
     {
       text: "The future is bright, kiddo. Go take a rest. I'll handle things here.",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.PROUD,
     },
   ],
 };
@@ -1037,11 +1042,11 @@ const MAIN_PAGE_IDLE_CASE_COUNT: Record<0 | 1 | 2 | 3, Dialogue[]> = {
 const MINOR_CASE_IDLE_GENERIC: Dialogue[] = [
   {
     text: "This operation stinks like cheap bourbon. Time to put it on ice.",
-    reaction: BluenoirReaction.SMUG,
+    reaction: BluenoirReaction.ANGRY,
   },
   {
     text: "Watch your back, kid.",
-    reaction: BluenoirReaction.SMUG,
+    reaction: BluenoirReaction.NEUTRAL,
   },
   {
     text: "If anybody bothers you, send 'em my way. My heater's been itching for a taste of the action.",
@@ -1049,18 +1054,18 @@ const MINOR_CASE_IDLE_GENERIC: Dialogue[] = [
   },
   {
     text: "Hmm ...",
-    reaction: BluenoirReaction.SMUG,
+    reaction: BluenoirReaction.THINKING,
   },
   {
     text: "Oof ... I need a drink.",
-    reaction: BluenoirReaction.SMUG,
+    reaction: BluenoirReaction.TIRED,
   },
   {
     text: "*puffs cigar*",
-    reaction: BluenoirReaction.SMUG,
+    reaction: BluenoirReaction.NEUTRAL,
   },
   {
-    text: "Good detective work is like good jazz. You gotta know when to give the other guy a turn to run the show.",
+    text: "Good detective work is like good jazz. You gotta know when to give the other guy a turn to run the show. That's why I'm letting you do all the work.",
     reaction: BluenoirReaction.SMUG,
   },
 ];
@@ -1069,7 +1074,7 @@ const MINOR_CASE_IDLE_BY_CASE: Record<string, Dialogue[]> = {
   whales: [
     {
       text: "You know, I've always liked fish. Maybe it's because I'm a bear.",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.THINKING,
     },
     {
       text: "Whaling is a real threat to the ocean ecosystem!",
@@ -1081,21 +1086,21 @@ const MINOR_CASE_IDLE_BY_CASE: Record<string, Dialogue[]> = {
     },
     {
       text: "Yarr.",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.HAPPY,
     },
     {
       text: "I never knew whales were such fascinating creatures.",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.THINKING,
     },
     {
       text: "This reminds me of this one time Carberry sent me out to sea to solve a cruise ship mystery. Had to shit in a hole to the ocean for months. Such is the life of a glamorous detective.",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.NEUTRAL,
     },
   ],
   "birbs-at-brown": [
     {
       text: "My life goal is to find a birb.",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.HAPPY,
     },
     {
       text: "Are those mischievous mallards causing trouble again?",
@@ -1103,7 +1108,7 @@ const MINOR_CASE_IDLE_BY_CASE: Record<string, Dialogue[]> = {
     },
     {
       text: "I may look tough, but those little crochet birds bring me so much joy",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.PROUD,
     },
     {
       text: "I have post notifications on",
@@ -1111,13 +1116,13 @@ const MINOR_CASE_IDLE_BY_CASE: Record<string, Dialogue[]> = {
     },
     {
       text: "We need to put these birbs behind bars",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.ANGRY,
     },
   ],
   "mr-cat": [
     {
       text: "You're kitten close!",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.PROUD,
     },
     {
       text: "You look pretty purr-plexed…",
@@ -1125,11 +1130,11 @@ const MINOR_CASE_IDLE_BY_CASE: Record<string, Dialogue[]> = {
     },
     {
       text: "Put your thinking cat on",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.NEUTRAL,
     },
     {
       text: "Meow you're talking!",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.EXCITED,
     },
   ],
   "penny-for-dreadful-news": [
@@ -1139,7 +1144,7 @@ const MINOR_CASE_IDLE_BY_CASE: Record<string, Dialogue[]> = {
     },
     {
       text: "Lay off the ‘nog and use your noggin.",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.ANGRY,
     },
     {
       text: "Ho-Ho-How are you so bad at this?",
@@ -1147,21 +1152,21 @@ const MINOR_CASE_IDLE_BY_CASE: Record<string, Dialogue[]> = {
     },
     {
       text: "Never could stand Rudolph the Reindeer. Guy's got a real vanity complex.",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.THINKING,
     },
     {
       text: "Carberry and I once took a case at the North Pole. Had to burn our trilbys, just to stay alive.",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.NEUTRAL,
     },
   ],
   exile: [
     {
       text: "Legally I didn't say this, but it looks like this guy deserved it",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.NEUTRAL,
     },
     {
       text: "This place gives me the creeps",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.NERVOUS,
     },
     {
       text: "I certainly wouldn't want to be out in this weather",
@@ -1169,13 +1174,13 @@ const MINOR_CASE_IDLE_BY_CASE: Record<string, Dialogue[]> = {
     },
     {
       text: "Sometimes crime is justified",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.NEUTRAL,
     },
   ],
   nyt: [
     {
       text: "Remember when they made the wordle SALLY the other day? That was so lame",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.THINKING,
     },
     {
       text: "You really have to be a detective to solve the Connections nowadays",
@@ -1183,11 +1188,11 @@ const MINOR_CASE_IDLE_BY_CASE: Record<string, Dialogue[]> = {
     },
     {
       text: "Have you played that new Strands game? I'm really bad at it.",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.NEUTRAL,
     },
     {
       text: "Back in my day detective work was hard, and you get to sit there and play puzzle games?",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.ANGRY,
     },
     {
       text: "STARE-CLOUD-PINKY never fails",
@@ -1201,19 +1206,19 @@ const MINOR_CASE_IDLE_BY_CASE: Record<string, Dialogue[]> = {
   "god-of-the-labyrinth": [
     {
       text: "Ugh, I better not have to read this whole thing.",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.TIRED,
     },
     {
       text: "Something ain't right here…",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.THINKING,
     },
     {
       text: "This inventor guy's a weirdo.",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.NERVOUS,
     },
     {
       text: "What's so good about this detective R, anyway?",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.THINKING,
     },
     {
       text: "Man, the narrator really is an idiot.",
@@ -1231,7 +1236,7 @@ const MINOR_CASE_IDLE_BY_CASE: Record<string, Dialogue[]> = {
     },
     {
       text: "Nomen… clept. What does that even mean?",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.THINKING,
     },
     {
       text: "Hey, you heard what Cassette Man said!",
@@ -1239,17 +1244,17 @@ const MINOR_CASE_IDLE_BY_CASE: Record<string, Dialogue[]> = {
     },
     {
       text: "I used to know this guy… for some reason, I can't remember his name…",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.THINKING,
     },
   ],
   twiqh: [
     {
       text: "What a series of unfortunate events for this Godot guy…",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.THINKING,
     },
     {
       text: "Hey, I didn't volunteer for this.",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.ANGRY,
     },
     {
       text: "At least I don't have to read 13 books to solve this murder.",
@@ -1257,7 +1262,7 @@ const MINOR_CASE_IDLE_BY_CASE: Record<string, Dialogue[]> = {
     },
     {
       text: "Soon you'll tell me there's a secret organization behind this whole play.",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.NEUTRAL,
     },
     {
       text: "Hey, did you catch the reenactment earlier?",
@@ -1267,7 +1272,7 @@ const MINOR_CASE_IDLE_BY_CASE: Record<string, Dialogue[]> = {
   maze: [
     {
       text: "Where are you even supposed to go?",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.THINKING,
     },
     {
       text: "That's some nice procedurally-generated carpet right there.",
@@ -1275,11 +1280,11 @@ const MINOR_CASE_IDLE_BY_CASE: Record<string, Dialogue[]> = {
     },
     {
       text: "What a cute little sprite!",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.HAPPY,
     },
     {
       text: "Josiah n' I loved games like this when we were kids.",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.SENSITIVE,
     },
   ],
   // (Special: this ellipsis should be the only bit of idle dialogue bluenoir has access to for this one)
@@ -1298,7 +1303,7 @@ const MINOR_CASE_IDLE_BY_CASE: Record<string, Dialogue[]> = {
     },
     {
       text: "Work your asset off",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.HAPPY,
     },
     {
       text: "He's kinda hot, right?",
@@ -1306,11 +1311,11 @@ const MINOR_CASE_IDLE_BY_CASE: Record<string, Dialogue[]> = {
     },
     {
       text: "Hey Alexa, play “Fuck Taxes” by Lil Heez",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.HAPPY,
     },
     {
       text: "White collar crime. The opposite of Film Noir.",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.NEUTRAL,
     },
   ],
 };
@@ -1318,39 +1323,39 @@ const MINOR_CASE_IDLE_BY_CASE: Record<string, Dialogue[]> = {
 const WORDLE_FAIL_PROMPTS = [
   {
     text: "Ah, that's alright, kid. You'll get it next time.",
-    reaction: BluenoirReaction.SMUG,
+    reaction: BluenoirReaction.NEUTRAL,
   },
   {
     text: "Nice try.",
-    reaction: BluenoirReaction.SMUG,
+    reaction: BluenoirReaction.NEUTRAL,
   },
   {
     text: "Eh ... Are you sloshed, or something?",
-    reaction: BluenoirReaction.SMUG,
+    reaction: BluenoirReaction.NERVOUS,
   },
   {
     text: "Who are you, and what have you done with my intern?",
-    reaction: BluenoirReaction.SMUG,
+    reaction: BluenoirReaction.ANGRY,
   },
   {
     text: "Maybe lay off smelling the barrel for a while, kid?",
-    reaction: BluenoirReaction.SMUG,
+    reaction: BluenoirReaction.EMBARRASSED,
   },
   {
     text: "Are you dense?",
-    reaction: BluenoirReaction.SMUG,
+    reaction: BluenoirReaction.ANGRY,
   },
   {
-    text: "Maybe you're not cut out for detective life after all.",
-    reaction: BluenoirReaction.SMUG,
+    text: "Maybe you're not cut out for detective life after all ...",
+    reaction: BluenoirReaction.EMBARRASSED,
   },
   {
     text: "I give up. Come find me again when you've finally figured it out.",
-    reaction: BluenoirReaction.SMUG,
+    reaction: BluenoirReaction.ANGRY,
   },
   {
     text: "...",
-    reaction: BluenoirReaction.SMUG,
+    reaction: BluenoirReaction.TIRED,
   },
 ];
 
@@ -1358,17 +1363,17 @@ const MAJOR_CASE_DIALOGUE: Record<MajorCaseEnum, Dialogue[]> = {
   [MajorCaseEnum.COLORED_THREAD]: [
     {
       text: "Haven't gotten to do a high profile case like this in a while. Nice to be back in the swing of things.",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.HAPPY,
     },
   ],
   [MajorCaseEnum.SOCIAL_DEDUCTION]: [
     {
       text: "Should've paid attention in high school English",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.NEUTRAL,
     },
     {
       text: "ಠ_ಠ The eyes of TJ Eckleburg do not approve",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.CURIOUS,
     },
     {
       text: "Good one, old sport",
@@ -1380,32 +1385,32 @@ const MAJOR_CASE_DIALOGUE: Record<MajorCaseEnum, Dialogue[]> = {
     },
     {
       text: "Well, someone must be lying",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.NEUTRAL,
     },
     {
       text: "These monsters sure are messy",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.THINKING,
     },
     {
       text: "Werewolfsheim and I had a fling back in '83. Swell  guy, but a bit ... ehm, hairy.",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.EMBARRASSED,
     },
     {
       text: "Haven't gotten to do a high profile case like this in a while. Nice to be back in the swing of things.",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.HAPPY,
     },
   ],
   [MajorCaseEnum.DATA]: [
     {
       text: "Imagine if you had to actually listen to all of these!",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.HAPPY,
     },
     {
       text: "What a crummy old system.",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.NEUTRAL,
     },
     {
-      text: "Data? I hardly know ‘er.",
+      text: "Data? I hardly know ‘a!",
       reaction: BluenoirReaction.SMUG,
     },
     {
@@ -1414,11 +1419,11 @@ const MAJOR_CASE_DIALOGUE: Record<MajorCaseEnum, Dialogue[]> = {
     },
     {
       text: "This reminds me of a video game.",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.NEUTRAL,
     },
     {
       text: "Wait, who's sleeping with who?",
-      reaction: BluenoirReaction.SMUG,
+      reaction: BluenoirReaction.THINKING,
     },
   ],
 };
