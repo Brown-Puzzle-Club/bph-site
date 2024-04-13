@@ -1602,10 +1602,11 @@ def notify_on_answer_submission(sender, instance, created, **kwargs):
             elif submitted_teams > 1:
                 sigil = ":skull_crossbones:"
             dispatch_submission_alert(
-                _("{} {} Team {} submitted `{}` for {}: {}{}").format(
+                _("{} {} Team {} ({}) submitted `{}` for {}: {}{}").format(
                     sigil,
                     instance.puzzle.emoji,
                     instance.team,
+                    "irl 🧸" if instance.team.in_person else "remote",
                     instance.submitted_answer,
                     instance.puzzle,
                     _("Correct!") if instance.is_correct else _("Incorrect."),
