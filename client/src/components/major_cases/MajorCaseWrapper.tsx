@@ -3,6 +3,8 @@ import type { ReactNode } from "react";
 import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 
+import useBPHStore from "@/stores/useBPHStore";
+import { getMajorCaseIdleDialogue } from "@/utils/bluenoir_dialogue";
 import type { MajorCaseEnum } from "@/utils/constants";
 import type { MajorCase, Puzzle } from "@/utils/django_types";
 
@@ -11,8 +13,9 @@ import AnswerSubmit from "../puzzle/AnswerSubmission";
 
 function MajorCaseWrapper({ children }: { children: ReactNode }) {
   const [majorCase, setMajorCase] = useState<MajorCase>({} as MajorCase);
-
   const { pathname } = useLocation();
+  const setBluenoirDialogue = useBPHStore((state) => state.setRandomDialogueFunction);
+
   const majorCaseSlug = pathname.split("/").pop();
   useEffect(() => {
     const url = `/api/major-case/${majorCaseSlug}`;
@@ -24,6 +27,12 @@ function MajorCaseWrapper({ children }: { children: ReactNode }) {
       setMajorCase(major_case);
     });
   }, [majorCaseSlug, pathname]);
+
+  useEffect(() => {
+    setBluenoirDialogue(() => {
+      return getMajorCaseIdleDialogue(majorCaseSlug as MajorCaseEnum);
+    });
+  });
 
   // TYPE JANKNESS OOPS
   const puzzle = useMemo(() => {
