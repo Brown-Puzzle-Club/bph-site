@@ -29,7 +29,7 @@ import TeamNavbar from "./TeamNavbar";
 
 const components: { title: string; to: string; description: string }[] = [
   {
-    title: "Event Details",
+    title: "Hunt Details",
     to: "/info#important-info",
     description: "Information on when, where, and how to participate in the event.",
   },
