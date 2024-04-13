@@ -29,7 +29,7 @@ const UnknownError = () => {
 };
 
 export default function ErrorPage({ custom_error }: { custom_error?: ErrorResponse }) {
-  window.location.href = "/eventpage";
+  // window.location.href = "/eventpage";
   // RouteError comes from react router. It labels error pages as 404 etc.
   const error = useRouteError();
   if (!custom_error) {
