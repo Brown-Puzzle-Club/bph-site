@@ -647,7 +647,7 @@ class Team(models.Model):
         """
         Compute the total number of hints (used + remaining) available to this team.
         """
-        FREE_HINT_CNT = 0
+        FREE_HINT_CNT = 1
         if not HINTS_ENABLED or self.hunt_is_over:
             return 0
         if self.now < self.creation_time + TEAM_AGE_BEFORE_HINTS:
