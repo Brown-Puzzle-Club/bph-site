@@ -13,6 +13,7 @@ import CaseVoting from "./websockets/CaseVoting";
 export const PageWrapper = ({ route }: { route: React.ReactElement }) => {
   const { theme } = useTheme();
   const [votingOpen, setVotingOpen] = useState(false);
+
   const { sendJsonMessage, readyState, votingInfo } = useSocket("ws/puzzles", {
     onOpen: () => {
       console.log("Connected to websocket! yay!");

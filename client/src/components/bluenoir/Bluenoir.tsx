@@ -22,6 +22,7 @@ const Bluenoir = () => {
 
   const x = useMotionValue(position.x);
   const y = useMotionValue(position.y);
+  const scale = useMotionValue(1);
 
   const dragRef = useRef<HTMLDivElement>(null);
   const measureRef = useRef<HTMLDivElement>(null);
@@ -49,6 +50,7 @@ const Bluenoir = () => {
 
     animate(x, centeredPositionX);
     animate(y, centeredPositionY);
+    animate(scale, centered ? 2 : 1);
     setPosition(pos);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [centered, setPosition]);
@@ -70,6 +72,7 @@ const Bluenoir = () => {
 
         animate(x, centeredPositionX);
         animate(y, centeredPositionY);
+        animate(scale, centered ? 2 : 1);
         setPosition(pos);
       },
     },
@@ -86,6 +89,7 @@ const Bluenoir = () => {
       style={{
         x,
         y,
+        scale,
         touchAction: "none",
         userSelect: "none",
         MozUserSelect: "none",

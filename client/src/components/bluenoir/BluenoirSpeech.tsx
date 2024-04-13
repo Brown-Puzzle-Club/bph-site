@@ -1,5 +1,6 @@
 import type { Variants } from "framer-motion";
 import { AnimatePresence, motion } from "framer-motion";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import Typewriter from "typewriter-effect";
 
 import useBPHStore from "@/stores/useBPHStore";
@@ -41,6 +42,9 @@ const BluenoirSpeech = () => {
   const speechDialogue = useBPHStore((state) => state.bluenoirDialogue);
   const speak = useBPHStore((state) => state.bluenoirSpeak);
   const restart = useBPHStore((state) => state.restartIdleTimer);
+  const prevStoryline = useBPHStore((state) => state.prevStoryline);
+  const nextStoryline = useBPHStore((state) => state.nextStoryline);
+  const centered = useBPHStore((state) => state.bluenoirCentered);
 
   return (
     <motion.div
@@ -52,21 +56,23 @@ const BluenoirSpeech = () => {
       <AnimatePresence initial={false}>
         {open && (
           <motion.div
-            className="px-4"
+            className="px-4 min-w-xs"
             variants={textVariants}
             initial="hidden"
             animate="visible"
             exit="hidden"
           >
             <div className={cn("absolute text-slate-500 text-sm top-1 right-2")}>
-              <button
-                onClick={() => {
-                  setOpen(false);
-                  restart(speak, IDLE_TIMER * 1000);
-                }}
-              >
-                ✕
-              </button>
+              {!centered && (
+                <button
+                  onClick={() => {
+                    setOpen(false);
+                    restart(speak, IDLE_TIMER * 1000);
+                  }}
+                >
+                  ✕
+                </button>
+              )}
             </div>
             <div className={cn("font-extrabold font-mono text-sm underline underline-offset-2")}>
               Bluenoir
@@ -88,6 +94,20 @@ const BluenoirSpeech = () => {
                 />
               </div>
             </div>
+            {centered && (
+              <div className="flex absolute text-slate-500 text-sm bottom-1 right-2">
+                <div>
+                  <button onClick={prevStoryline}>
+                    <ChevronLeft />
+                  </button>
+                </div>
+                <div>
+                  <button onClick={nextStoryline}>
+                    <ChevronRight />
+                  </button>
+                </div>
+              </div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>

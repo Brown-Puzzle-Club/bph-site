@@ -1,7 +1,8 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
-import { getMainPageIdleDialogue, type Dialogue } from "@/utils/bluenoir_dialogue";
+import { IDLE_TIMER } from "@/components/bluenoir/Bluenoir";
+import { BluenoirStories, getMainPageIdleDialogue, type Dialogue } from "@/utils/bluenoir_dialogue";
 
 export const TOP_LEFT = { x: 0.05, y: 0.13 } as const;
 export const BOTTOM_LEFT = { x: 0.05, y: 0.85 } as const;
@@ -19,6 +20,8 @@ interface BluenoirState {
   bluenoirCentered: boolean;
   bluenoirIdleDialogueFunction: (() => Dialogue) | null;
   bluenoirIntervalId: NodeJS.Timeout | null;
+  bluenoirStorylineSlug: string;
+  bluenoirStorylineIndex: number;
 }
 
 interface BluenoirActions {
@@ -34,6 +37,9 @@ interface BluenoirActions {
   startIdleTimer: (callback: () => void, duration: number) => void;
   stopIdleTimer: () => void;
   restartIdleTimer: (callback: () => void, duration: number) => void;
+  setStoryline: (slug: string) => void;
+  nextStoryline: () => void;
+  prevStoryline: () => void;
 }
 
 interface VotingState {
@@ -57,6 +63,8 @@ const initialBluenoirState: BluenoirState = {
   bluenoirCentered: false,
   bluenoirIdleDialogueFunction: getMainPageIdleDialogue,
   bluenoirIntervalId: null,
+  bluenoirStorylineSlug: "",
+  bluenoirStorylineIndex: 0,
 };
 
 const initialVotingState: VotingState = {
@@ -94,7 +102,7 @@ const useBPHStore = create<BPHState & BPHActions>()(
       set((state) => ({
         bluenoirCurrentPosition: position,
         bluenoirPreviousPosition:
-          position === state.bluenoirCurrentPosition
+          position === state.bluenoirCurrentPosition || position === CENTER
             ? state.bluenoirPreviousPosition
             : state.bluenoirCurrentPosition,
       }));
@@ -137,6 +145,45 @@ const useBPHStore = create<BPHState & BPHActions>()(
       }, duration);
 
       set({ bluenoirIntervalId: newIntervalId });
+    },
+    setStoryline: (slug: string) => {
+      if (!BluenoirStories[slug]) return;
+      get().restartIdleTimer(get().nextStoryline, 10 * 1000);
+      get().bluenoirSpeak(BluenoirStories[slug].dialogues[0]);
+      set(() => {
+        return {
+          bluenoirStorylineSlug: slug,
+          bluenoirStorylineIndex: 0,
+          bluenoirCentered: true,
+        };
+      });
+    },
+    nextStoryline: () => {
+      if (!get().bluenoirStorylineSlug) return;
+      get().restartIdleTimer(get().nextStoryline, 10 * 1000);
+      const newIndex = get().bluenoirStorylineIndex + 1;
+      if (newIndex === BluenoirStories[get().bluenoirStorylineSlug].dialogues.length) {
+        get().restartIdleTimer(get().bluenoirSpeak, IDLE_TIMER * 1000);
+        set({
+          bluenoirStorylineSlug: "",
+          bluenoirStorylineIndex: 0,
+          bluenoirCentered: false,
+        });
+      } else {
+        get().bluenoirSpeak(BluenoirStories[get().bluenoirStorylineSlug].dialogues[newIndex]);
+        set({
+          bluenoirStorylineIndex: newIndex,
+        });
+      }
+    },
+    prevStoryline: () => {
+      if (!get().bluenoirStorylineSlug || get().bluenoirStorylineIndex === 0) return;
+      get().stopIdleTimer();
+      const newIndex = get().bluenoirStorylineIndex - 1;
+      get().bluenoirSpeak(BluenoirStories[get().bluenoirStorylineSlug].dialogues[newIndex]);
+      set({
+        bluenoirStorylineIndex: newIndex,
+      });
     },
     setVotingModalOpen: (open) => set({ votingModalOpen: open }),
     toggleVotingModalOpen: () => set((state) => ({ votingModalOpen: !state.votingModalOpen })),
