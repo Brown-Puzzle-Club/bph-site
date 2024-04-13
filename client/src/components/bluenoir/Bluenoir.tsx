@@ -43,10 +43,8 @@ const Bluenoir = () => {
 
   useEffect(() => {
     const pos = centered ? CENTER : previousPosition;
-    const centeredPositionX =
-      pos.x * window.innerWidth - (measureRef.current?.offsetWidth ?? 0) / 2;
-    const centeredPositionY =
-      pos.y * window.innerHeight - (measureRef.current?.offsetHeight ?? 0) / 2;
+    const centeredPositionX = pos.x * innerWidth - (measureRef.current?.offsetWidth ?? 0) / 2;
+    const centeredPositionY = pos.y * innerHeight - (measureRef.current?.offsetHeight ?? 0) / 2;
 
     animate(x, centeredPositionX);
     animate(y, centeredPositionY);

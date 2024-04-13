@@ -16,6 +16,7 @@ import Contact from "./routes/Contact";
 import Credits from "./routes/Credits";
 import ErrorPage, { Error404 } from "./routes/ErrorPage";
 import EventPage from "./routes/EventPage";
+import FinalVerdict from "./routes/FInalVerdict";
 import InfoPage from "./routes/InfoPage";
 import Landing from "./routes/Landing";
 import Leaderboard from "./routes/Leaderboard";
@@ -225,6 +226,18 @@ const router = createBrowserRouter([
             route={
               <Locked condition={IS_ADMIN}>
                 <AdminPanel />
+              </Locked>
+            }
+          />
+        ),
+      },
+      {
+        path: "/final-verdict",
+        element: (
+          <PageWrapper
+            route={
+              <Locked condition={IS_ADMIN}>
+                <FinalVerdict />
               </Locked>
             }
           />
