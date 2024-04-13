@@ -224,6 +224,11 @@ def handle_answer(
         f"submitting for puzzle: {puzzle_slug} with answer: {answer} for team: {django_context.team}"
     )
 
+    if (
+        not django_context.hunt_has_started or django_context.hunt_is_over
+    ) and not django_context.is_admin:
+        return Response({"error": "Hunt is not active"}, status=403)
+
     puzzle = Puzzle.objects.get(slug=puzzle_slug)
     unlock = PuzzleUnlock.objects.filter(team=django_context.team, puzzle=puzzle)
 
