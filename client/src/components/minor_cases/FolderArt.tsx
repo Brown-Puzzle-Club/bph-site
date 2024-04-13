@@ -134,17 +134,17 @@ export const CatsArt = () => {
     <div>
       <img
         className="absolute shadow-lg  object-cover w-[29vw]"
-        style={{ left: "5%", top: "26%", rotate: "354deg" }}
+        style={{ left: "5%", top: "14%", rotate: "354deg" }}
         src={catmeme}
       />
       <img
         className="absolute object-cover w-[18vw]"
-        style={{ left: "20%", top: "2%", rotate: "10deg" }}
+        style={{ left: "30%", top: "2%", rotate: "10deg" }}
         src={tape}
       />
       <img
         className="absolute object-cover w-[18vw]"
-        style={{ left: "6%", top: "12%", rotate: "295deg" }}
+        style={{ left: "6%", top: "67%", rotate: "185deg" }}
         src={tape}
       />
     </div>
