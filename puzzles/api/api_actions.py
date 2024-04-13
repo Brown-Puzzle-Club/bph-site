@@ -27,9 +27,9 @@ def login_action(request: Request) -> Response:
     username = request.data.get("username")
     password = request.data.get("password")
     user = authenticate(request, username=username, password=password)
-    Token.objects.get_or_create(user=user)
 
     if user is not None:
+        Token.objects.get_or_create(user=user)
         login(request._request, user)
         team = Team.objects.get(user=user)
         return Response(TeamSerializer(team).data)
