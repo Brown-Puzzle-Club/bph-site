@@ -1,15 +1,12 @@
 import { FaPlay } from "react-icons/fa";
 
 import { useStoryUnlocks } from "@/hooks/useDjangoContext";
+import useBPHStore from "@/stores/useBPHStore";
 import { BluenoirStories } from "@/utils/bluenoir_dialogue";
-
-const dispatchBluenoir = (storyline_slug: string) => {
-  // TODO: implement
-  alert(`Dispatching ${storyline_slug}`);
-};
 
 export default function Story() {
   const { data: story_unlocks } = useStoryUnlocks();
+  const dispatchBluenoir = useBPHStore((state) => state.setStoryline);
 
   return (
     <div className="bg-slate-900 text-white h-[90vh] overscroll-contain overflow-hidden overflow-y-auto ">
@@ -33,7 +30,7 @@ export default function Story() {
                       {BluenoirStories[unlock.storyline]?.title}
                     </h2>
                   </div>
-                  <p className="text-lg text-right font-mono text-sm">
+                  <p className="text-lg text-right font-mono">
                     {BluenoirStories[unlock.storyline]?.description}
                   </p>
                 </div>

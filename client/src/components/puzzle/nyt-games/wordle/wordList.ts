@@ -45,7 +45,6 @@ export const possibleSolutions = [
   "white",
   "smear",
   "scram",
-  "nyphm",
   "psalm",
   "ascot",
   "parer",

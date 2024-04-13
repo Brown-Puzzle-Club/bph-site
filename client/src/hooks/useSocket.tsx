@@ -6,6 +6,7 @@ import useWebSocket from "react-use-websocket";
 import { z } from "zod";
 
 import NotificationToast from "@/NotificationToast";
+import useBPHStore from "@/stores/useBPHStore";
 import { RoundSchema, VotingInfoSchema, type VotingInfo } from "@/utils/django_types";
 
 import { useAuth } from "./useAuth";
@@ -73,6 +74,7 @@ const useSocket = (path: string, callbacks: SocketCallbacks | undefined = undefi
     retryOnError: true,
   });
   const { token } = useAuth();
+  const dispatchBluenoir = useBPHStore((state) => state.setStoryline);
 
   const protocol = window.location.protocol.includes("https") ? "wss" : "ws";
 
@@ -131,14 +133,16 @@ const useSocket = (path: string, callbacks: SocketCallbacks | undefined = undefi
         );
         break;
       }
-      case "storyline":
-        console.log(parsedMessage as StorylineNotification);
+      case "storyline": {
+        const message = parsedMessage as StorylineNotification;
+        dispatchBluenoir(message.data.slug);
         break;
+      }
       default:
         console.warn("Unknown message", parsedMessage);
         break;
     }
-  }, [lastJsonMessage]);
+  }, [dispatchBluenoir, lastJsonMessage]);
 
   return { sendJsonMessage, readyState, votingInfo };
 };
