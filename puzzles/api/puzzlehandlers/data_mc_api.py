@@ -29,7 +29,7 @@ def search_voice_recordings(request: Request) -> Response:
     return Response({"results": [result.to_dict() for result in results]})
 
 
-VOICE_DATA_RELATIVE_PATH = "../../static/data/voicedata-4-6.tsv"
+VOICE_DATA_RELATIVE_PATH = "../../static/data/voicedata-4-13.tsv"
 
 
 @api_view(["POST"])

@@ -47,3 +47,15 @@ export const NOMENCLEPT_THEME: Theme = {
   content_color: "#bba067",
   footer_color: "#bba067",
 };
+
+export const BLUES_THEME: Theme = {
+  // bg_color: "#bba067",
+  content_color: "#e96652",
+  footer_color: "#e96652",
+};
+
+export const SHOWDOWN_THEME: Theme = {
+  // bg_color: "#bba067",
+  content_color: "#054d84",
+  footer_color: "#054d84",
+};

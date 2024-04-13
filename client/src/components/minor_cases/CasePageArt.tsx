@@ -4,6 +4,15 @@ import { Link, useLocation } from "react-router-dom";
 
 import birb_bg from "@/assets/minor_cases/birbs/birb_bg.png";
 import thebirb from "@/assets/minor_cases/birbs/thebirb.png";
+import blues_bg from "@/assets/minor_cases/blues_clues/blue clue background.png";
+import blues_meta1 from "@/assets/minor_cases/blues_clues/blue meta 1.png";
+import blues_meta2 from "@/assets/minor_cases/blues_clues/blue meta 2.png";
+import blues_letter1 from "@/assets/minor_cases/blues_clues/letter 1.png";
+import blues_letter2 from "@/assets/minor_cases/blues_clues/letter 2.png";
+import blues_snail1 from "@/assets/minor_cases/blues_clues/snail 1.png";
+import blues_snail2 from "@/assets/minor_cases/blues_clues/snail 2.png";
+import blues_steve1 from "@/assets/minor_cases/blues_clues/steve college 1.png";
+import blues_steve2 from "@/assets/minor_cases/blues_clues/steve college 2.png";
 import mr_cat from "@/assets/minor_cases/cats/mr_cat.jpg";
 import bottle from "@/assets/minor_cases/exile/bottle.png";
 import exile_bg from "@/assets/minor_cases/exile/exile_bg.png";
@@ -21,6 +30,8 @@ import book from "@/assets/minor_cases/nomenclept/book.png";
 import casette from "@/assets/minor_cases/nomenclept/casette.png";
 import letter from "@/assets/minor_cases/nomenclept/letter.png";
 import nomenclepttitle from "@/assets/minor_cases/nomenclept/nomenclepttitle.png";
+import showdown from "@/assets/minor_cases/showdown/showdown.png";
+import showdownpuzz from "@/assets/minor_cases/showdown/showdown_puzz.png";
 import twiqh from "@/assets/minor_cases/twiqh/twiqh.png";
 import whale_bg from "@/assets/minor_cases/whales/background_whale2.png";
 import flowers from "@/assets/minor_cases/whales/flowers.png";
@@ -32,7 +43,7 @@ import { useDjangoContext } from "@/hooks/useDjangoContext";
 import { useTheme } from "@/hooks/useTheme";
 import type { MajorCaseEnum } from "@/utils/constants";
 import { CASE_PALETTE } from "@/utils/constants";
-import { BIRB_THEME, NOMENCLEPT_THEME, WHALE_THEME } from "@/utils/themes";
+import { BIRB_THEME, BLUES_THEME, NOMENCLEPT_THEME, WHALE_THEME } from "@/utils/themes";
 import type { PuzzleAnswer } from "@/utils/utils";
 import { cn, getUnlockedPuzzle } from "@/utils/utils";
 
@@ -292,6 +303,83 @@ const MicroinfluencerArt = () => {
   );
 };
 
+const BluesCluesArt = () => {
+  const { setTheme } = useTheme();
+  useEffect(() => {
+    setTheme(BLUES_THEME);
+  });
+  return (
+    <ArtWrapper className="" background_src={blues_bg}>
+      <PuzzleIconWrapper
+        slug="josh"
+        imageSrc={blues_letter1}
+        hoverImageSrc={blues_letter2}
+        extraStyles={{
+          top: "26%",
+          left: "8%",
+          width: "20%",
+          zIndex: 3,
+        }}
+      />
+      <PuzzleIconWrapper
+        slug="joe"
+        imageSrc={blues_snail1}
+        hoverImageSrc={blues_snail2}
+        extraStyles={{
+          top: "71%",
+          left: "74%",
+          width: "14%",
+          zIndex: 3,
+        }}
+      />
+      <PuzzleIconWrapper
+        slug="steve"
+        imageSrc={blues_steve1}
+        hoverImageSrc={blues_steve2}
+        extraStyles={{
+          top: "13%",
+          left: "70%",
+          width: "21%",
+          zIndex: 3,
+        }}
+      />
+      <PuzzleIconWrapper
+        slug="the-thinking-chair"
+        imageSrc={blues_meta1}
+        hoverImageSrc={blues_meta2}
+        extraStyles={{
+          top: "30%",
+          left: "37%",
+          width: "24%",
+          zIndex: 3,
+        }}
+        meta
+      />
+    </ArtWrapper>
+  );
+};
+
+const ShowdownArt = () => {
+  return (
+    <ArtWrapper
+      className="drop-shadow-[0_15px_15px_rgba(255,255,255,0.2)]"
+      background_src={showdown}
+    >
+      <PuzzleIconWrapper
+        slug="showdown"
+        imageSrc={showdownpuzz}
+        extraStyles={{
+          top: "41%",
+          left: "46.5%",
+          width: "8%",
+          zIndex: 3,
+        }}
+        meta
+      />
+    </ArtWrapper>
+  );
+};
+
 interface PuzzleAsset extends AssetProps {
   slug: string;
   meta?: boolean;
@@ -393,6 +481,8 @@ const CASE_ART_COMPONENT: { [key: string]: JSX.Element } = {
   maze: <MazeArt />,
   twiqh: <TwiqhArt />,
   nomenclept: <NomencleptArt />,
+  "blues-clues": <BluesCluesArt />,
+  showdown: <ShowdownArt />,
 };
 
 export default function CasePageArt({ case_slug }: { case_slug: string }) {
