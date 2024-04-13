@@ -53,13 +53,16 @@ def get_remote_emails(request: Request) -> Response:
 @require_admin
 def get_team_case_solve_count(request: Request) -> Response:
 
+    visible_teams = Team.objects.filter(is_hidden=False)
     team_case_solve_count = {}
     solves = MinorCaseCompleted.objects.all()
     for solve in solves:
         team = solve.team
+        if team not in visible_teams:
+            continue
         if team.team_name in team_case_solve_count:
-            team_case_solve_count[team.team_name] += 1
+            team_case_solve_count[team.team_name][0] += 1
         else:
-            team_case_solve_count[team.team_name] = 1
+            team_case_solve_count[team.team_name] = [1, "🐻" if team.in_person else "🖥️"]
 
     return Response({"data": team_case_solve_count})
