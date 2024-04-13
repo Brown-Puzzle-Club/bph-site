@@ -7,6 +7,7 @@ import pano3 from "@/assets/minor_cases/exile/pano/3low.jpg";
 import pano4 from "@/assets/minor_cases/exile/pano/4low.jpg";
 import pano5 from "@/assets/minor_cases/exile/pano/5low.jpg";
 import pano6 from "@/assets/minor_cases/exile/pano/6low.jpg";
+import postIt from "@/assets/minor_cases/exile/post-it.png";
 import { cn } from "@/utils/utils";
 
 const panos = [
@@ -67,6 +68,10 @@ export default function IllicitAffairsPano() {
           (or in what region), but i do know he wasn&apos;t with his wife.
         </p>
       </div>
+      <img
+        className="flex self-center h-full lg:mx-[43vw] md:mx-[25vw] mx-[15vw] max-h-[12rem]"
+        src={postIt}
+      ></img>
 
       <div className="flex justify-center my-4">
         {panos.map((_, index) => (
