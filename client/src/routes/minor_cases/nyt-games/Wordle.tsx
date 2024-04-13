@@ -1,3 +1,4 @@
+import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 
@@ -59,13 +60,19 @@ const Wordle = () => {
       </div>
       <div className="flex justify-center items-center flex-col pt-4">
         <div className="flex flex-row gap-2 items-center text-xl py-3 franklin">
-          <span>Remaining Guesses:</span>
           <div className="flex flex-row gap-1 pt-1">
-            <>
+            <AnimatePresence initial={false} mode="popLayout">
               {[...Array(guesses)].map((_, i) => (
-                <div key={i} className="rounded-full bg-neutral-500 w-4 h-4" />
+                <motion.div
+                  layout
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0, opacity: 0 }}
+                  key={i}
+                  className="rounded-full bg-neutral-500 w-4 h-4"
+                />
               ))}
-            </>
+            </AnimatePresence>
           </div>
         </div>
         <Button

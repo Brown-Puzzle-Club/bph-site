@@ -33,6 +33,17 @@ interface HangmanWordleProps {
   gameState: GameState;
 }
 
+const dummyGuess: Guess = {
+  guess: [
+    { letter: "A", verified: VerificationState.Correct },
+    { letter: "B", verified: VerificationState.Correct },
+    { letter: "C", verified: VerificationState.Correct },
+    { letter: "D", verified: VerificationState.Correct },
+    { letter: "E", verified: VerificationState.Correct },
+  ],
+  row: Row.Top,
+};
+
 const HangmanWordle = ({ setGameMode, setGuesses, gameState }: HangmanWordleProps) => {
   const [board, setBoard] = useState<Board>(
     new Array(13).fill({ letter: "", verified: VerificationState.Unverified }),
@@ -197,11 +208,14 @@ const HangmanWordle = ({ setGameMode, setGuesses, gameState }: HangmanWordleProp
         />
       </div>
       <div>
-        <p className="franklin pb-4">Previous Guesses</p>
         <ul className="grid gap-2">
-          {prevGuesses.map((guess, i) => (
-            <GuessTile key={i} guess={guess} />
-          ))}
+          {prevGuesses.length === 0 ? (
+            <div className="invisible">
+              <GuessTile guess={dummyGuess} />
+            </div>
+          ) : (
+            prevGuesses.map((guess, i) => <GuessTile key={i} guess={guess} />)
+          )}
         </ul>
       </div>
     </div>
