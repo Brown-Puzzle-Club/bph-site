@@ -107,7 +107,7 @@ export default function InternalCharacters({
           imageSrc={invisiguy}
           hoverImageSrc={invisiguyPose}
           extraStyles={{
-            top: "25%",
+            top: "22%",
             left: "36%",
             width: "22%",
             zIndex: 1,
