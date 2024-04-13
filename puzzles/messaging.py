@@ -426,7 +426,7 @@ def broadcast_minor_case_incoming_event(
     channel = get_channel_layer()
     if channel is not None:
         message = {
-            "type": "vote",
+            "type": "vote_start",
             "data": {
                 "id": caseId,
                 "cases": cases,

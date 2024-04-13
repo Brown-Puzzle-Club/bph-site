@@ -87,7 +87,7 @@ const useSocket = (path: string, callbacks: SocketCallbacks | undefined = undefi
     const parsedMessage = NotificationSchema.parse(lastJsonMessage);
     console.log(parsedMessage);
     switch (parsedMessage.type) {
-      case "vote": {
+      case "vote_start": {
         setVotingInfo(parsedMessage.data as VotingInfo);
         toast.custom(
           <NotificationToast Icon={Vote}>
@@ -96,6 +96,10 @@ const useSocket = (path: string, callbacks: SocketCallbacks | undefined = undefi
           </NotificationToast>,
           { duration: 5 * 60 * 1000 },
         );
+        break;
+      }
+      case "vote": {
+        setVotingInfo(parsedMessage.data as VotingInfo);
         break;
       }
       case "hint": {
