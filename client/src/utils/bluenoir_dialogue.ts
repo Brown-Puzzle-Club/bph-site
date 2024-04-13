@@ -116,7 +116,19 @@ export const BluenoirStories: Record<string, Story> = {
         reaction: BluenoirReaction.THINKING,
       },
       {
-        text: "There's the phone, where you might receive messages from the higher-ups on the Board of Directors.",
+        text: "Below me on the desk are your active 'Minor Cases'. We're collecting criminal information into packets for your whole lot to puzzle through.",
+        reaction: BluenoirReaction.NEUTRAL,
+      },
+      {
+        text: "You solve a Minor Case by answering a question related to the overarching crime. I've started color coding the folders to help a bit.",
+        reaction: BluenoirReaction.NEUTRAL,
+      },
+      {
+        text: "Solved Minor Cases will go to the left, and you will periodically see incoming cases on the right. Be sure to check here after every case solve for new choices.",
+        reaction: BluenoirReaction.NEUTRAL,
+      },
+      {
+        text: "We believe in free will at BIB so we are giving your team a couple minutes to choose which to take up next.",
         reaction: BluenoirReaction.NEUTRAL,
       },
       {
