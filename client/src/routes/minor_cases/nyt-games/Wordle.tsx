@@ -15,9 +15,9 @@ const Wordle = () => {
 
   useEffect(() => {
     if (gameState === GameState.Win) {
-      toast.success("You win!", { duration: Infinity, position: "top-center" });
+      toast.success("You win!", { duration: 10 * 1000, position: "top-center" });
     } else if (gameState === GameState.Lose) {
-      toast.error("You lose!", { duration: Infinity, position: "top-center" });
+      toast.error("You lose!", { duration: 10 * 1000, position: "top-center" });
     }
   }, [gameState]);
 
