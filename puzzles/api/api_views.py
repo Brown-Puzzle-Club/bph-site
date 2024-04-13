@@ -237,7 +237,7 @@ def get_hints_for_puzzle(request: Request, puzzle_slug: str) -> Response:
             else:
                 raise Puzzle.DoesNotExist
 
-        hints = Hint.objects.filter(puzzle=puzzle)
+        hints = Hint.objects.filter(puzzle=puzzle, team=context.team)
         serializer = HintSerializer(hints, many=True)
 
         return Response(serializer.data)

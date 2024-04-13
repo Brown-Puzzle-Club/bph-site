@@ -8,6 +8,7 @@ import { usePuzzle } from "@/hooks/useDjangoContext";
 import { Error404 } from "@/routes/ErrorPage";
 import AltPuzzleRoute, { ALT_PUZZLE_ROUTES } from "@/routes/minor_cases/AltPuzzleRoute";
 import useBPHStore, { BOTTOM_LEFT } from "@/stores/useBPHStore";
+import { getMinorCaseIdleDialogue } from "@/utils/bluenoir_dialogue";
 import type { MajorCaseEnum } from "@/utils/constants";
 import { toPuzzleStyle } from "@/utils/constants";
 import type { Erratum } from "@/utils/django_types";
@@ -56,12 +57,20 @@ function PuzzleWrapper({ puzzle_slug }: { puzzle_slug: string }) {
   const { data: puzzle, isError } = usePuzzle(puzzle_slug);
   const setPosition = useBPHStore((state) => state.setBluenoirPosition);
   const [puzzleContent, setPuzzleContent] = useState(puzzle?.body);
+  const setBluenoirDialogue = useBPHStore((state) => state.setRandomDialogueFunction);
+
   useEffect(() => {
     setPuzzleContent(puzzle?.body);
   }, [puzzle]);
 
   useEffect(() => {
     setPosition(BOTTOM_LEFT);
+  });
+
+  useEffect(() => {
+    setBluenoirDialogue(() => {
+      return getMinorCaseIdleDialogue(puzzle_slug);
+    });
   });
 
   const navigate = useNavigate();
