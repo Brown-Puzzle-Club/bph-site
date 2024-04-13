@@ -240,9 +240,9 @@ export default function InfoPage() {
           </ul>
           <p>You may not publicly stream a solve of our hunt when the hunt is live.</p>
           <p>
-            It won&apos;t be necessary to look at the HTML source/JavaScript/CSS on any webpages for
-            any puzzle. Infractions or abuse of these elements may be grounds for disqualification
-            or removal from the hunt.
+            Please don&apos;t look at the HTML source/JavaScript/CSS on any webpages for any puzzle.
+            Infractions or abuse of these elements may be grounds for disqualification or removal
+            from the hunt.
           </p>
           <p>We reserve the right to disqualify any team for unsportsmanlike conduct.</p>
           <p>
