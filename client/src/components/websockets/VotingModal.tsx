@@ -50,7 +50,7 @@ const VotingModal = ({ sendJsonMessage, votingInfo, open, onOpenChange }: Voting
   });
 
   useEffect(() => {
-    if (votingInfo !== null && votingInfo.expiration_time !== null) {
+    if (votingInfo && votingInfo.expiration_time !== null) {
       console.log(new Date(votingInfo.expiration_time));
       restart(new Date(votingInfo.expiration_time));
     } else {
