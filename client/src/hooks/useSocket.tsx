@@ -68,6 +68,7 @@ const useSocket = (path: string, callbacks: SocketCallbacks | undefined = undefi
         setVotingInfo(parsedMessage.data);
         break;
       }
+      case "hint":
       case "unlock":
       case "solve": {
         toast.custom(
@@ -86,6 +87,8 @@ const useSocket = (path: string, callbacks: SocketCallbacks | undefined = undefi
         );
         break;
       }
+      case "storyline":
+        break;
       default:
         console.warn("Unknown message type", parsedMessage.type);
         break;

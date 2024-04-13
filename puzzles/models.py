@@ -1965,6 +1965,8 @@ def notify_on_hint_update(sender, instance, created, update_fields, **kwargs):
     if instance.status == Hint.NO_RESPONSE:
         if "discord_id" not in update_fields:
             discord_interface.update_hint(instance)
+            # TODO: Update this!
+            send_notification.send(None, notification_type="hint", title="New Hint", desc="")
     else:
         if "discord_id" not in update_fields:
             discord_interface.clear_hint(instance)
@@ -2001,20 +2003,20 @@ class StorylineUnlock(models.Model):
         super(StorylineUnlock, self).save(*args, **kwargs)
         send_notification.send(
             None,
-            notification_type="storyline_unlock",
+            notification_type="storyline",
             title=self.storyline,
             desc=self.storyline,
-            team=self.team.user.id,
+            team=self.team.id,
         )
 
     @staticmethod
     def activate_non_storyline_dialogue(storyline_slug: str, team: Team):
         send_notification.send(
             None,
-            notification_type="storyline_unlock",
+            notification_type="storyline",
             title=storyline_slug,
             desc=storyline_slug,
-            team=team.user.id,  # TODO: fix (no access to team
+            team=team.id,  # TODO: fix (no access to team
         )
 
     FREE_STORY_SLUGS = ["main-page-intro"]
