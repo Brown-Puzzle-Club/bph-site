@@ -2,6 +2,10 @@ import { useEffect, useState } from "react";
 import { BeatLoader } from "react-spinners";
 import { useDebounce } from "use-debounce";
 
+import databg from "@/assets/major_cases/data/databg.png";
+import dataleftcassette from "@/assets/major_cases/data/dataleftcassette.png";
+import datarightcasette from "@/assets/major_cases/data/datarightcasette.png";
+import datasearch from "@/assets/major_cases/data/datasearch.png";
 import { Input } from "@/components/ui/input";
 
 interface VoiceRecording {
@@ -29,44 +33,85 @@ export default function Data() {
   }, [debouncedQuery]);
 
   return (
-    <div className="py-4 mx-[20%]">
-      <h1 className="text-2xl font-bold">The Crime of Data</h1>
-      <p>
-        <a
-          href="https://docs.google.com/document/d/1M5AHZp_9G-F7cQ-8NTrw8rORa_hT-rN9MwwDVaudpXo/edit?usp=sharing"
-          className="underline hover:text-slate-400"
+    <div
+      className="flex justify-center h-full items-center"
+      style={{
+        backgroundImage: `url(${databg})`,
+        backgroundSize: "cover",
+      }}
+    >
+      <div className="py-4 mx-[2%] w-full flex flex-col items-center">
+        <h1 className="text-2xl font-bold">Data Major Case</h1>
+        <p>
+          <a
+            href="https://docs.google.com/document/d/1M5AHZp_9G-F7cQ-8NTrw8rORa_hT-rN9MwwDVaudpXo/edit?usp=sharing"
+            className="underline hover:text-slate-400"
+          >
+            Flavor Text
+          </a>
+        </p>
+        <div
+          className="bg-contain bg-no-repeat pt-2 pb-2 w-full relative aspect-[7/1] w-[70%]"
+          style={{
+            backgroundImage: `url(${datasearch})`,
+          }}
         >
-          Flavor Text
-        </a>
-      </p>
-      <Input
-        type="text"
-        className="dark text-xl font-mono my-4"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search voice recordings"
-      />
-      {loading ? (
-        <BeatLoader className="justify-center content-center pr-2" color={"#fff"} size={12} />
-      ) : (
-        <div>
-          <ul>
-            {results.map((result, index) => (
-              <li key={index} className="py-4 border-b border-slate-800">
-                <div className="flex justify-between">
-                  <div className="text-left border-r border-slate-800 px-2 w-[75%]">
-                    {result.transcript}
-                  </div>
-                  <div className="text-sm text-center border-r border-slate-800 font-mono pr-2 justify-center content-center px-1">
-                    {result.characters}, {result.hour}:00PM
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ul>
+          <Input
+            type="text"
+            className="absolute bg-transparent text-xl text-black font-mono my-4 border-none outline-none shadow-none text-white px-2 py-1 focus:outline-none focus-visible:ring-offset-0 ring-offset-0 border-0 w-[80%]"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search voice recordings"
+            style={{ top: "10%", left: "10%" }}
+          />
         </div>
-      )}
-      {results.length === 0 && debouncedQuery !== "" && !loading && <div>No results found</div>}
+
+        {loading ? (
+          <BeatLoader className="justify-center content-center pr-2" color={"#fff"} size={12} />
+        ) : (
+          <div>
+            <ul>
+              {results.map((result, index) => (
+                <>
+                  <li key={index} className="py-5 text-black">
+                    <div className="flex justify-between " style={{}}>
+                      <div
+                        className="bg-contain bg-no-repeat aspect-ratio-[15/17] bg-right"
+                        style={{
+                          backgroundImage: `url(${dataleftcassette})`,
+                          width: "40%",
+                          transform: " scale(1.3)",
+                        }}
+                      ></div>
+                      <div
+                        className="w-full flex-col justify-center px-3"
+                        style={{
+                          backgroundColor: "#c29bb0",
+                        }}
+                      >
+                        <div className="text-sm text-center  font-mono justify-center ">
+                          {result.characters}, {result.hour}:00PM
+                        </div>
+                        <div className="text-left px-2 w-full">{result.transcript}</div>
+                      </div>
+
+                      <div
+                        className="bg-contain bg-left bg-no-repeat aspect-ratio-[15/17]"
+                        style={{
+                          backgroundImage: `url(${datarightcasette})`,
+                          width: "40%",
+                          transform: " scale(1.3)",
+                        }}
+                      ></div>
+                    </div>
+                  </li>
+                </>
+              ))}
+            </ul>
+          </div>
+        )}
+        {results.length === 0 && debouncedQuery !== "" && !loading && <div>No results found</div>}
+      </div>
     </div>
   );
 }
