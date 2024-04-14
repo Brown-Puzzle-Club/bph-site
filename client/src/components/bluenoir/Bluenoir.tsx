@@ -2,7 +2,7 @@ import { animate, motion, useMotionValue } from "framer-motion";
 import { useEffect, useRef } from "react";
 import { useGesture } from "react-use-gesture";
 
-import useBPHStore, { CENTER } from "@/stores/useBPHStore";
+import useBPHStore from "@/stores/useBPHStore";
 import { cn } from "@/utils/utils";
 
 import BluenoirFrame from "./BluenoirFrame";
@@ -42,7 +42,7 @@ const Bluenoir = () => {
   });
 
   useEffect(() => {
-    const pos = centered ? CENTER : previousPosition;
+    const pos = centered ? centered : previousPosition;
     const centeredPositionX =
       pos.x * window.innerWidth - (measureRef.current?.offsetWidth ?? 0) / 2;
     const centeredPositionY =
@@ -66,7 +66,7 @@ const Bluenoir = () => {
         y.set(dy);
       },
       onDragEnd: () => {
-        const pos = centered ? CENTER : getNearestSnapPoint({ x: x.get(), y: y.get() });
+        const pos = centered ? centered : getNearestSnapPoint({ x: x.get(), y: y.get() });
         const centeredPositionX = pos.x * innerWidth - (measureRef.current?.offsetWidth ?? 0) / 2;
         const centeredPositionY = pos.y * innerHeight - (measureRef.current?.offsetHeight ?? 0) / 2;
 
@@ -85,7 +85,7 @@ const Bluenoir = () => {
 
   return (
     <motion.div
-      className="fixed z-[50] text-white rounded-lg bg-slate-900 p-3 pr-4 shadow-lg shadow-slate-800"
+      className="fixed z-[100] text-white rounded-lg bg-slate-900 p-3 pr-4 shadow-lg shadow-slate-800"
       style={{
         x,
         y,

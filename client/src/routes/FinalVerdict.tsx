@@ -1,18 +1,18 @@
 import { useWindowSize } from "@uidotdev/usehooks";
 import type { MotionValue } from "framer-motion";
 import { animate, motion, useMotionValue } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
-import { z } from "zod";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import frame from "@/assets/bluenoir/frame.png";
 import cultleader from "@/assets/main_page/CULT_LEADER.jpg";
 import gorgon from "@/assets/main_page/GORGON.jpg";
 import nerd from "@/assets/main_page/NERD.jpg";
 import { Button } from "@/components/ui/button";
+import useBPHStore, { BOTTOM_CENTER } from "@/stores/useBPHStore";
 import { cn } from "@/utils/utils";
 
 enum Culprit {
-  CULT_LEADER = "The Cult Leader",
+  CULT_LEADER = "Cult Leader",
   GORGON = "Lady Gorgon",
   NERD = "The Earworm",
 }
@@ -29,6 +29,12 @@ const CHARACTER_GLOW = {
   [Culprit.NERD]: "drop-shadow(0 0 0.75rem maroon)",
 };
 
+const characterPosState = {
+  [Culprit.CULT_LEADER]: { x: 0.25 - 0.043, y: 0.15 },
+  [Culprit.GORGON]: { x: 0.5 - 0.043, y: 0.15 },
+  [Culprit.NERD]: { x: 0.75 - 0.043, y: 0.15 },
+};
+
 export default function FinalVerdict() {
   // const { data: context } = useDjangoContext();
 
@@ -36,45 +42,84 @@ export default function FinalVerdict() {
 
   const [currentSelectedCharacter, setCurrentSelectedCharacter] = useState<Culprit | null>(null);
   const [prevSelectedCharacter, setPrevSelectedCharacter] = useState<Culprit | null>(null);
+  const cultRef = useRef<HTMLDivElement>(null);
+  const gorgonRef = useRef<HTMLDivElement>(null);
+  const nerdRef = useRef<HTMLDivElement>(null);
+  const verdictBoxRef = useRef<HTMLDivElement>(null);
 
-  const CHARACTER_REFS = {
-    [Culprit.CULT_LEADER]: useRef<HTMLDivElement>(null),
-    [Culprit.GORGON]: useRef<HTMLDivElement>(null),
-    [Culprit.NERD]: useRef<HTMLDivElement>(null),
-  };
+  const setStoryline = useBPHStore((state) => state.setStoryline);
 
+  const cultX = useMotionValue(
+    characterPosState[Culprit.CULT_LEADER].x * (innerWidth ?? window.innerWidth),
+  );
+  const cultY = useMotionValue(
+    characterPosState[Culprit.CULT_LEADER].y * (innerHeight ?? window.innerHeight),
+  );
+  const gorgonX = useMotionValue(
+    characterPosState[Culprit.GORGON].x * (innerWidth ?? window.innerWidth),
+  );
+  const gorgonY = useMotionValue(
+    characterPosState[Culprit.GORGON].y * (innerHeight ?? window.innerHeight),
+  );
+  const nerdX = useMotionValue(
+    characterPosState[Culprit.NERD].x * (innerWidth ?? window.innerWidth),
+  );
+  const nerdY = useMotionValue(
+    characterPosState[Culprit.NERD].y * (innerHeight ?? window.innerHeight),
+  );
 
-  useEffect(() => { 
-    console.log("currentSelectedCharacter", currentSelectedCharacter);
-    console.log("prevSelectedCharacter", prevSelectedCharacter);
-  }, [currentSelectedCharacter, prevSelectedCharacter]);
+  const charCoords = useMemo(
+    () => ({
+      [Culprit.CULT_LEADER]: { x: cultX, y: cultY },
+      [Culprit.GORGON]: { x: gorgonX, y: gorgonY },
+      [Culprit.NERD]: { x: nerdX, y: nerdY },
+    }),
+    [cultX, cultY, gorgonX, gorgonY, nerdX, nerdY],
+  );
 
-  // useEffect(() => {
-  //   if (!chosenCharacter) return;
-  //   const character = chosenCharacter[0];
-  //   const { x, y } = char_coordss[character];
+  const CHARACTER_REFS = useMemo(
+    () => ({
+      [Culprit.CULT_LEADER]: cultRef,
+      [Culprit.GORGON]: gorgonRef,
+      [Culprit.NERD]: nerdRef,
+    }),
+    [],
+  );
 
-  //   console.log();
-  //   const box_x = verdictBoxRef.current?.getBoundingClientRect().x ?? 0;
-  //   const box_y = verdictBoxRef.current?.getBoundingClientRect().y ?? 0;
-  //   const box_width = verdictBoxRef.current?.offsetWidth ?? 0;
-  //   const box_height = verdictBoxRef.current?.offsetHeight ?? 0;
+  useEffect(() => {
+    if (currentSelectedCharacter) {
+      const { x, y } = charCoords[currentSelectedCharacter];
 
-  //   const character_width = CHARACTER_REFS[character].current?.offsetWidth ?? 0;
-  //   const character_height = CHARACTER_REFS[character].current?.offsetHeight ?? 0;
+      const box_x = verdictBoxRef.current?.getBoundingClientRect().x ?? 0;
+      const box_y = verdictBoxRef.current?.getBoundingClientRect().y ?? 0;
+      const box_width = verdictBoxRef.current?.offsetWidth ?? 0;
+      const box_height = verdictBoxRef.current?.offsetHeight ?? 0;
 
-  //   const verdict_x = box_x + (box_width - character_width) / 2;
-  //   const verdict_y = box_y + (box_height - character_height) / 2;
+      const character_width = CHARACTER_REFS[currentSelectedCharacter].current?.offsetWidth ?? 0;
+      const character_height = CHARACTER_REFS[currentSelectedCharacter].current?.offsetHeight ?? 0;
 
-  //   animate(x, verdict_x);
-  //   animate(y, verdict_y);
+      const verdict_x = box_x + (box_width - character_width) / 2;
+      const verdict_y = box_y + (box_height - character_height) / 2;
 
-  //   console.log(x, y);
-  // }, [chosenCharacter, innerWidth, innerHeight]);
+      animate(x, verdict_x);
+      animate(y, verdict_y);
+    }
 
-  // if (!context || Object.keys(context.team_context.major_case_solves).length < 3) {
-  //   return <Error404 />;
-  // }
+    if (prevSelectedCharacter) {
+      const prev_x = characterPosState[prevSelectedCharacter].x * (innerWidth ?? 0);
+      const prev_y = characterPosState[prevSelectedCharacter].y * (innerHeight ?? 0);
+
+      animate(charCoords[prevSelectedCharacter].x, prev_x);
+      animate(charCoords[prevSelectedCharacter].y, prev_y);
+    }
+  }, [
+    currentSelectedCharacter,
+    innerWidth,
+    innerHeight,
+    charCoords,
+    CHARACTER_REFS,
+    prevSelectedCharacter,
+  ]);
 
   const CharacterFrame = ({
     character,
@@ -87,15 +132,13 @@ export default function FinalVerdict() {
     x: MotionValue<number>;
     y: MotionValue<number>;
   }) => {
-    // const x = useMotionValue
-
     return (
       <motion.div
         ref={CHARACTER_REFS[character]}
-        className="absolute flex flex-col items-center z-[50] text-white rounded-lg bg-slate-900 p-3 pr-4 shadow-lg shadow-slate-800"
+        className="absolute flex flex-col items-center z-[50] w-[160px] h-[160px] text-white rounded-lg bg-slate-900 p-5 shadow-lg shadow-slate-800"
         style={{
-          filter: currentSelectedCharacter == character ? CHARACTER_GLOW[currentSelectedCharacter] : "",
-          // transform: "translate(-50%, -50%)",
+          filter:
+            currentSelectedCharacter == character ? CHARACTER_GLOW[currentSelectedCharacter] : "",
           left: x,
           top: y,
           ...style,
@@ -112,11 +155,11 @@ export default function FinalVerdict() {
               }}
             />
           </div>
-          <div className="h-[100px] w-[100px] absolute mx-auto my-auto select-none">
+          <div className="h-[100px] w-[100px] absolute mx-auto my-auto select-none p-2">
             <img className="select-none pointer-events-none" src={frame} />
           </div>
         </div>
-        <h2 className="text-md font-bold text-center underline">{character}</h2>
+        <h2 className="text-md font-bold font-mon text-center underline">{character}</h2>
       </motion.div>
     );
   };
@@ -131,29 +174,19 @@ export default function FinalVerdict() {
     }
   };
 
-  const verdictBoxRef = useRef<HTMLDivElement>(null);
-
-  const characterPosState = {
-    [Culprit.CULT_LEADER]: { x: 0.25, y: 0.25 },
-    [Culprit.GORGON]: { x: 0.5, y: 0.25 },
-    [Culprit.NERD]: { x: 0.75, y: 0.25 },
-  };
-
-  const cultX = useMotionValue(characterPosState[Culprit.CULT_LEADER].x * (innerWidth ?? 0));
-  const cultY = useMotionValue(characterPosState[Culprit.CULT_LEADER].y * (innerHeight ?? 0));
-  const gorgonX = useMotionValue(characterPosState[Culprit.GORGON].x * (innerWidth ?? 0));
-  const gorgonY = useMotionValue(characterPosState[Culprit.GORGON].y * (innerHeight ?? 0));
-  const nerdX = useMotionValue(characterPosState[Culprit.NERD].x * (innerWidth ?? 0));
-  const nerdY = useMotionValue(characterPosState[Culprit.NERD].y * (innerHeight ?? 0));
-
-  const char_coordss = {
-    [Culprit.CULT_LEADER]: { x: cultX, y: cultY },
-    [Culprit.GORGON]: { x: gorgonX, y: gorgonY },
-    [Culprit.NERD]: { x: nerdX, y: nerdY },
-  };
-
   const confirmSelection = () => {
     // TODO: handle bluenoir talking logic, handle resetting the scene.
+    switch (currentSelectedCharacter) {
+      case Culprit.CULT_LEADER:
+        setStoryline("colored-thread-verdict", BOTTOM_CENTER);
+        break;
+      case Culprit.GORGON:
+        setStoryline("social-deduction-verdict", BOTTOM_CENTER);
+        break;
+      case Culprit.NERD:
+        setStoryline("data-verdict", BOTTOM_CENTER);
+        break;
+    }
   };
 
   return (
@@ -167,7 +200,7 @@ export default function FinalVerdict() {
         >
           The Final Verdict
         </h1>
-        <h3 className="text-center">CASES CLOSED: Who killed Josiah S. Carberry?</h3>
+        <h3 className="text-center font-mono">CASES CLOSED: Who killed Josiah S. Carberry?</h3>
       </div>
 
       <div className="flex items-center justify-center text-white  p-3 pr-4 gap-8">
@@ -190,7 +223,7 @@ export default function FinalVerdict() {
         <div
           ref={verdictBoxRef}
           className={cn(
-            "absolute verdict-box text-white rounded-lg bg-slate-900 p-3 pr-4 shadow-lg  w-[160px] h-[160px]",
+            "absolute verdict-box text-white rounded-lg bg-slate-900 p-3 shadow-lg w-[160px] h-[160px]",
             currentSelectedCharacter && "shadow-slate-500",
           )}
           style={{
@@ -198,16 +231,7 @@ export default function FinalVerdict() {
             left: "50%",
             transform: "translate(-50%, -50%)",
           }}
-        >
-          {/* <div
-            className="absolute verdict-box text-white rounded-lg bg-slate-900 p-3 pr-4 shadow-lg shadow-slate-400 w-[125px] h-[125px]"
-            style={{
-              top: "48%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-            }}
-          ></div> */}
-        </div>
+        />
       </div>
 
       {currentSelectedCharacter && (
@@ -218,9 +242,7 @@ export default function FinalVerdict() {
             left: "50%",
             transform: "translate(-50%, -50%)",
           }}
-          onClick={() =>
-            
-          }
+          onClick={confirmSelection}
         >
           CONFIRM
         </Button>
