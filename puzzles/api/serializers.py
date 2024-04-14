@@ -158,6 +158,15 @@ class AnswerSubmissionSerializer(serializers.ModelSerializer):
         ]
 
 
+class AnswerSubmissionStatsSerializer(serializers.ModelSerializer):
+    team_name = serializers.CharField(source="team__team_name")
+    puzzle_name = serializers.CharField(source="puzzle__name")
+
+    class Meta:
+        model = AnswerSubmission
+        fields = ["team_name", "puzzle_name", "submitted_datetime"]
+
+
 class ExtraGuessGrantSerializer(serializers.ModelSerializer):
     class Meta:
         model = ExtraGuessGrant

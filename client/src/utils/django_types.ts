@@ -72,6 +72,13 @@ const AnswerSubmissionSchema = z.object({
 });
 type AnswerSubmission = z.infer<typeof AnswerSubmissionSchema>;
 
+const AnswerSubmissionStatsSchema = z.object({
+  team_name: z.string(),
+  puzzle_name: z.string(),
+  submitted_datetime: z.date(),
+});
+type AnswerSubmissionStats = z.infer<typeof AnswerSubmissionStatsSchema>;
+
 const MajorCaseSchema = z.object({
   id: z.number(),
   name: z.string(),
@@ -283,6 +290,7 @@ type APIResponse<T> = SuccessResponse<T> | ErrorResponse;
 export type {
   APIResponse,
   AnswerSubmission,
+  AnswerSubmissionStats,
   DjangoContext,
   Erratum,
   EventCompletion,

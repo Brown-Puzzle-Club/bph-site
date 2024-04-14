@@ -265,3 +265,15 @@ def get_events(request: Request) -> Response:
     serializer = EventSerializer(events, many=True)
 
     return Response(serializer.data)
+
+
+@api_view(["GET"])
+def get_all_solve_stats(request: Request) -> Response:
+    # Get all the solves for all the puzzles, and return only the team names and the puzzle slugs
+    solves = AnswerSubmission.objects.filter(is_correct=True).values(
+        "team__team_name", "puzzle__name", "submitted_datetime"
+    )
+    serializer = AnswerSubmissionStatsSerializer(solves, many=True)
+
+    return Response(serializer.data)
+    return Response("Not implemented yet")

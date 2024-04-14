@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
 import type {
+  AnswerSubmissionStats,
   DjangoContext,
   Hint,
   InPersonEvent,
@@ -45,6 +46,10 @@ const getHintsForPuzzle = async (puzzleSlug: string) => {
 };
 const getStoryUnlocks = async () => {
   const response = await axios.get<StorylineUnlock[]>("/api/story-unlocks");
+  return response.data;
+};
+const getStatistics = async () => {
+  const response = await axios.get<AnswerSubmissionStats[]>("/api/stats");
   return response.data;
 };
 
@@ -109,6 +114,13 @@ export const useStoryUnlocks = () => {
   return useQuery({
     queryKey: ["story-unlocks"],
     queryFn: getStoryUnlocks,
+  });
+};
+
+export const useStatistics = () => {
+  return useQuery({
+    queryKey: ["stats"],
+    queryFn: getStatistics,
   });
 };
 
