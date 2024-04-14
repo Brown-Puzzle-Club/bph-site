@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
 import { BeatLoader } from "react-spinners";
 
 import MarkdownWrapper from "@/components/puzzle/MarkdownWrapper";
@@ -29,20 +28,24 @@ const Errata = ({ errata }: { errata: Erratum[] }) => {
         <div className="max-h-[10rem] overflow-auto">
           <table className="table-auto w-full">
             <tbody>
-              {errata.map((erratum, i) => (
-                <tr key={`erratum-${i}`}>
-                  <td className="border-b border-slate-500 px-4 py-2 text-left">
-                    {erratum.updates_text}
-                  </td>
-                  <td
-                    className={cn(
-                      "border-b border-slate-500 px-4 py-2 font-mono text-xs text-right",
-                    )}
-                  >
-                    {new Date(erratum.timestamp).toLocaleString("en-US")}
-                  </td>
-                </tr>
-              ))}
+              {errata
+                .filter((erratum) => erratum.published)
+                .map((erratum, i) => {
+                  return (
+                    <tr key={`erratum-${i}`}>
+                      <td className="border-b border-slate-500 px-4 py-2 text-left">
+                        {erratum.updates_text}
+                      </td>
+                      <td
+                        className={cn(
+                          "border-b border-slate-500 px-4 py-2 font-mono text-xs text-right",
+                        )}
+                      >
+                        {new Date(erratum.timestamp).toLocaleString("en-US")}
+                      </td>
+                    </tr>
+                  );
+                })}
             </tbody>
           </table>
         </div>
@@ -73,8 +76,6 @@ function PuzzleWrapper({ puzzle_slug }: { puzzle_slug: string }) {
     });
   });
 
-  const navigate = useNavigate();
-
   const ADMIN_REMOTE_VISIBLE = useMemo(() => {
     // if the body_remote exists in the fetch, this means that the user has admin access. This saves a query :P
     return puzzle?.body_remote && puzzle.body_remote != "";
@@ -91,7 +92,6 @@ function PuzzleWrapper({ puzzle_slug }: { puzzle_slug: string }) {
   }, [puzzle, puzzleContent]);
 
   if (isError) {
-    navigate("/eventpage");
     return <Error404 />;
   }
 
