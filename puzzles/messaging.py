@@ -114,15 +114,26 @@ def log_puzzle_info(puzzle, team, content):
 request_logger = logging.getLogger("puzzles.request")
 
 
+THRESHOLD_FOR_LONG_REQUEST = datetime.timedelta(seconds=1)
+
+
 def log_request_middleware(get_response):
     def middleware(request):
 
         start = datetime.datetime.now()
         response = get_response(request)
         end = datetime.datetime.now()
-        request_logger.info(
-            "{} {} {}".format(request.get_full_path(), request.user, end - start)
-        )
+        elapsed = end - start
+        if elapsed > THRESHOLD_FOR_LONG_REQUEST:
+            request_logger.warning(
+                "Long request: {} {} {}".format(
+                    request.get_full_path(), request.user, elapsed
+                )
+            )
+        else:
+            request_logger.info(
+                "{} {} {}".format(request.get_full_path(), request.user, end - start)
+            )
         return response
 
     return middleware
