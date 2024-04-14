@@ -245,7 +245,7 @@ export const BluenoirStories: Record<string, Story> = {
   "colored-thread-complete": {
     slug: "first-major-case-complete",
     title: "First Discovery",
-    description: "You've solved your first major case!",
+    description: "You've solved the case of the colored thread!",
     dialogues: [
       {
         text: "Heh ... Not bad work back there, kid.",
@@ -292,7 +292,7 @@ export const BluenoirStories: Record<string, Story> = {
   "social-deduction-complete": {
     slug: "second-major-case-complete",
     title: "Second Discovery",
-    description: "You've solved your second major case!",
+    description: "You've solved the case of Social Deduction!",
     dialogues: [
       {
         text: "Look who's done it again!",
@@ -363,7 +363,7 @@ export const BluenoirStories: Record<string, Story> = {
   "data-complete": {
     slug: "third-major-case-complete",
     title: "Final Discovery",
-    description: "You've solved your second major case!",
+    description: "You've solved the case of Data!",
     dialogues: [
       {
         text: "... Wow, kid.",
