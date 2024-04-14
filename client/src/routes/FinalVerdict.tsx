@@ -8,7 +8,7 @@ import cultleader from "@/assets/main_page/CULT_LEADER.jpg";
 import gorgon from "@/assets/main_page/GORGON.jpg";
 import nerd from "@/assets/main_page/NERD.jpg";
 import { Button } from "@/components/ui/button";
-import useBPHStore, { BOTTOM_CENTER } from "@/stores/useBPHStore";
+import useBPHStore, { BOTTOM_CENTER, VERDICT_CENTER } from "@/stores/useBPHStore";
 import { cn } from "@/utils/utils";
 
 enum Culprit {
@@ -42,10 +42,13 @@ export default function FinalVerdict() {
 
   const [currentSelectedCharacter, setCurrentSelectedCharacter] = useState<Culprit | null>(null);
   const [prevSelectedCharacter, setPrevSelectedCharacter] = useState<Culprit | null>(null);
+  const setOpen = useBPHStore((state) => state.setBluenoirOpen);
+  const position = useBPHStore((state) => state.bluenoirCurrentPosition);
   const cultRef = useRef<HTMLDivElement>(null);
   const gorgonRef = useRef<HTMLDivElement>(null);
   const nerdRef = useRef<HTMLDivElement>(null);
   const verdictBoxRef = useRef<HTMLDivElement>(null);
+  const [bluenoirCount, setBluenoirCount] = useState(1);
 
   const setStoryline = useBPHStore((state) => state.setStoryline);
 
@@ -85,6 +88,14 @@ export default function FinalVerdict() {
     }),
     [],
   );
+
+  useEffect(() => {
+    if (position == VERDICT_CENTER) {
+      setPrevSelectedCharacter(currentSelectedCharacter);
+      setCurrentSelectedCharacter(null);
+      setOpen(false);
+    }
+  }, [currentSelectedCharacter, position, setOpen]);
 
   useEffect(() => {
     if (currentSelectedCharacter) {
@@ -168,7 +179,7 @@ export default function FinalVerdict() {
     if (currentSelectedCharacter === character) {
       setCurrentSelectedCharacter(null);
       setPrevSelectedCharacter(character);
-    } else {
+    } else if (position != VERDICT_CENTER) {
       setPrevSelectedCharacter(currentSelectedCharacter);
       setCurrentSelectedCharacter(character);
     }
@@ -176,6 +187,12 @@ export default function FinalVerdict() {
 
   const confirmSelection = () => {
     // TODO: handle bluenoir talking logic, handle resetting the scene.
+    if (position == VERDICT_CENTER) {
+      setBluenoirCount((prev) => prev + 1);
+      setStoryline(`bluenoir-verdict-${bluenoirCount}`, BOTTOM_CENTER);
+      return;
+    }
+
     switch (currentSelectedCharacter) {
       case Culprit.CULT_LEADER:
         setStoryline("colored-thread-verdict", BOTTOM_CENTER);
@@ -212,7 +229,7 @@ export default function FinalVerdict() {
       <div
         className={cn(
           "absolute verdict-box text-white rounded-lg bg-slate-900 p-3 pr-4 shadow-lg w-[200px] h-[200px]",
-          currentSelectedCharacter && "shadow-slate-800",
+          (currentSelectedCharacter || position == VERDICT_CENTER) && "shadow-slate-800",
         )}
         style={{
           top: "50%",
@@ -224,7 +241,7 @@ export default function FinalVerdict() {
           ref={verdictBoxRef}
           className={cn(
             "absolute verdict-box text-white rounded-lg bg-slate-900 p-3 shadow-lg w-[160px] h-[160px]",
-            currentSelectedCharacter && "shadow-slate-500",
+            (currentSelectedCharacter || position == VERDICT_CENTER) && "shadow-slate-500",
           )}
           style={{
             top: "50%",
@@ -234,7 +251,7 @@ export default function FinalVerdict() {
         />
       </div>
 
-      {currentSelectedCharacter && (
+      {(currentSelectedCharacter || position == VERDICT_CENTER) && (
         <Button
           className="absolute"
           style={{

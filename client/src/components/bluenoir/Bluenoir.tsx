@@ -1,5 +1,6 @@
 import { animate, motion, useMotionValue } from "framer-motion";
 import { useEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
 import { useGesture } from "react-use-gesture";
 
 import useBPHStore from "@/stores/useBPHStore";
@@ -26,6 +27,8 @@ const Bluenoir = () => {
 
   const dragRef = useRef<HTMLDivElement>(null);
   const measureRef = useRef<HTMLDivElement>(null);
+
+  const location = useLocation();
 
   useEffect(() => {
     start(speak, IDLE_TIMER * 1000);
@@ -66,7 +69,13 @@ const Bluenoir = () => {
         y.set(dy);
       },
       onDragEnd: () => {
-        const pos = centered ? centered : getNearestSnapPoint({ x: x.get(), y: y.get() });
+        console.log(location.pathname.includes("final-verdict"));
+        const pos = centered
+          ? centered
+          : getNearestSnapPoint(
+              { x: x.get(), y: y.get() },
+              location.pathname.includes("final-verdict"),
+            );
         const centeredPositionX = pos.x * innerWidth - (measureRef.current?.offsetWidth ?? 0) / 2;
         const centeredPositionY = pos.y * innerHeight - (measureRef.current?.offsetHeight ?? 0) / 2;
 

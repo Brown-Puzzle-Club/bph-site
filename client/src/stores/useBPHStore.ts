@@ -9,6 +9,7 @@ export const TOP_LEFT = { x: 0.05, y: 0.13 } as const;
 export const BOTTOM_LEFT = { x: 0.05, y: 0.85 } as const;
 export const CENTER = { x: 0.4, y: 0.4 } as const;
 export const BOTTOM_CENTER = { x: 0.4, y: 0.75 } as const;
+export const VERDICT_CENTER = { x: 0.493, y: 0.48 } as const;
 
 export interface Position {
   x: number;
@@ -34,7 +35,7 @@ interface BluenoirActions {
   getPreviousPosition: () => Position;
   getBluenoirPosition: () => Position;
   setBluenoirPosition: (position: Position) => void;
-  getNearestSnapPoint: (position?: Position) => Position;
+  getNearestSnapPoint: (position?: Position, includeCenter?: boolean) => Position;
   setBluenoirCentered: (centered: typeof CENTER | typeof BOTTOM_CENTER | null) => void;
   toggleBluenoirCentered: () => void;
   startIdleTimer: (callback: () => void, duration: number) => void;
@@ -119,12 +120,15 @@ const useBPHStore = create<BPHState & BPHActions>()(
             : state.bluenoirCurrentPosition,
       }));
     },
-    getNearestSnapPoint: (position) => {
+    getNearestSnapPoint: (position, includeCenter) => {
       const pos = position ?? get().getBluenoirPosition();
       const normalizedPosition = { x: pos.x / window.innerWidth, y: pos.y / window.innerHeight };
 
+      const snapPoints = includeCenter
+        ? [TOP_LEFT, BOTTOM_LEFT, VERDICT_CENTER]
+        : [TOP_LEFT, BOTTOM_LEFT];
+      console.log(snapPoints);
       // find the closest snap point
-      const snapPoints = [TOP_LEFT, BOTTOM_LEFT];
       const orderedSnapPoints = snapPoints.sort(
         (a, b) => distSq(a, normalizedPosition) - distSq(b, normalizedPosition),
       );
