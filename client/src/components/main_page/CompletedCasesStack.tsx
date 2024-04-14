@@ -44,7 +44,7 @@ export default function CompletedCasesStack({
           transform: "translate(-50%, 50%)",
         }}
       >
-        COMPLETED CASES
+        CLOSED CASES
       </span>
       {completed_cases.map((mc_completed) => (
         <img
