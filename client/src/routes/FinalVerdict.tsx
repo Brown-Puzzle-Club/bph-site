@@ -119,6 +119,8 @@ export default function FinalVerdict() {
     const verdict_x = verdictBoxRef.current?.getBoundingClientRect().x ?? 0;
     const verdict_y = verdictBoxRef.current?.getBoundingClientRect().y ?? 0;
 
+    console.log(verdict_x, verdict_y);
+
     animate(x, verdict_x);
     animate(y, verdict_y);
 
