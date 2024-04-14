@@ -132,11 +132,11 @@ def context(request: Request) -> Response:
     serializer = ContextSerializer(data=request._request.context)
     new_time = datetime.now()
     time_elapse = new_time - time
-    print(f"Context took {time_elapse} to serialize")
+    # print(f"Context took {time_elapse} to serialize")
 
-    print("yee")
+    # print("yee")
     if serializer.is_valid():
-        print("haw")
+        # print("haw")
         validated_data = serializer.validated_data
         return Response(validated_data)
     else:
