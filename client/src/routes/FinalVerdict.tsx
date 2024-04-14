@@ -1,6 +1,8 @@
+import { useWindowSize } from "@uidotdev/usehooks";
 import type { MotionValue } from "framer-motion";
 import { animate, motion, useMotionValue } from "framer-motion";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { z } from "zod";
 
 import frame from "@/assets/bluenoir/frame.png";
 import cultleader from "@/assets/main_page/CULT_LEADER.jpg";
@@ -30,7 +32,45 @@ const CHARACTER_GLOW = {
 export default function FinalVerdict() {
   // const { data: context } = useDjangoContext();
 
-  const [selectedCharacter, setSelectedCharacter] = useState<Culprit | null>(null);
+  const { width: innerWidth, height: innerHeight } = useWindowSize();
+
+  const [currentSelectedCharacter, setCurrentSelectedCharacter] = useState<Culprit | null>(null);
+  const [prevSelectedCharacter, setPrevSelectedCharacter] = useState<Culprit | null>(null);
+
+  const CHARACTER_REFS = {
+    [Culprit.CULT_LEADER]: useRef<HTMLDivElement>(null),
+    [Culprit.GORGON]: useRef<HTMLDivElement>(null),
+    [Culprit.NERD]: useRef<HTMLDivElement>(null),
+  };
+
+
+  useEffect(() => { 
+    console.log("currentSelectedCharacter", currentSelectedCharacter);
+    console.log("prevSelectedCharacter", prevSelectedCharacter);
+  }, [currentSelectedCharacter, prevSelectedCharacter]);
+
+  // useEffect(() => {
+  //   if (!chosenCharacter) return;
+  //   const character = chosenCharacter[0];
+  //   const { x, y } = char_coordss[character];
+
+  //   console.log();
+  //   const box_x = verdictBoxRef.current?.getBoundingClientRect().x ?? 0;
+  //   const box_y = verdictBoxRef.current?.getBoundingClientRect().y ?? 0;
+  //   const box_width = verdictBoxRef.current?.offsetWidth ?? 0;
+  //   const box_height = verdictBoxRef.current?.offsetHeight ?? 0;
+
+  //   const character_width = CHARACTER_REFS[character].current?.offsetWidth ?? 0;
+  //   const character_height = CHARACTER_REFS[character].current?.offsetHeight ?? 0;
+
+  //   const verdict_x = box_x + (box_width - character_width) / 2;
+  //   const verdict_y = box_y + (box_height - character_height) / 2;
+
+  //   animate(x, verdict_x);
+  //   animate(y, verdict_y);
+
+  //   console.log(x, y);
+  // }, [chosenCharacter, innerWidth, innerHeight]);
 
   // if (!context || Object.keys(context.team_context.major_case_solves).length < 3) {
   //   return <Error404 />;
@@ -47,15 +87,17 @@ export default function FinalVerdict() {
     x: MotionValue<number>;
     y: MotionValue<number>;
   }) => {
-    // const x = useMotionValue;
+    // const x = useMotionValue
+
     return (
       <motion.div
+        ref={CHARACTER_REFS[character]}
         className="absolute flex flex-col items-center z-[50] text-white rounded-lg bg-slate-900 p-3 pr-4 shadow-lg shadow-slate-800"
         style={{
-          filter: selectedCharacter == character ? CHARACTER_GLOW[selectedCharacter] : "",
+          filter: currentSelectedCharacter == character ? CHARACTER_GLOW[currentSelectedCharacter] : "",
           // transform: "translate(-50%, -50%)",
-          x,
-          y,
+          left: x,
+          top: y,
           ...style,
         }}
         onClick={() => toggleSelectedCharacter(character)}
@@ -80,12 +122,12 @@ export default function FinalVerdict() {
   };
 
   const toggleSelectedCharacter = (character: Culprit) => {
-    if (selectedCharacter === character) {
-      setSelectedCharacter(null);
-      // TODO: handle character moving back to original position
+    if (currentSelectedCharacter === character) {
+      setCurrentSelectedCharacter(null);
+      setPrevSelectedCharacter(character);
     } else {
-      setSelectedCharacter(character);
-      // TODO: handle character moving to box
+      setPrevSelectedCharacter(currentSelectedCharacter);
+      setCurrentSelectedCharacter(character);
     }
   };
 
@@ -97,12 +139,12 @@ export default function FinalVerdict() {
     [Culprit.NERD]: { x: 0.75, y: 0.25 },
   };
 
-  const cultX = useMotionValue(characterPosState[Culprit.CULT_LEADER].x * innerWidth);
-  const cultY = useMotionValue(characterPosState[Culprit.CULT_LEADER].y * innerHeight);
-  const gorgonX = useMotionValue(characterPosState[Culprit.GORGON].x * innerWidth);
-  const gorgonY = useMotionValue(characterPosState[Culprit.GORGON].y * innerHeight);
-  const nerdX = useMotionValue(characterPosState[Culprit.NERD].x * innerWidth);
-  const nerdY = useMotionValue(characterPosState[Culprit.NERD].y * innerHeight);
+  const cultX = useMotionValue(characterPosState[Culprit.CULT_LEADER].x * (innerWidth ?? 0));
+  const cultY = useMotionValue(characterPosState[Culprit.CULT_LEADER].y * (innerHeight ?? 0));
+  const gorgonX = useMotionValue(characterPosState[Culprit.GORGON].x * (innerWidth ?? 0));
+  const gorgonY = useMotionValue(characterPosState[Culprit.GORGON].y * (innerHeight ?? 0));
+  const nerdX = useMotionValue(characterPosState[Culprit.NERD].x * (innerWidth ?? 0));
+  const nerdY = useMotionValue(characterPosState[Culprit.NERD].y * (innerHeight ?? 0));
 
   const char_coordss = {
     [Culprit.CULT_LEADER]: { x: cultX, y: cultY },
@@ -112,19 +154,6 @@ export default function FinalVerdict() {
 
   const confirmSelection = () => {
     // TODO: handle bluenoir talking logic, handle resetting the scene.
-    if (!selectedCharacter) return;
-    const { x, y } = char_coordss[selectedCharacter];
-
-    console.log();
-    const verdict_x = verdictBoxRef.current?.getBoundingClientRect().x ?? 0;
-    const verdict_y = verdictBoxRef.current?.getBoundingClientRect().y ?? 0;
-
-    console.log(verdict_x, verdict_y);
-
-    animate(x, verdict_x);
-    animate(y, verdict_y);
-
-    console.log(x, y);
   };
 
   return (
@@ -138,7 +167,7 @@ export default function FinalVerdict() {
         >
           The Final Verdict
         </h1>
-        <h3 className="text-center">CASES CLOSED</h3>
+        <h3 className="text-center">CASES CLOSED: Who killed Josiah S. Carberry?</h3>
       </div>
 
       <div className="flex items-center justify-center text-white  p-3 pr-4 gap-8">
@@ -150,7 +179,7 @@ export default function FinalVerdict() {
       <div
         className={cn(
           "absolute verdict-box text-white rounded-lg bg-slate-900 p-3 pr-4 shadow-lg w-[200px] h-[200px]",
-          selectedCharacter && "shadow-slate-800",
+          currentSelectedCharacter && "shadow-slate-800",
         )}
         style={{
           top: "50%",
@@ -162,7 +191,7 @@ export default function FinalVerdict() {
           ref={verdictBoxRef}
           className={cn(
             "absolute verdict-box text-white rounded-lg bg-slate-900 p-3 pr-4 shadow-lg  w-[160px] h-[160px]",
-            selectedCharacter && "shadow-slate-500",
+            currentSelectedCharacter && "shadow-slate-500",
           )}
           style={{
             top: "50%",
@@ -181,7 +210,7 @@ export default function FinalVerdict() {
         </div>
       </div>
 
-      {selectedCharacter && (
+      {currentSelectedCharacter && (
         <Button
           className="absolute"
           style={{
@@ -189,7 +218,9 @@ export default function FinalVerdict() {
             left: "50%",
             transform: "translate(-50%, -50%)",
           }}
-          onClick={() => confirmSelection()}
+          onClick={() =>
+            
+          }
         >
           CONFIRM
         </Button>
