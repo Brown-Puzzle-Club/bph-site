@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import Typewriter from "typewriter-effect";
 
 import useBPHStore from "@/stores/useBPHStore";
+import { BluenoirReaction } from "@/utils/bluenoir_dialogue";
 import { cn } from "@/utils/utils";
 
 import { IDLE_TIMER } from "./Bluenoir";
@@ -81,7 +82,7 @@ const BluenoirSpeech = () => {
               </button>
             </div>
             <div className={cn("font-extrabold font-mono text-sm underline underline-offset-2")}>
-              Bluenoir
+              {speechDialogue.reaction != BluenoirReaction.PHONE ? "Bluenoir" : ""}
             </div>
             <div className="grid font-mono font-light max-w-xs text-xs">
               <p className="text-slate-900 col-start-1 row-start-1">{speechDialogue.text}</p>
