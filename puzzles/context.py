@@ -26,7 +26,10 @@ from puzzles.shortcuts import get_shortcuts
 
 def context_middleware(get_response):
     def middleware(request):
+        time = timezone.localtime()
         request.context = Context(request)
+        time_after = timezone.localtime()
+        print("context_middleware: ", time_after - time)
         return get_response(request)
 
     return middleware
