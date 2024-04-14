@@ -2,12 +2,14 @@ import { useWindowSize } from "@uidotdev/usehooks";
 import type { MotionValue } from "framer-motion";
 import { animate, motion, useMotionValue } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 
 import frame from "@/assets/bluenoir/frame.png";
 import cultleader from "@/assets/main_page/CULT_LEADER.jpg";
 import gorgon from "@/assets/main_page/GORGON.jpg";
 import nerd from "@/assets/main_page/NERD.jpg";
 import { Button } from "@/components/ui/button";
+import { useDjangoContext } from "@/hooks/useDjangoContext";
 import useBPHStore, { BOTTOM_CENTER, VERDICT_CENTER } from "@/stores/useBPHStore";
 import { cn } from "@/utils/utils";
 
@@ -36,7 +38,7 @@ const characterPosState = {
 };
 
 export default function FinalVerdict() {
-  // const { data: context } = useDjangoContext();
+  const { data: context } = useDjangoContext();
 
   const { width: innerWidth, height: innerHeight } = useWindowSize();
 
@@ -175,6 +177,10 @@ export default function FinalVerdict() {
     );
   };
 
+  if (!context || Object.keys(context.team_context.major_case_solves).length != 3) {
+    return null;
+  }
+
   const toggleSelectedCharacter = (character: Culprit) => {
     if (currentSelectedCharacter === character) {
       setCurrentSelectedCharacter(null);
@@ -251,7 +257,7 @@ export default function FinalVerdict() {
         />
       </div>
 
-      {(currentSelectedCharacter || position == VERDICT_CENTER) && (
+      {(currentSelectedCharacter || (position == VERDICT_CENTER && bluenoirCount != 4)) && (
         <Button
           className="absolute"
           style={{
@@ -263,6 +269,19 @@ export default function FinalVerdict() {
         >
           CONFIRM
         </Button>
+      )}
+      {position == VERDICT_CENTER && bluenoirCount == 4 && (
+        <Link
+          to="/final-page"
+          className="absolute font-bold font-mono text-lg"
+          style={{
+            top: "70%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+          }}
+        >
+          Chase after Bluenoir!
+        </Link>
       )}
     </div>
   );

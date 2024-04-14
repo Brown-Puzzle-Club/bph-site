@@ -16,6 +16,7 @@ import Contact from "./routes/Contact";
 import Credits from "./routes/Credits";
 import ErrorPage, { Error404 } from "./routes/ErrorPage";
 import EventPage from "./routes/EventPage";
+import FinalPage from "./routes/FinalPage";
 import FinalVerdict from "./routes/FinalVerdict";
 import InfoPage from "./routes/InfoPage";
 import Landing from "./routes/Landing";
@@ -222,6 +223,10 @@ const router = createBrowserRouter([
       {
         path: "/final-verdict",
         element: <PageWrapper route={<FinalVerdict />} />,
+      },
+      {
+        path: "/final-page",
+        element: <PageWrapper route={<FinalPage />} />,
       },
       {
         path: "/solveadmin",

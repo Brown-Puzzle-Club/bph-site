@@ -1,4 +1,5 @@
 import { Toaster } from "react-hot-toast";
+import { useLocation } from "react-router-dom";
 
 import Footer from "@/components/Footer";
 import Navbar from "@/components/navbar/Navbar";
@@ -11,6 +12,7 @@ import CaseVoting from "./websockets/CaseVoting";
 
 export const PageWrapper = ({ route }: { route: React.ReactNode }) => {
   const { theme } = useTheme();
+  const location = useLocation();
 
   const { sendJsonMessage, readyState } = useSocket("ws/puzzles", {
     onOpen: () => {
@@ -31,7 +33,7 @@ export const PageWrapper = ({ route }: { route: React.ReactNode }) => {
         backgroundColor: theme.bg_color ? theme.bg_color : DEFAULT_THEME.bg_color,
       }}
     >
-      <Bluenoir />
+      {!location.pathname.includes("final-page") && <Bluenoir />}
       <Navbar />
       <div
         className="content min-h-[90vh] pb-2"
