@@ -116,8 +116,14 @@ request_logger = logging.getLogger("puzzles.request")
 
 def log_request_middleware(get_response):
     def middleware(request):
-        request_logger.info("{} {}".format(request.get_full_path(), request.user))
-        return get_response(request)
+
+        start = datetime.datetime.now()
+        response = get_response(request)
+        end = datetime.datetime.now()
+        request_logger.info(
+            "{} {} {}".format(request.get_full_path(), request.user, end - start)
+        )
+        return response
 
     return middleware
 
