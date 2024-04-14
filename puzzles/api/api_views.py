@@ -1,3 +1,4 @@
+from datetime import datetime
 from rest_framework import permissions, viewsets, mixins
 from puzzles import models
 from puzzles.api.api_guards import require_auth
@@ -127,9 +128,15 @@ class StorylineUnlockViewSet(viewsets.ModelViewSet):
 
 @api_view(["GET"])
 def context(request: Request) -> Response:
+    time = datetime.now()
     serializer = ContextSerializer(data=request._request.context)
+    new_time = datetime.now()
+    time_elapse = new_time - time
+    print(f"Context took {time_elapse} to serialize")
 
+    print("yee")
     if serializer.is_valid():
+        print("haw")
         validated_data = serializer.validated_data
         return Response(validated_data)
     else:

@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.contrib.auth.models import User
 from puzzles.models import (
     AnswerSubmission,
@@ -306,9 +307,17 @@ class ContextSerializer(serializers.Serializer):
         all_fields = hunt_context_fields.union(team_context_fields)
         for ctx in all_fields:
             if ctx in hunt_context_fields:
+                time = datetime.now()
                 hunt_context_data[ctx] = getattr(data, ctx)
+                new_time = datetime.now()
+                time_elapse = new_time - time
+                print(f"Context took {time_elapse} to serialize {ctx}")
             elif ctx in team_context_fields:
+                time = datetime.now()
                 team_context_data[ctx] = getattr(data, ctx)
+                new_time = datetime.now()
+                time_elapse = new_time - time
+                print(f"Context took {time_elapse} to serialize {ctx}")
 
         return {
             "team_context": TeamPuzzleContextSerializer(team_context_data).data,
