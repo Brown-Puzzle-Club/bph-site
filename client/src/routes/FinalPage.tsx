@@ -1,6 +1,7 @@
 import { useWindowSize } from "@uidotdev/usehooks";
 import Confetti from "react-confetti";
 
+import detectiveOfTheMonth from "@/assets/bdotm.png";
 import { useDjangoContext } from "@/hooks/useDjangoContext";
 
 const FinalPage = () => {
@@ -22,6 +23,7 @@ const FinalPage = () => {
           If you are a remote team, thank you for joining us! If you are an in-person team, wait for
           HQ to contact you with further instructions.
         </p>
+        {!context.team_context.in_person && <img src={detectiveOfTheMonth} />}
       </div>
     </div>
   );
