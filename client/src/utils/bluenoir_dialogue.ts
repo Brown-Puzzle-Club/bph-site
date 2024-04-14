@@ -507,6 +507,14 @@ export const BluenoirStories: Record<string, Story> = {
         text: "Just let me grab my coat. I should be ready in two flits of a floozy's skirt.",
         reaction: BluenoirReaction.EXCITED,
       },
+      {
+        text: "This case is closed... or is it? Maybe you should reconsider your choice.",
+        reaction: BluenoirReaction.PHONE,
+      },
+      {
+        text: "Let's go!",
+        reaction: BluenoirReaction.SMUG,
+      },
     ],
   },
   "social-deduction-verdict": {
@@ -532,6 +540,14 @@ export const BluenoirStories: Record<string, Story> = {
         text: "Just let me grab my coat. I'll be ready in two flits of a floozy's skirt.",
         reaction: BluenoirReaction.EXCITED,
       },
+      {
+        text: "This case is closed... or is it? Maybe you should reconsider.",
+        reaction: BluenoirReaction.PHONE,
+      },
+      {
+        text: "Let's go!",
+        reaction: BluenoirReaction.SMUG,
+      },
     ],
   },
   "data-verdict": {
@@ -556,6 +572,14 @@ export const BluenoirStories: Record<string, Story> = {
       {
         text: "Just let me grab my coat. I'll be ready in two flits of a floozy's skirt.",
         reaction: BluenoirReaction.EXCITED,
+      },
+      {
+        text: "This case is closed... or is it? Maybe you should reconsider.",
+        reaction: BluenoirReaction.PHONE,
+      },
+      {
+        text: "Let's go!",
+        reaction: BluenoirReaction.SMUG,
       },
     ],
   },

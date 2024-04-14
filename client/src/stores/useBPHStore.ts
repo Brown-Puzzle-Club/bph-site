@@ -8,6 +8,8 @@ import type { VotingInfo } from "@/utils/django_types";
 export const TOP_LEFT = { x: 0.05, y: 0.13 } as const;
 export const BOTTOM_LEFT = { x: 0.05, y: 0.85 } as const;
 export const CENTER = { x: 0.4, y: 0.4 } as const;
+export const BOTTOM_CENTER = { x: 0.4, y: 0.75 } as const;
+export const VERDICT_CENTER = { x: 0.493, y: 0.48 } as const;
 
 export interface Position {
   x: number;
@@ -18,7 +20,7 @@ interface BluenoirState {
   bluenoirDialogue: Dialogue;
   bluenoirPreviousPosition: Position;
   bluenoirCurrentPosition: Position;
-  bluenoirCentered: boolean;
+  bluenoirCentered: typeof CENTER | typeof BOTTOM_CENTER | null;
   bluenoirIdleDialogueFunction: (() => Dialogue) | null;
   bluenoirIntervalId: NodeJS.Timeout | null;
   bluenoirStorylineSlug: string;
@@ -33,12 +35,13 @@ interface BluenoirActions {
   getPreviousPosition: () => Position;
   getBluenoirPosition: () => Position;
   setBluenoirPosition: (position: Position) => void;
-  getNearestSnapPoint: (position?: Position) => Position;
+  getNearestSnapPoint: (position?: Position, includeCenter?: boolean) => Position;
+  setBluenoirCentered: (centered: typeof CENTER | typeof BOTTOM_CENTER | null) => void;
   toggleBluenoirCentered: () => void;
   startIdleTimer: (callback: () => void, duration: number) => void;
   stopIdleTimer: () => void;
   restartIdleTimer: (callback: () => void, duration: number) => void;
-  setStoryline: (slug: string) => void;
+  setStoryline: (slug: string, centerOption?: typeof CENTER | typeof BOTTOM_CENTER) => void;
   nextStoryline: () => void;
   prevStoryline: () => void;
   stopStoryline: () => void;
@@ -64,7 +67,7 @@ const initialBluenoirState: BluenoirState = {
   bluenoirDialogue: (() => getMainPageIdleDialogue())(),
   bluenoirCurrentPosition: BOTTOM_LEFT,
   bluenoirPreviousPosition: BOTTOM_LEFT,
-  bluenoirCentered: false,
+  bluenoirCentered: null,
   bluenoirIdleDialogueFunction: getMainPageIdleDialogue,
   bluenoirIntervalId: null,
   bluenoirStorylineSlug: "",
@@ -117,20 +120,26 @@ const useBPHStore = create<BPHState & BPHActions>()(
             : state.bluenoirCurrentPosition,
       }));
     },
-    getNearestSnapPoint: (position) => {
+    getNearestSnapPoint: (position, includeCenter) => {
       const pos = position ?? get().getBluenoirPosition();
       const normalizedPosition = { x: pos.x / window.innerWidth, y: pos.y / window.innerHeight };
 
+      const snapPoints = includeCenter
+        ? [TOP_LEFT, BOTTOM_LEFT, VERDICT_CENTER]
+        : [TOP_LEFT, BOTTOM_LEFT];
+      console.log(snapPoints);
       // find the closest snap point
-      const snapPoints = [TOP_LEFT, BOTTOM_LEFT];
       const orderedSnapPoints = snapPoints.sort(
         (a, b) => distSq(a, normalizedPosition) - distSq(b, normalizedPosition),
       );
 
       return orderedSnapPoints[0];
     },
+    setBluenoirCentered: (centered) => {
+      set(() => ({ bluenoirCentered: centered }));
+    },
     toggleBluenoirCentered: () => {
-      set((state) => ({ bluenoirCentered: !state.bluenoirCentered }));
+      set((state) => ({ bluenoirCentered: state.bluenoirCentered ? null : CENTER }));
     },
     startIdleTimer: (callback, duration) => {
       if (get().bluenoirIntervalId) return;
@@ -155,7 +164,7 @@ const useBPHStore = create<BPHState & BPHActions>()(
 
       set({ bluenoirIntervalId: newIntervalId });
     },
-    setStoryline: (slug: string) => {
+    setStoryline: (slug: string, centerOption = CENTER) => {
       if (!BluenoirStories[slug]) return;
       get().restartIdleTimer(get().nextStoryline, 10 * 1000);
       get().bluenoirSpeak(BluenoirStories[slug].dialogues[0]);
@@ -163,7 +172,7 @@ const useBPHStore = create<BPHState & BPHActions>()(
         return {
           bluenoirStorylineSlug: slug,
           bluenoirStorylineIndex: 0,
-          bluenoirCentered: true,
+          bluenoirCentered: centerOption,
         };
       });
     },
@@ -194,7 +203,7 @@ const useBPHStore = create<BPHState & BPHActions>()(
       set({
         bluenoirStorylineSlug: "",
         bluenoirStorylineIndex: 0,
-        bluenoirCentered: false,
+        bluenoirCentered: null,
       });
     },
     setVotingModalOpen: (open) => {
