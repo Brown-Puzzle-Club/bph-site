@@ -1,6 +1,7 @@
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { useEffect } from "react";
 import { FaCheck } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 import background from "@/assets/main_page/Backdrop.png";
 import cassette from "@/assets/main_page/D1.png";
@@ -18,6 +19,7 @@ import CompletedCases from "@/components/main_page/CompletedCases";
 import IncomingCasesStack from "@/components/main_page/IncomingCasesStack";
 import Phone from "@/components/main_page/Phone";
 import { ArtWrapperInner } from "@/components/minor_cases/CasePageArt";
+import { Button } from "@/components/ui/button";
 import { useDjangoContext } from "@/hooks/useDjangoContext";
 import { useTheme } from "@/hooks/useTheme";
 import useBPHStore from "@/stores/useBPHStore";
@@ -108,6 +110,25 @@ export default function EventPage() {
           >
             <ActiveCases />
           </div>
+          <div
+            className="absolute shadow-[0_35px_60px_-15px_rgba(255,255,255,0.8)]"
+            style={{ top: "47%", left: "45%" }}
+          >
+            {context && Object.keys(context?.team_context.major_case_solves).length >= 3 && (
+              <Button className="">
+                <Link
+                  to={"/final-verdict"}
+                  className="text-shadow"
+                  style={{
+                    textShadow: "0 0 10px #fff",
+                  }}
+                >
+                  The Final Verdict
+                </Link>
+              </Button>
+            )}
+          </div>
+
           <MajorCaseIcon
             majorCase={MajorCaseEnum.DATA}
             imageSrc={cassette}

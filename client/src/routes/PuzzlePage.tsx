@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import PuzzleWrapper from "@/components/puzzle/PuzzleWrapper";
 import { useDjangoContext } from "@/hooks/useDjangoContext";
@@ -10,7 +10,6 @@ import { Error404 } from "./ErrorPage";
 
 function PuzzlePage() {
   const { slug } = useParams();
-  const navigate = useNavigate();
 
   const { setTheme } = useTheme();
   useEffect(() => {
@@ -20,7 +19,7 @@ function PuzzlePage() {
   const { data: context } = useDjangoContext();
 
   if (!slug) {
-    navigate("/eventpage");
+    // navigate("/eventpage");
     return <Error404 />;
   }
 
