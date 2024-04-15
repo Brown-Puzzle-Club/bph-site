@@ -131,12 +131,12 @@ export default function Credits() {
             </li>
             <li>
               <strong>
-                Kristine Lee (@<a href="https://www.instagram.com/codnjs.oo/">codnjs.oo</a>)
+                Talia Bloomfield (@<a href="https://marshmanta.carrd.co/">Pix</a>)
               </strong>
             </li>
             <li>
               <strong>
-                Talia Bloomfield (@<a href="https://www.instagram.com/codnjs.oo/">codnjs.oo</a>)
+                Kristine Lee (@<a href="https://www.instagram.com/codnjs.oo/">codnjs.oo</a>)
               </strong>
             </li>
           </ul>
