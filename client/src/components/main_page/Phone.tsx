@@ -116,7 +116,7 @@ const Phone = () => {
             <p className="font-bold text-white font-sans text-[0.8vw]">
               {hours}:{minutes.toLocaleString("en-US", { minimumIntegerDigits: 2 })}
             </p>
-            {unfinished_events && (
+            {unfinished_events && !context.hunt_context.hunt_is_over && (
               <AnimatePresence>
                 {unfinished_events.map(
                   (event) =>
