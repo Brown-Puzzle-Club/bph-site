@@ -253,7 +253,10 @@ const NavbarRight = () => {
     <div className="right flex justify-end w-1/3">
       <NavigationMenuRight>
         <div className="space-x-4">
-          {context?.team_context.num_hints_remaining &&
+          {context &&
+          context?.hunt_context.hunt_has_started &&
+          !context?.hunt_context.hunt_is_over &&
+          context?.team_context.num_hints_remaining &&
           context?.team_context.num_hints_remaining > 0 ? (
             <TooltipProvider>
               <Tooltip>
@@ -274,7 +277,10 @@ const NavbarRight = () => {
               </Tooltip>
             </TooltipProvider>
           ) : null}
-          {context?.team_context.num_free_answers_remaining &&
+          {context &&
+          context?.hunt_context.hunt_has_started &&
+          !context?.hunt_context.hunt_is_over &&
+          context?.team_context.num_free_answers_remaining &&
           context?.team_context.num_free_answers_remaining > 0 ? (
             <TooltipProvider>
               <Tooltip>

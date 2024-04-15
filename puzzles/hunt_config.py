@@ -39,8 +39,8 @@ HUNT_END_TIME = timezone.make_aware(
         year=2024,
         month=4,
         day=14,
-        hour=23,
-        minute=59,
+        hour=19,
+        minute=00,
     )
 )
 HUNT_CLOSE_TIME = timezone.make_aware(
