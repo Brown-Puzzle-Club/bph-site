@@ -134,6 +134,11 @@ export default function Credits() {
                 Kristine Lee (@<a href="https://www.instagram.com/codnjs.oo/">codnjs.oo</a>)
               </strong>
             </li>
+            <li>
+              <strong>
+                Talia Bloomfield (@<a href="https://www.instagram.com/codnjs.oo/">codnjs.oo</a>)
+              </strong>
+            </li>
           </ul>
         </div>
 
@@ -145,6 +150,9 @@ export default function Credits() {
             </li>
             <li>
               <strong>Nick Bottone</strong> (&apos;24)
+            </li>
+            <li>
+              <strong>Jiahua Chens</strong> (&apos;24)
             </li>
             <li>
               <strong>Hammad Izhar</strong> (&apos;24)
