@@ -48,7 +48,7 @@ def logout_action(request: Request) -> Response:
 def register_action(request):
 
     context = request._request.context
-    if context.hunt_has_started and not context.is_admin:
+    if context.hunt_has_started and not context.is_admin and not context.hunt_is_over:
         return Response(
             {"error": "Registration has closed. Please contact an admin."},
             status=400,
