@@ -48,7 +48,7 @@ def logout_action(request: Request) -> Response:
 def register_action(request):
 
     context = request._request.context
-    if (context.hunt_has_started and not context.is_admin) or context.hunt_is_over:
+    if context.hunt_has_started and not context.is_admin:
         return Response(
             {"error": "Registration has closed. Please contact an admin."},
             status=400,
@@ -225,7 +225,7 @@ def handle_answer(
     )
 
     if (
-        not django_context.hunt_has_started or django_context.hunt_is_over
+        not django_context.hunt_has_started or django_context.hunt_is_closed
     ) and not django_context.is_admin:
         return Response({"error": "Hunt is not active"}, status=403)
 
