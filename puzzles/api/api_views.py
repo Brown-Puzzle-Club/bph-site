@@ -191,8 +191,14 @@ def get_puzzle(request: Request, puzzle_slug: str) -> Response:
             additional_fields["clipboard_remote"] = puzzle.clipboard_remote
             additional_fields["solution"] = puzzle.solution
         elif context.hunt_is_over:
-            additional_fields["body"] = puzzle.body_remote
-            additional_fields["clipboard"] = puzzle.clipboard_remote
+            additional_fields["body"] = (
+                puzzle.body_remote if puzzle.body_remote != "" else puzzle.body
+            )
+            additional_fields["clipboard"] = (
+                puzzle.clipboard_remote
+                if puzzle.clipboard_remote != ""
+                else puzzle.clipboard
+            )
         else:
             additional_fields["body"] = (
                 puzzle.body
