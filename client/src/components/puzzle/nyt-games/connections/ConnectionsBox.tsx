@@ -10,11 +10,13 @@ interface ConnectionsBoxProps {
 const ConnectionsBox: React.FC<ConnectionsBoxProps> = ({ word, isSelected, onClick }) => {
   const displayWord = word.includes("N/A") ? word.split(" N/A")[0] : word;
 
+  console.log(word.includes("N/A") ? "N/A" : "Not N/A");
+
   // If the word includes "N/A", set red background color
   const boxStyle = word.includes("N/A")
     ? isSelected
       ? "bg-[#5A594E] text-white"
-      : "bg-[#FFE6E6FF]"
+      : "bg-[#ab7575]"
     : isSelected
       ? "bg-[#5A594E] text-white"
       : "bg-[#FFE6E6FF]";

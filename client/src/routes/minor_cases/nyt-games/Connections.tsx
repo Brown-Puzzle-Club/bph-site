@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { BeatLoader } from "react-spinners";
 
 import ConnectionsBox from "@/components/puzzle/nyt-games/connections/ConnectionsBox";
@@ -97,7 +98,10 @@ function Connections() {
           }
           setWords(groupedWords.flat());
         } else {
-          alert("no match! :(");
+          toast.error(`No match 🫠`, {
+            duration: 1000,
+            position: "top-center",
+          });
           // Handle case when no matching category is found
         }
       })

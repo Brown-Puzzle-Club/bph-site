@@ -32,6 +32,7 @@ import TeamPage from "./routes/TeamPage";
 import ColoredThread from "./routes/major_cases/ColoredThread";
 import Data from "./routes/major_cases/Data";
 import SocialDeduction from "./routes/major_cases/SocialDeduction";
+import Connections from "./routes/minor_cases/nyt-games/Connections";
 import "./styles/index.css";
 import "./styles/puzzlestyle-data.css";
 import "./styles/puzzlestyle-nyt.css";
@@ -239,6 +240,10 @@ const router = createBrowserRouter([
             }
           />
         ),
+      },
+      {
+        path: "clps350/connections",
+        element: <PageWrapper route={<Connections />} />,
       },
     ],
   },
