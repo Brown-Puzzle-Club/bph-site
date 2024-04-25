@@ -10,7 +10,9 @@ import gorgon from "@/assets/main_page/GORGON.jpg";
 import nerd from "@/assets/main_page/NERD.jpg";
 import { Button } from "@/components/ui/button";
 import { useDjangoContext } from "@/hooks/useDjangoContext";
+import { useTheme } from "@/hooks/useTheme";
 import useBPHStore, { BOTTOM_CENTER, VERDICT_CENTER } from "@/stores/useBPHStore";
+import { DEFAULT_THEME } from "@/utils/themes";
 import { cn } from "@/utils/utils";
 
 enum Culprit {
@@ -32,12 +34,17 @@ const CHARACTER_GLOW = {
 };
 
 const characterPosState = {
-  [Culprit.CULT_LEADER]: { x: 0.25 - 0.043, y: 0.15 },
-  [Culprit.GORGON]: { x: 0.5 - 0.043, y: 0.15 },
-  [Culprit.NERD]: { x: 0.75 - 0.043, y: 0.15 },
+  [Culprit.CULT_LEADER]: { x: 0.25 - 0.044, y: 0.15 },
+  [Culprit.GORGON]: { x: 0.5 - 0.055, y: 0.15 },
+  [Culprit.NERD]: { x: 0.75 - 0.055, y: 0.15 },
 };
 
 export default function FinalVerdict() {
+  const { setTheme } = useTheme();
+  useEffect(() => {
+    setTheme(DEFAULT_THEME);
+  }, [setTheme]);
+
   const { data: context } = useDjangoContext();
 
   const { width: innerWidth, height: innerHeight } = useWindowSize();
@@ -192,7 +199,6 @@ export default function FinalVerdict() {
   };
 
   const confirmSelection = () => {
-    // TODO: handle bluenoir talking logic, handle resetting the scene.
     if (position == VERDICT_CENTER) {
       setBluenoirCount((prev) => prev + 1);
       setStoryline(`bluenoir-verdict-${bluenoirCount}`, BOTTOM_CENTER);

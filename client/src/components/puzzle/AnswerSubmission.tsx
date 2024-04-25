@@ -8,6 +8,7 @@ import { BeatLoader } from "react-spinners";
 import { z } from "zod";
 
 import { useAuth } from "@/hooks/useAuth";
+import { useDjangoContext } from "@/hooks/useDjangoContext";
 import { MajorCaseEnum } from "@/utils/constants";
 import type { AnswerSubmission, Puzzle, PuzzleMessage } from "@/utils/django_types";
 import { cn } from "@/utils/utils";
@@ -338,6 +339,8 @@ export default function AnswerSubmit({
 
   const [submissions, setSubmissions] = useState(puzzle.submissions);
 
+  const { data: context } = useDjangoContext();
+
   const PUZZLE_ANSWER = useMemo(() => {
     if (!submissions) return "";
     return submissions.filter((submission) => submission.is_correct)[0]?.submitted_answer || "";
@@ -386,7 +389,15 @@ export default function AnswerSubmit({
         </div>
       )}
 
-      <HintModal puzzleSlug={puzzle.slug} open={hintModalOpen} onOpenChange={setHintModalOpen} />
+      {context &&
+        context.hunt_context.hunt_has_started &&
+        (!context.hunt_context.hunt_is_over || context.team_context.is_admin) && (
+          <HintModal
+            puzzleSlug={puzzle.slug}
+            open={hintModalOpen}
+            onOpenChange={setHintModalOpen}
+          />
+        )}
       <SubmissionHistory submissions={submissions} />
     </div>
   ) : (

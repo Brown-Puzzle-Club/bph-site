@@ -51,17 +51,18 @@ export default function LoginNavbar() {
 
   return (
     <NavigationMenuList>
-      {window.location.pathname !== "/register" && !context?.hunt_context.hunt_has_started && (
-        <NavigationMenuItem>
-          {/* send to /register page */}
-          <Button
-            className="dark bg-[grey] hover:text-black font-bold"
-            onClick={() => navigate("/register")}
-          >
-            Register
-          </Button>
-        </NavigationMenuItem>
-      )}
+      {window.location.pathname !== "/register" &&
+        (!context?.hunt_context.hunt_has_started || context?.hunt_context.hunt_is_over) && (
+          <NavigationMenuItem>
+            {/* send to /register page */}
+            <Button
+              className="dark bg-[grey] hover:text-black font-bold"
+              onClick={() => navigate("/register")}
+            >
+              Register
+            </Button>
+          </NavigationMenuItem>
+        )}
       <NavigationMenuItem>
         <NavigationMenuTrigger>
           <div className="bg-blue">Login</div>

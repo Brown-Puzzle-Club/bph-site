@@ -1,6 +1,8 @@
 import type React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+import { useDjangoContext } from "@/hooks/useDjangoContext";
 
 import bear_regular from "../../assets/landing/bear_regular.png";
 import bear_wave from "../../assets/landing/bear_wave.png";
@@ -19,6 +21,13 @@ const LandingSplash: React.FC = () => {
 
   const navigate = useNavigate();
 
+  const { data: context } = useDjangoContext();
+
+  const close_date = useMemo(() => {
+    if (!context) return "";
+    return new Date(context?.hunt_context.close_time).toDateString();
+  }, [context]);
+
   useEffect(() => {
     // parallax, blimp height
     const handleScroll = () => {
@@ -28,6 +37,7 @@ const LandingSplash: React.FC = () => {
       const layer3Element = document.querySelector(".layer-3") as HTMLElement;
       const layer4Element = document.querySelector(".layer-4") as HTMLElement;
       const layer5Element = document.querySelector(".layer-5") as HTMLElement;
+      const layer6Element = document.querySelector(".layer-6") as HTMLElement;
 
       if (layer2Element) {
         layer2Element.style.transform = `translateY(-${scrollY * 0.3}px)`;
@@ -40,6 +50,9 @@ const LandingSplash: React.FC = () => {
       }
       if (layer5Element) {
         layer5Element.style.transform = `translateY(-${scrollY * 0.4}px) rotate(9deg)`;
+      }
+      if (layer6Element) {
+        layer6Element.style.transform = `translateY(-${scrollY * 0.4}px)`;
       }
     };
 
@@ -152,6 +165,19 @@ const LandingSplash: React.FC = () => {
               src={release}
             />
           </a>
+          <div
+            className="layer-6 art-bg-img absolute w-full z-40 when-box col-start-1 col-span-5 md:col-start-6 md:col-span-3 text-center dark bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md btn-gradient-1"
+            style={{
+              top: "72%",
+              left: "65%",
+              width: "34%",
+            }}
+          >
+            <p className="text-white font-mono text-xs">
+              The hunt weekend is over, but you can still participate and register until{" "}
+              <b>{close_date}</b> !
+            </p>
+          </div>
         </div>
       </div>
     </section>

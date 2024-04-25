@@ -63,7 +63,7 @@ export default function Leaderboard() {
       <h1 className="text-4xl font-bold text-center py-5">Teams</h1>
       <h1 className="text-md text-center pb-5">
         !! Due to our unconventional unlock structure, we will not be releasing stats until after
-        the hunt is over !!
+        the hunt is closed !!
       </h1>
       <div className="tabs flex items-center justify-end gap-4 mx-[5%] md:mx-[20%] pr-10 z-10">
         <button

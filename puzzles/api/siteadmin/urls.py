@@ -11,5 +11,10 @@ urlpatterns = [
     path("get_all_emails", views.get_all_emails, name="get_all_emails"),
     path("get_onsite_emails", views.get_onsite_emails, name="get_onsite_emails"),
     path("get_remote_emails", views.get_remote_emails, name="get_remote_emails"),
-    path("get_team_case_solve_count", views.get_team_case_solve_count, name="get_team_case_solve_count"),
+    path(
+        "get_team_case_solve_count",
+        views.get_team_case_solve_count,
+        name="get_team_case_solve_count",
+    ),
+    path("most_chosen_cases", views.get_most_chosen_cases, name="most_chosen_cases"),
 ]

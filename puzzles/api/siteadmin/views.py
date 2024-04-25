@@ -1,3 +1,4 @@
+from collections import defaultdict
 from django.urls import path
 
 from puzzles.api.api_guards import require_admin
@@ -6,6 +7,7 @@ from puzzles.models import (
     EventCompletion,
     MajorCaseCompleted,
     MinorCaseCompleted,
+    MinorCaseVoteEvent,
     TeamMember,
     Team,
 )
@@ -120,3 +122,20 @@ def get_team_case_solve_count(request: Request) -> Response:
         )
 
     return Response({"data": end_data})
+
+
+@api_view(["GET"])
+@require_admin
+def get_most_chosen_cases(request: Request) -> Response:
+
+    # cases = Round.objects.all()
+
+    completed_votes = MinorCaseVoteEvent.objects.all()
+
+    case_votes = defaultdict(int)
+
+    for vote_event in completed_votes:
+        for vote in vote_event.final_votes.all():
+            case_votes[vote.minor_case.slug] += 1
+
+    return Response({"data": case_votes})
