@@ -5,7 +5,7 @@ import { BeatLoader } from "react-spinners";
 
 import TeamIcon from "@/components/team/TeamIcon";
 import { useAuth } from "@/hooks/useAuth";
-import { useAllTeams } from "@/hooks/useDjangoContext";
+import { useLeaderboardTeams } from "@/hooks/useDjangoContext";
 import type { Team, UserTeam } from "@/utils/django_types";
 
 enum LeaderboardTab {
@@ -15,7 +15,8 @@ enum LeaderboardTab {
 
 export default function Leaderboard() {
   const { team } = useAuth();
-  const { data: teams } = useAllTeams();
+  const { data: teams } = useLeaderboardTeams();
+  console.log(teams);
   const [curTab, setTab] = useState<LeaderboardTab>(() => {
     const savedTab = Cookies.get("leaderboardTab");
     return savedTab ? (savedTab as LeaderboardTab) : LeaderboardTab.IN_PERSON;
