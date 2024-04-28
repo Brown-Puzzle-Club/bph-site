@@ -49,6 +49,13 @@ const TeamSchema = z.object({
 });
 type Team = z.infer<typeof TeamSchema>;
 
+interface LeaderboardTeam extends Team {
+  total_solves: number;
+  total_minor_case_solves: number;
+  total_major_case_solves: number;
+  finish_time: string;
+}
+
 const TeamMemberSchema = z.object({
   name: z.string(),
   email: z.string(),
@@ -296,6 +303,7 @@ export type {
   EventCompletion,
   Hint,
   InPersonEvent,
+  LeaderboardTeam,
   MajorCase,
   MinorCase,
   MinorCaseActive,

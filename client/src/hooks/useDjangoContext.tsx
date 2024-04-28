@@ -6,6 +6,7 @@ import type {
   DjangoContext,
   Hint,
   InPersonEvent,
+  LeaderboardTeam,
   Puzzle,
   StorylineUnlock,
   Team,
@@ -18,6 +19,10 @@ const getMyTeamMembers = async () => {
 };
 const getAllTeams = async () => {
   const response = await axios.get<Team[]>("/api/teams");
+  return response.data;
+};
+const getLeaderboardTeams = async () => {
+  const response = await axios.get<LeaderboardTeam[]>("/api/teams/leaderboard");
   return response.data;
 };
 const getDjangoContext = async () => {
@@ -64,6 +69,13 @@ export const useAllTeams = () => {
   return useQuery({
     queryKey: ["teams"],
     queryFn: getAllTeams,
+  });
+};
+
+export const useLeaderboardTeams = () => {
+  return useQuery({
+    queryKey: ["leaderboard-teams"],
+    queryFn: getLeaderboardTeams,
   });
 };
 

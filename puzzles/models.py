@@ -4,7 +4,6 @@ import unicodedata
 from urllib.parse import quote_plus
 import math
 
-from django import forms
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
@@ -17,6 +16,8 @@ from django.db.models import (
     Case,
     When,
     Count,
+    Max,
+    IntegerField,
 )
 from django.db.models.functions import Coalesce
 from django.db.models.signals import post_save
@@ -481,14 +482,16 @@ class Team(models.Model):
         return Team.leaderboard_teams(current_team, hide_hidden, hide_remote).values(
             "id",
             "user_id",
+            "emoji_choice",
+            "color_choice",
             "in_person",
+            "is_hidden",
             "team_name",
             "total_solves",
             "last_solve_or_creation_time",
-            "runaround_solve_time",
-            "recent_meta_solve_time",
-            "all_metas_solve_time",
-            "meta_solve_count",
+            "minor_case_solve_count",
+            "major_case_solve_count",
+            "major_case_solve_count",
         )
 
     @staticmethod
@@ -535,63 +538,48 @@ class Team(models.Model):
                 ),
             ),
             total_solves=Count("scoring_submissions"),
-            # runaround_solve_time=Min(
-            #     Case(
-            #         When(
-            #             scoring_submissions__puzzle__slug=RUNAROUND_SLUG,
-            #             then="scoring_submissions__submitted_datetime",
-            #         )
-            #         # else, null by default
-            #     )
-            # ),
-            # recent_meta_solve_time=Max(
-            #     Case(  # only usable when all metas are solved.. So check meta_solve_count first.
-            #         When(
-            #             Q(scoring_submissions__puzzle__slug__in=META_SLUGS),
-            #             then="scoring_submissions__submitted_datetime",
-            #         ),
-            #         default=None,
-            #         output_field=models.DateTimeField(),
-            #     )
-            # ),
-            # meta_solve_count=Count(
-            #     Case(
-            #         When(
-            #             Q(scoring_submissions__puzzle__slug__in=META_SLUGS),
-            #             then="scoring_submissions__submitted_datetime",
-            #         ),
-            #         default=None,
-            #         output_field=IntegerField(),
-            #     )
-            # ),
-            # all_metas_solve_time=Case(
-            #     When(
-            #         meta_solve_count=len(META_SLUGS),
-            #         then=Max(
-            #             Case(
-            #                 When(
-            #                     Q(scoring_submissions__puzzle__slug__in=META_SLUGS),
-            #                     then="scoring_submissions__submitted_datetime",
-            #                 ),
-            #                 default=None,
-            #                 output_field=models.DateTimeField(),
-            #             )
-            #         ),
-            #     ),
-            #     default=None,
-            #     output_field=models.DateTimeField(),
-            # ),
+            minor_case_solve_count=Count(
+                Case(
+                    When(
+                        Q(scoring_submissions__puzzle__is_meta=True),
+                        then="scoring_submissions__submitted_datetime",
+                    ),
+                    default=None,
+                    output_field=IntegerField(),
+                )
+            ),
+            major_case_solve_count=Count(
+                Case(
+                    When(
+                        Q(scoring_submissions__puzzle__is_major_meta=True),
+                        then="scoring_submissions__submitted_datetime",
+                    ),
+                    default=None,
+                    output_field=IntegerField(),
+                )
+            ),
+            all_metas_solve_time=Case(
+                When(
+                    major_case_solve_count=len(MAJOR_CASE_SLUGS),
+                    then=Max(
+                        Case(
+                            When(
+                                Q(scoring_submissions__puzzle__is_major_meta=True),
+                                then="scoring_submissions__submitted_datetime",
+                            ),
+                            default=None,
+                            output_field=models.DateTimeField(),
+                        )
+                    ),
+                ),
+                default=None,
+                output_field=models.DateTimeField(),
+            ),
             # Coalesce(things) = the first of things that isn't null
             last_solve_or_creation_time=Coalesce("last_solve_time", "creation_time"),
-            in_person=Case(
-                When(Q(in_person_sat__gt=0) | Q(in_person_sun__gt=0), then=Value(True)),
-                default=Value(False),
-                output_field=BooleanField(),
-            ),
         ).order_by(
-            F("runaround_solve_time").asc(nulls_last=True),
             F("all_metas_solve_time").asc(nulls_last=True),
-            F("meta_solve_count").desc(),
+            F("major_case_solve_count").desc(),
             F("total_solves").desc(),
             # F('in_person').desc(),
             F("last_solve_or_creation_time"),

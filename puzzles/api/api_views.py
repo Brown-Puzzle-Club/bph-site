@@ -285,3 +285,12 @@ def get_all_solve_stats(request: Request) -> Response:
     serializer = AnswerSubmissionStatsSerializer(solves, many=True)
 
     return Response(serializer.data)
+
+
+@api_view(["GET"])
+def get_leaderboard(request: Request) -> Response:
+    # Get all the solves for all the puzzles, and return only the team names and the puzzle slugs
+    context = request._request.context
+
+    teams = Team.leaderboard(context.team, hide_hidden=not context.is_admin)
+    return Response(teams, status=200)
