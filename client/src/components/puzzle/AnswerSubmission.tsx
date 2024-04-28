@@ -350,7 +350,7 @@ export default function AnswerSubmit({
     setSubmissions(puzzle.submissions);
   }, [puzzle]);
 
-  const hintButton = (
+  const hintButton = !context?.hunt_context.hunt_is_closed ? (
     <Button
       className="ml-1"
       onClick={() => {
@@ -359,6 +359,8 @@ export default function AnswerSubmit({
     >
       Hints available: {hintsRemaining}
     </Button>
+  ) : (
+    <></>
   );
 
   return puzzle.name ? (

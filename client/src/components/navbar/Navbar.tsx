@@ -221,7 +221,7 @@ const NavbarLeft = () => {
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>
-          {context?.hunt_context.hunt_has_started && (
+          {context?.hunt_context.hunt_has_started && !context?.hunt_context.hunt_is_closed && (
             <NavigationMenuItem>
               <Button
                 className="bg-[grey] hover:text-black font-bold"

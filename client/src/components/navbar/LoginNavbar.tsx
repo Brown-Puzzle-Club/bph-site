@@ -52,7 +52,8 @@ export default function LoginNavbar() {
   return (
     <NavigationMenuList>
       {window.location.pathname !== "/register" &&
-        (!context?.hunt_context.hunt_has_started || context?.hunt_context.hunt_is_over) && (
+        (!context?.hunt_context.hunt_has_started || context?.hunt_context.hunt_is_over) &&
+        !context?.hunt_context.hunt_is_closed && (
           <NavigationMenuItem>
             {/* send to /register page */}
             <Button

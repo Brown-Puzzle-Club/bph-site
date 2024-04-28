@@ -33,8 +33,8 @@ export default function CompletedCases() {
             style={{ top: "20%", left: "29%", width: "50%", height: "37%" }}
           >
             <div className="flex flex-col items-center">
-              <span className="font-bold text-[2vw] text-center mb-4 bg-slate-800 rounded-xl">
-                CLOSED CASES
+              <span className="font-bold text-[2vw] text-center mb-4 bg-slate-800 rounded-xl px-2 select-none">
+                {context?.hunt_context.hunt_is_closed ? "CASES" : "CLOSED CASES"}
               </span>
 
               <div className="flex flex-wrap overflow-y-auto max-h-[20vw] p-4 space-x-3 space-y-3 rounded-xl bg-[#09090947]">

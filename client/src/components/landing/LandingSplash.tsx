@@ -1,5 +1,6 @@
 import type React from "react";
 import { useEffect, useMemo, useState } from "react";
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 import { useDjangoContext } from "@/hooks/useDjangoContext";
@@ -96,7 +97,7 @@ const LandingSplash: React.FC = () => {
       }}
     >
       <div className="map relative left-1/2 transform -translate-x-1/2 aspect-w-3 aspect-h-2 w-full">
-        <div className="art-bg">
+        <div className="art-bg select-none">
           <img className="layer-1 art-bg-img absolute top-0 left-0 w-full z-0" src={layer1} />
           <img
             className="logo art-bg-img absolute w-full z-10"
@@ -130,7 +131,14 @@ const LandingSplash: React.FC = () => {
               bear.src = bear_regular;
             }}
             onClick={() => {
-              navigate("/register");
+              if (context?.hunt_context.hunt_is_closed) {
+                toast.error("the hunt is closed :(", {
+                  duration: 500,
+                  position: "top-right",
+                });
+              } else {
+                navigate("/register");
+              }
             }}
             src={blimp}
           />
@@ -173,7 +181,7 @@ const LandingSplash: React.FC = () => {
               width: "34%",
             }}
           >
-            <p className="text-white font-mono text-xs">
+            <p className="text-white font-mono text-xs select-all">
               The hunt weekend is over, but you can still participate and register until{" "}
               <b>{close_date}</b> !
             </p>

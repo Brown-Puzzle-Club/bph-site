@@ -39,7 +39,13 @@ import "./styles/puzzlestyle-data.css";
 import "./styles/puzzlestyle-nyt.css";
 import "./styles/puzzlestyle-red-thread.css";
 import "./styles/puzzlestyle-soc-deduction.css";
-import { HUNT_HAS_STARTED, IS_ADMIN, IS_MAJOR_CASE_UNLOCKED } from "./utils/auth";
+import {
+  HUNT_HAS_STARTED,
+  HUNT_IS_CLOSED,
+  IS_ADMIN,
+  IS_MAJOR_CASE_UNLOCKED,
+  NOT,
+} from "./utils/auth";
 import { MajorCaseEnum } from "./utils/constants";
 
 try {
@@ -104,7 +110,15 @@ const router = createBrowserRouter([
       },
       {
         path: "/register",
-        element: <PageWrapper route={<RegisterForm />} />,
+        element: (
+          <PageWrapper
+            route={
+              <Locked condition={NOT(HUNT_IS_CLOSED)}>
+                <RegisterForm />
+              </Locked>
+            }
+          />
+        ),
       },
       {
         path: "/markdown-test",

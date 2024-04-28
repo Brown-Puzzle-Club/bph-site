@@ -1,6 +1,7 @@
 import type React from "react";
 import { useState } from "react";
 
+import { useDjangoContext } from "@/hooks/useDjangoContext";
 import type { MajorCaseEnum } from "@/utils/constants";
 import { MAJOR_CASE_FOLDER } from "@/utils/constants";
 import type { MinorCaseCompleted } from "@/utils/django_types";
@@ -17,6 +18,7 @@ export default function CompletedCasesStack({
   setSolvedCasesOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const [isHovered, setIsHovered] = useState(false);
+  const { data: context } = useDjangoContext();
 
   if (!completed_cases) return null;
 
@@ -37,14 +39,14 @@ export default function CompletedCasesStack({
       onClick={() => toggleSolvedCases()}
     >
       <span
-        className="z-10 absolute font-mono font-bold text-black text-center whitespace-pre-line break-words text-[1.5vw] bg-[#ffffff82] rounded"
+        className="z-10 absolute font-mono font-bold text-black text-center whitespace-pre-line break-words text-[1.5vw] bg-[#ffffff82] rounded mt-4 select-none"
         style={{
-          top: "20%",
+          top: "100%",
           left: "50%",
           transform: "translate(-50%, 50%)",
         }}
       >
-        CLOSED CASES
+        {context?.hunt_context.hunt_is_closed ? "CASES" : "CLOSED CASES"}
       </span>
       {completed_cases.map((mc_completed) => (
         <img

@@ -24,12 +24,16 @@ export const HUNT_IS_CLOSED = (context: DjangoContext) => {
   );
 };
 
+export const NOT = (condition: (context: DjangoContext) => boolean) => {
+  return (context: DjangoContext) => !condition(context);
+};
+
 export const IS_ADMIN = (context: DjangoContext) => {
   return context.team_context.is_admin || context.team_context.is_superuser;
 };
 
 export const IS_MAJOR_CASE_UNLOCKED = (major_case_slug: string) => (context: DjangoContext) => {
-  if (context.team_context.is_admin) return true;
+  if (context.team_context.is_admin || context.hunt_context.hunt_is_closed) return true;
   return major_case_slug in context.team_context.major_case_puzzles;
 };
 

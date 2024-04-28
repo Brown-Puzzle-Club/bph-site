@@ -746,6 +746,16 @@ class Team(models.Model):
         PuzzleUnlock.objects.bulk_create(unlocks_to_make)
         return major_case_puzzles
 
+    @staticmethod
+    def case_puzzles():
+        unique_cases = {}
+        for puzzle in Puzzle.objects.all():
+            if not puzzle or not puzzle.round:
+                continue
+            if puzzle.round.slug not in unique_cases:
+                unique_cases[puzzle.round.slug] = puzzle.round
+        return unique_cases
+
     def case_unlocks(self):
         unique_cases = {}
         for unlock in self.puzzleunlock_set.select_related("puzzle", "puzzle__round"):
@@ -755,9 +765,28 @@ class Team(models.Model):
                 unique_cases[unlock.puzzle.round.slug] = unlock.puzzle.round
         return unique_cases
 
-    def unlocks_by_case(self):
+    @staticmethod
+    def puzzles_by_case():
         out = {}
-        for unlock in self.puzzleunlock_set.select_related("puzzle", "puzzle__round"):
+        puzzles = Puzzle.objects.all()
+
+        for puzzle in puzzles:
+            if not puzzle or not puzzle.round or not puzzle.round.major_case:
+                continue
+            if puzzle.round.major_case.slug not in out:
+                out[puzzle.round.major_case.slug] = {}
+            if puzzle.round.slug not in out[puzzle.round.major_case.slug]:
+                out[puzzle.round.major_case.slug][puzzle.round.slug] = {}
+            out[puzzle.round.major_case.slug][puzzle.round.slug][puzzle.slug] = puzzle
+        return out
+
+    @staticmethod
+    def unlocks_by_case(team=None, unlocks=[]):
+        out = {}
+        if not unlocks and team:
+            unlocks = team.puzzleunlock_set.select_related("puzzle", "puzzle__round")
+
+        for unlock in unlocks:
             if (
                 not unlock
                 or not unlock.puzzle
@@ -1450,6 +1479,18 @@ class MinorCaseCompleted(models.Model):
         StorylineUnlock.activate_non_storyline_dialogue(
             f"{self.minor_case_round.slug}-case-solve", self.team
         )
+
+    @staticmethod
+    def all_completed_cases():
+        cases = {}
+        for puzzle in Puzzle.objects.all():
+            if puzzle.round and puzzle.round not in cases:
+                cases[puzzle.round] = MinorCaseCompleted(
+                    team=None,
+                    minor_case_round=puzzle.round,
+                    completed_datetime=timezone.now(),
+                )
+        return cases.values()
 
 
 class MajorCaseCompleted(models.Model):

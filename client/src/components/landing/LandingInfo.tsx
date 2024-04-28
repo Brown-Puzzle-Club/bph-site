@@ -34,7 +34,7 @@ const LandingInfo: React.FC = () => {
           <div className="absolute" style={{ top: "-30px", left: "-19px" }}>
             <img
               src={blueno_when}
-              className="blueno_when transition ease-in-out duration-200 h-28 w-28 opacity-75"
+              className="blueno_when transition ease-in-out duration-200 h-28 w-28 opacity-75 select-none"
               style={{ filter: SVG_FILTER }}
             />
           </div>
@@ -71,7 +71,7 @@ const LandingInfo: React.FC = () => {
             <img
               src={blueno_what}
               alt=""
-              className="blueno_what transition ease-in-out duration-200 h-32 w-32 opacity-75"
+              className="blueno_what transition ease-in-out duration-200 h-32 w-32 opacity-75 select-none"
               style={{ filter: SVG_FILTER }}
             />
           </div>

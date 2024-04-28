@@ -202,9 +202,16 @@ class Context:
         return HOURS_PER_HINT
 
     def unlocks(self):
-        return self.team.unlocks_by_case if self.team else {}
+        return (
+            models.Team.puzzles_by_case()
+            if self.hunt_is_closed
+            else models.Team.unlocks_by_case(team=self.team)
+        )
 
     def case_unlocks(self):
+        if self.hunt_is_closed:
+            return models.Team.case_puzzles()
+
         if not self.team:
             return {}
         case_unlocks = self.team.case_unlocks
@@ -212,6 +219,12 @@ class Context:
         return case_unlocks
 
     def major_case_unlocks(self):
+        if self.hunt_is_closed:
+            return {
+                major_case.slug: major_case
+                for major_case in models.MajorCase.objects.all()
+            }
+
         if not self.team:
             return {}
 
@@ -305,6 +318,9 @@ class Context:
         return self.team.db_minor_case_active if self.team else {}
 
     def minor_case_completed(self):
+        if self.hunt_is_closed:
+            return models.MinorCaseCompleted.all_completed_cases()
+
         return self.team.db_minor_case_completed if self.team else {}
 
     def completed_events(self):

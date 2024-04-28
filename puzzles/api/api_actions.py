@@ -224,20 +224,19 @@ def handle_answer(
         f"submitting for puzzle: {puzzle_slug} with answer: {answer} for team: {django_context.team}"
     )
 
-    if (
-        not django_context.hunt_has_started or django_context.hunt_is_closed
-    ) and not django_context.is_admin:
+    if not django_context.hunt_has_started and not django_context.is_admin:
         return Response({"error": "Hunt is not active"}, status=403)
 
     puzzle = Puzzle.objects.get(slug=puzzle_slug)
     unlock = PuzzleUnlock.objects.filter(team=django_context.team, puzzle=puzzle)
 
-    if not unlock and not django_context.is_admin:
+    if not unlock and not django_context.is_admin and not django_context.hunt_is_closed:
         return Response({"error": "Puzzle not unlocked"}, status=403)
 
-    guesses_left = request_context.team.guesses_remaining(puzzle)
-    if guesses_left <= 0 and not voucher:
-        return Response({"error": "No guesses remaining"}, status=400)
+    if request_context.team:
+        guesses_left = request_context.team.guesses_remaining(puzzle)
+        if guesses_left <= 0 and not voucher:
+            return Response({"error": "No guesses remaining"}, status=400)
 
     sanitized_answer = "".join(
         [char for char in puzzle.answer if char.isalpha()]
@@ -254,24 +253,25 @@ def handle_answer(
     if correct:
         answer = puzzle.answer  # for consistent styling on the UI
 
-    try:
-        submission = AnswerSubmission.objects.create(
-            team=django_context.team,
-            puzzle=puzzle,
-            submitted_answer=answer,
-            is_correct=correct,
-            used_free_answer=voucher,
-        )
-        submission.save()
-    except Exception as e:
-        if not puzzle_messages:
-            return Response(
-                {"error": "Answer submission failed", "error_body": str(e)},
-                status=500,
+    if request_context.team:
+        try:
+            submission = AnswerSubmission.objects.create(
+                team=django_context.team,
+                puzzle=puzzle,
+                submitted_answer=answer,
+                is_correct=correct,
+                used_free_answer=voucher,
             )
+            submission.save()
+        except Exception as e:
+            if not puzzle_messages:
+                return Response(
+                    {"error": "Answer submission failed", "error_body": str(e)},
+                    status=500,
+                )
 
     # if this submission solves the minor case:
-    if correct:
+    if correct and request_context.team:
         print(f"Correct answer! ({sanitized_answer})")
         send_notification.send(
             None,
@@ -307,7 +307,7 @@ def handle_answer(
         {
             "status": "correct" if correct else "incorrect",
             "guess": answer,
-            "guesses_left": guesses_left,
+            "guesses_left": guesses_left if request_context.team else "∞",
             "messages": PuzzleMessageSerializer(puzzle_messages, many=True).data,
         },
         status=200,

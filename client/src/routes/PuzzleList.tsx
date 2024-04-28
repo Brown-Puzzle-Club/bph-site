@@ -16,6 +16,7 @@ export default function PuzzleList() {
   });
 
   const { data: context } = useDjangoContext();
+  console.log(context);
   const [curTab, setTab] = useLocalStorage<MajorCaseEnum>(
     "puzzles-tab",
     MajorCaseEnum.COLORED_THREAD,

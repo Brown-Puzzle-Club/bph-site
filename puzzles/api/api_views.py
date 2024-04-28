@@ -159,10 +159,13 @@ def get_puzzle(request: Request, puzzle_slug: str) -> Response:
     # gets a puzzle if the team has access to it
     try:
         context = request._request.context
-        puzzle = context.team.unlocks.get(puzzle_slug)
+        puzzle = None
+
+        if context.team:
+            puzzle = context.team.unlocks.get(puzzle_slug)
 
         if puzzle is None:
-            if context.is_admin:
+            if context.is_admin or context.hunt_is_closed:
                 puzzle = Puzzle.objects.get(slug=puzzle_slug)
             else:
                 raise Puzzle.DoesNotExist
@@ -174,7 +177,9 @@ def get_puzzle(request: Request, puzzle_slug: str) -> Response:
         additional_fields = {}
 
         # answer history
-        submissions = context.team.puzzle_submissions(puzzle)
+        submissions = []
+        if context.team:
+            submissions = context.team.puzzle_submissions(puzzle)
         additional_fields["submissions"] = AnswerSubmissionSerializer(
             submissions, many=True
         ).data
@@ -184,7 +189,7 @@ def get_puzzle(request: Request, puzzle_slug: str) -> Response:
         additional_fields["errata"] = ErrataSerializer(errata, many=True).data
 
         # puzzle body
-        if context.is_admin:
+        if context.is_admin or context.hunt_is_closed:
             additional_fields["body"] = puzzle.body
             additional_fields["body_remote"] = puzzle.body_remote
             additional_fields["clipboard"] = puzzle.clipboard
@@ -202,12 +207,14 @@ def get_puzzle(request: Request, puzzle_slug: str) -> Response:
         else:
             additional_fields["body"] = (
                 puzzle.body
-                if context.team.in_person or puzzle.body_remote == ""
+                if context.team and context.team.in_person or puzzle.body_remote == ""
                 else puzzle.body_remote
             )
             additional_fields["clipboard"] = (
                 puzzle.clipboard
-                if context.team.in_person or puzzle.clipboard_remote == ""
+                if context.team
+                and context.team.in_person
+                or puzzle.clipboard_remote == ""
                 else puzzle.clipboard_remote
             )
 

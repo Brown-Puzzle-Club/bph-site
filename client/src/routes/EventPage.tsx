@@ -33,12 +33,13 @@ interface MajorCaseIconProps extends AssetProps {
 
 const MajorCaseIcon = (props: MajorCaseIconProps) => {
   const { data: context } = useDjangoContext();
+  console.log(context);
   return (
     context?.team_context &&
-    context.team_context.major_case_puzzles[props.majorCase] && (
+    context.team_context.major_case_unlocks[props.majorCase] && (
       <RelativeAsset linkTo={`/majorcase/${props.majorCase}`} {...props}>
         {context.team_context.solves[
-          context.team_context.major_case_puzzles[props.majorCase].slug
+          context.team_context.major_case_unlocks[props.majorCase].slug
         ] && (
           <FaCheck
             className="pointer-events-none absolute select-none hover:cursor-pointer text-[5vw] text-[#ffffff80]"
