@@ -306,6 +306,9 @@ class Context:
         return self.team.solves_by_case if self.team else {}
 
     def minor_case_solves(self):
+        if self.hunt_is_closed:
+            return models.AnswerSubmission.all_solved_minor_cases()
+
         return self.team.minor_case_solves if self.team else {}
 
     def major_case_solves(self):

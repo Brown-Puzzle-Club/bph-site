@@ -132,7 +132,8 @@ def hint(request, id):
             hint.response = form.cleaned_data["response"]
             hint.save(update_fields=("answered_datetime", "status", "response"))
             messages.success(request, _("Hint saved."))
-            return redirect("hint-list")
+            return 
+        ("hint-list")
 
     claimer = request.COOKIES.get("claimer")
     if claimer:

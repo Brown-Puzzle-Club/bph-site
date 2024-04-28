@@ -1,12 +1,15 @@
 import { FaPlay } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
-import { useStoryUnlocks } from "@/hooks/useDjangoContext";
+import { Button } from "@/components/ui/button";
+import { useDjangoContext, useStoryUnlocks } from "@/hooks/useDjangoContext";
 import useBPHStore from "@/stores/useBPHStore";
 import { BluenoirStories } from "@/utils/bluenoir_dialogue";
 
 export default function Story() {
   const { data: story_unlocks } = useStoryUnlocks();
   const dispatchBluenoir = useBPHStore((state) => state.setStoryline);
+  const { data: context } = useDjangoContext();
 
   return (
     <div className="bg-slate-900 text-white h-[90vh] overscroll-contain overflow-hidden overflow-y-auto ">
@@ -37,6 +40,23 @@ export default function Story() {
               ),
           )}
       </div>
+      {context?.hunt_context.hunt_is_closed && (
+        <div className="flex flex-col items-center p-4">
+          <div className="shadow-[0_35px_60px_-15px_rgba(255,255,255,0.)]">
+            <Button className="text-2xl">
+              <Link
+                to={"/final-verdict"}
+                className="text-shadow"
+                style={{
+                  textShadow: "0 0 10px #fff",
+                }}
+              >
+                The Final Verdict
+              </Link>
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

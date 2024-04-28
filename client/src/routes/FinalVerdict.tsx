@@ -184,7 +184,11 @@ export default function FinalVerdict() {
     );
   };
 
-  if (!context || Object.keys(context.team_context.major_case_solves).length != 3) {
+  if (
+    !context ||
+    (Object.keys(context.team_context.major_case_solves).length != 3 &&
+      !context.hunt_context.hunt_is_closed)
+  ) {
     return null;
   }
 

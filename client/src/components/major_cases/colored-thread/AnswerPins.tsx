@@ -76,7 +76,7 @@ export default function AnswerPins(props: AnswerPinsProps) {
     <>
       <Pin
         {...props}
-        id="mr-cat"
+        id="cats"
         imageSrc={pin1}
         extraStyles={{
           top: "9%",
@@ -110,7 +110,7 @@ export default function AnswerPins(props: AnswerPinsProps) {
       />
       <Pin
         {...props}
-        id="penny-puzz"
+        id="penny"
         imageSrc={pin3}
         extraStyles={{
           top: "35%",
@@ -229,7 +229,7 @@ export default function AnswerPins(props: AnswerPinsProps) {
       />
       <Pin
         {...props}
-        id="whaling-ships"
+        id="whales"
         imageSrc={pin10}
         extraStyles={{
           top: "72%",

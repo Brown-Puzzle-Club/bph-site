@@ -1,3 +1,4 @@
+import { MajorCaseEnum } from "@/utils/constants";
 import type { DjangoContext } from "@/utils/django_types";
 
 import type { INode, NodeAnswer } from "./types/BoardTypes";
@@ -19,14 +20,14 @@ export const collectNodes = (context: DjangoContext | undefined) => {
 
   // ids here are the slugs for the puzzles
   const puzzle_nodes: INode[] = [
-    { id: "whaling-ships", x: 47, y: 77 },
-    { id: "mr-cat", x: 25, y: 15 },
-    { id: "penny-puzz", x: 19, y: 39 },
+    { id: "whales", x: 47, y: 77 },
+    { id: "cats", x: 25, y: 15 },
+    { id: "penny", x: 19, y: 39 },
     { id: "birbs-at-brown", x: 54, y: 73 },
   ];
 
   const answered_puzzle_nodes: NodeAnswer[] = [];
-  const solves = context.team_context.solves;
+  const solves = context.team_context.minor_case_solves[MajorCaseEnum.COLORED_THREAD];
 
   for (const node of puzzle_nodes) {
     if (solves[node.id]) {

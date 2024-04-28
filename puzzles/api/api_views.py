@@ -115,14 +115,19 @@ class EventCompletionViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return EventCompletion.objects.filter(team=self.request._request.context.team)
-
+  
 
 class StorylineUnlockViewSet(viewsets.ModelViewSet):
     queryset = StorylineUnlock.objects.all()
     serializer_class = StorylineUnlockSerializer
-    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
+        if (
+            self.request._request.context.is_admin
+            or self.request._request.context.hunt_is_closed
+        ):
+            return StorylineUnlock.all_storylines()
+
         return StorylineUnlock.objects.filter(team=self.request._request.context.team)
 
 
@@ -234,7 +239,9 @@ def major_case(request: Request, major_case_slug: str) -> Response:
         serializer = MajorCaseSerializer(major_case)
 
         additional_fields = {}
-        submissions = context.team.puzzle_submissions(major_case.puzzle)
+        submissions = []
+        if context.team:
+            submissions = context.team.puzzle_submissions(major_case.puzzle)
 
         additional_fields["submissions"] = AnswerSubmissionSerializer(
             submissions, many=True

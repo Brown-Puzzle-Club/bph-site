@@ -1545,7 +1545,9 @@ class MajorCaseCompleted(models.Model):
 class AnswerSubmission(models.Model):
     """Represents a team making a solve attempt on a puzzle (right or wrong)."""
 
-    team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_("team"))
+    team = models.ForeignKey(
+        Team, on_delete=models.CASCADE, null=True, blank=True, verbose_name=_("team")
+    )
     puzzle = models.ForeignKey(
         Puzzle, on_delete=models.CASCADE, verbose_name=_("puzzle")
     )
@@ -1571,6 +1573,26 @@ class AnswerSubmission(models.Model):
         unique_together = ("team", "puzzle", "submitted_answer")
         verbose_name = _("answer submission")
         verbose_name_plural = _("answer submissions")
+
+    @staticmethod
+    def all_solved_minor_cases():
+        acc = {}
+        for puzzle in Puzzle.objects.filter(is_meta=True):
+            submit = AnswerSubmission(
+                team=None,
+                puzzle=puzzle,
+                submitted_answer=puzzle.answer,
+                is_correct=True,
+                submitted_datetime=datetime.datetime.now(),
+                used_free_answer=False,
+            )
+            if puzzle.round.major_case.slug not in acc:
+                acc[puzzle.round.major_case.slug] = {}
+            if puzzle.round.slug not in acc[puzzle.round.major_case.slug]:
+                acc[puzzle.round.major_case.slug][puzzle.round.slug] = {}
+            acc[puzzle.round.major_case.slug][puzzle.round.slug] = submit
+
+        return acc
 
 
 @receiver(post_save, sender=AnswerSubmission)
@@ -2141,6 +2163,20 @@ class StorylineUnlock(models.Model):
             data={"slug": storyline_slug},
             team=team.id,
         )
+
+    STORYLINE_SLUGS = [
+        "main-page-intro",
+        "colored-thread-complete",
+        "social-deduction-complete",
+        "data-complete",
+    ]
+
+    @staticmethod
+    def all_storylines():
+        return [
+            StorylineUnlock(team=None, storyline=slug, unlock_datetime=timezone.now())
+            for slug in StorylineUnlock.STORYLINE_SLUGS
+        ]
 
     FREE_STORY_SLUGS = ["main-page-intro"]
 
