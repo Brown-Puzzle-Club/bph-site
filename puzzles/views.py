@@ -1,3 +1,4 @@
+from collections import defaultdict
 import itertools
 import re
 from functools import wraps
@@ -12,7 +13,9 @@ from django.views.decorators.http import require_GET
 
 from puzzles.forms import AnswerHintForm
 
+from puzzles.hunt_config import HUNT_END_TIME
 from puzzles.models import (
+    AnswerSubmission,
     Hint,
     Puzzle,
     Team,

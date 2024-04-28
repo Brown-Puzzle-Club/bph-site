@@ -49,6 +49,8 @@ const TeamSchema = z.object({
 });
 type Team = z.infer<typeof TeamSchema>;
 
+type Biggraph = [number, number, string, boolean];
+
 interface LeaderboardTeam extends Team {
   total_solves: number;
   total_minor_case_solves: number;
@@ -320,4 +322,5 @@ export type {
   User,
   UserTeam,
   VotingInfo,
+  Biggraph,
 };

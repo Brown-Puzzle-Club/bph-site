@@ -1,3 +1,4 @@
+import MinimalSolveGraph from "@/components/stats/MinimalSolveGraph";
 import { SortableTable } from "@/components/stats/SortableTable";
 
 const headers = ["Team", "Correct Answers", "Total Answers", "Answer Accuracy"];
@@ -10,6 +11,13 @@ const dummyData = [
   { team: "beep boop", correctAnswers: 26, totalAnswers: 47, answerAccuracy: 55.32 },
   { team: "Galactic Tax Exempt", correctAnswers: 26, totalAnswers: 48, answerAccuracy: 54.17 },
   { team: "The Geese Geese", correctAnswers: 29, totalAnswers: 54, answerAccuracy: 53.7 },
+];
+
+const dummyData2 = [
+  { team: "The 25 Venters", solveData: { date: new Date(1713079907668), count: 1 } },
+  { team: "The 25 Venters", solveData: { date: new Date(1713079907668), count: 2 } },
+  { team: "The 25 Venters", solveData: { date: new Date(1713080923024), count: 3 } },
+  { team: "The 25 Venters", solveData: { date: new Date(1713086864987), count: 4 } },
 ];
 
 const transformData = (header: string, data: Record<string, unknown>) => {
@@ -38,6 +46,7 @@ const WrapUp = () => {
         transformData={transformData}
         extractKey={extractKey}
       />
+      <MinimalSolveGraph data={dummyData2} />
     </div>
   );
 };
