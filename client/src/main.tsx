@@ -29,6 +29,7 @@ import PuzzlePage from "./routes/PuzzlePage";
 import RegisterForm from "./routes/Register";
 import Story from "./routes/Story";
 import TeamPage from "./routes/TeamPage";
+import WrapUp from "./routes/WrapUp";
 import ColoredThread from "./routes/major_cases/ColoredThread";
 import Data from "./routes/major_cases/Data";
 import SocialDeduction from "./routes/major_cases/SocialDeduction";
@@ -108,6 +109,10 @@ const router = createBrowserRouter([
       {
         path: "/markdown-test",
         element: <PageWrapper route={<MarkdownTest />} />,
+      },
+      {
+        path: "/wrapup",
+        element: <PageWrapper route={<WrapUp />} />,
       },
       {
         path: "/puzzles",
