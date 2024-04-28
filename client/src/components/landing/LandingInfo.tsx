@@ -51,7 +51,7 @@ const LandingInfo: React.FC = () => {
           <p className="pt-3 italic font-light">
             &gt;{" "}
             <Link smooth className="hover:underline" to="/info#FAQ">
-              what is a puzzlehunt?
+              What is a puzzlehunt?
             </Link>
           </p>
         </div>

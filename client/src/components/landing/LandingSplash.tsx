@@ -133,7 +133,7 @@ const LandingSplash: React.FC = () => {
             onClick={() => {
               if (context?.hunt_context.hunt_is_closed) {
                 toast.error("the hunt is closed :(", {
-                  duration: 500,
+                  duration: 750,
                   position: "top-right",
                 });
               } else {
@@ -182,8 +182,17 @@ const LandingSplash: React.FC = () => {
             }}
           >
             <p className="text-white font-mono text-xs select-all">
-              The hunt weekend is over, but you can still participate and register until{" "}
-              <b>{close_date}</b> !
+              {context?.hunt_context.hunt_is_over ? (
+                <>
+                  The hunt weekend is over, but you can still participate and register until{" "}
+                  <b>{close_date}</b> !
+                </>
+              ) : (
+                <>
+                  The hunt is closed! <b>All puzzles and solutions are open to the public.</b> You
+                  can keep progressing on your account, but it will not affect the leaderboard.
+                </>
+              )}
             </p>
           </div>
         </div>
