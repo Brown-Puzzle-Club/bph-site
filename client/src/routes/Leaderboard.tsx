@@ -182,13 +182,13 @@ export default function Leaderboard() {
                 </th>
               </tr>
             </thead>
-            <Reorder.Group as="tbody" values={values} onReorder={() => {}} draggable={false}>
+            <Reorder.Group as="tbody" values={values} onReorder={() => {}}>
               {collectTeams(values, curTab).map((cur_team, index, array) => (
                 <Reorder.Item
                   as="tr"
                   value={cur_team}
                   key={cur_team.id}
-                  draggable={false}
+                  dragListener={false}
                   className={cn(
                     "team-box px-6 py-3 text-slate-800",
                     index !== array.length - 1 && "border-b-4 border-[#957a62]",

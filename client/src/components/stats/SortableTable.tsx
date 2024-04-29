@@ -84,7 +84,12 @@ export const SortableTable = <TData, THeader extends string>({
       </thead>
       <Reorder.Group as="tbody" values={values} onReorder={setValues}>
         {values.map((row, index) => (
-          <Reorder.Item as="tr" key={extractKey(values[index])} value={values[index]}>
+          <Reorder.Item
+            as="tr"
+            key={extractKey(values[index])}
+            value={values[index]}
+            dragListener={false}
+          >
             {headers.map((header, index) => (
               <td className="px-4" key={index}>
                 {renderData(header, row)}
