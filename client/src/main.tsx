@@ -200,7 +200,7 @@ const router = createBrowserRouter([
         element: <PageWrapper route={<PuzzlePage />} />,
       },
       {
-        path: "/puzzle-stats/:slug",
+        path: "/puzzle/:slug/stats",
         element: <PageWrapper route={<PuzzleStats />} />,
       },
       {

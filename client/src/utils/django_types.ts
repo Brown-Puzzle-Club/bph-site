@@ -106,7 +106,14 @@ interface TeamPuzzleStats {
   num_hints: number;
 }
 
-interface PuzzleStats {
+interface PuzzleStatsBase {
+  name: string;
+  total_solves: number;
+  guesses: number;
+  unlocks: number;
+}
+
+interface PuzzleStats extends PuzzleStatsBase {
   name: string;
   total_solves: number;
   guesses: number;
@@ -139,14 +146,9 @@ export const RoundSchema = z.object({
   description: z.string(),
   unlock_global_minor: z.number(),
   unlock_local_major: z.number(),
+  meta: z.number(),
 });
 type Round = z.infer<typeof RoundSchema>;
-
-const SolveStatsSchema = z.object({
-  num_solves: z.number(),
-  num_guesses: z.number(),
-  num_teams: z.number(),
-});
 
 const PuzzleSchema = z.object({
   id: z.number(),
@@ -163,7 +165,6 @@ const PuzzleSchema = z.object({
   clipboard_remote: z.string(),
   submissions: z.array(AnswerSubmissionSchema),
   errata: z.array(ErratumSchema),
-  stats: SolveStatsSchema,
 });
 type Puzzle = z.infer<typeof PuzzleSchema>;
 
@@ -333,7 +334,6 @@ type APIResponse<T> = SuccessResponse<T> | ErrorResponse;
 export type {
   APIResponse,
   AnswerSubmission,
-  TeamStats,
   Biggraph,
   DjangoContext,
   Erratum,
@@ -349,15 +349,17 @@ export type {
   MinorCaseIncomingEvent,
   Puzzle,
   PuzzleMessage,
+  PuzzleStats,
+  PuzzleStatsBase,
   Round,
   StorylineUnlock,
   Team,
   TeamMember,
+  TeamPuzzleStats,
+  TeamStats,
+  TeamStatsInner,
   Token,
   User,
   UserTeam,
   VotingInfo,
-  TeamPuzzleStats,
-  PuzzleStats,
-  TeamStatsInner,
 };

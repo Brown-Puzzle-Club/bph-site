@@ -335,12 +335,24 @@ def get_events(request: Request) -> Response:
 def get_all_solve_stats(request: Request, team_id: int) -> Response:
     solves = AnswerSubmission.objects.filter(
         team__id=team_id, team__is_hidden=False
-    ).values("team__team_name", "puzzle__name", "puzzle__slug", "submitted_datetime", "is_correct")
+    ).values(
+        "team__team_name",
+        "puzzle__name",
+        "puzzle__slug",
+        "submitted_datetime",
+        "is_correct",
+    )
 
     puzzles = set([solve["puzzle__slug"] for solve in solves])
 
     def get_incorrect_guesses_puzzle(slug: str):
-        return len([solve for solve in solves if solve["puzzle__slug"] == slug and not solve["is_correct"]])
+        return len(
+            [
+                solve
+                for solve in solves
+                if solve["puzzle__slug"] == slug and not solve["is_correct"]
+            ]
+        )
 
     def get_unlock_time(slug: str):
         unlock_time = PuzzleUnlock.objects.filter(team__id=team_id, puzzle__slug=slug)
@@ -351,7 +363,11 @@ def get_all_solve_stats(request: Request, team_id: int) -> Response:
         return None
 
     def get_correct_guess_time(slug: str):
-        correct_guesses = [solve["submitted_datetime"] for solve in solves if solve["puzzle__slug"] == slug and solve["is_correct"]]
+        correct_guesses = [
+            solve["submitted_datetime"]
+            for solve in solves
+            if solve["puzzle__slug"] == slug and solve["is_correct"]
+        ]
         if correct_guesses:
             return correct_guesses[0]
         return None
@@ -366,12 +382,15 @@ def get_all_solve_stats(request: Request, team_id: int) -> Response:
         for puzzle in puzzles
     }
 
-    return Response({
-        "name": solves[0]["team__team_name"],
-        "id": team_id,
-        "total_solves": len([solve for solve in solves if solve["is_correct"]]),
-        "stats": team_stats
-    })
+    return Response(
+        {
+            "name": solves[0]["team__team_name"],
+            "id": team_id,
+            "total_solves": len([solve for solve in solves if solve["is_correct"]]),
+            "stats": team_stats,
+        }
+    )
+
 
 @api_view(["GET"])
 def get_puzzle_stats(request: Request, puzzle_slug: str) -> Response:
@@ -386,10 +405,20 @@ def get_puzzle_stats(request: Request, puzzle_slug: str) -> Response:
     teams = set([(solve["team__team_name"], solve["team__id"]) for solve in solves])
 
     def get_incorrect_guesses_team(team: str):
-        return len([solve for solve in solves if solve["team__team_name"] == team and not solve["is_correct"]])
+        return len(
+            [
+                solve
+                for solve in solves
+                if solve["team__team_name"] == team and not solve["is_correct"]
+            ]
+        )
 
     def get_correct_guess_time(team: str):
-        correct_guesses = [solve["submitted_datetime"] for solve in solves if solve["team__team_name"] == team and solve["is_correct"]]
+        correct_guesses = [
+            solve["submitted_datetime"]
+            for solve in solves
+            if solve["team__team_name"] == team and solve["is_correct"]
+        ]
         if correct_guesses:
             nonlocal total_solves
             total_solves += 1
@@ -397,13 +426,17 @@ def get_puzzle_stats(request: Request, puzzle_slug: str) -> Response:
         return None
 
     def num_hints(team: str):
-        num_hints = len(Hint.objects.filter(team__team_name=team, puzzle__slug=puzzle_slug))
+        num_hints = len(
+            Hint.objects.filter(team__team_name=team, puzzle__slug=puzzle_slug)
+        )
         nonlocal hints_asked
         hints_asked += num_hints
         return num_hints
 
     def unlock_time(team: str):
-        unlock_time = PuzzleUnlock.objects.filter(team__team_name=team, puzzle__slug=puzzle_slug)
+        unlock_time = PuzzleUnlock.objects.filter(
+            team__team_name=team, puzzle__slug=puzzle_slug
+        )
         if unlock_time:
             unlock_time = unlock_time[0].unlock_datetime
             nonlocal teams_unlocked
@@ -424,14 +457,33 @@ def get_puzzle_stats(request: Request, puzzle_slug: str) -> Response:
         for (team, team_id) in teams
     }
 
-    return Response({
-        "name": puzzle.name,
-        "total_solves": total_solves,
-        "guesses": len(solves),
-        "hints": hints_asked,
-        "unlocks": teams_unlocked,
-        "submissions": team_data
-    })
+    return Response(
+        {
+            "name": puzzle.name,
+            "total_solves": total_solves,
+            "guesses": len(solves),
+            "hints": hints_asked,
+            "unlocks": teams_unlocked,
+            "submissions": team_data,
+        }
+    )
+
+
+@api_view(["GET"])
+def get_all_puzzle_stats(request: Request):
+    django_context = request._request.context
+
+    if not django_context.is_admin and not django_context.hunt_is_closed:
+        return Response({"error": "Unauthorized"}, status=401)
+
+    puzzles = Puzzle.objects.all()
+
+    # DOES NOT INCLUDE TEAM-BASED STATS. FOR THOSE, QUERY FOR A SPECIFIC PUZZLE.
+    stats_data = {
+        puzzle.slug: {"name": puzzle.name, **puzzle.stats} for puzzle in puzzles
+    }
+
+    return Response(stats_data, status=200)
 
 
 @api_view(["GET"])

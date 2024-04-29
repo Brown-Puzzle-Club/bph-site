@@ -302,9 +302,9 @@ class Puzzle(models.Model):
             teams[submission.puzzle_id].add(submission.team_id)
 
         return {
-            "num_solves": correct[self.id],
-            "num_guesses": guesses[self.id],
-            "num_teams": len(teams[self.id]),
+            "total_solves": correct[self.id],
+            "guesses": guesses[self.id],
+            "unlocks": len(teams[self.id]),
         }
 
     @staticmethod
@@ -828,7 +828,7 @@ class Team(models.Model):
             ] = unlock.puzzle
         return out
 
-    def solves_by_case(self):
+    def solves_by_case(self): 
         out = {}
         # major_case : minor_case : puzzle : {puzzle, solve_time, answer}
         # DOES NOT INCLUDE EVENT PUZZLES, RUNAROUND.

@@ -3,7 +3,7 @@ import type { SetStateAction } from "react";
 import { useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 
-import { useDjangoContext } from "@/hooks/useDjangoContext";
+import { useAllPuzzleStats, useDjangoContext } from "@/hooks/useDjangoContext";
 import { useTheme } from "@/hooks/useTheme";
 import { CASE_PALETTE, MAJOR_CASE_NAMES, MajorCaseEnum } from "@/utils/constants";
 import { DEFAULT_THEME } from "@/utils/themes";
@@ -16,7 +16,7 @@ export default function PuzzleList() {
   });
 
   const { data: context } = useDjangoContext();
-  console.log(context);
+  // console.log(context);
   const [curTab, setTab] = useLocalStorage<MajorCaseEnum>(
     "puzzles-tab",
     MajorCaseEnum.COLORED_THREAD,
@@ -25,6 +25,9 @@ export default function PuzzleList() {
   const handleTabChange = (tab: SetStateAction<string>) => {
     setTab(tab as MajorCaseEnum);
   };
+
+  const { data: all_stats } = useAllPuzzleStats();
+  // console.log(all_stats);
 
   // round_slug -> (round: Round, answer: string)
   const minor_cases = useMemo(() => {
@@ -69,9 +72,9 @@ export default function PuzzleList() {
             }}
           >
             <div className="custom-scroll h-full max-h-[65dvh] overflow-y-auto">
-              {context.team_context.major_case_puzzles[curTab] && (
+              {context.team_context.major_case_unlocks[curTab] && (
                 <div
-                  className="majorcase-puzzle text-center font-bold text-black font-serif pb-2"
+                  className="majorcase-puzzle text-center font-bold text-black font-serif pb-2 px-2"
                   style={{
                     borderBottomColor: CASE_PALETTE[curTab].primary,
                     borderBottomWidth: "8px",
@@ -80,6 +83,18 @@ export default function PuzzleList() {
                   <Link to={`/majorcase/${curTab}`} className="underline text-2xl">
                     The Case of {context.team_context.major_case_unlocks[curTab].name}
                   </Link>
+                  {all_stats && all_stats[curTab] && (
+                    <>
+                      <br></br>
+                      <Link
+                        to={`/puzzle/${curTab}/stats`}
+                        className="font-mono font-bold text-center hover:underline"
+                      >
+                        {all_stats[curTab].total_solves} solves {all_stats[curTab].guesses} guesses{" "}
+                        {all_stats[curTab].unlocks} teams
+                      </Link>
+                    </>
+                  )}
                   {context.team_context.solves[curTab] && (
                     <p
                       className="font-mono pt-1"
@@ -108,7 +123,7 @@ export default function PuzzleList() {
                             : {}
                         }
                       >
-                        <div className={`flex justify-between items-center`}>
+                        <div className={`block justify-between items-center`}>
                           <Link
                             to={`/minorcase/${round}`}
                             className="underline text-center text-xl font-extrabold tracking-wider"
@@ -116,7 +131,22 @@ export default function PuzzleList() {
                           >
                             {minor_cases[round] && minor_cases[round].minor_case.name}
                           </Link>
+                          {all_stats && all_stats[minor_cases[round].meta?.slug ?? ""] && (
+                            <>
+                              <br></br>
+                              <Link
+                                to={`/puzzle/${minor_cases[round].meta?.slug}/stats`}
+                                className="font-mono font-bold text-center hover:underline"
+                              >
+                                {all_stats[minor_cases[round].meta?.slug ?? ""].total_solves} solves{" "}
+                                {all_stats[minor_cases[round].meta?.slug ?? ""].guesses} guesses{" "}
+                                {all_stats[minor_cases[round].meta?.slug ?? ""].unlocks} teams
+                              </Link>
+                            </>
+                          )}
                         </div>
+                        {/* STATS */}
+
                         {/* ANSWER */}
                         <span
                           className="pl-3 font-mono font-bold text-right"

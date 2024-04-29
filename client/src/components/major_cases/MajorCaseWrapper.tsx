@@ -52,6 +52,7 @@ function MajorCaseWrapper({ children }: { children: ReactNode }) {
         description: "",
         unlock_global_minor: 0,
         unlock_local_major: 0,
+        meta: 0,
       },
       body_remote: "",
       solution: "",

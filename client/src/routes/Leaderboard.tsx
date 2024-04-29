@@ -119,10 +119,10 @@ export default function Leaderboard() {
   return (
     <div className="contact bg-slate-900 text-white h-[90vh] overscroll-contain overflow-hidden overflow-y-auto ">
       <h1 className="text-4xl font-bold text-center py-5">Teams</h1>
-      <h1 className="text-md text-center pb-5">
+      {/* <h1 className="text-md text-center pb-5">
         !! Due to our unconventional unlock structure, we will not be releasing stats until after
         the hunt is closed !!
-      </h1>
+      </h1> */}
       <div className="tabs flex items-center justify-end gap-4 mx-[5%] md:mx-[20%] pr-10 z-10">
         <button
           onClick={() => setTab(LeaderboardTab.IN_PERSON)}
@@ -152,29 +152,41 @@ export default function Leaderboard() {
       <div className="text-left dark bg-gradient-to-b from-[#b3957c] to-[#a28369] pb-2 pt-2 no-underline outline-none focus:shadow-md border-4 border-[#957a62] rounded-xl relative mx-[5%] md:mx-[20%] px-4">
         {teams ? (
           <table className="contact-content custom-scroll h-full max-h-[65dvh] overflow-y-auto w-full table-fixed">
-            <thead>
+            <thead className="border-b-4 border-[#544334] bg-[#ceaa8a] rounded-xl font-mono select-none text-[2vw] md:text-sm">
               <tr className="team-box px-6 pt-3 pb-3 text-slate-800">
-                <th className="text-xl font-bold w-[3%]">#</th>
-                <th className="text-xl font-bold w-[50%]">Team Name</th>
-                <th onClick={() => updateSortHeader("major")} className="text-xl font-bold">
+                <th className="font-bold w-[3%]">#</th>
+                <th className="font-bold w-[50%]">Team Name</th>
+                <th
+                  onClick={() => updateSortHeader("major")}
+                  className="font-bold hover:cursor-pointer"
+                >
                   Major Cases Solved
                   <span className={cn(selectedHeader === "major" ? "visible" : "invisible")}>
                     {sortAscending ? "▲" : "▼"}
                   </span>
                 </th>
-                <th onClick={() => updateSortHeader("minor")} className="text-xl font-bold">
+                <th
+                  onClick={() => updateSortHeader("minor")}
+                  className="font-bold hover:cursor-pointer"
+                >
                   Minor Cases Solved
                   <span className={cn(selectedHeader === "minor" ? "visible" : "invisible")}>
                     {sortAscending ? "▲" : "▼"}
                   </span>
                 </th>
-                <th onClick={() => updateSortHeader("total")} className="text-xl font-bold">
+                <th
+                  onClick={() => updateSortHeader("total")}
+                  className="font-bold hover:cursor-pointer"
+                >
                   Total Puzzles Solved
                   <span className={cn(selectedHeader === "total" ? "visible" : "invisible")}>
                     {sortAscending ? "▲" : "▼"}
                   </span>
                 </th>
-                <th onClick={() => updateSortHeader("time")} className="text-xl font-bold">
+                <th
+                  onClick={() => updateSortHeader("time")}
+                  className="font-bold hover:cursor-pointer"
+                >
                   Finish Time
                   <span className={cn(selectedHeader === "time" ? "visible" : "invisible")}>
                     {sortAscending ? "▲" : "▼"}
@@ -213,7 +225,7 @@ export default function Leaderboard() {
                   <td className="py-4">
                     {cur_team.all_metas_solve_time
                       ? new Date(cur_team.all_metas_solve_time).toDateString()
-                      : "DNF"}
+                      : ""}
                   </td>
                 </Reorder.Item>
               ))}

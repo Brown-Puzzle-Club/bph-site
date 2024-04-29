@@ -9,7 +9,7 @@ import rt_folder from "@/assets/main_page/folders/rt_folder.png";
 import sd_folder from "@/assets/main_page/folders/sd_folder.png";
 import { CASE_PALETTE, MajorCaseEnum } from "@/utils/constants";
 import type { Round } from "@/utils/django_types";
-import { getMinorCaseSolution } from "@/utils/utils";
+import { getMinorCaseMeta, getPuzzleSolution } from "@/utils/utils";
 
 import { useDjangoContext } from "../hooks/useDjangoContext";
 import { CASE_ART_BY_ROUND_SLUG } from "./minor_cases/FolderArt";
@@ -49,7 +49,7 @@ const MinorCaseModal: React.FC<ModalProps> = ({
     if (!selectedCase || !context) {
       return "";
     }
-    return getMinorCaseSolution(selectedCase, context);
+    return getPuzzleSolution(getMinorCaseMeta(selectedCase, context), context);
   }, [selectedCase, context]);
 
   return (

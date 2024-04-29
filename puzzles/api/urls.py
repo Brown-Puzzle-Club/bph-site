@@ -58,4 +58,5 @@ urlpatterns = [
     path("biggraph", api_views.get_my_biggraph, name="get_big_graph"),
     path("teams/leaderboard", api_views.get_leaderboard, name="get_leaderboard"),
     path("puzzle-stats/<str:puzzle_slug>", api_views.get_puzzle_stats, name="get_puzzle_stats"),
+    path("puzzle-stats", api_views.get_all_puzzle_stats, name="get_all_puzzle_stats"),
 ]

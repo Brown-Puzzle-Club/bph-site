@@ -18,7 +18,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { useDjangoContext } from "@/hooks/useDjangoContext";
+import { useAllPuzzleStats, useDjangoContext } from "@/hooks/useDjangoContext";
 import { useTheme } from "@/hooks/useTheme";
 import useBPHStore, { BOTTOM_LEFT } from "@/stores/useBPHStore";
 import { IS_MINOR_CASE_UNLOCKED } from "@/utils/auth";
@@ -44,6 +44,8 @@ const ALT_MINOR_CASE_ROUTE = (mc_slug: string, context: DjangoContext) => {
 function MinorCasePage() {
   const { setTheme } = useTheme();
   const setPosition = useBPHStore((state) => state.setBluenoirPosition);
+
+  const { data: all_stats } = useAllPuzzleStats();
 
   useEffect(() => {
     setTheme(DEFAULT_THEME);
@@ -145,7 +147,7 @@ function MinorCasePage() {
                         : {}
                     }
                   >
-                    <div className="flex items-center space-x-4">
+                    <div className="block items-center space-x-4">
                       <span
                         className="text-xl font-bold w-9"
                         style={{
@@ -161,6 +163,19 @@ function MinorCasePage() {
                       >
                         {puzzle_answer.puzzle.name.toUpperCase()}
                       </Link>
+                      {all_stats && all_stats[puzzle_answer.puzzle.slug] && (
+                        <>
+                          <br></br>
+                          <Link
+                            to={`/puzzle/${puzzle_answer.puzzle.slug}/stats`}
+                            className="font-mono font-bold text-center hover:underline"
+                          >
+                            {all_stats[puzzle_answer.puzzle.slug].total_solves} solves{" "}
+                            {all_stats[puzzle_answer.puzzle.slug].guesses} guesses{" "}
+                            {all_stats[puzzle_answer.puzzle.slug].unlocks} teams
+                          </Link>
+                        </>
+                      )}
                     </div>
                     <span
                       className="pl-3 font-mono font-bold"

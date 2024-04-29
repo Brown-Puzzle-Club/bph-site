@@ -90,40 +90,54 @@ export function getUnlockedPuzzle(slug: string, context: DjangoContext, case_slu
 // slug -> {Round, answer: string}
 export function getMinorCases(
   context: DjangoContext,
-): Record<string, { minor_case: Round; answer: string | null }> {
+): Record<string, { minor_case: Round; answer: string | null; meta: Puzzle | null | undefined }> {
   return Object.fromEntries(
     Object.values(context?.team_context?.case_unlocks).map((minor_case: Round) => {
+      const meta = getMinorCaseMeta(minor_case, context);
       return [
         minor_case.slug,
         {
           minor_case: minor_case,
-          answer: getMinorCaseSolution(minor_case, context),
+          answer: meta ? getPuzzleSolution(meta, context) : null,
+          meta: meta,
         },
       ];
     }),
   );
 }
 
-export function getMinorCaseSolution(round: Round, context: DjangoContext) {
+export function getMinorCaseMeta(round: Round, context: DjangoContext) {
   if (
     !context?.team_context ||
     !round ||
-    !context.team_context.solves_by_case[round.major_case.slug] ||
-    !context.team_context.solves_by_case[round.major_case.slug][round.slug] ||
     !context?.team_context.unlocks[round.major_case.slug] ||
     !context?.team_context.unlocks[round.major_case.slug][round.slug]
   ) {
     return null;
   }
 
-  let submission;
   const meta_puzzle = Object.values(
     context.team_context.unlocks[round.major_case.slug][round.slug],
   ).find((puzzle) => puzzle.is_meta);
+  return meta_puzzle;
+}
+
+export function getPuzzleSolution(puzzle: Puzzle | undefined | null, context: DjangoContext) {
+  let submission;
+
   if (
-    meta_puzzle &&
+    !puzzle ||
+    !context?.team_context.solves_by_case[puzzle.round.major_case.slug] ||
+    !context?.team_context.solves_by_case[puzzle.round.major_case.slug][puzzle.round.slug]
+  ) {
+    return null;
+  }
+  if (
+    puzzle &&
     (submission =
-      context.team_context.solves_by_case[round.major_case.slug][round.slug][meta_puzzle.slug])
+      context.team_context.solves_by_case[puzzle.round.major_case.slug][puzzle.round.slug][
+        puzzle.slug
+      ])
   ) {
     return submission.submitted_answer;
   }
