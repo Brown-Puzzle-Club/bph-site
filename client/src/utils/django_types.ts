@@ -54,6 +54,7 @@ interface LeaderboardTeam extends Team {
   total_minor_case_solves: number;
   total_major_case_solves: number;
   finish_time: string;
+  all_metas_solve_time: string;
 }
 
 const TeamMemberSchema = z.object({

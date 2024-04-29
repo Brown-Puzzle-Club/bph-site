@@ -492,6 +492,7 @@ class Team(models.Model):
             "minor_case_solve_count",
             "major_case_solve_count",
             "major_case_solve_count",
+            "all_metas_solve_time",
         )
 
     @staticmethod
