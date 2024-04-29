@@ -53,9 +53,9 @@ type Biggraph = [number, number, string, boolean];
 
 interface LeaderboardTeam extends Team {
   total_solves: number;
-  total_minor_case_solves: number;
-  total_major_case_solves: number;
-  finish_time: string;
+  major_case_solve_count: number;
+  minor_case_solve_count: number;
+  last_solve_or_creation_time: string;
 }
 
 const TeamMemberSchema = z.object({
