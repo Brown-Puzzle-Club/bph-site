@@ -93,6 +93,8 @@ function MinorCasePage() {
     return getUnlockedPuzzles(majorCaseSlug, minorCaseSlug, context);
   }, [majorCaseSlug, minorCaseSlug, context]);
 
+  console.log(unlocked_puzzles);
+
   if (!context?.team_context) {
     return <BeatLoader className="justify-center content-center p-4" color={"#fff"} size={12} />;
   }

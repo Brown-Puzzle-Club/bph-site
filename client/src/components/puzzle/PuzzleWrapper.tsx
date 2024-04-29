@@ -58,6 +58,7 @@ const NO_ANSWER_SUBMIT = new Set(["wordle", "connection", "lettertroxd"]);
 
 function PuzzleWrapper({ puzzle_slug }: { puzzle_slug: string }) {
   const { data: puzzle, isError } = usePuzzle(puzzle_slug);
+  console.log(puzzle);
   const setPosition = useBPHStore((state) => state.setBluenoirPosition);
   const [puzzleContent, setPuzzleContent] = useState(puzzle?.body);
   const setBluenoirDialogue = useBPHStore((state) => state.setRandomDialogueFunction);

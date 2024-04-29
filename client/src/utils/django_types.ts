@@ -142,6 +142,12 @@ export const RoundSchema = z.object({
 });
 type Round = z.infer<typeof RoundSchema>;
 
+const SolveStatsSchema = z.object({
+  num_solves: z.number(),
+  num_guesses: z.number(),
+  num_teams: z.number(),
+});
+
 const PuzzleSchema = z.object({
   id: z.number(),
   name: z.string(),
@@ -157,6 +163,7 @@ const PuzzleSchema = z.object({
   clipboard_remote: z.string(),
   submissions: z.array(AnswerSubmissionSchema),
   errata: z.array(ErratumSchema),
+  stats: SolveStatsSchema,
 });
 type Puzzle = z.infer<typeof PuzzleSchema>;
 
@@ -327,6 +334,7 @@ export type {
   APIResponse,
   AnswerSubmission,
   TeamStats,
+  Biggraph,
   DjangoContext,
   Erratum,
   EventCompletion,
@@ -349,7 +357,6 @@ export type {
   User,
   UserTeam,
   VotingInfo,
-  Biggraph,
   TeamPuzzleStats,
   PuzzleStats,
   TeamStatsInner,

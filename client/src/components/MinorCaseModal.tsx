@@ -66,7 +66,9 @@ const MinorCaseModal: React.FC<ModalProps> = ({
             border: "none",
           }}
         >
-          {CASE_ART_BY_ROUND_SLUG[selectedCase.slug as MajorCaseEnum]}
+          <div className="select-none">
+            {CASE_ART_BY_ROUND_SLUG[selectedCase.slug as MajorCaseEnum]}
+          </div>
           {solution && (
             <img
               className="absolute object-cover w-[18vw] select-none pointer-events-none"

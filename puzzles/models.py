@@ -4,6 +4,8 @@ import unicodedata
 from urllib.parse import quote_plus
 import math
 
+from collections import defaultdict
+
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
@@ -283,6 +285,27 @@ class Puzzle(models.Model):
     @property
     def normalized_answer(self):
         return Puzzle.normalize_answer(self.answer)
+
+    @property
+    def stats(self):
+        correct = defaultdict(int)
+        guesses = defaultdict(int)
+        teams = defaultdict(set)
+        for submission in AnswerSubmission.objects.filter(
+            used_free_answer=False,
+            team__is_hidden=False,
+            submitted_datetime__lt=HUNT_CLOSE_TIME,
+        ):
+            if submission.is_correct:
+                correct[submission.puzzle_id] += 1
+            guesses[submission.puzzle_id] += 1
+            teams[submission.puzzle_id].add(submission.team_id)
+
+        return {
+            "num_solves": correct[self.id],
+            "num_guesses": guesses[self.id],
+            "num_teams": len(teams[self.id]),
+        }
 
     @staticmethod
     def normalize_answer(s):
@@ -788,6 +811,7 @@ class Team(models.Model):
             unlocks = team.puzzleunlock_set.select_related("puzzle", "puzzle__round")
 
         for unlock in unlocks:
+            unlock.puzzle["stats"] = unlock.puzzle.stats
             if (
                 not unlock
                 or not unlock.puzzle

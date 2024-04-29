@@ -3,7 +3,7 @@ from datetime import datetime
 from rest_framework import permissions, viewsets, mixins
 from puzzles import models
 from puzzles.api.api_guards import require_auth
-from puzzles.hunt_config import HUNT_END_TIME, MAJOR_CASE_SLUGS
+from puzzles.hunt_config import HUNT_CLOSE_TIME, HUNT_END_TIME, MAJOR_CASE_SLUGS
 
 from .serializers import *
 
@@ -52,6 +52,7 @@ def get_my_token(request: Request) -> Response:
     except Token.DoesNotExist:
         return Response({"success": False, "error": "Token not found"})
 
+
 @api_view(["GET"])
 def get_my_biggraph(request: Request) -> Response:
     if not request.user.is_authenticated:
@@ -66,19 +67,25 @@ def get_my_biggraph(request: Request) -> Response:
     team_score = 0
 
     for puzzle_id, submitted_datetime in (
-        AnswerSubmission.objects
-        .filter(is_correct=True, team__is_hidden=False, used_free_answer=False, team__id=request._request.context.team.id)
-        .order_by('submitted_datetime')
-        .values_list('puzzle_id', 'submitted_datetime')
+        AnswerSubmission.objects.filter(
+            is_correct=True,
+            team__is_hidden=False,
+            used_free_answer=False,
+            team__id=request._request.context.team.id,
+        )
+        .order_by("submitted_datetime")
+        .values_list("puzzle_id", "submitted_datetime")
     ):
         team_score += 1
         puzzle = puzzle_map[puzzle_id]
-        team_point_changes.append((
-            submitted_datetime.timestamp() * 1000,
-            team_score,
-            puzzle.name,
-            puzzle.is_meta,
-        ))
+        team_point_changes.append(
+            (
+                submitted_datetime.timestamp() * 1000,
+                team_score,
+                puzzle.name,
+                puzzle.is_meta,
+            )
+        )
 
     return Response({"success": True, "data": team_point_changes})
 
@@ -164,10 +171,10 @@ class StorylineUnlockViewSet(viewsets.ModelViewSet):
 
 @api_view(["GET"])
 def context(request: Request) -> Response:
-    time = datetime.now()
+    # time = datetime.now()
     serializer = ContextSerializer(data=request._request.context)
-    new_time = datetime.now()
-    time_elapse = new_time - time
+    # new_time = datetime.now()
+    # time_elapse = new_time - time
     # print(f"Context took {time_elapse} to serialize")
 
     # print("yee")
@@ -223,6 +230,9 @@ def get_puzzle(request: Request, puzzle_slug: str) -> Response:
         # errata
         errata = Erratum.get_puzzle_erata(context=context, puzzle_slug=puzzle.slug)
         additional_fields["errata"] = ErrataSerializer(errata, many=True).data
+
+        if context.hunt_is_over:
+            additional_fields["stats"] = puzzle.stats
 
         # puzzle body
         if context.is_admin or context.hunt_is_closed:
