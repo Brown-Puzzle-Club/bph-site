@@ -1,3 +1,4 @@
+import { Reorder } from "framer-motion";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { HashLink as Link } from "react-router-hash-link";
@@ -6,12 +7,30 @@ import { BeatLoader } from "react-spinners";
 import TeamIcon from "@/components/team/TeamIcon";
 import { useAuth } from "@/hooks/useAuth";
 import { useLeaderboardTeams } from "@/hooks/useDjangoContext";
-import type { Team, UserTeam } from "@/utils/django_types";
+import type { LeaderboardTeam, Team, UserTeam } from "@/utils/django_types";
+import { cn } from "@/utils/utils";
 
 enum LeaderboardTab {
   IN_PERSON = "In Person",
   REMOTE = "Remote",
 }
+
+type Header = "major" | "minor" | "total" | "time";
+
+type TransformData = (header: Header, data: LeaderboardTeam) => string | number;
+const sortData = (
+  data: LeaderboardTeam[],
+  transformData: TransformData,
+  sortColumn: Header,
+  sortAscending: boolean,
+) => {
+  return [...data].sort((a, b) => {
+    const valueA = transformData(sortColumn, a).toString();
+    const valueB = transformData(sortColumn, b).toString();
+
+    return sortAscending ? valueA.localeCompare(valueB) : valueB.localeCompare(valueA);
+  });
+};
 
 export default function Leaderboard() {
   const { team } = useAuth();
@@ -21,6 +40,9 @@ export default function Leaderboard() {
     const savedTab = Cookies.get("leaderboardTab");
     return savedTab ? (savedTab as LeaderboardTab) : LeaderboardTab.IN_PERSON;
   });
+  const [selectedHeader, setSelectedHeader] = useState<Header>("time");
+  const [sortAscending, setSortAscending] = useState<boolean>(false);
+  const [values, setValues] = useState<LeaderboardTeam[]>(teams || []);
 
   const getTeamTab = (team: Team | UserTeam) => {
     return team.in_person ? LeaderboardTab.IN_PERSON : LeaderboardTab.REMOTE;
@@ -38,19 +60,19 @@ export default function Leaderboard() {
     }
   }, [team]);
 
-  const collectRemoteTeams = (teams: Team[]) => {
+  const collectRemoteTeams = (teams: LeaderboardTeam[]) => {
     return teams.filter(
       (cur_team) => !cur_team.in_person && (!cur_team.is_hidden || cur_team.id === team.data?.id),
     );
   };
 
-  const collectInPersonTeams = (teams: Team[]) => {
+  const collectInPersonTeams = (teams: LeaderboardTeam[]) => {
     return teams.filter(
       (cur_team) => cur_team.in_person && (!cur_team.is_hidden || cur_team.id === team.data?.id),
     );
   };
 
-  const collectTeams = (teams: Team[], tab: LeaderboardTab) => {
+  const collectTeams = (teams: LeaderboardTeam[], tab: LeaderboardTab) => {
     switch (tab) {
       case LeaderboardTab.IN_PERSON:
         return collectInPersonTeams(teams);
@@ -58,6 +80,32 @@ export default function Leaderboard() {
         return collectRemoteTeams(teams);
     }
   };
+
+  const updateSortHeader = (header: Header) => {
+    if (header === selectedHeader) {
+      setSortAscending((sortAscending) => !sortAscending);
+    } else {
+      setSelectedHeader(header);
+      setSortAscending(false);
+    }
+  };
+
+  const transformData = (header: Header, data: LeaderboardTeam) => {
+    switch (header) {
+      case "major":
+        return data.major_case_solve_count;
+      case "minor":
+        return data.minor_case_solve_count;
+      case "total":
+        return data.total_solves;
+      case "time":
+        return new Date(data.last_solve_or_creation_time).getTime();
+    }
+  };
+
+  useEffect(() => {
+    setValues(sortData(teams ?? [], transformData, selectedHeader, sortAscending));
+  }, [selectedHeader, sortAscending, teams]);
 
   return (
     <div className="contact bg-slate-900 text-white h-[90vh] overscroll-contain overflow-hidden overflow-y-auto ">
@@ -92,36 +140,81 @@ export default function Leaderboard() {
           Remote
         </button>
       </div>
-      <div className="text-left dark bg-gradient-to-b from-[#b3957c] to-[#a28369] pb-2 pt-2 no-underline outline-none focus:shadow-md border-4 border-[#957a62] rounded-xl relative mx-[5%] md:mx-[20%]">
-        <div className="contact-content custom-scroll h-full max-h-[65dvh] overflow-y-auto">
-          {teams ? (
-            collectTeams(teams, curTab).map((cur_team, index, array) => (
-              <div
-                key={cur_team.id}
-                className={`team-box px-6 pt-3 pb-3 flex items-center space-x-4 text-slate-800 ${
-                  index !== array.length - 1 ? "border-b-4 border-[#957a62]" : ""
-                } ${cur_team.id === team.data?.id ? "bg-[#ceaa8a]" : ""}`}
-              >
-                <span className="text-xl font-bold w-9">{index + 1}</span>
-                <TeamIcon
-                  className="w-12 h-12"
-                  color={cur_team?.color_choice || "#000000"}
-                  emoji={cur_team?.emoji_choice || "❓"}
-                  emoji_cn="text-3xl"
-                />
-                <Link className="truncate text-lg w-[80%]" to={`/team/${cur_team.id}`}>
-                  {cur_team.team_name}
-                </Link>
-              </div>
-            ))
-          ) : (
-            <BeatLoader
-              className="text-center justify-center content-center pr-2"
-              color={"#000"}
-              size={12}
-            />
-          )}
-        </div>
+      <div className="text-left dark bg-gradient-to-b from-[#b3957c] to-[#a28369] pb-2 pt-2 no-underline outline-none focus:shadow-md border-4 border-[#957a62] rounded-xl relative mx-[5%] md:mx-[20%] px-4">
+        {teams ? (
+          <table className="contact-content custom-scroll h-full max-h-[65dvh] overflow-y-auto w-full table-fixed">
+            <thead>
+              <tr className="team-box px-6 pt-3 pb-3 text-slate-800">
+                <th className="text-xl font-bold w-[3%]">#</th>
+                <th className="text-xl font-bold w-[50%]">Team Name</th>
+                <th onClick={() => updateSortHeader("major")} className="text-xl font-bold">
+                  Major Cases Solved
+                  <span className={cn(selectedHeader === "major" ? "visible" : "invisible")}>
+                    {sortAscending ? "▲" : "▼"}
+                  </span>
+                </th>
+                <th onClick={() => updateSortHeader("minor")} className="text-xl font-bold">
+                  Minor Cases Solved
+                  <span className={cn(selectedHeader === "minor" ? "visible" : "invisible")}>
+                    {sortAscending ? "▲" : "▼"}
+                  </span>
+                </th>
+                <th onClick={() => updateSortHeader("total")} className="text-xl font-bold">
+                  Total Puzzles Solved
+                  <span className={cn(selectedHeader === "total" ? "visible" : "invisible")}>
+                    {sortAscending ? "▲" : "▼"}
+                  </span>
+                </th>
+                <th onClick={() => updateSortHeader("time")} className="text-xl font-bold">
+                  Finish Time
+                  <span className={cn(selectedHeader === "time" ? "visible" : "invisible")}>
+                    {sortAscending ? "▲" : "▼"}
+                  </span>
+                </th>
+              </tr>
+            </thead>
+            <Reorder.Group as="tbody" values={values} onReorder={() => {}} draggable={false}>
+              {collectTeams(values, curTab).map((cur_team, index, array) => (
+                <Reorder.Item
+                  as="tr"
+                  value={cur_team}
+                  key={cur_team.id}
+                  draggable={false}
+                  className={cn(
+                    "team-box px-6 py-3 text-slate-800",
+                    index !== array.length - 1 && "border-b-4 border-[#957a62]",
+                    cur_team.id === team.data?.id && "bg-[#ceaa8a]",
+                  )}
+                >
+                  <td className="text-xl font-bold py-4">{index + 1}</td>
+                  <td className="flex items-center gap-4 py-4 pr-4">
+                    <TeamIcon
+                      className="min-w-12 min-h-12 max-w-12 max-h-12"
+                      color={cur_team?.color_choice || "#000000"}
+                      emoji={cur_team?.emoji_choice || "❓"}
+                      emoji_cn="text-3xl"
+                    />
+                    <Link className="truncate text-lg" to={`/team/${cur_team.id}`}>
+                      {cur_team.team_name}
+                    </Link>
+                  </td>
+                  <td className="py-4">{cur_team.major_case_solve_count}</td>
+                  <td className="py-4">{cur_team.minor_case_solve_count}</td>
+                  <td className="py-4">{cur_team.total_solves}</td>
+                  <td className="py-4">
+                    {new Date(cur_team.last_solve_or_creation_time).toDateString()}
+                  </td>
+                </Reorder.Item>
+              ))}
+            </Reorder.Group>
+          </table>
+        ) : (
+          <BeatLoader
+            className="text-center justify-center content-center pr-2"
+            color={"#000"}
+            size={12}
+          />
+        )}
       </div>
     </div>
   );

@@ -55,5 +55,6 @@ urlpatterns = [
     path("events/submit_answer", api_actions.submit_event_answer, name="submit_answer"),
     path("rounds/<str:round_slug>/voucher", api_actions.voucher_case, name="get_round"),
     path("stats", api_views.get_all_solve_stats, name="get_stats"),
+    path("biggraph", api_views.get_my_biggraph, name="get_big_graph"),
     path("teams/leaderboard", api_views.get_leaderboard, name="get_leaderboard"),
 ]

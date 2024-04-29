@@ -3,6 +3,7 @@ import axios from "axios";
 
 import type {
   AnswerSubmissionStats,
+  Biggraph,
   DjangoContext,
   Hint,
   InPersonEvent,
@@ -56,6 +57,10 @@ const getStoryUnlocks = async () => {
 const getStatistics = async () => {
   const response = await axios.get<AnswerSubmissionStats[]>("/api/stats");
   return response.data;
+};
+const getBiggraph = async () => {
+  const response = await axios.get<{ data: Biggraph }>("/api/biggraph");
+  return response.data.data;
 };
 
 export const useMyTeamMembers = () => {
@@ -133,6 +138,13 @@ export const useStatistics = () => {
   return useQuery({
     queryKey: ["stats"],
     queryFn: getStatistics,
+  });
+};
+
+export const useBiggraph = () => {
+  return useQuery({
+    queryKey: ["biggraph"],
+    queryFn: getBiggraph,
   });
 };
 

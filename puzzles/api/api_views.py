@@ -1,8 +1,9 @@
+from collections import defaultdict
 from datetime import datetime
 from rest_framework import permissions, viewsets, mixins
 from puzzles import models
 from puzzles.api.api_guards import require_auth
-from puzzles.hunt_config import MAJOR_CASE_SLUGS
+from puzzles.hunt_config import HUNT_END_TIME, MAJOR_CASE_SLUGS
 
 from .serializers import *
 
@@ -50,6 +51,36 @@ def get_my_token(request: Request) -> Response:
         return Response({"success": True, "data": serializer.data})
     except Token.DoesNotExist:
         return Response({"success": False, "error": "Token not found"})
+
+@api_view(["GET"])
+def get_my_biggraph(request: Request) -> Response:
+    if not request.user.is_authenticated:
+        return Response({"success": False, "error": "User not logged in"})
+
+    puzzles = request._request.context.all_puzzles
+    puzzle_map = {}
+    for puzzle in puzzles:
+        puzzle_map[puzzle.id] = puzzle
+
+    team_point_changes = []
+    team_score = 0
+
+    for puzzle_id, submitted_datetime in (
+        AnswerSubmission.objects
+        .filter(is_correct=True, team__is_hidden=False, used_free_answer=False, team__id=request._request.context.team.id)
+        .order_by('submitted_datetime')
+        .values_list('puzzle_id', 'submitted_datetime')
+    ):
+        team_score += 1
+        puzzle = puzzle_map[puzzle_id]
+        team_point_changes.append((
+            submitted_datetime.timestamp() * 1000,
+            team_score,
+            puzzle.name,
+            puzzle.is_meta,
+        ))
+
+    return Response({"success": True, "data": team_point_changes})
 
 
 class BasicTeamViewSet(
