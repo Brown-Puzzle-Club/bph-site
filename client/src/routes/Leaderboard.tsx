@@ -25,10 +25,19 @@ const sortData = (
   sortAscending: boolean,
 ) => {
   return [...data].sort((a, b) => {
-    const valueA = transformData(sortColumn, a).toString();
-    const valueB = transformData(sortColumn, b).toString();
+    const valueA = transformData(sortColumn, a);
+    const valueB = transformData(sortColumn, b);
 
-    return sortAscending ? valueA.localeCompare(valueB) : valueB.localeCompare(valueA);
+    if (typeof valueA === "number" && typeof valueB === "number") {
+      return sortAscending ? valueA - valueB : valueB - valueA;
+    }
+
+    const valueAString = valueA.toString();
+    const valueBString = valueB.toString();
+
+    return sortAscending
+      ? valueAString.localeCompare(valueBString)
+      : valueBString.localeCompare(valueAString);
   });
 };
 
@@ -202,7 +211,9 @@ export default function Leaderboard() {
                   <td className="py-4">{cur_team.minor_case_solve_count}</td>
                   <td className="py-4">{cur_team.total_solves}</td>
                   <td className="py-4">
-                    {new Date(cur_team.last_solve_or_creation_time).toDateString()}
+                    {cur_team.all_metas_solve_time
+                      ? new Date(cur_team.all_metas_solve_time).toDateString()
+                      : "DNF"}
                   </td>
                 </Reorder.Item>
               ))}

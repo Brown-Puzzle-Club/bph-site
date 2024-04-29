@@ -89,6 +89,24 @@ const AnswerSubmissionStatsSchema = z.object({
 });
 type AnswerSubmissionStats = z.infer<typeof AnswerSubmissionStatsSchema>;
 
+interface TeamPuzzleStats {
+  name: string;
+  id: number;
+  incorrect_guesses: number;
+  unlock_time: string;
+  solve_time: string;
+  num_hints: number;
+}
+
+interface PuzzleStats {
+  name: string;
+  total_solves: number;
+  guesses: number;
+  hints: number;
+  unlocks: number;
+  submissions: Record<string, TeamPuzzleStats>;
+}
+
 const MajorCaseSchema = z.object({
   id: z.number(),
   name: z.string(),
@@ -324,4 +342,6 @@ export type {
   UserTeam,
   VotingInfo,
   Biggraph,
+  TeamPuzzleStats,
+  PuzzleStats,
 };

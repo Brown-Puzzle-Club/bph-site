@@ -146,7 +146,7 @@ class EventCompletionViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return EventCompletion.objects.filter(team=self.request._request.context.team)
-  
+
 
 class StorylineUnlockViewSet(viewsets.ModelViewSet):
     queryset = StorylineUnlock.objects.all()
@@ -330,6 +330,66 @@ def get_all_solve_stats(request: Request) -> Response:
     serializer = AnswerSubmissionStatsSerializer(solves, many=True)
 
     return Response(serializer.data)
+
+@api_view(["GET"])
+def get_puzzle_stats(request: Request, puzzle_slug: str) -> Response:
+    puzzle = Puzzle.objects.get(slug=puzzle_slug)
+    solves = AnswerSubmission.objects.filter(
+        team__is_hidden=False, puzzle__slug=puzzle_slug
+    ).values("team__team_name", "team__id", "submitted_datetime", "is_correct")
+    total_solves = 0
+    hints_asked = 0
+    teams_unlocked = 0
+
+    teams = set([(solve["team__team_name"], solve["team__id"]) for solve in solves])
+
+    def get_incorrect_gusses_team(team: str):
+        return len([solve for solve in solves if solve["team__team_name"] == team and not solve["is_correct"]])
+
+    def get_correct_guess_time(team: str):
+        correct_guesses = [solve["submitted_datetime"] for solve in solves if solve["team__team_name"] == team and solve["is_correct"]]
+        if correct_guesses:
+            nonlocal total_solves
+            total_solves += 1
+            return correct_guesses[0]
+        return None
+
+    def num_hints(team: str):
+        num_hints = len(Hint.objects.filter(team__team_name=team, puzzle__slug=puzzle_slug))
+        nonlocal hints_asked
+        hints_asked += num_hints
+        return num_hints
+
+    def unlock_time(team: str):
+        unlock_time = PuzzleUnlock.objects.filter(team__team_name=team, puzzle__slug=puzzle_slug)
+        if unlock_time:
+            unlock_time = unlock_time[0].unlock_datetime
+            nonlocal teams_unlocked
+            teams_unlocked += 1
+            return unlock_time.isoformat()
+
+        return None
+
+    team_data = {
+        team: {
+            "name": team,
+            "id": team_id,
+            "incorrect_guesses": get_incorrect_gusses_team(team),
+            "unlock_time": unlock_time(team),
+            "solve_time": get_correct_guess_time(team),
+            "num_hints": num_hints(team),
+        }
+        for (team, team_id) in teams
+    }
+
+    return Response({
+        "name": puzzle.name,
+        "total_solves": total_solves,
+        "guesses": len(solves),
+        "hints": hints_asked,
+        "unlocks": teams_unlocked,
+        "submissions": team_data
+    })
 
 
 @api_view(["GET"])

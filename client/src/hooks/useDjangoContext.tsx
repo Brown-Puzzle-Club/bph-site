@@ -9,6 +9,7 @@ import type {
   InPersonEvent,
   LeaderboardTeam,
   Puzzle,
+  PuzzleStats,
   StorylineUnlock,
   Team,
   TeamMember,
@@ -61,6 +62,10 @@ const getStatistics = async () => {
 const getBiggraph = async () => {
   const response = await axios.get<{ data: Biggraph }>("/api/biggraph");
   return response.data.data;
+};
+const getPuzzleStats = async (slug: string) => {
+  const response = await axios.get<PuzzleStats>(`/api/puzzle-stats/${slug}`);
+  return response.data;
 };
 
 export const useMyTeamMembers = () => {
@@ -145,6 +150,13 @@ export const useBiggraph = () => {
   return useQuery({
     queryKey: ["biggraph"],
     queryFn: getBiggraph,
+  });
+};
+
+export const usePuzzleStats = (slug: string) => {
+  return useQuery({
+    queryKey: ["puzzle-stats", slug],
+    queryFn: () => getPuzzleStats(slug),
   });
 };
 

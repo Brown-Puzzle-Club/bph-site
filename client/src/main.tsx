@@ -26,6 +26,7 @@ import MinorCasePage from "./routes/MinorCasePage";
 import MyTeamPage from "./routes/MyTeamPage";
 import PuzzleList from "./routes/PuzzleList";
 import PuzzlePage from "./routes/PuzzlePage";
+import PuzzleStats from "./routes/PuzzleStats";
 import RegisterForm from "./routes/Register";
 import Story from "./routes/Story";
 import TeamPage from "./routes/TeamPage";
@@ -197,6 +198,10 @@ const router = createBrowserRouter([
       {
         path: "/puzzle/:slug",
         element: <PageWrapper route={<PuzzlePage />} />,
+      },
+      {
+        path: "/puzzle-stats/:slug",
+        element: <PageWrapper route={<PuzzleStats />} />,
       },
       {
         path: "/majorcase/social-deduction",

@@ -40,13 +40,13 @@ const extractKey = (data: Record<string, unknown>) => data.team as string;
 const WrapUp = () => {
   return (
     <div>
-      <SortableTable
+      {/* <SortableTable
         headers={headers}
         data={dummyData}
         transformData={transformData}
         extractKey={extractKey}
       />
-      <MinimalSolveGraph data={dummyData2} />
+      <MinimalSolveGraph data={dummyData2} /> */}
     </div>
   );
 };

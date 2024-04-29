@@ -1,34 +1,55 @@
 import { Reorder } from "framer-motion";
 import { useEffect, useState } from "react";
 
-type TransformData = (header: string, data: Record<string, unknown>) => string | number;
-type ExtractKey = (data: Record<string, unknown>) => string | number;
+import { cn } from "@/utils/utils";
 
-interface SortableTableProps {
-  data: Record<string, unknown>[];
-  headers: string[];
-  transformData: TransformData;
-  extractKey: ExtractKey;
+type TransformData<T> = (header: string, data: T) => string | number;
+type RenderData<T> = (header: string, data: T) => React.ReactNode;
+type ExtractKey<T> = (data: T) => React.Key;
+
+interface SortableTableProps<TData, THeader extends string> {
+  data: TData[];
+  headers: THeader[];
+  transformData: TransformData<TData>;
+  extractKey: ExtractKey<TData>;
+  renderData: RenderData<TData>;
+  defaultSortColumn?: THeader;
 }
 
-const sortData = (
-  data: Record<string, unknown>[],
-  transformData: TransformData,
+const sortData = <T,>(
+  data: T[],
+  transformData: TransformData<T>,
   sortColumn: string,
   sortAscending: boolean,
 ) => {
   return [...data].sort((a, b) => {
-    const valueA = transformData(sortColumn, a).toString();
-    const valueB = transformData(sortColumn, b).toString();
+    const valueA = transformData(sortColumn, a);
+    const valueB = transformData(sortColumn, b);
 
-    return sortAscending ? valueA.localeCompare(valueB) : valueB.localeCompare(valueA);
+    if (typeof valueA === "number" && typeof valueB === "number") {
+      return sortAscending ? valueA - valueB : valueB - valueA;
+    }
+
+    const valueAString = valueA.toString();
+    const valueBString = valueB.toString();
+
+    return sortAscending
+      ? valueAString.localeCompare(valueBString)
+      : valueBString.localeCompare(valueAString);
   });
 };
 
-export const SortableTable = ({ data, headers, transformData, extractKey }: SortableTableProps) => {
-  const [sortColumn, setSortColumn] = useState<string | null>(null);
-  const [sortAscending, setSortAscending] = useState<boolean>(true);
-  const [values, setValues] = useState<Record<string, unknown>[]>(data);
+export const SortableTable = <TData, THeader extends string>({
+  data,
+  headers,
+  transformData,
+  extractKey,
+  renderData,
+  defaultSortColumn,
+}: SortableTableProps<TData, THeader>) => {
+  const [sortColumn, setSortColumn] = useState<THeader | undefined>(defaultSortColumn);
+  const [sortAscending, setSortAscending] = useState<boolean>(false);
+  const [values, setValues] = useState<TData[]>(data);
 
   useEffect(() => {
     setValues(sortColumn ? sortData(data, transformData, sortColumn, sortAscending) : data);
@@ -48,11 +69,15 @@ export const SortableTable = ({ data, headers, transformData, extractKey }: Sort
                   return;
                 }
                 setSortColumn(header);
-                setSortAscending(true);
+                setSortAscending(false);
               }}
             >
-              {header}
-              <span>{sortColumn === header && (sortAscending ? "▲" : "▼")}</span>
+              <div className="flex gap-2">
+                {header}
+                <span className={cn(sortColumn === header ? "visible" : "invisible")}>
+                  {sortAscending ? "▲" : "▼"}
+                </span>
+              </div>
             </th>
           ))}
         </tr>
@@ -62,7 +87,7 @@ export const SortableTable = ({ data, headers, transformData, extractKey }: Sort
           <Reorder.Item as="tr" key={extractKey(values[index])} value={values[index]}>
             {headers.map((header, index) => (
               <td className="px-4" key={index}>
-                {transformData(header, row)}
+                {renderData(header, row)}
               </td>
             ))}
           </Reorder.Item>
