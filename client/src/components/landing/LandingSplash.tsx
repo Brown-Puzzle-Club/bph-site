@@ -181,19 +181,22 @@ const LandingSplash: React.FC = () => {
               width: "34%",
             }}
           >
-            <p className="text-white font-mono text-xs select-all">
-              {context?.hunt_context.hunt_is_over ? (
-                <>
-                  The hunt weekend is over, but you can still participate and register until{" "}
-                  <b>{close_date}</b> !
-                </>
-              ) : (
-                <>
-                  The hunt is closed! <b>All puzzles and solutions are open to the public.</b> You
-                  can keep progressing on your account, but it will not affect the leaderboard.
-                </>
-              )}
-            </p>
+            {context?.hunt_context.hunt_is_over && (
+              <p className="text-white font-mono text-xs select-all">
+                {context?.hunt_context.hunt_is_closed ? (
+                  <>
+                    The hunt is closed! <b>All puzzles are open to the public.</b> You can keep
+                    progressing on your account, but it will not affect the leaderboard. Solutions
+                    and wrapup will be posted soon™
+                  </>
+                ) : (
+                  <>
+                    The hunt weekend is over, but you can still participate and register until{" "}
+                    <b>{close_date}</b> !
+                  </>
+                )}
+              </p>
+            )}
           </div>
         </div>
       </div>

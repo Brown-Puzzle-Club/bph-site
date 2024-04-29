@@ -2,8 +2,10 @@ import { useLocalStorage } from "@uidotdev/usehooks";
 import axios from "axios";
 import type { ReactNode } from "react";
 import { useEffect, useMemo, useState } from "react";
+import { IoMdArrowRoundBack } from "react-icons/io";
 import { Link, useLocation } from "react-router-dom";
 
+import { useAuth } from "@/hooks/useAuth";
 import useBPHStore from "@/stores/useBPHStore";
 import { getMajorCaseIdleDialogue } from "@/utils/bluenoir_dialogue";
 import { MAJOR_CASE_NAMES, MajorCaseEnum } from "@/utils/constants";
@@ -32,17 +34,20 @@ const SpoilerAlert = ({ major_case }: { major_case: MajorCaseEnum }) => {
             </p>
             <Link
               to={"/eventpage"}
-              className="rounded-md px-6 py-2 font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
+              className="rounded-md px-6 py-2 bg-slate-700 font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
             >
-              Leave Major Case
+              <div className="inline-block items-center ">
+                <IoMdArrowRoundBack className="inline-block align-middle" />
+                <span className="inline-block">Leave Major Case</span>
+              </div>
             </Link>
             <button
               onClick={() => {
                 setDismissed(true);
               }}
-              className="rounded-md px-6 py-2 font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
+              className="rounded-md mx-2 px-6 py-2 font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
             >
-              I&apos;m ok being spoiled!
+              Enter
             </button>
           </div>
         </div>
@@ -55,6 +60,8 @@ function MajorCaseWrapper({ children }: { children: ReactNode }) {
   const [majorCase, setMajorCase] = useState<MajorCase>({} as MajorCase);
   const { pathname } = useLocation();
   const setBluenoirDialogue = useBPHStore((state) => state.setRandomDialogueFunction);
+  const { team } = useAuth();
+  console.log(team.data);
 
   const majorCaseSlug = pathname.split("/").pop();
   useEffect(() => {
@@ -103,7 +110,7 @@ function MajorCaseWrapper({ children }: { children: ReactNode }) {
 
   return (
     <div className="puzzle-page">
-      {SPOILER_MAJOR_CASES.includes(majorCaseSlug as MajorCaseEnum) && (
+      {SPOILER_MAJOR_CASES.includes(majorCaseSlug as MajorCaseEnum) && !team.data && (
         <SpoilerAlert major_case={majorCaseSlug as MajorCaseEnum} />
       )}
       <AnswerSubmit puzzle={puzzle} major_case={majorCase.slug as MajorCaseEnum} />
