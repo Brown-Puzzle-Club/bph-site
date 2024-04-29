@@ -1,11 +1,14 @@
+import { formatDuration, intervalToDuration } from "date-fns";
 import { FaCog } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import { HashLink as Link } from "react-router-hash-link";
 import { BeatLoader } from "react-spinners";
 
+import { SortableTable } from "@/components/stats/SortableTable";
 import TeamIcon from "@/components/team/TeamIcon";
 import { useAuth } from "@/hooks/useAuth";
-import { useSpecificTeam, useSpecificTeamMembers } from "@/hooks/useDjangoContext";
+import { useSpecificTeam, useSpecificTeamMembers, useTeamStats } from "@/hooks/useDjangoContext";
+import type { TeamStatsInner } from "@/utils/django_types";
 
 import ErrorPage from "./ErrorPage";
 
@@ -13,14 +16,57 @@ export default function TeamPage() {
   const { teamId } = useParams();
 
   const { team } = useAuth();
+  const { data: stats, isError: statsError } = useTeamStats(parseInt(teamId ?? ""));
+
   const isOwnTeam = team.data?.id.toString() === teamId;
 
   const { data: thisTeam, isLoading, isError } = useSpecificTeam(teamId ?? "");
   const { data: thisTeamMembers } = useSpecificTeamMembers(teamId ?? "");
 
-  if (isError) {
+  if (isError || statsError) {
     return <ErrorPage custom_error={{ status: 404, statusText: "Team not found", data: null }} />;
   }
+
+  console.log(stats);
+
+  const transformData = (header: string, data: TeamStatsInner) => {
+    switch (header) {
+      case "Team":
+        return data.name;
+      case "Incorrect Guesses":
+        return data.incorrect_guesses;
+      case "Unlock Time":
+        return new Date(data.unlock_time).getTime();
+      case "Time to Solve":
+        return new Date(data.solve_time).getTime() - new Date(data.unlock_time).getTime();
+      case "Solve Time":
+        return new Date(data.solve_time).getTime();
+      default:
+        return "";
+    }
+  };
+
+  const renderData = (header: string, data: TeamStatsInner) => {
+    switch (header) {
+      case "Team":
+        return data.name;
+      case "Incorrect Guesses":
+        return data.incorrect_guesses;
+      case "Unlock Time":
+        return new Date(data.unlock_time).toLocaleString();
+      case "Time to Solve":
+        return data.solve_time
+          ? formatDuration(
+              intervalToDuration({
+                start: new Date(data.unlock_time),
+                end: new Date(data.solve_time),
+              }),
+            )
+          : "DNS";
+      case "Solve Time":
+        return data.solve_time ? new Date(data.solve_time).toLocaleString() : "DNS";
+    }
+  };
 
   return (
     <div className="teampage text-center text-white min-h-[90vh]">
@@ -36,7 +82,7 @@ export default function TeamPage() {
           <FaCog className="w-5 h-5 text-slate-400 group-hover:text-white transition-colors duration-300" />
         </Link>
       ) : null}
-      {isLoading ? (
+      {isLoading || !stats ? (
         <BeatLoader className="justify-center content-center pr-2 pt-3" color={"#fff"} size={12} />
       ) : (
         <div className="teampage-content pt-6">
@@ -64,6 +110,15 @@ export default function TeamPage() {
               </div>
             </div>
           </section>
+
+          <SortableTable
+            data={Object.values(stats.stats)}
+            headers={["Team", "Incorrect Guesses", "Unlock Time", "Time to Solve", "Solve Time"]}
+            transformData={transformData}
+            extractKey={(row) => row.name}
+            renderData={renderData}
+            defaultSortColumn="Incorrect Guesses"
+          />
         </div>
       )}
     </div>

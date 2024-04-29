@@ -2,7 +2,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
 import type {
-  AnswerSubmissionStats,
   Biggraph,
   DjangoContext,
   Hint,
@@ -13,6 +12,7 @@ import type {
   StorylineUnlock,
   Team,
   TeamMember,
+  TeamStats,
 } from "@/utils/django_types";
 
 const getMyTeamMembers = async () => {
@@ -55,8 +55,8 @@ const getStoryUnlocks = async () => {
   const response = await axios.get<StorylineUnlock[]>("/api/story-unlocks");
   return response.data;
 };
-const getStatistics = async () => {
-  const response = await axios.get<AnswerSubmissionStats[]>("/api/stats");
+const getTeamStats = async (teamId: number) => {
+  const response = await axios.get<TeamStats>(`/api/team-stats/${teamId}`);
   return response.data;
 };
 const getBiggraph = async () => {
@@ -139,10 +139,10 @@ export const useStoryUnlocks = () => {
   });
 };
 
-export const useStatistics = () => {
+export const useTeamStats = (teamId: number) => {
   return useQuery({
-    queryKey: ["stats"],
-    queryFn: getStatistics,
+    queryKey: ["team-stats", teamId],
+    queryFn: () => getTeamStats(teamId),
   });
 };
 

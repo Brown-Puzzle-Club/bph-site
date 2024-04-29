@@ -82,12 +82,20 @@ const AnswerSubmissionSchema = z.object({
 });
 type AnswerSubmission = z.infer<typeof AnswerSubmissionSchema>;
 
-const AnswerSubmissionStatsSchema = z.object({
-  team_name: z.string(),
-  puzzle_name: z.string(),
-  submitted_datetime: z.date(),
-});
-type AnswerSubmissionStats = z.infer<typeof AnswerSubmissionStatsSchema>;
+interface TeamStatsInner {
+  name: string;
+  slug: string;
+  incorrect_guesses: number;
+  unlock_time: string;
+  solve_time: string;
+}
+
+interface TeamStats {
+  name: string;
+  id: number;
+  total_solves: number;
+  stats: Record<string, TeamStatsInner>;
+}
 
 interface TeamPuzzleStats {
   name: string;
@@ -318,7 +326,7 @@ type APIResponse<T> = SuccessResponse<T> | ErrorResponse;
 export type {
   APIResponse,
   AnswerSubmission,
-  AnswerSubmissionStats,
+  TeamStats,
   DjangoContext,
   Erratum,
   EventCompletion,
@@ -344,4 +352,5 @@ export type {
   Biggraph,
   TeamPuzzleStats,
   PuzzleStats,
+  TeamStatsInner,
 };

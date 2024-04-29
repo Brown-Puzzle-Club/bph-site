@@ -322,14 +322,46 @@ def get_events(request: Request) -> Response:
 
 
 @api_view(["GET"])
-def get_all_solve_stats(request: Request) -> Response:
-    # Get all the solves for all the puzzles, and return only the team names and the puzzle slugs
+def get_all_solve_stats(request: Request, team_id: int) -> Response:
     solves = AnswerSubmission.objects.filter(
-        is_correct=True, team__is_hidden=False
-    ).values("team__team_name", "puzzle__name", "submitted_datetime")
-    serializer = AnswerSubmissionStatsSerializer(solves, many=True)
+        team__id=team_id, team__is_hidden=False
+    ).values("team__team_name", "puzzle__name", "puzzle__slug", "submitted_datetime", "is_correct")
 
-    return Response(serializer.data)
+    puzzles = set([solve["puzzle__slug"] for solve in solves])
+
+    def get_incorrect_guesses_puzzle(slug: str):
+        return len([solve for solve in solves if solve["puzzle__slug"] == slug and not solve["is_correct"]])
+
+    def get_unlock_time(slug: str):
+        unlock_time = PuzzleUnlock.objects.filter(team__id=team_id, puzzle__slug=slug)
+        if unlock_time:
+            unlock_time = unlock_time[0].unlock_datetime
+            return unlock_time.isoformat()
+
+        return None
+
+    def get_correct_guess_time(slug: str):
+        correct_guesses = [solve["submitted_datetime"] for solve in solves if solve["puzzle__slug"] == slug and solve["is_correct"]]
+        if correct_guesses:
+            return correct_guesses[0]
+        return None
+
+    team_stats = {
+        puzzle: {
+            "name": puzzle,
+            "incorrect_guesses": get_incorrect_guesses_puzzle(puzzle),
+            "unlock_time": get_unlock_time(puzzle),
+            "solve_time": get_correct_guess_time(puzzle),
+        }
+        for puzzle in puzzles
+    }
+
+    return Response({
+        "name": solves[0]["team__team_name"],
+        "id": team_id,
+        "total_solves": len([solve for solve in solves if solve["is_correct"]]),
+        "stats": team_stats
+    })
 
 @api_view(["GET"])
 def get_puzzle_stats(request: Request, puzzle_slug: str) -> Response:
@@ -343,7 +375,7 @@ def get_puzzle_stats(request: Request, puzzle_slug: str) -> Response:
 
     teams = set([(solve["team__team_name"], solve["team__id"]) for solve in solves])
 
-    def get_incorrect_gusses_team(team: str):
+    def get_incorrect_guesses_team(team: str):
         return len([solve for solve in solves if solve["team__team_name"] == team and not solve["is_correct"]])
 
     def get_correct_guess_time(team: str):
@@ -374,7 +406,7 @@ def get_puzzle_stats(request: Request, puzzle_slug: str) -> Response:
         team: {
             "name": team,
             "id": team_id,
-            "incorrect_guesses": get_incorrect_gusses_team(team),
+            "incorrect_guesses": get_incorrect_guesses_team(team),
             "unlock_time": unlock_time(team),
             "solve_time": get_correct_guess_time(team),
             "num_hints": num_hints(team),

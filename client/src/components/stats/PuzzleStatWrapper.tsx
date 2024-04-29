@@ -28,10 +28,6 @@ const PuzzleStatWrapper = ({ slug }: { slug: string }) => {
       case "Unlock Time":
         return new Date(data.unlock_time).getTime();
       case "Time to Solve":
-        console.log(
-          data,
-          new Date(data.solve_time).getTime() - new Date(data.unlock_time).getTime(),
-        );
         return new Date(data.solve_time).getTime() - new Date(data.unlock_time).getTime();
       case "Solve Time":
         return new Date(data.solve_time).getTime();
