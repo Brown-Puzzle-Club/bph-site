@@ -11,7 +11,7 @@ import { CASE_PALETTE, MajorCaseEnum } from "@/utils/constants";
 import type { Round } from "@/utils/django_types";
 import { getMinorCaseMeta, getPuzzleSolution } from "@/utils/utils";
 
-import { useDjangoContext } from "../hooks/useDjangoContext";
+import { useAllPuzzleStats, useDjangoContext } from "../hooks/useDjangoContext";
 import { CASE_ART_BY_ROUND_SLUG } from "./minor_cases/FolderArt";
 import { Button } from "./ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
@@ -44,6 +44,14 @@ const MinorCaseModal: React.FC<ModalProps> = ({
   action,
 }) => {
   const { data: context } = useDjangoContext();
+  const { data: all_stats } = useAllPuzzleStats();
+
+  const meta = useMemo(() => {
+    if (!selectedCase || !context) {
+      return null;
+    }
+    return getMinorCaseMeta(selectedCase, context);
+  }, [selectedCase, context]);
 
   const solution = useMemo(() => {
     if (!selectedCase || !context) {
@@ -120,13 +128,26 @@ const MinorCaseModal: React.FC<ModalProps> = ({
             )}
             <div className="text-[0.9vw] flex flex-col items-center">
               {typeof action === "string" ? (
-                <div className="flex items-center space-x-4">
+                <div className="items-center space-x-4">
                   {/* <p className="font-bold text-2xl">{'>>'}</p> */}
                   <Link to={action}>
                     <Button className={`text-[1vw] hover:bg-slate-800`}>
                       Go to Minor Case Page
                     </Button>
                   </Link>
+                  {all_stats && all_stats[meta?.slug ?? ""] && (
+                    <>
+                      <br></br><br></br>
+                      <Link
+                        to={`/puzzle/${selectedCase.slug}/stats`}
+                        className="font-mono font-bold hover:underline"
+                      >
+                        {all_stats[meta?.slug ?? ""].total_solves} solves{" "}
+                        {all_stats[meta?.slug ?? ""].guesses} guesses{" "}
+                        {all_stats[meta?.slug ?? ""].unlocks} teams
+                      </Link>
+                    </>
+                  )}
                 </div>
               ) : (
                 <div>

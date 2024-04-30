@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
+import { Link } from "react-router-dom";
 import { BeatLoader } from "react-spinners";
 import { z } from "zod";
 
@@ -371,6 +372,18 @@ export default function AnswerSubmit({
         </div>
       ) : (
         <div>
+          {context?.hunt_context.hunt_is_closed && (
+            <div className="flex flex-row justify-center space-x-3 pt-2">
+              <Button className="font-mono text-sm">
+                <Link to={`/puzzle/${puzzle.slug}/stats`} className="">
+                  stats
+                </Link>
+              </Button>
+              <Button className="font-mono text-sm select-none" disabled>
+                solution (coming soon)
+              </Button>
+            </div>
+          )}
           {puzzle.is_meta && major_case && (
             <CaseQuestion major_case={major_case as MajorCaseEnum} case_slug={puzzle.round.slug} />
           )}
