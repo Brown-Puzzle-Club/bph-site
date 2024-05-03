@@ -270,19 +270,18 @@ export default function ArtCredit({
   const [open, setOpen] = useState(window.location.hash.includes(artist_id));
 
   return (
-    <Drawer open={open} onOpenChange={setOpen}>
+    <Drawer
+      open={open}
+      onOpenChange={(open) => {
+        window.location.hash = open ? artist_id : "";
+        setOpen(open);
+      }}
+    >
       <DrawerTrigger>
         {children ? (
           children
         ) : (
-          <Button
-            className="dark text-xs h-5 ml-2 font-mono bg-slate-600"
-            onClick={() => {
-              window.location.hash = artist_id;
-            }}
-          >
-            CREDIT
-          </Button>
+          <Button className="dark text-xs h-5 ml-2 font-mono bg-slate-600">CREDIT</Button>
         )}
       </DrawerTrigger>
       <DrawerContent className="dark text-white max-h-[90%]">
