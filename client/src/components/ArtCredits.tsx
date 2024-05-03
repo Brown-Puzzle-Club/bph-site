@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 import birbs_credit from "@/assets/art_credit/birbs.png";
 import blues_clues_credit from "@/assets/art_credit/blues_clues.png";
+import cat_credit from "@/assets/art_credit/cat_kris.jpg";
 import data_credit from "@/assets/art_credit/data.png";
 import eventpage_credit from "@/assets/art_credit/eventpage.png";
 import exile_credit from "@/assets/art_credit/exile.png";
@@ -191,6 +192,11 @@ const ART_CREDIT_DATA: Record<string, ArtCreditItem[]> = {
       title: "Blue's Clues Letter",
       src: letter_credit,
       link: "/puzzle/josh",
+    },
+    {
+      title: "Mr. Cat Board",
+      src: cat_credit,
+      link: "/puzzle/mr-cat",
     },
   ],
   "Bailey Merlino": [
