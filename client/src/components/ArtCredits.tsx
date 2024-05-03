@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import birbs_credit from "@/assets/art_credit/birbs.png";
@@ -155,7 +156,7 @@ const ART_CREDIT_DATA: Record<string, ArtCreditItem[]> = {
     {
       title: "The Case of the Colored Thread",
       src: colored_thread_credit,
-      link: "/majorcase/social-deduction",
+      link: "/majorcase/colored-thread",
     },
     {
       title: "Whales",
@@ -265,13 +266,23 @@ export default function ArtCredit({
   artist: string;
   children?: JSX.Element;
 }) {
+  const artist_id = artist ? artist.split(" ")[0].toLowerCase() : "";
+  const [open, setOpen] = useState(window.location.hash.includes(artist_id));
+
   return (
-    <Drawer>
+    <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger>
         {children ? (
           children
         ) : (
-          <Button className="dark text-xs h-5 ml-2 font-mono bg-slate-600">CREDIT</Button>
+          <Button
+            className="dark text-xs h-5 ml-2 font-mono bg-slate-600"
+            onClick={() => {
+              window.location.hash = artist_id;
+            }}
+          >
+            CREDIT
+          </Button>
         )}
       </DrawerTrigger>
       <DrawerContent className="dark text-white max-h-[90%]">
@@ -284,7 +295,7 @@ export default function ArtCredit({
               {ART_CREDIT_DATA[artist] &&
                 ART_CREDIT_DATA[artist].map((credit, i) => (
                   <Card
-                    key={`credit ${artist} ${i}`}
+                    key={`credit-${artist_id}-${i}`}
                     className={cn(
                       "md:w-[18%] w-[12rem] m-2",
                       credit.link && "hover:drop-shadow-[0_15px_15px_rgba(255,255,255,0.2)]",
