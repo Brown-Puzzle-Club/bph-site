@@ -1,6 +1,16 @@
+import { useEffect } from "react";
 import { HashLink as Link } from "react-router-hash-link";
 
+import ArtCredit from "@/components/ArtCredits";
+import { useTheme } from "@/hooks/useTheme";
+import { DEFAULT_THEME } from "@/utils/themes";
+
 export default function Credits() {
+  const { setTheme } = useTheme();
+  useEffect(() => {
+    setTheme(DEFAULT_THEME);
+  }, [setTheme]);
+
   return (
     <div className="credits bg-slate-900 text-white overscroll-contain overflow-hidden overflow-y-auto ">
       <div className="credits-top text-center p-5">
@@ -113,31 +123,50 @@ export default function Credits() {
           <ul>
             <li>
               (<b>Team Lead</b>) <strong>Jaclyn Cohen</strong> (&apos;26)
+              <ArtCredit artist="Jaclyn Cohen" />
             </li>
             <li>
               <strong>Lucid Clairvoyant</strong> (&apos;24)
+              <ArtCredit artist="Lucid Clairvoyant" />
+            </li>
+            <li>
+              <strong>
+                Michelle Ding (@<a href="https://www.instagram.com/fishing.ttf/">fishing.ttf</a>)
+              </strong>{" "}
+              (RISD &apos;24)
+              <ArtCredit artist="Michelle Ding" />
             </li>
             <li>
               <strong>Christine Wang</strong> (RISD &apos;24)
+              <ArtCredit artist="Christine Wang" />
+            </li>
+            <li>
+              <strong>Bailey Merlino</strong> (&apos;26)
+              <ArtCredit artist="Bailey Merlino" />
             </li>
             <li>
               <strong>Eliot Geer</strong> (&apos;27)
+              <ArtCredit artist="Eliot Geer" />
             </li>
             <li>
               <strong>Annie Johnson</strong> (&apos;27)
+              <ArtCredit artist="Annie Johnson" />
             </li>
             <li>
               <strong>Phil Avilov</strong> (RISD &apos;27)
+              <ArtCredit artist="Phil Avilov" />
             </li>
             <li>
               <strong>
                 Talia Bloomfield (@<a href="https://marshmanta.carrd.co/">Pix</a>)
               </strong>
+              <ArtCredit artist="Talia Bloomfield" />
             </li>
             <li>
               <strong>
                 Kristine Lee (@<a href="https://www.instagram.com/codnjs.oo/">codnjs.oo</a>)
               </strong>
+              <ArtCredit artist="Kristine Lee" />
             </li>
           </ul>
         </div>
@@ -181,6 +210,14 @@ export default function Credits() {
             <li className="py-1">
               To <strong>Karan Kashyap</strong> and Full Stack at Brown for their support roping in
               developers and designers for our website.
+            </li>
+            <li className="py-1">
+              To <strong>Josh, Joe,</strong> and <strong>Steve</strong> for their eager willingness
+              to record shenanigans about blue detective animals.
+            </li>
+            <li className="py-1">
+              To <strong>Heidi Erwin</strong> for inspiring our club members, and for completing our
+              Connections puzzle.
             </li>
             <li className="py-1">
               To <strong>Cassie Sutten Coats</strong> and Brown SAO for the guidance, kind words,
