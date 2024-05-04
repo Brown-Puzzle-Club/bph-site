@@ -31,6 +31,7 @@ import bluenoir_surprised from "@/assets/bluenoir/surprised.png";
 import bluenoir_thinking from "@/assets/bluenoir/thinking.png";
 import bluenoir_tired from "@/assets/bluenoir/tired.png";
 import gift_doodle from "@/assets/info/giftdooble.svg";
+import blueno_what from "@/assets/landing/blueno_what.svg";
 import cult_leader from "@/assets/main_page/CULT_LEADER.jpg";
 import colored_thread_credit from "@/assets/major_cases/colored-thread/board.png";
 import labyrithn_cover from "@/assets/minor_cases/labyrinth/labyrinth_cover.png";
@@ -93,6 +94,12 @@ const ART_CREDIT_DATA: Record<string, ArtCreditItem[]> = {
       title: "Birbs at Brown",
       src: birbs_credit,
       link: "/minorcase/birbs-at-brown",
+    },
+    {
+      title: "Landing Page",
+      src: blueno_what,
+      link: "/",
+      description: "bluenoir icons",
     },
     {
       title: "Info Page Doodles",
