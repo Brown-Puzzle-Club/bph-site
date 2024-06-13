@@ -135,11 +135,12 @@ const MinorCaseModal: React.FC<ModalProps> = ({
                       Go to Minor Case Page
                     </Button>
                   </Link>
-                  {all_stats && all_stats[meta?.slug ?? ""] && (
+                  {all_stats && meta?.slug && all_stats[meta?.slug] && (
                     <>
-                      <br></br><br></br>
+                      <br></br>
+                      <br></br>
                       <Link
-                        to={`/puzzle/${selectedCase.slug}/stats`}
+                        to={`/puzzle/${meta.slug}/stats`}
                         className="font-mono font-bold hover:underline"
                       >
                         {all_stats[meta?.slug ?? ""].total_solves} solves{" "}

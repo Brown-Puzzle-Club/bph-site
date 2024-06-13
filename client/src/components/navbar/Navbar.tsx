@@ -235,9 +235,12 @@ const NavbarLeft = () => {
             </NavigationMenuItem>
           )}
           <NavigationMenuItem>
-            <Link to="/wrapup" className="text-white">
-              Wrap Up
-            </Link>
+            <NavigationMenuItem>
+              {/* send to /register page */}
+              <Button className="dark hover:bg-accent" onClick={() => navigate("/wrapup")}>
+                Wrap Up
+              </Button>
+            </NavigationMenuItem>
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>

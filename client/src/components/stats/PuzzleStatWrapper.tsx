@@ -1,15 +1,22 @@
 import { formatDuration, intervalToDuration } from "date-fns";
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { BeatLoader } from "react-spinners";
 
 import { usePuzzleStats } from "@/hooks/useDjangoContext";
 import { Error404 } from "@/routes/ErrorPage";
+import { MajorCaseEnum } from "@/utils/constants";
 import type { TeamPuzzleStats } from "@/utils/django_types";
 
+import { Button } from "../ui/button";
 import { SortableTable } from "./SortableTable";
 
-const PuzzleStatWrapper = ({ slug }: { slug: string }) => {
+const PuzzleStatWrapper = ({ slug }: { slug: string; isMajorCase?: boolean }) => {
   const { data: stats, isError } = usePuzzleStats(slug);
+  const isMajorCase = useMemo(
+    () => Object.values(MajorCaseEnum).includes(slug as MajorCaseEnum),
+    [slug],
+  );
 
   if (isError) {
     return <Error404 />;
@@ -60,6 +67,18 @@ const PuzzleStatWrapper = ({ slug }: { slug: string }) => {
     <div className="mx-auto w-[80vw] max-w-5xl">
       <h1 className="text-center py-6 font-bold text-5xl capitalize">{stats.name}</h1>
 
+      <div className="flex justify-center space-x-2">
+        <Button className="text-2xl bg-slate-800 hover-bg-slate-600">
+          <Link to={isMajorCase ? `/majorcase/${slug}` : `/puzzle/${slug}`} className="text-shadow">
+            Puzzle
+          </Link>
+        </Button>
+        <Button className="text-2xl bg-slate-800 hover-bg-slate-600">
+          <Link to={`/puzzle/${slug}/solution`} className="text-shadow">
+            Solution
+          </Link>
+        </Button>
+      </div>
       <div className="py-4" />
 
       <div className="flex justify-center gap-16 text-center">

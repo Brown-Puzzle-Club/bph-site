@@ -28,6 +28,7 @@ import PuzzleList from "./routes/PuzzleList";
 import PuzzlePage from "./routes/PuzzlePage";
 import PuzzleStats from "./routes/PuzzleStats";
 import RegisterForm from "./routes/Register";
+import SolutionPage from "./routes/SolutionPage";
 import Story from "./routes/Story";
 import TeamPage from "./routes/TeamPage";
 import WrapUp from "./routes/WrapUp";
@@ -194,6 +195,10 @@ const router = createBrowserRouter([
         path: "/puzzle",
         element: <PageWrapper route={<Redirect to={"/eventpage"} />} />,
       },
+      {
+        path: "/solution",
+        element: <PageWrapper route={<Redirect to={"/eventpage"} />} />,
+      },
 
       {
         path: "/minorcase/:slug",
@@ -202,6 +207,10 @@ const router = createBrowserRouter([
       {
         path: "/puzzle/:slug",
         element: <PageWrapper route={<PuzzlePage />} />,
+      },
+      {
+        path: "/puzzle/:slug/solution",
+        element: <PageWrapper route={<SolutionPage />} />,
       },
       {
         path: "/puzzle/:slug/stats",
