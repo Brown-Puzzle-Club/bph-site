@@ -57,16 +57,39 @@ const PuzzleStatWrapper = ({ slug }: { slug: string }) => {
   };
 
   return (
-    <div>
-      <h1>{stats.name}</h1>
-      <div>
-        <p>Total Solves: {stats.total_solves}</p>
-        <p>Total Guesses: {stats.guesses}</p>
+    <div className="mx-auto w-[80vw] max-w-5xl">
+      <h1 className="text-center py-6 font-bold text-5xl capitalize">{stats.name}</h1>
+
+      <div className="py-4" />
+
+      <div className="flex justify-center gap-16 text-center">
+        <div className="grid basis-1/2 place-items-center border-2 border-white">
+          <div className="bg-white w-full h-8" />
+          <div className="grid py-2">
+            <p>
+              <span className="font-bold">Total Solves:</span> {stats.total_solves}
+            </p>
+            <p>
+              <span className="font-bold">Total Guesses:</span> {stats.guesses}
+            </p>
+          </div>
+        </div>
+
+        <div className="grid basis-1/2 place-items-center border-2 border-white">
+          <div className="bg-white w-full h-8" />
+          <div className="grid py-2">
+            <p>
+              <span className="font-bold">Hints Asked:</span> {stats.hints}
+            </p>
+            <p>
+              <span className="font-bold">Teams Unlocked:</span> {stats.unlocks}
+            </p>
+          </div>
+        </div>
       </div>
-      <div>
-        <p>Hints Asked: {stats.hints}</p>
-        <p>Teams Unlocked: {stats.unlocks}</p>
-      </div>
+
+      <div className="py-4" />
+
       <SortableTable
         data={Object.values(stats.submissions)}
         headers={

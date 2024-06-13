@@ -152,7 +152,7 @@ export default function Leaderboard() {
       <div className="text-left dark bg-gradient-to-b from-[#b3957c] to-[#a28369] pb-2 pt-2 no-underline outline-none focus:shadow-md border-4 border-[#957a62] rounded-xl relative mx-[5%] md:mx-[20%] px-4">
         {teams ? (
           <table className="contact-content custom-scroll h-full max-h-[65dvh] overflow-y-auto w-full table-fixed">
-            <thead className="border-b-4 border-[#544334] bg-[#ceaa8a] rounded-xl font-mono select-none text-[2vw] md:text-sm">
+            <thead className="border-b-4 border-[#544334] bg-[#AF9178] rounded-xl font-mono select-none text-[2vw] md:text-sm">
               <tr className="team-box px-6 pt-3 pb-3 text-slate-800">
                 <th className="font-bold w-[3%]">#</th>
                 <th className="font-bold w-[50%]">Team Name</th>

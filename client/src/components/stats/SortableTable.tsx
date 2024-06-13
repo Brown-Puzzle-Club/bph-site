@@ -57,7 +57,7 @@ export const SortableTable = <TData, THeader extends string>({
 
   return (
     <table className="table-auto">
-      <thead>
+      <thead className="border-b">
         <tr>
           {headers.map((header, index) => (
             <th
@@ -89,6 +89,7 @@ export const SortableTable = <TData, THeader extends string>({
             key={extractKey(values[index])}
             value={values[index]}
             dragListener={false}
+            className="border-t border-b"
           >
             {headers.map((header, index) => (
               <td className="px-4" key={index}>
