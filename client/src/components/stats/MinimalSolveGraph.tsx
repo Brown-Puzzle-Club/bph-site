@@ -1,4 +1,4 @@
-import { eachHourOfInterval, eachMinuteOfInterval, max, min } from "date-fns";
+import { eachHourOfInterval, max, min } from "date-fns";
 import ReactEChartsCore from "echarts-for-react/lib/core";
 import { LineChart } from "echarts/charts";
 import { GridComponent } from "echarts/components";
@@ -8,21 +8,21 @@ import { CanvasRenderer } from "echarts/renderers";
 
 import { useBiggraph } from "../../hooks/useDjangoContext";
 
-const findInsertionIndex = (date: Date, dates: Date[]) => {
-  let low = 0;
-  let high = dates.length - 1;
-  while (low <= high) {
-    const mid = Math.floor((low + high) / 2);
-    if (dates[mid] < date) {
-      low = mid + 1;
-    } else if (dates[mid] > date) {
-      high = mid - 1;
-    } else {
-      return mid;
-    }
-  }
-  return low;
-};
+// const findInsertionIndex = (date: Date, dates: Date[]) => {
+//   let low = 0;
+//   let high = dates.length - 1;
+//   while (low <= high) {
+//     const mid = Math.floor((low + high) / 2);
+//     if (dates[mid] < date) {
+//       low = mid + 1;
+//     } else if (dates[mid] > date) {
+//       high = mid - 1;
+//     } else {
+//       return mid;
+//     }
+//   }
+//   return low;
+// };
 
 const MinimalSolveGraph = () => {
   const { data } = useBiggraph();

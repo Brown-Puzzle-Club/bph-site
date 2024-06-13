@@ -234,6 +234,11 @@ const NavbarLeft = () => {
               </Button>
             </NavigationMenuItem>
           )}
+          <NavigationMenuItem>
+            <Link to="/wrapup" className="text-white">
+              Wrap Up
+            </Link>
+          </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
     </div>
