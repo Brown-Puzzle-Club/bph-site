@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 
 import ProgressDocs from "@/components/ProgressDocs";
+import TotalSolveGraph from "@/components/stats/TotalSolveGraph";
 
 // import MinimalSolveGraph from "@/components/stats/MinimalSolveGraph";
 // import { SortableTable } from "@/components/stats/SortableTable";
@@ -46,6 +47,7 @@ export default function WrapUp() {
     <div className="info bg-slate-900 text-white">
       <ProgressDocs>
         <h1 id="wrapup">BPH 2024 WRAPUP!</h1>
+        <TotalSolveGraph />
 
         <p>
           Congratulations to the XXXX teams that finished the hunt, and to the XXXX teams that
