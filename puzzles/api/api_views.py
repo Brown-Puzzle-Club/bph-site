@@ -89,7 +89,25 @@ def get_my_biggraph(request: Request) -> Response:
 
     return Response({"success": True, "data": team_point_changes})
 
+@api_view(["GET"])
+def get_total_solve(request: Request) -> Response:
+    teams = Team.objects.all()
 
+    data = {}
+    for team in teams:
+        answer_submissions = AnswerSubmission.objects.filter(
+            is_correct=True,
+            team__is_hidden=False,
+            used_free_answer=False,
+            team__id=team.id # type: ignore
+        ).order_by("submitted_datetime")
+
+
+        data[team.team_name] = [{"puzzle_name": submission.puzzle.name, "solvedAt": str(submission.submitted_datetime.isoformat())} for submission in answer_submissions]
+
+    data = {k: v for k, v in data.items() if len(v) > 0}
+
+    return Response({"success": True, "data": data})
 class BasicTeamViewSet(
     mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet
 ):

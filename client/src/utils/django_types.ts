@@ -51,6 +51,8 @@ type Team = z.infer<typeof TeamSchema>;
 
 type Biggraph = [number, number, string, boolean];
 
+type SolveInfo = Record<string, { puzzle_name: string; solvedAt: string }[]>;
+
 interface LeaderboardTeam extends Team {
   total_solves: number;
   major_case_solve_count: number;
@@ -361,5 +363,6 @@ export type {
   Token,
   User,
   UserTeam,
+  SolveInfo,
   VotingInfo,
 };

@@ -10,6 +10,7 @@ import type {
   Puzzle,
   PuzzleStats,
   PuzzleStatsBase,
+  SolveInfo,
   StorylineUnlock,
   Team,
   TeamMember,
@@ -62,6 +63,12 @@ const getTeamStats = async (teamId: number) => {
 };
 const getBiggraph = async () => {
   const response = await axios.get<{ data: Biggraph }>("/api/biggraph");
+  console.log("hereh:", response);
+  return response.data.data;
+};
+const getTotalSolves = async () => {
+  const response = await axios.get<{ data: SolveInfo }>("/api/total-solves");
+
   return response.data.data;
 };
 const getPuzzleStats = async (slug: string) => {
@@ -182,6 +189,13 @@ const postHintRequest = async (
 ) => {
   const response = await axios.post<Hint>(`/api/hints/${puzzleSlug}/submit`, data);
   return response.data;
+};
+
+export const useTotalSolves = () => {
+  return useQuery({
+    queryKey: ["total-solves"],
+    queryFn: getTotalSolves,
+  });
 };
 
 export const useMutateTeam = () => {
