@@ -92,9 +92,7 @@ const PuzzleStatWrapper = ({ slug }: { slug: string }) => {
 
       <SortableTable
         data={Object.values(stats.submissions)}
-        headers={
-          ["Team", "Incorrect Guesses", "Unlock Time", "Time to Solve", "Solve Time"] as const
-        }
+        headers={["Team", "Incorrect Guesses", "Unlock Time", "Time to Solve", "Solve Time"]}
         transformData={transformData}
         extractKey={(data) => data.name}
         renderData={renderData}
