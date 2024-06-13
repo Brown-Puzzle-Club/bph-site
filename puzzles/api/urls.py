@@ -56,6 +56,7 @@ urlpatterns = [
     path("rounds/<str:round_slug>/voucher", api_actions.voucher_case, name="get_round"),
     path("team-stats/<int:team_id>", api_views.get_all_solve_stats, name="get_stats"),
     path("biggraph", api_views.get_my_biggraph, name="get_big_graph"),
+    path("total-solves", api_views.get_total_solve, name="get_total_solve"),
     path("teams/leaderboard", api_views.get_leaderboard, name="get_leaderboard"),
     path("puzzle-stats/<str:puzzle_slug>", api_views.get_puzzle_stats, name="get_puzzle_stats"),
     path("puzzle-stats", api_views.get_all_puzzle_stats, name="get_all_puzzle_stats"),
