@@ -82,9 +82,9 @@ function PuzzleWrapper({ puzzle_slug }: { puzzle_slug: string }) {
     return puzzle?.body_remote && puzzle.body_remote != "";
   }, [puzzle]);
 
-  const ADMIN_SOLUTION_VISIBLE = useMemo(() => {
-    return puzzle?.solution && puzzle.solution != "";
-  }, [puzzle]);
+  // const ADMIN_SOLUTION_VISIBLE = useMemo(() => {
+  //   return puzzle?.solution && puzzle.solution != "";
+  // }, [puzzle]);
 
   const clipboard_content = useMemo(() => {
     return puzzle?.body_remote && puzzle.body_remote != "" && puzzleContent == puzzle.body_remote
@@ -120,14 +120,14 @@ function PuzzleWrapper({ puzzle_slug }: { puzzle_slug: string }) {
             </button>
           </>
         )}
-        {ADMIN_SOLUTION_VISIBLE && (
+        {/* {ADMIN_SOLUTION_VISIBLE && (
           <button
             className="p-2 m-2 bg-slate-600 hover:bg-slate-800 text-white"
             onClick={() => setPuzzleContent(puzzle?.solution)}
           >
             Solution
           </button>
-        )}
+        )} */}
       </div>
       {!NO_ANSWER_SUBMIT.has(puzzle.slug) ? (
         <AnswerSubmit

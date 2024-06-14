@@ -5,6 +5,8 @@ export default function ProgressDocs({ children }: { children: ReactNode }) {
   const [scrollPercentage, setScrollPercentage] = useState<number>(0);
   const docsRef = useRef<HTMLDivElement>(null);
 
+  const route = window.location.pathname.substring(1);
+
   const [headings, setHeadings] = useState<NodeListOf<Element>>();
   const [activeHeadings, setActiveHeadings] = useState<string[]>([]);
 
@@ -42,7 +44,7 @@ export default function ProgressDocs({ children }: { children: ReactNode }) {
   const scrollToAnchor = () => {
     const hash = window.location.hash;
     if (hash) {
-      const element = document.getElementById(hash.substring(1));
+      const element = document.getElementById(`${route}-${hash.substring(1)}`);
       if (element) {
         element.scrollIntoView({ behavior: "smooth" });
       }
@@ -68,7 +70,7 @@ export default function ProgressDocs({ children }: { children: ReactNode }) {
         <div className="progress p-4">
           {Array.from(headings || []).map((heading) => (
             <div
-              key={heading.id}
+              key={`${route}-${heading.id}`}
               className={`cursor-pointer px-2 py-1 text-sm transition-colors ${
                 (activeHeadings.includes(heading.innerHTML.toLowerCase()) && "font-bold") ||
                 "text-slate-400"

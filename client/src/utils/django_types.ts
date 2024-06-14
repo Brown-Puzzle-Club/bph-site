@@ -156,6 +156,7 @@ const PuzzleSchema = z.object({
   id: z.number(),
   name: z.string(),
   slug: z.string(),
+  answer: z.string(),
   order: z.number(),
   is_meta: z.boolean(),
   is_major_meta: z.boolean(),
@@ -354,6 +355,7 @@ export type {
   PuzzleStats,
   PuzzleStatsBase,
   Round,
+  SolveInfo,
   StorylineUnlock,
   Team,
   TeamMember,
@@ -363,6 +365,5 @@ export type {
   Token,
   User,
   UserTeam,
-  SolveInfo,
   VotingInfo,
 };

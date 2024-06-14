@@ -106,6 +106,7 @@ function MajorCaseWrapper({ children }: { children: ReactNode }) {
       clipboard: "",
       clipboard_remote: "",
       errata: [],
+      answer: "",
     };
   }, [majorCase]);
 

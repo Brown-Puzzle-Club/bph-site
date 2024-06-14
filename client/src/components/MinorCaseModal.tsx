@@ -110,7 +110,7 @@ const MinorCaseModal: React.FC<ModalProps> = ({
             className="grid gap-2 absolute"
             style={{
               left: "55%",
-              top: "75%",
+              top: solution ? "65%" : "75%",
             }}
           >
             {solution && (

@@ -366,24 +366,26 @@ export default function AnswerSubmit({
 
   return puzzle.name ? (
     <div>
+      {context?.hunt_context.hunt_is_closed && (
+        <div className="flex flex-row justify-center space-x-3 my-2">
+          <Button className="font-mono text-sm">
+            <Link to={`/puzzle/${puzzle.slug}/stats`} className="">
+              stats
+            </Link>
+          </Button>
+          <Button className="font-mono text-sm">
+            <Link to={`/puzzle/${puzzle.slug}/solution`} className="">
+              solution
+            </Link>
+          </Button>
+        </div>
+      )}
       {PUZZLE_ANSWER != "" ? (
         <div className="text-white dark text-center">
           ANSWER: <span className="font-mono text-green-100">{PUZZLE_ANSWER}</span>
         </div>
       ) : (
         <div>
-          {context?.hunt_context.hunt_is_closed && (
-            <div className="flex flex-row justify-center space-x-3 pt-2">
-              <Button className="font-mono text-sm">
-                <Link to={`/puzzle/${puzzle.slug}/stats`} className="">
-                  stats
-                </Link>
-              </Button>
-              <Button className="font-mono text-sm select-none" disabled>
-                solution (coming soon)
-              </Button>
-            </div>
-          )}
           {puzzle.is_meta && major_case && (
             <CaseQuestion major_case={major_case as MajorCaseEnum} case_slug={puzzle.round.slug} />
           )}

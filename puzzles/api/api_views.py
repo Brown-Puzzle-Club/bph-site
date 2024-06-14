@@ -89,6 +89,7 @@ def get_my_biggraph(request: Request) -> Response:
 
     return Response({"success": True, "data": team_point_changes})
 
+
 @api_view(["GET"])
 def get_total_solve(request: Request) -> Response:
     teams = Team.objects.all()
@@ -99,15 +100,22 @@ def get_total_solve(request: Request) -> Response:
             is_correct=True,
             team__is_hidden=False,
             used_free_answer=False,
-            team__id=team.id # type: ignore
+            team__id=team.id,  # type: ignore
         ).order_by("submitted_datetime")
 
-
-        data[team.team_name] = [{"puzzle_name": submission.puzzle.name, "solvedAt": str(submission.submitted_datetime.isoformat())} for submission in answer_submissions]
+        data[team.team_name] = [
+            {
+                "puzzle_name": submission.puzzle.name,
+                "solvedAt": str(submission.submitted_datetime.isoformat()),
+            }
+            for submission in answer_submissions
+        ]
 
     data = {k: v for k, v in data.items() if len(v) > 0}
 
     return Response({"success": True, "data": data})
+
+
 class BasicTeamViewSet(
     mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet
 ):
@@ -259,6 +267,7 @@ def get_puzzle(request: Request, puzzle_slug: str) -> Response:
             additional_fields["clipboard"] = puzzle.clipboard
             additional_fields["clipboard_remote"] = puzzle.clipboard_remote
             additional_fields["solution"] = puzzle.solution
+            additional_fields["answer"] = puzzle.answer
         elif context.hunt_is_over:
             additional_fields["body"] = (
                 puzzle.body_remote if puzzle.body_remote != "" else puzzle.body
