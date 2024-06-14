@@ -203,6 +203,37 @@ export default function Credits() {
             </li>
           </ul>
         </div>
+        <div className="credits-box py-5 btn-gradient-bot">
+          <h4 className="text-2xl font-bold pb-3">Test Solving</h4>
+          <ul>
+            <li>
+              (<b>Mathemagicians</b>)
+            </li>
+            <li className="px-[20%]">
+              <strong>
+                lope, kfcruan, Mononoko, [Creative Name], JackTheFlop, noneuclidean, ShadowOfApollo,
+                Tane
+              </strong>
+            </li>
+
+            <br></br>
+            <li>
+              (<b>MIT Puzzle Club</b>)
+            </li>
+            <li className="px-[20%]">
+              <strong>
+                Wayne Zhao, Wesley Zhang, Aloysius Ng, Ella Sheffield, Eva Goldie, Lumia Neyo
+              </strong>
+            </li>
+            <br></br>
+            <li>
+              (<b>Cheetahs</b>)
+            </li>
+            <li className="px-[20%]">
+              <strong>Tim/Soni, HenryMcHenry, shadyhollow, TheRammer, Kaiserlucas</strong>
+            </li>
+          </ul>
+        </div>
 
         <div className="credits-box py-5">
           <h4 className="text-xl font-bold pb-3">Special Thanks</h4>
