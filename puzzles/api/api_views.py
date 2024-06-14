@@ -492,6 +492,7 @@ def get_puzzle_stats(request: Request, puzzle_slug: str) -> Response:
             "hints": hints_asked,
             "unlocks": teams_unlocked,
             "submissions": team_data,
+            "answer": puzzle.answer,
         }
     )
 

@@ -122,6 +122,7 @@ interface PuzzleStats extends PuzzleStatsBase {
   hints: number;
   unlocks: number;
   submissions: Record<string, TeamPuzzleStats>;
+  answer: string;
 }
 
 const MajorCaseSchema = z.object({

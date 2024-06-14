@@ -67,6 +67,18 @@ const PuzzleStatWrapper = ({ slug }: { slug: string; isMajorCase?: boolean }) =>
     <div className="mx-auto w-[80vw] max-w-5xl">
       <h1 className="text-center py-6 font-bold text-5xl capitalize">{stats.name}</h1>
 
+      <h2 className="flex text-4xl items-center text-center justify-center gap-4">
+        <span className="font-bold">Answer:</span>
+        <div className="relative p-2">
+          <div className="z-10 absolute inset-0 rounded-lg bg-white-200 backdrop-filter backdrop-blur-[20px] hover:backdrop-blur-none transition-all duration-500 delay-300 ease-in"></div>
+          <span className="select-none font-bold font-mono text-[#98FF98] uppercase">
+            {stats.answer}
+          </span>
+        </div>
+      </h2>
+
+      <div className="py-2" />
+
       <div className="flex justify-center space-x-2">
         <Button className="text-2xl bg-slate-800 hover-bg-slate-600">
           <Link to={isMajorCase ? `/majorcase/${slug}` : `/puzzle/${slug}`} className="text-shadow">
