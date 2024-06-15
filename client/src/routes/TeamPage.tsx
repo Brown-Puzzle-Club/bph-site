@@ -111,14 +111,16 @@ export default function TeamPage() {
             </div>
           </section>
 
-          <SortableTable
-            data={Object.values(stats.stats)}
-            headers={["Team", "Incorrect Guesses", "Unlock Time", "Time to Solve", "Solve Time"]}
-            transformData={transformData}
-            extractKey={(row) => row.name}
-            renderData={renderData}
-            defaultSortColumn="Incorrect Guesses"
-          />
+          <div className="flex flex-col px-[10%] pt-4">
+            <SortableTable
+              data={Object.values(stats.stats)}
+              headers={["Team", "Incorrect Guesses", "Unlock Time", "Time to Solve", "Solve Time"]}
+              transformData={transformData}
+              extractKey={(row) => row.name}
+              renderData={renderData}
+              defaultSortColumn="Incorrect Guesses"
+            />
+          </div>
         </div>
       )}
     </div>
