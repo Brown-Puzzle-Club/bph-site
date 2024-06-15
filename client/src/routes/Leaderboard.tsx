@@ -114,7 +114,9 @@ export default function Leaderboard() {
       case "total":
         return data.total_solves;
       case "time":
-        return new Date(data.all_metas_solve_time).getTime();
+        return data.all_metas_solve_time != null
+          ? -new Date(data.all_metas_solve_time).getTime()
+          : -Infinity;
     }
   };
 
