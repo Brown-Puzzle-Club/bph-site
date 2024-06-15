@@ -31,10 +31,11 @@ export default function SolutionWrapper({ puzzle_slug }: { puzzle_slug: string }
             <b>ANSWER: </b>
             <Spoiler bodyText={puzzle.answer} className="text-[green]" />
           </p>
-          <MarkdownWrapper
+          SOLUTION WRITEUP COMING (very) SOON !
+          {/* <MarkdownWrapper
             markdown={puzzle.solution}
             puzzleStyle={toPuzzleStyle(puzzle.round.major_case.slug)}
-          />
+          /> */}
         </div>
       )}
     </div>
