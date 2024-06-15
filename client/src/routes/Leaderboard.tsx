@@ -10,6 +10,12 @@ import { useLeaderboardTeams } from "@/hooks/useDjangoContext";
 import type { LeaderboardTeam, Team, UserTeam } from "@/utils/django_types";
 import { cn } from "@/utils/utils";
 
+const eventSolveDateFormat = (date: Date) => {
+  const datePart = date.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+  const timePart = date.toLocaleTimeString();
+  return `${datePart} ${timePart}`;
+};
+
 enum LeaderboardTab {
   IN_PERSON = "In Person",
   REMOTE = "Remote",
@@ -108,7 +114,7 @@ export default function Leaderboard() {
       case "total":
         return data.total_solves;
       case "time":
-        return new Date(data.last_solve_or_creation_time).getTime();
+        return new Date(data.all_metas_solve_time).getTime();
     }
   };
 
@@ -224,7 +230,7 @@ export default function Leaderboard() {
                   <td className="py-4">{cur_team.total_solves}</td>
                   <td className="py-4">
                     {cur_team.all_metas_solve_time
-                      ? new Date(cur_team.all_metas_solve_time).toDateString()
+                      ? eventSolveDateFormat(new Date(cur_team.all_metas_solve_time))
                       : ""}
                   </td>
                 </Reorder.Item>
