@@ -83,10 +83,6 @@ const router = createBrowserRouter([
         element: <PageWrapper route={<InfoPage />} />,
       },
       {
-        path: "/wrapup",
-        element: <PageWrapper route={<WrapUp />} />,
-      },
-      {
         path: "/credits",
         element: <PageWrapper route={<Credits />} />,
       },
