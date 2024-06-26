@@ -216,7 +216,7 @@ export default function Leaderboard() {
                   )}
                 >
                   <td className="text-xl font-bold py-4">{index + 1}</td>
-                  <td className="flex items-center gap-4 py-4 pr-4">
+                  <td className="flex items-center gap-4 py-4 px-4">
                     <TeamIcon
                       className="min-w-12 min-h-12 max-w-12 max-h-12"
                       color={cur_team?.color_choice || "#000000"}

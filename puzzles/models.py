@@ -547,7 +547,7 @@ class Team(models.Model):
         if hide_remote:
             q &= Q(in_person_sat__gt=0) | Q(in_person_sun__gt=0)
 
-        all_teams = Team.objects.filter(q, creation_time__lt=HUNT_END_TIME)
+        all_teams = Team.objects.filter(q, creation_time__lt=HUNT_CLOSE_TIME)
 
         # https://docs.djangoproject.com/en/3.1/ref/models/querysets/#filteredrelation-objects
         # FilteredRelation does a LEFT OUTER JOIN with additional conditions in
