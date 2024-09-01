@@ -2,10 +2,11 @@ import { useMemo } from "react";
 import { BeatLoader } from "react-spinners";
 
 import { usePuzzle } from "@/hooks/useDjangoContext";
-import { MajorCaseEnum } from "@/utils/constants";
+import { MajorCaseEnum, toPuzzleStyle } from "@/utils/constants";
 
 import BackButton from "../BackButton";
 import Spoiler from "../Spoiler";
+import MarkdownWrapper from "./MarkdownWrapper";
 
 export default function SolutionWrapper({ puzzle_slug }: { puzzle_slug: string }) {
   const { data: puzzle } = usePuzzle(puzzle_slug);
@@ -30,11 +31,11 @@ export default function SolutionWrapper({ puzzle_slug }: { puzzle_slug: string }
             <b>ANSWER: </b>
             <Spoiler bodyText={puzzle.answer} className="text-[green]" />
           </p>
-          SOLUTION WRITEUP COMING (very) SOON !
-          {/* <MarkdownWrapper
+          {/* SOLUTION WRITEUP COMING (very) SOON ! */}
+          <MarkdownWrapper
             markdown={puzzle.solution}
             puzzleStyle={toPuzzleStyle(puzzle.round.major_case.slug)}
-          /> */}
+          />
         </div>
       )}
     </div>
