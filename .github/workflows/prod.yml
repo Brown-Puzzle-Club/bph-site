@@ -18,7 +18,7 @@ jobs:
           ssh-keyscan ${{ secrets.REMOTE_SERVER }} >> ~/.ssh/known_hosts
       - name: Pull from Git
         run: |
-          ssh obloomfi@${{ secrets.REMOTE_SERVER }} -i ~/.ssh/id_rsa "./update_server"
+          ssh obloomfi@${{ secrets.REMOTE_SERVER }} -i ~/.ssh/id_rsa "./update_2024"
       # - name: Purge cache
       #   uses: jakejarvis/cloudflare-purge-action@master
       #   env:
