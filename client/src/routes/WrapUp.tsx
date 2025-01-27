@@ -319,7 +319,7 @@ export default function WrapUp() {
 
         <h1>Credits</h1>
         <p>
-          See <Link to="/credits">www.brownpuzzlehunt.com/credits</Link>
+          See <Link to="/credits">2024.brownpuzzlehunt.com/credits</Link>
         </p>
 
         <h4>Exit survey</h4>
