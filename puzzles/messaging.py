@@ -58,11 +58,11 @@ INCORRECT_SUBMISSION_DISCORD_USERNAME = "Confused Bluenoir"
 # From a channel you can create them under Integrations > Webhooks.
 # They can be the same webhook if you don't care about keeping them in separate
 # channels.
-ALERT_WEBHOOK_URL = "https://discord.com/api/webhooks/1226020530100895745/rm94xl2s-B-u9wOWKUDsw8dzxKratjn_YXL8CAJC2HSDzVgK5tXGschTG9FJwZHsRS-o"
-MAJOR_CASE_SOLVE_WEBHOOK_URL = "https://discord.com/api/webhooks/1226023886194212964/ebN1BkREGMfu0qFzYtTLeRLQcZ2bNe3RwTw-qoZkq4wbgXdxFH3O6OfHWc6iPvNoKxED"
-MINOR_CASE_SOLVE_WEBHOOK_URL = "https://discord.com/api/webhooks/1226022628607918181/naBVgpnx2Hj_gR-HK1or0zz4dE1YUdjessu0Ex7fxv01Xz61IsPKygvuREx-0-DdhbT8"
-PUZZLE_SOLVE_WEBHOOK_URL = "https://discord.com/api/webhooks/1226021486532362241/pyAHeoChtNlEGMRMMchsI_a40nJ_5Wqh-z_RR26Fm1aT6MV-mYTq-8-L_MQ-YYITZX9M"
-INCORRECT_SUBMISSION_WEBHOOK_URL = "https://discord.com/api/webhooks/1226021270290829412/8z25UEJXczxyGHAfeiJQIZGeCqIIlIFyUDBzuyBIEJCv1aSh73CI5cqV8K5iM1B-R2FH"
+ALERT_WEBHOOK_URL = ""
+MAJOR_CASE_SOLVE_WEBHOOK_URL = ""
+MINOR_CASE_SOLVE_WEBHOOK_URL = ""
+PUZZLE_SOLVE_WEBHOOK_URL = ""
+INCORRECT_SUBMISSION_WEBHOOK_URL = ""
 
 DISCORD_TOGGLE = True if settings.DISCORD_TOKEN else False
 
