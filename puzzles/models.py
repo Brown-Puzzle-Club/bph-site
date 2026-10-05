@@ -287,6 +287,14 @@ class Puzzle(models.Model):
         return Puzzle.normalize_answer(self.answer)
 
     @property
+    def major_case(self):
+        # most puzzles reach their major case through their round, but major
+        # metas have no round and are attached to the major case directly.
+        if self.round and self.round.major_case:
+            return self.round.major_case
+        return self.majorcase_set.first()
+
+    @property
     def stats(self):
         correct = defaultdict(int)
         guesses = defaultdict(int)

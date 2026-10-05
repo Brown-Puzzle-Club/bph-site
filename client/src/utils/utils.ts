@@ -70,15 +70,17 @@ export function getUnlockedPuzzle(slug: string, context: DjangoContext, case_slu
   }
 
   const solves = context?.team_context?.solves_by_case;
+  const round = puzzle.round;
   if (
+    round &&
     solves &&
-    solves[puzzle.round.major_case.slug] &&
-    solves[puzzle.round.major_case.slug][puzzle.round.slug] &&
-    solves[puzzle.round.major_case.slug][puzzle.round.slug][slug]
+    solves[round.major_case.slug] &&
+    solves[round.major_case.slug][round.slug] &&
+    solves[round.major_case.slug][round.slug][slug]
   ) {
     return {
       puzzle,
-      answer: solves[puzzle.round.major_case.slug][puzzle.round.slug][slug].submitted_answer,
+      answer: solves[round.major_case.slug][round.slug][slug].submitted_answer,
     };
   }
 
@@ -125,19 +127,19 @@ export function getMinorCaseMeta(round: Round, context: DjangoContext) {
 export function getPuzzleSolution(puzzle: Puzzle | undefined | null, context: DjangoContext) {
   let submission;
 
+  const round = puzzle?.round;
   if (
     !puzzle ||
-    !context?.team_context.solves_by_case[puzzle.round.major_case.slug] ||
-    !context?.team_context.solves_by_case[puzzle.round.major_case.slug][puzzle.round.slug]
+    !round ||
+    !context?.team_context.solves_by_case[round.major_case.slug] ||
+    !context?.team_context.solves_by_case[round.major_case.slug][round.slug]
   ) {
     return null;
   }
   if (
     puzzle &&
     (submission =
-      context.team_context.solves_by_case[puzzle.round.major_case.slug][puzzle.round.slug][
-        puzzle.slug
-      ])
+      context.team_context.solves_by_case[round.major_case.slug][round.slug][puzzle.slug])
   ) {
     return submission.submitted_answer;
   }

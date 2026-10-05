@@ -56,10 +56,20 @@ class RoundSerializer(serializers.ModelSerializer):
 
 class PuzzleBasicSerializer(serializers.ModelSerializer):
     round = RoundSerializer()
+    major_case = MajorCaseSerializer(read_only=True)
 
     class Meta:
         model = Puzzle
-        fields = ["id", "name", "slug", "round", "order", "is_meta", "is_major_meta"]
+        fields = [
+            "id",
+            "name",
+            "slug",
+            "round",
+            "major_case",
+            "order",
+            "is_meta",
+            "is_major_meta",
+        ]
 
 
 class TeamMemberSerializer(serializers.ModelSerializer):

@@ -86,6 +86,9 @@ function PuzzleWrapper({ puzzle_slug }: { puzzle_slug: string }) {
   //   return puzzle?.solution && puzzle.solution != "";
   // }, [puzzle]);
 
+  // major case metas belong to no round; PuzzlePage redirects them to /majorcase/:slug
+  const round = puzzle?.round;
+
   const clipboard_content = useMemo(() => {
     return puzzle?.body_remote && puzzle.body_remote != "" && puzzleContent == puzzle.body_remote
       ? puzzle.clipboard_remote
@@ -102,7 +105,7 @@ function PuzzleWrapper({ puzzle_slug }: { puzzle_slug: string }) {
 
   return (
     <div className="puzzle-page">
-      <BackButton to={`/minorcase/${puzzle.round.slug}`} />
+      <BackButton to={round ? `/minorcase/${round.slug}` : `/majorcase/${puzzle.slug}`} />
       <div>
         {ADMIN_REMOTE_VISIBLE && (
           <>
@@ -130,10 +133,7 @@ function PuzzleWrapper({ puzzle_slug }: { puzzle_slug: string }) {
         )} */}
       </div>
       {!NO_ANSWER_SUBMIT.has(puzzle.slug) ? (
-        <AnswerSubmit
-          puzzle={puzzle}
-          major_case={puzzle?.round?.major_case.slug as MajorCaseEnum}
-        />
+        <AnswerSubmit puzzle={puzzle} major_case={puzzle.major_case?.slug as MajorCaseEnum} />
       ) : (
         <p className="text-center py-4">Completion of the game will solve this puzzle</p>
       )}
@@ -144,7 +144,7 @@ function PuzzleWrapper({ puzzle_slug }: { puzzle_slug: string }) {
         <div className="flex flex-col items-center">
           <MarkdownWrapper
             markdown={puzzleContent || ""}
-            puzzleStyle={toPuzzleStyle(puzzle.round.major_case.slug)}
+            puzzleStyle={toPuzzleStyle(puzzle.major_case?.slug ?? "")}
           />
           {clipboard_content && (
             <Button

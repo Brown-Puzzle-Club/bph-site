@@ -386,7 +386,7 @@ export default function AnswerSubmit({
         </div>
       ) : (
         <div>
-          {puzzle.is_meta && major_case && (
+          {puzzle.is_meta && major_case && puzzle.round && (
             <CaseQuestion major_case={major_case as MajorCaseEnum} case_slug={puzzle.round.slug} />
           )}
           {major_case === MajorCaseEnum.COLORED_THREAD &&

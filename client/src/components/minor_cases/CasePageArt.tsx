@@ -422,8 +422,7 @@ const PuzzleIconWrapper = (props: PuzzleAsset) => {
               )}
               style={{
                 color:
-                  CASE_PALETTE[puzzle_answer.puzzle.round.major_case.slug as MajorCaseEnum]
-                    .answerColor,
+                  CASE_PALETTE[puzzle_answer.puzzle.major_case?.slug as MajorCaseEnum]?.answerColor,
               }}
             >
               {puzzle_answer?.answer?.toUpperCase()}

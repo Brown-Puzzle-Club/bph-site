@@ -81,7 +81,6 @@ function MajorCaseWrapper({ children }: { children: ReactNode }) {
     });
   });
 
-  // TYPE JANKNESS OOPS
   const puzzle = useMemo(() => {
     return {
       ...majorCase.puzzle,
@@ -90,17 +89,8 @@ function MajorCaseWrapper({ children }: { children: ReactNode }) {
       body: "",
       is_meta: false,
       is_major_meta: true,
-      round: {
-        id: 0,
-        name: "",
-        slug: "",
-        order: 0,
-        major_case: {} as MajorCase,
-        description: "",
-        unlock_global_minor: 0,
-        unlock_local_major: 0,
-        meta: 0,
-      },
+      round: null,
+      major_case: majorCase,
       body_remote: "",
       solution: "",
       clipboard: "",

@@ -34,7 +34,7 @@ export default function SolutionWrapper({ puzzle_slug }: { puzzle_slug: string }
           {/* SOLUTION WRITEUP COMING (very) SOON ! */}
           <MarkdownWrapper
             markdown={puzzle.solution}
-            puzzleStyle={toPuzzleStyle(puzzle.round.major_case.slug)}
+            puzzleStyle={toPuzzleStyle(puzzle.major_case?.slug ?? "")}
           />
         </div>
       )}
